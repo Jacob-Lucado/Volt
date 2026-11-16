@@ -13,9 +13,9 @@ import {
 } from '@volt/renderer';
 import { FC, useEffect, useMemo, useState } from 'react';
 import {
-    filterFurnitureGroupItems,
     FURNI_MAIN_FILTER,
     FurniMainFilter,
+    filterFurnitureGroupItems,
     isObjectMoverRequested,
     LocalizeBadgeName,
     LocalizeText,
@@ -27,11 +27,15 @@ import {
     useInventoryBadges,
     useInventoryFurni,
     useInventoryTrade,
-    useWiredTrading,
     useInventoryUnseenTracker,
     useMessageEvent,
-    useVoltEvent
+    useVoltEvent,
+    useWiredTrading
 } from '../../hooks';
+import { LosInventory, LosInventoryFilter } from './lucado/LosInventory';
+import { LosInventoryBadges } from './lucado/LosInventoryBadges';
+import { LosInventoryBots, LosInventoryPets } from './lucado/LosInventoryCompanions';
+import { LosInventoryFurni } from './lucado/LosInventoryFurni';
 import { InventoryBadgeView } from './views/badge/InventoryBadgeView';
 import { InventoryBotView } from './views/bot/InventoryBotView';
 import { InventoryFurnitureDeleteView } from './views/furniture/InventoryFurnitureDeleteView';
@@ -65,8 +69,7 @@ const TAB_PADDING = 24;
 
 let tabMeasureContext: CanvasRenderingContext2D | null = null;
 
-const measureTabLabel = (label: string) =>
-{
+const measureTabLabel = (label: string) => {
     tabMeasureContext ??= document.createElement('canvas').getContext('2d');
     tabMeasureContext.font = TAB_FONT;
     tabMeasureContext.fontKerning = 'none';
@@ -75,14 +78,12 @@ const measureTabLabel = (label: string) =>
 };
 
 // v75 lays the tabs out at fractional x: each tab starts on the floor of its position and the last one ends on the ceiling.
-const getTabBoxes = (labels: string[]) =>
-{
+const getTabBoxes = (labels: string[]) => {
     const edges = [0];
 
     labels.forEach((label, index) => edges.push(edges[index] + measureTabLabel(label) + TAB_PADDING));
 
-    return labels.map((_, index) =>
-    {
+    return labels.map((_, index) => {
         const left = Math.floor(edges[index]);
         const right = index === labels.length - 1 ? Math.ceil(edges[index + 1]) : Math.floor(edges[index + 1]);
 
@@ -128,8 +129,7 @@ export const InventoryView: FC<{}> = () => {
     const { groupItems = [] } = useInventoryFurni();
     const { badgeCodes = [] } = useInventoryBadges();
 
-    useEffect(() =>
-    {
+    useEffect(() => {
         document.fonts.load(TAB_FONT).then(() => setTabFontLoaded(true));
     }, []);
 
@@ -162,8 +162,7 @@ export const InventoryView: FC<{}> = () => {
         // Only the highest level of an achievement shows up; v75 keeps the order the badges arrived in.
         const highest: { [key: string]: number } = {};
 
-        for (const badge of badgeCodes)
-        {
+        for (const badge of badgeCodes) {
             if (!badge.startsWith('ACH_')) continue;
 
             const name = badge.split(/[\d]+/)[0];
@@ -172,15 +171,12 @@ export const InventoryView: FC<{}> = () => {
             if (highest[name] === undefined || number > highest[name]) highest[name] = number;
         }
 
-        return badgeCodes.filter((badge) =>
-        {
-            if (badge.startsWith('ACH_'))
-            {
+        return badgeCodes.filter((badge) => {
+            if (badge.startsWith('ACH_')) {
                 const name = badge.split(/[\d]+/)[0];
 
                 if (Number(badge.replace(name, '')) !== highest[name] || mainFilter === BADGE_MAIN_NORMAL) return false;
-            }
-            else if (mainFilter === BADGE_MAIN_ACHIEVEMENTS) return false;
+            } else if (mainFilter === BADGE_MAIN_ACHIEVEMENTS) return false;
 
             return LocalizeBadgeName(badge).toLocaleLowerCase().includes(comparison);
         });
@@ -257,8 +253,7 @@ export const InventoryView: FC<{}> = () => {
     // The v75 trade table sits under the furni list items are offered from.
     const [wasTrading, setWasTrading] = useState(false);
 
-    if (wasTrading !== isTrading)
-    {
+    if (wasTrading !== isTrading) {
         setWasTrading(isTrading);
         if (isTrading) setCurrentTab(TAB_FURNITURE);
     }
@@ -271,6 +266,46 @@ export const InventoryView: FC<{}> = () => {
     const isTradeMinimized = isTrading && currentTab !== TAB_FURNITURE;
     const hasCreditNote = !!ownUser?.creditsCount || !!otherUser?.creditsCount;
     const showFilter = (currentTab === TAB_FURNITURE && groupItems.length > 0) || currentTab === TAB_BADGES;
+
+    // Trading keeps the classic window; everything else opens the LucadoOS inventory.
+    if (!isTrading && !showWiredTrade) {
+        const applySearch = (value: string) => {
+            setSearchValue(value);
+            setAppliedSearch(value);
+        };
+
+        return (
+            <>
+                <LosInventory
+                    tabs={TABS.map((name) => ({ name, label: tabLabel(name), count: getTabUnseenCount(name, getCount) }))}
+                    currentTab={currentTab}
+                    onTab={setCurrentTab}
+                    onClose={onClose}
+                    filter={
+                        showFilter && (
+                            <LosInventoryFilter
+                                kind={currentTab === TAB_BADGES ? 'badges' : 'furni'}
+                                search={searchValue}
+                                mainFilter={mainFilter}
+                                typeFilter={typeFilter}
+                                onSearch={applySearch}
+                                onMainFilter={setMainFilter}
+                                onTypeFilter={setTypeFilter}
+                            />
+                        )
+                    }
+                >
+                    {currentTab === TAB_FURNITURE && (
+                        <LosInventoryFurni filteredGroupItems={filteredGroupItems} roomPreviewer={roomPreviewer} roomSession={roomSession} />
+                    )}
+                    {currentTab === TAB_PETS && <LosInventoryPets roomSession={roomSession} />}
+                    {currentTab === TAB_BADGES && <LosInventoryBadges filteredBadgeCodes={filteredBadgeCodes} />}
+                    {currentTab === TAB_BOTS && <LosInventoryBots roomSession={roomSession} />}
+                </LosInventory>
+                <InventoryFurnitureDeleteView />
+            </>
+        );
+    }
 
     return (
         <>

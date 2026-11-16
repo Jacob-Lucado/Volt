@@ -1,0 +1,427 @@
+/* LucadoOS inventory: tabs, a tile grid on the left and the selected item on the right.
+   LucadoOS(TM) is a trademark of Jacob Lucado. */
+
+.los-inv {
+    width: 600px;
+    max-width: calc(100vw - 16px);
+    height: 470px;
+    max-height: calc(100vh - 110px);
+}
+
+.los-inv__tabs {
+    flex: none;
+    padding: 8px 12px 0;
+}
+
+.los-inv__badge {
+    display: inline-block;
+    min-width: 16px;
+    margin-left: 6px;
+    padding: 0 4px;
+    border-radius: 8px;
+    background: #ff5d6c;
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 700;
+    line-height: 16px;
+    text-align: center;
+}
+
+.los-inv__filter {
+    display: flex;
+    flex: none;
+    gap: 8px;
+    padding: 10px 12px 0;
+}
+
+.los-inv__filter--inner {
+    padding: 0;
+}
+
+.los-inv__search {
+    position: relative;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    min-width: 0;
+    margin: 0;
+}
+
+.los-inv__search .los-icon {
+    position: absolute;
+    left: 9px;
+    color: var(--los-dim);
+    pointer-events: none;
+}
+
+.los-inv__search .los-input {
+    width: 100%;
+    padding-left: 28px;
+}
+
+.los-inv__filter .los-select {
+    flex: 0 0 132px;
+    min-width: 0;
+}
+
+.los-inv__content {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    padding: 10px 12px 12px;
+}
+
+.los-inv__stack {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    min-height: 0;
+}
+
+.los-inv__split {
+    display: flex;
+    flex: 1;
+    gap: 12px;
+    min-width: 0;
+    min-height: 0;
+}
+
+.los-inv__list {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    min-height: 0;
+}
+
+.los-inv__grid {
+    display: grid;
+    flex: 1;
+    grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+    grid-auto-rows: 48px;
+    gap: 6px;
+    align-content: start;
+    min-height: 0;
+    padding: 2px 4px 2px 2px;
+    overflow-y: auto;
+    border-radius: 10px;
+}
+
+.los-inv__grid--tall {
+    grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+    grid-auto-rows: 72px;
+}
+
+.los-inv__grid.is-drop {
+    outline: 1px dashed #ff8f9a;
+    outline-offset: -1px;
+    background: rgba(255, 93, 108, .08);
+}
+
+.los-inv__none {
+    grid-column: 1 / -1;
+    margin: 24px 0 0;
+    color: var(--los-dim);
+    text-align: center;
+}
+
+.los-inv__tile {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--los-line);
+    border-radius: 10px;
+    background: var(--los-soft);
+    color: var(--los-text);
+    cursor: pointer;
+    transition: background .1s, border-color .1s;
+}
+
+.los-inv__tile:hover {
+    background: var(--los-soft-2);
+}
+
+.los-inv__tile.is-selected {
+    border-color: #4da3ff;
+    background: rgba(77, 163, 255, .2);
+    box-shadow: 0 0 0 1px #4da3ff inset;
+}
+
+.los-inv__tile.is-unseen::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #3ddc97;
+    box-shadow: 0 0 0 2px rgba(15, 23, 36, .9);
+}
+
+.los-inv__tile.is-used > img {
+    opacity: .4;
+}
+
+.los-inv__tile.is-drop {
+    border-color: #4da3ff;
+    border-style: dashed;
+    background: rgba(77, 163, 255, .16);
+}
+
+.los-inv__tile > img,
+.los-inv__tile canvas {
+    max-width: 100%;
+    max-height: 100%;
+    image-rendering: pixelated;
+    pointer-events: none;
+}
+
+.los-inv__tile > * {
+    pointer-events: none;
+}
+
+.los-inv__count,
+.los-inv__ltd {
+    position: absolute;
+    right: 3px;
+    bottom: 3px;
+    min-width: 15px;
+    padding: 0 4px;
+    border-radius: 6px;
+    background: rgba(8, 13, 22, .85);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 15px;
+    text-align: center;
+}
+
+.los-inv__ltd {
+    right: auto;
+    left: 3px;
+    background: linear-gradient(135deg, #eeb425, #e08a1c);
+    color: #2a1a00;
+}
+
+.los-inv__pages {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.los-inv__pages button {
+    min-width: 24px;
+    height: 22px;
+    padding: 0 6px;
+    border: 1px solid var(--los-line);
+    border-radius: 7px;
+    background: transparent;
+    color: var(--los-dim);
+    font: inherit;
+    font-size: 11.5px;
+    cursor: pointer;
+}
+
+.los-inv__pages button.is-active {
+    border-color: #4da3ff;
+    background: rgba(77, 163, 255, .2);
+    color: #fff;
+}
+
+.los-inv__side {
+    display: flex;
+    flex: 0 0 196px;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    min-height: 0;
+}
+
+.los-inv__stage {
+    position: relative;
+    flex: 0 0 150px;
+    overflow: hidden;
+    border: 1px solid var(--los-line);
+    border-radius: 10px;
+    background: radial-gradient(120% 90% at 50% 100%, rgba(77, 163, 255, .18), rgba(124, 108, 255, .06) 60%, transparent), rgba(8, 13, 22, .5);
+    cursor: pointer;
+}
+
+.los-inv__stage--figure,
+.los-inv__stage--badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+}
+
+.los-inv__stage--badge {
+    flex-basis: 84px;
+}
+
+.los-inv__stage--badge > * {
+    transform: scale(1.6);
+    image-rendering: pixelated;
+}
+
+.los-inv__stage-tools {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    display: flex;
+    gap: 4px;
+}
+
+.los-inv__stage-tools button {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid var(--los-line);
+    border-radius: 7px;
+    background: rgba(8, 13, 22, .7);
+    color: var(--los-dim);
+    cursor: pointer;
+}
+
+.los-inv__stage-tools button:hover {
+    border-color: #4da3ff;
+    color: #fff;
+}
+
+.los-inv__name {
+    flex: none;
+    overflow: hidden;
+    font-size: 13.5px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.los-inv__desc {
+    flex: 0 1 auto;
+    min-height: 32px;
+    max-height: 66px;
+    margin: 0;
+    overflow-y: auto;
+    color: var(--los-dim);
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.los-inv__label {
+    flex: none;
+    color: var(--los-dim);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.los-inv__slots {
+    display: grid;
+    flex: none;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+}
+
+.los-inv__slot {
+    aspect-ratio: 1;
+}
+
+.los-inv__slot.is-empty {
+    border-style: dashed;
+    background: transparent;
+    cursor: default;
+}
+
+.los-inv__chips {
+    display: flex;
+    flex: none;
+    gap: 6px;
+}
+
+.los-inv__chip {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    height: 20px;
+    padding: 0 7px;
+    border: 1px solid var(--los-line);
+    border-radius: 10px;
+    color: var(--los-dim);
+    font-size: 11px;
+    font-weight: 600;
+    opacity: .6;
+}
+
+.los-inv__chip.is-on {
+    border-color: rgba(61, 220, 151, .45);
+    color: #3ddc97;
+    opacity: 1;
+}
+
+.los-inv__actions {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: auto;
+}
+
+.los-inv__actions .los-button {
+    height: 32px;
+}
+
+.los-inv__empty {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 60px;
+    text-align: center;
+}
+
+.los-inv__empty-mark {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 6px;
+    border: 1px solid var(--los-line);
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(77, 163, 255, .22), rgba(124, 108, 255, .22));
+    color: #a9cdff;
+}
+
+.los-inv__empty strong {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.los-inv__empty p {
+    margin: 0 0 8px;
+    color: var(--los-dim);
+}
+
+.los-inv__empty .los-button {
+    gap: 7px;
+    height: 34px;
+    padding: 0 16px;
+}
+
+.los-inv__search .los-input::placeholder {
+    text-transform: capitalize;
+}
