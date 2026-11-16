@@ -1,11 +1,6 @@
-import {
-    GetSessionDataManager,
-    GiftReceiverNotFoundEvent,
-    VoltEvent,
-    NotEnoughBalanceMessageEvent,
-    PurchaseFromCatalogAsGiftComposer
-} from '@volt/renderer';
+import { GetSessionDataManager, GiftReceiverNotFoundEvent, NotEnoughBalanceMessageEvent, PurchaseFromCatalogAsGiftComposer, VoltEvent } from '@volt/renderer';
 import { ChangeEvent, CSSProperties, FC, KeyboardEvent, MouseEvent, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
     ColorUtils,
     GetConfigurationValue,
@@ -13,19 +8,13 @@ import {
     LocalizeText,
     MessengerFriend,
     OpenUrl,
-    ProductTypeEnum,
     Permission,
+    ProductTypeEnum,
     SendMessageComposer
 } from '../../../../api';
-import giftArrowLeftImage from '../../../../assets/images/catalog/air/gift/arrow-left.png';
-import giftArrowRightImage from '../../../../assets/images/catalog/air/gift/arrow-right.png';
-import giftCardBlankImage from '../../../../assets/images/catalog/air/gift/gift-card-blank.png';
 import giftIncognitoImage from '../../../../assets/images/catalog/air/gift/incognito.png';
-import giftPaletteBorderImage from '../../../../assets/images/catalog/air/gift/palette-border.png';
-import giftPaletteSelectionImage from '../../../../assets/images/catalog/air/gift/palette-selection.png';
-import giftSmallCoinImage from '../../../../assets/images/catalog/air/gift/small-coin.png';
-import giftSmallPenImage from '../../../../assets/images/catalog/air/gift/small-pen.png';
-import { LayoutFurniImageView, VoltCardContentView, VoltCardHeaderView, VoltCardView } from '../../../../common';
+import { LayoutAvatarImageView, LayoutCurrencyIcon, LayoutFurniImageView } from '../../../../common';
+import { LosIcon } from '../../../../common/lucadoos';
 import {
     CatalogEvent,
     CatalogInitGiftEvent,
@@ -34,16 +23,23 @@ import {
     CatalogPurchaseNotAllowedEvent,
     CatalogPurchaseSoldOutEvent
 } from '../../../../events';
-import { useCatalogActions, useCatalogUiState, useFriends, useGiftConfiguration, useHasPermission, useMessageEvent, useNotification, useUiEvent } from '../../../../hooks';
+import {
+    useCatalogActions,
+    useCatalogUiState,
+    useFriends,
+    useGiftConfiguration,
+    useHasPermission,
+    useMessageEvent,
+    useNotification,
+    useUiEvent
+} from '../../../../hooks';
 import {
     filterGiftRecipients,
     findGiftRecipientMatchIndex,
     getRandomGiftDefaultStuffType,
-    limitGiftMessageToTextarea,
     resolveGiftWrappingSelection,
     wrapGiftSelectionIndex
 } from './CatalogGiftView.helpers';
-import { CatalogGiftAvatar } from './CatalogGiftAvatar';
 
 interface GiftPaletteColor {
     id: number;
@@ -164,10 +160,6 @@ export const CatalogGiftView: FC = () => {
     const boxName = `catalog.gift_wrapping_new.box.${isDefaultBox ? 'default' : selectedBoxType}`;
     const ribbonName = `catalog.gift_wrapping_new.ribbon.${selectedRibbonIndex}`;
     const priceText = `catalog.gift_wrapping_new.${isDefaultBox ? 'freeprice' : 'price'}`;
-    const configuredGiftCard = GetConfigurationValue<string>('catalog.gift_wrapping_new.gift_card', '');
-    const giftCardImage = configuredGiftCard.length
-        ? `${GetConfigurationValue<string>('image.library.url', '')}Giftcards/${configuredGiftCard}.png`
-        : giftCardBlankImage;
 
     const selectRelativeBox = useCallback(
         (offset: number) => {
@@ -481,86 +473,103 @@ export const CatalogGiftView: FC = () => {
     // usable wrapper data exists, the second stage of the gift flow opens.
     if (!isVisible || !giftConfiguration || !boxTypes.length) return null;
 
-    return (
-        <VoltCardView classNames={['volt-catalog-gift']} frameStyle={3} isResizable={false} theme="primary-slim">
-            <VoltCardHeaderView headerText={LocalizeText('catalog.gift_wrapping.title')} onCloseClick={onClose} />
-            <VoltCardContentView classNames={['volt-catalog-gift-content']} overflow="hidden">
-                <div className="volt-catalog-gift-name-border">
-                    <input
-                        aria-label={LocalizeText('catalog.gift_wrapping_new.name_hint')}
-                        className="volt-catalog-gift-name-input"
-                        maxLength={32}
-                        placeholder={LocalizeText('catalog.gift_wrapping_new.name_hint')}
-                        ref={recipientInputRef}
-                        type="text"
-                        value={receiverName}
-                        onChange={onReceiverChanged}
-                        onKeyDown={onReceiverKeyDown}
-                        onMouseDown={() => setIsAutocompleteVisible(false)}
-                    />
-                </div>
-                <img alt="" className="volt-catalog-gift-pen" draggable={false} src={giftSmallPenImage} />
+    const stepper = (label: string, name: string, enabled: boolean, onStep: (direction: number) => void) => (
+        <div className={`los-gift__stepper${enabled ? '' : ' is-disabled'}`}>
+            <button aria-label={label} disabled={!enabled} type="button" onClick={() => onStep(-1)}>
+                <LosIcon name="back" size={13} />
+            </button>
+            <span>{name}</span>
+            <button aria-label={label} className="is-next" disabled={!enabled} type="button" onClick={() => onStep(1)}>
+                <LosIcon name="back" size={13} />
+            </button>
+        </div>
+    );
 
-                {isAutocompleteVisible && suggestions.length > 0 && (
-                    <div className="volt-catalog-gift-suggestions" role="listbox">
-                        {suggestions.map((friend, index) => (
-                            <div
-                                aria-selected={index === highlightedSuggestionIndex}
-                                className={index === highlightedSuggestionIndex ? 'is-highlighted' : ''}
-                                key={friend.id}
-                                role="option"
-                                onMouseDown={(event: MouseEvent<HTMLDivElement>) => {
-                                    event.preventDefault();
-                                    selectReceiverName(friend.name);
-                                }}
-                                onMouseEnter={() => setHighlightedSuggestionIndex(index)}
-                            >
-                                {renderSuggestionName(friend.name)}
-                            </div>
-                        ))}
-                    </div>
-                )}
-
-                <img alt="" className="volt-catalog-gift-card" draggable={false} src={giftCardImage} />
-                <CatalogGiftAvatar
-                    figure={showPurchaserIdentity ? sessionDataManager.figure : null}
-                    imageUrl={showPurchaserIdentity ? null : giftIncognitoImage}
-                />
-                <textarea
-                    aria-label={LocalizeText('catalog.gift_wrapping_new.message_hint')}
-                    className={`volt-catalog-gift-message${isAutocompleteVisible && suggestions.length >= 2 ? ' is-concealed' : ''}`}
-                    maxLength={140}
-                    placeholder={LocalizeText('catalog.gift_wrapping_new.message_hint')}
-                    ref={messageInputRef}
-                    value={message}
-                    onChange={(event) => setMessage(limitGiftMessageToTextarea(event.target.value, event.target))}
-                    onFocus={() => setIsAutocompleteVisible(false)}
-                />
-                {showPurchaserIdentity && (
-                    <div className="volt-catalog-gift-signature">
-                        {LocalizeText('catalog.gift_wrapping_new.message_from', ['name'], [sessionDataManager.userName])}
-                    </div>
-                )}
-
-                {isModerator && (
-                    <>
+    return createPortal(
+        <div className="los-dialog-backdrop">
+            <div aria-label={LocalizeText('catalog.gift_wrapping.title')} aria-modal="true" className="los-window los-dialog los-gift" role="dialog">
+                <header className="los-window__bar">
+                    <LosIcon name="gift" />
+                    <span className="los-window__title">{LocalizeText('catalog.gift_wrapping.title')}</span>
+                    <span className="los-window__actions">
+                        <button
+                            type="button"
+                            className="los-window__button los-window__button--close"
+                            aria-label={LocalizeText('generic.close')}
+                            onClick={onClose}
+                        >
+                            <LosIcon name="close" size={14} />
+                        </button>
+                    </span>
+                </header>
+                <div className="los-gift__body">
+                    <div className="los-gift__recipient">
                         <input
-                            aria-label={LocalizeText('catalog.gift_wrapping.show_face.title')}
-                            checked={showMyFace}
-                            className="volt-catalog-gift-show-face"
-                            id="volt-catalog-gift-show-face"
-                            type="checkbox"
-                            onChange={(event) => setShowMyFace(event.target.checked)}
+                            aria-label={LocalizeText('catalog.gift_wrapping_new.name_hint')}
+                            className="los-input"
+                            maxLength={32}
+                            placeholder={LocalizeText('catalog.gift_wrapping_new.name_hint')}
+                            ref={recipientInputRef}
+                            type="text"
+                            value={receiverName}
+                            onChange={onReceiverChanged}
+                            onKeyDown={onReceiverKeyDown}
+                            onMouseDown={() => setIsAutocompleteVisible(false)}
                         />
-                        <label className="volt-catalog-gift-show-face-label" htmlFor="volt-catalog-gift-show-face">
+                        {isAutocompleteVisible && suggestions.length > 0 && (
+                            <div className="los-gift__suggestions" role="listbox">
+                                {suggestions.map((friend, index) => (
+                                    <div
+                                        aria-selected={index === highlightedSuggestionIndex}
+                                        className={index === highlightedSuggestionIndex ? 'is-highlighted' : ''}
+                                        key={friend.id}
+                                        role="option"
+                                        onMouseDown={(event: MouseEvent<HTMLDivElement>) => {
+                                            event.preventDefault();
+                                            selectReceiverName(friend.name);
+                                        }}
+                                        onMouseEnter={() => setHighlightedSuggestionIndex(index)}
+                                    >
+                                        {renderSuggestionName(friend.name)}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                    <div className="los-gift__card">
+                        <div className="los-gift__avatar">
+                            {showPurchaserIdentity ? (
+                                <LayoutAvatarImageView headOnly direction={2} figure={sessionDataManager.figure} />
+                            ) : (
+                                <img alt="" draggable={false} src={giftIncognitoImage} />
+                            )}
+                        </div>
+                        <div className="los-gift__note">
+                            <textarea
+                                aria-label={LocalizeText('catalog.gift_wrapping_new.message_hint')}
+                                className="los-input"
+                                maxLength={140}
+                                placeholder={LocalizeText('catalog.gift_wrapping_new.message_hint')}
+                                ref={messageInputRef}
+                                value={message}
+                                onChange={(event) => setMessage(event.target.value)}
+                                onFocus={() => setIsAutocompleteVisible(false)}
+                            />
+                            {showPurchaserIdentity && (
+                                <span className="los-gift__signature">
+                                    {LocalizeText('catalog.gift_wrapping_new.message_from', ['name'], [sessionDataManager.userName])}
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                    {isModerator && (
+                        <label className="los-gift__check">
+                            <input checked={showMyFace} type="checkbox" onChange={(event) => setShowMyFace(event.target.checked)} />
                             {LocalizeText('catalog.gift_wrapping.show_face.title')}
                         </label>
-                    </>
-                )}
-
-                <div className="volt-catalog-gift-box-picker">
-                    <div className="volt-catalog-gift-product-border">
-                        <div className="volt-catalog-gift-product-image">
+                    )}
+                    <div className="los-gift__wrap">
+                        <div className="los-gift__box">
                             {giftSelection.wrapperId > 0 && (
                                 <LayoutFurniImageView
                                     direction={180}
@@ -570,84 +579,46 @@ export const CatalogGiftView: FC = () => {
                                 />
                             )}
                         </div>
+                        <div className="los-gift__options">
+                            {stepper(LocalizeText('catalog.gift_wrapping.pick_box'), LocalizeText(boxName), true, selectRelativeBox)}
+                            {stepper(LocalizeText('catalog.gift_wrapping.pick_ribbon'), LocalizeText(ribbonName), isRibbonEnabled, selectRelativeRibbon)}
+                            <div className="los-gift__price">
+                                <span>{LocalizeText(priceText, ['price'], [giftConfiguration.price.toString()])}</span>
+                                {!isDefaultBox && <LayoutCurrencyIcon type={-1} />}
+                            </div>
+                        </div>
                     </div>
-                    <button
-                        aria-label={LocalizeText('catalog.gift_wrapping.pick_box')}
-                        className="volt-catalog-gift-arrow volt-catalog-gift-box-prev"
-                        type="button"
-                        onClick={() => selectRelativeBox(-1)}
-                    >
-                        <img alt="" draggable={false} src={giftArrowLeftImage} />
-                    </button>
-                    <button
-                        aria-label={LocalizeText('catalog.gift_wrapping.pick_box')}
-                        className="volt-catalog-gift-arrow volt-catalog-gift-box-next"
-                        type="button"
-                        onClick={() => selectRelativeBox(1)}
-                    >
-                        <img alt="" draggable={false} src={giftArrowRightImage} />
-                    </button>
-                    <div className="volt-catalog-gift-box-name">{LocalizeText(boxName)}</div>
-                    <div className="volt-catalog-gift-price">
-                        <span>{LocalizeText(priceText, ['price'], [giftConfiguration.price.toString()])}</span>
-                        {!isDefaultBox && <img alt="" draggable={false} src={giftSmallCoinImage} />}
-                    </div>
-                    <button
-                        aria-label={LocalizeText('catalog.gift_wrapping.pick_ribbon')}
-                        className={`volt-catalog-gift-arrow volt-catalog-gift-ribbon-prev${isRibbonEnabled ? '' : ' is-disabled'}`}
-                        disabled={!isRibbonEnabled}
-                        type="button"
-                        onClick={() => selectRelativeRibbon(-1)}
-                    >
-                        <img alt="" draggable={false} src={giftArrowLeftImage} />
-                    </button>
-                    <button
-                        aria-label={LocalizeText('catalog.gift_wrapping.pick_ribbon')}
-                        className={`volt-catalog-gift-arrow volt-catalog-gift-ribbon-next${isRibbonEnabled ? '' : ' is-disabled'}`}
-                        disabled={!isRibbonEnabled}
-                        type="button"
-                        onClick={() => selectRelativeRibbon(1)}
-                    >
-                        <img alt="" draggable={false} src={giftArrowRightImage} />
-                    </button>
-                    <div className={`volt-catalog-gift-ribbon-name${isRibbonEnabled ? '' : ' is-disabled'}`}>{LocalizeText(ribbonName)}</div>
-                </div>
-
-                <div className={`volt-catalog-gift-color-title${isColorEnabled ? '' : ' is-disabled'}`}>
-                    {LocalizeText('catalog.gift_wrapping.pick_color')}
-                </div>
-                <div className={`volt-catalog-gift-palette${isColorEnabled ? '' : ' is-disabled'}`}>
-                    <div className="volt-catalog-gift-palette-grid">
-                        {colors.map((color) => (
-                            <button
-                                aria-label={color.color}
-                                className="volt-catalog-gift-palette-item"
-                                disabled={!isColorEnabled}
-                                key={color.id}
-                                style={{ '--volt-gift-palette-color': color.color } as CSSProperties}
-                                type="button"
-                                onClick={() => {
-                                    setIsAutocompleteVisible(false);
-                                    setSelectedColorId(color.id);
-                                }}
-                            >
-                                <span className="volt-catalog-gift-palette-color" />
-                                <img alt="" className="volt-catalog-gift-palette-border" draggable={false} src={giftPaletteBorderImage} />
-                                {color.id === selectedColorId && (
-                                    <img alt="" className="volt-catalog-gift-palette-selection" draggable={false} src={giftPaletteSelectionImage} />
-                                )}
-                            </button>
-                        ))}
+                    <div className={`los-gift__colors${isColorEnabled ? '' : ' is-disabled'}`}>
+                        <span className="los-gift__label">{LocalizeText('catalog.gift_wrapping.pick_color')}</span>
+                        <div className="los-gift__palette">
+                            {colors.map((color) => (
+                                <button
+                                    aria-label={color.color}
+                                    aria-pressed={color.id === selectedColorId}
+                                    className={color.id === selectedColorId ? 'is-selected' : ''}
+                                    disabled={!isColorEnabled}
+                                    key={color.id}
+                                    style={{ background: color.color } as CSSProperties}
+                                    type="button"
+                                    onClick={() => {
+                                        setIsAutocompleteVisible(false);
+                                        setSelectedColorId(color.id);
+                                    }}
+                                />
+                            ))}
+                        </div>
                     </div>
                 </div>
-
-                <button className="volt-catalog-gift-cancel" type="button" onClick={onClose}>
-                    {LocalizeText('catalog.gift_wrapping.cancel')}
-                </button>
-                <button className="volt-catalog-gift-submit" disabled={isBuyingGift} type="button" onClick={onBuyGift}>
-                    {LocalizeText('catalog.gift_wrapping.give_gift')}
-                </button>
-            </VoltCardContentView>
-        </VoltCardView>
+                <div className="los-confirm__actions">
+                    <button className="los-button" type="button" onClick={onClose}>
+                        {LocalizeText('catalog.gift_wrapping.cancel')}
+                    </button>
+                    <button className="los-button los-button--primary" disabled={isBuyingGift} type="button" onClick={onBuyGift}>
+                        {LocalizeText('catalog.gift_wrapping.give_gift')}
+                    </button>
+                </div>
+            </div>
+        </div>,
+        document.body
     );
 };
