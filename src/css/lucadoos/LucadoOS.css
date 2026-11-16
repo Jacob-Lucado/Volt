@@ -189,3 +189,53 @@ body,
 .volt-navigator-air__tab-shelf::after {
     background: var(--los-paper-edge);
 }
+
+/* Friend bar "find friends" tabs as glass chips. */
+
+.friend-bar-add-tab[class*="frame-"] {
+    outline: none;
+    border-image-source: none;
+    border-radius: 10px;
+    background: rgba(148, 176, 214, .1);
+    box-shadow: inset 0 0 0 1px rgba(148, 176, 214, .22);
+    transition: background .12s;
+}
+
+.friend-bar-add-tab[class*="frame-"]:hover,
+.friend-bar-add-tab[class*="frame-"].is-exposed {
+    background: rgba(77, 163, 255, .2);
+    box-shadow: inset 0 0 0 1px rgba(77, 163, 255, .5);
+}
+
+.friend-bar-add-tab[class*="frame-"].is-selected {
+    background: rgba(15, 23, 36, .94);
+    backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: inset 0 0 0 1px rgba(148, 176, 214, .25), 0 16px 36px rgba(0, 0, 0, .45);
+}
+
+.friend-bar-add-tab__title {
+    color: #e8eef5;
+    font-weight: 600;
+}
+
+.friend-bar-add-tab__text {
+    background: transparent;
+    color: #c5d2e3;
+}
+
+.friend-bar-add-tab__button,
+.friend-bar-add-tab__button:hover,
+.friend-bar-add-tab__button:active {
+    padding: 0;
+    border: 0;
+    border-image-source: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #4da3ff, #7c6cff);
+    color: #fff;
+    font-family: inherit;
+    font-weight: 600;
+}
+
+.friend-bar-add-tab__button:hover {
+    filter: brightness(1.1);
+}
