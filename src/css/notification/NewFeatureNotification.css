@@ -1,17 +1,19 @@
 /* new_feature_notification_promo_xml (AIR WIN63-202610151745-318700621): a 192x34 region with the dynamic style
    brightness_and_shadow_under_gentle (core/window/dynamicstyle/class_2922.as:91-109) around a style-9 border coloured with
    notifications.new_feature.color.<key>. The icon (8,7 20x20, centred) and the underlined text (30,7) are tagged #icon. */
+/* The wrapped desc grows the bar; the layout keeps 7px above it and 10px below (7 + 17 + 10 = 34 for one line). */
 .volt-new-feature-promo {
     position: relative;
+    display: flow-root;
     box-sizing: border-box;
     width: 192px;
-    height: 34px;
+    min-height: 34px;
     margin-left: auto;
     margin-right: -1px;
     color: #ffffff;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 12px;
-    line-height: 15px;
+    line-height: 13px;
     cursor: pointer;
     pointer-events: auto;
     image-rendering: pixelated;
@@ -53,8 +55,9 @@
 }
 
 .volt-new-feature-promo-desc {
-    left: 30px;
-    top: 7px;
+    position: relative;
+    width: fit-content;
+    margin: 7px 0 10px 30px;
     max-width: 148px;
     padding: 2px;
     text-decoration: underline;
