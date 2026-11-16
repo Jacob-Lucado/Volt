@@ -130,7 +130,7 @@ function getValidRoomObjectDirection(roomObject: any, isPositive: boolean) {
 const BRANDING_NUMBER_RANGES: Record<string, [number, number]> = {
     offsetX: [-10000, 10000],
     offsetY: [-10000, 10000],
-    offsetZ: [-1000, 1000],
+    offsetZ: [-2147483648, 2147483647],
     scale: [10, 500],
     alpha: [0, 100]
 };
