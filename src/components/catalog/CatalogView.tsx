@@ -14,7 +14,7 @@ import { CatalogBuilderHeaderView } from './views/catalog-header/CatalogBuilderH
 import { CatalogIconView } from './views/catalog-icon/CatalogIconView';
 import { CatalogGiftView } from './views/gift/CatalogGiftView';
 import { CatalogSearchView } from './views/page/common/CatalogSearchView';
-import { catalogPageHidesLeftPane } from './views/page/layout/catalogLayoutRegistry';
+import { catalogPageHidesLeftPane, getCatalogLayoutDefinition } from './views/page/layout/catalogLayoutRegistry';
 import { GetCatalogLayout } from './views/page/layout/GetCatalogLayout';
 import { MarketplacePostOfferView } from './views/page/layout/marketplace/MarketplacePostOfferView';
 
@@ -27,8 +27,8 @@ const BUILDER_HEADER_IMAGE = 'catalog_header_roombuilder';
 /** AIR HabboCatalog.toggleCatalog: the Builders Club catalogue is only there while builders.club.enabled is on. */
 const isBuildersClubEnabled = () => GetConfigurationValue<boolean>('builders.club.enabled', true);
 
-/** Page layouts drawn in the glass style. The rest keep the light sheet. */
-const DARK_LAYOUTS = ['default_3x3', 'frontpage', 'frontpage4', 'frontpage_featured'];
+/** Page renderers drawn in the glass style. The rest keep the light sheet. */
+const DARK_RENDERERS = ['default', 'frontpage'];
 
 const getCatalogTypeFromLink = (type?: string) => {
     switch ((type || '').toLowerCase()) {
@@ -248,7 +248,10 @@ const CatalogViewInner: FC<{}> = () => {
                                     {currentTab && <LosCatalogNav node={currentTab} />}
                                 </div>
                             )}
-                            <div aria-busy={isBusy} className={`los-cat__page${DARK_LAYOUTS.includes(currentPage?.layoutCode) ? ' is-dark' : ''}`}>
+                            <div
+                                aria-busy={isBusy}
+                                className={`los-cat__page${DARK_RENDERERS.includes(getCatalogLayoutDefinition(currentPage?.layoutCode)?.renderer) ? ' is-dark' : ''}`}
+                            >
                                 <div className="volt-catalog-layout-shell">
                                     <div className="volt-catalog-layout-container">{GetCatalogLayout(currentPage, hideCatalogNavigation)}</div>
                                 </div>
