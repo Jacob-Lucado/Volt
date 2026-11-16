@@ -267,3 +267,141 @@
     color: var(--catalog-standard-text);
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .5);
 }
+
+/* Standard furni page in the glass style. Other page types stay on the light sheet. */
+
+.los-cat__page.is-dark {
+    --catalog-standard-bg: transparent;
+    background: rgba(8, 13, 22, .35);
+    color: var(--los-text);
+    box-shadow: inset 0 0 0 1px var(--los-line);
+}
+
+.los-cat__page.is-dark .volt-catalog-offer-preview {
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.los-cat__page.is-dark .volt-catalog-welcome canvas,
+.los-cat__page.is-dark .volt-catalog-grid-price canvas,
+.los-cat__page.is-dark .volt-catalog-standard-spinner canvas,
+.los-cat__page.is-dark .volt-catalog-total-price-label canvas,
+.los-cat__page.is-dark .volt-catalog-standard-price-text canvas,
+.los-cat__page.is-dark .volt-catalog-gift-caption canvas,
+.los-cat__page.is-dark .volt-catalog-purchase-selection-prompt canvas {
+    /* Turns dark text on a light fill into white text on nothing. */
+    filter: url(#los-cat-ink);
+}
+
+.los-cat__page.is-dark .volt-catalog-grid-shell::before {
+    border: 1px solid var(--los-line);
+    border-image-source: none;
+    border-radius: 8px;
+    background: rgba(8, 13, 22, .4);
+}
+
+.los-window.los-cat .los-cat__page.is-dark .layout-grid-item {
+    border-radius: 8px;
+    transition: background .1s;
+}
+
+.los-window.los-cat .los-cat__page.is-dark .layout-grid-item:hover {
+    background: var(--los-soft-2);
+}
+
+.los-window.los-cat .los-cat__page.is-dark .layout-grid-item.is-active::before,
+.los-window.los-cat .los-cat__page.is-dark .volt-catalog-grid-density-standard .layout-grid-item.is-active::before {
+    border: 1px solid #4da3ff;
+    border-image-source: none;
+    border-radius: 8px;
+    background: rgba(77, 163, 255, .22);
+    box-shadow: none;
+}
+
+.los-cat__page.is-dark .volt-classic-scrollbar-track,
+.los-cat__page.is-dark .volt-classic-scrollbar-thumb,
+.los-cat__page.is-dark .volt-classic-scrollbar-thumb::before,
+.los-cat__page.is-dark .volt-classic-scrollbar-thumb::after,
+.los-cat__page.is-dark .volt-classic-scrollbar-button {
+    background-image: none;
+}
+
+.los-cat__page.is-dark .volt-classic-scrollbar-button {
+    opacity: 0;
+}
+
+.los-cat__page.is-dark .volt-classic-scrollbar-track {
+    border-radius: 6px;
+    background-color: rgba(148, 176, 214, .08);
+}
+
+.los-cat__page.is-dark .volt-classic-scrollbar-thumb {
+    border-radius: 6px;
+    background-color: rgba(148, 176, 214, .4);
+    box-shadow: inset 0 0 0 4px rgba(15, 23, 36, .9);
+}
+
+.los-window.los-cat .los-cat__page.is-dark .volt-catalog-standard-spinner-input-frame::before {
+    border: 1px solid var(--los-line) !important;
+    border-image-source: none !important;
+    border-radius: 6px;
+    background: rgba(8, 13, 22, .5);
+}
+
+.los-window.los-cat .los-cat__page.is-dark .volt-catalog-standard-spinner-value {
+    color: var(--los-text) !important;
+}
+
+.los-window.los-cat .los-cat__page.is-dark button.volt-catalog-preview-btn::before {
+    border: 1px solid var(--los-line);
+    border-image-source: none;
+    border-radius: 7px;
+    background: rgba(232, 238, 245, .9);
+}
+
+.los-window.los-cat .los-cat__page.is-dark button.volt-catalog-preview-btn:hover::before {
+    border-color: #4da3ff;
+}
+
+.los-cat__page.is-dark .volt-catalog-preview-arrow {
+    position: relative;
+    z-index: 1;
+}
+
+.los-window.los-cat .los-cat__page.is-dark .volt-catalog-standard-button {
+    border-image-source: none !important;
+    border-radius: 8px;
+    outline: 1px solid var(--los-line);
+    outline-offset: -1px;
+    background: var(--los-soft) !important;
+    transition: filter .12s;
+}
+
+.los-window.los-cat .los-cat__page.is-dark .volt-catalog-standard-button:hover:not(:disabled) {
+    filter: brightness(1.25);
+}
+
+.los-window.los-cat .los-cat__page.is-dark .volt-catalog-standard-buy-button {
+    outline: 0;
+    background: linear-gradient(135deg, #4da3ff, #7c6cff) border-box !important;
+}
+
+.los-window.los-cat .los-cat__page.is-dark .volt-catalog-standard-button:disabled {
+    opacity: .5;
+}
+
+.los-window.los-cat .los-cat__page.is-dark .volt-catalog-purchase-selection-prompt::before {
+    border: 1px dashed var(--los-line);
+    border-image-source: none;
+    border-radius: 8px;
+}
+
+.los-window.los-cat .los-cat__page.is-dark .volt-catalog-standard-spinner input {
+    background: transparent !important;
+    color: var(--los-text) !important;
+    box-shadow: none !important;
+}
+
+.los-cat__defs {
+    position: absolute;
+}

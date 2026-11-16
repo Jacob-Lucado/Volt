@@ -245,12 +245,18 @@ const CatalogViewInner: FC<{}> = () => {
                                     {currentTab && <LosCatalogNav node={currentTab} />}
                                 </div>
                             )}
-                            <div aria-busy={isBusy} className="los-cat__page">
+                            <div aria-busy={isBusy} className={`los-cat__page${currentPage?.layoutCode === 'default_3x3' ? ' is-dark' : ''}`}>
                                 <div className="volt-catalog-layout-shell">
                                     <div className="volt-catalog-layout-container">{GetCatalogLayout(currentPage, hideCatalogNavigation)}</div>
                                 </div>
                             </div>
                         </div>
+                        {/* Redraws dark page text on a light fill as white text on nothing, for the dark pages. */}
+                        <svg aria-hidden="true" className="los-cat__defs" width="0" height="0">
+                            <filter id="los-cat-ink" colorInterpolationFilters="sRGB">
+                                <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -0.9 -0.9 -0.9 2 0" />
+                            </filter>
+                        </svg>
                         {(isBusy || catalogLoadError) && <CatalogLoadingStateView error={catalogLoadError} onRetry={retryCurrentPage} />}
                     </LosWindow>
                 </DraggableWindow>
