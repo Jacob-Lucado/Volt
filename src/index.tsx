@@ -108,6 +108,8 @@ import './css/navigator/NavigatorView.css';
 import './css/quests/RewardTrackView.css';
 import './css/common/ClassicScrollbar.css';
 
+import './css/lucadoos/LosPurse.css';
+
 // bootstrap.ts mounts the app once the configuration has loaded.
 export const mountApp = () => {
     document.documentElement.classList.add('has-classic-scrollbar');
