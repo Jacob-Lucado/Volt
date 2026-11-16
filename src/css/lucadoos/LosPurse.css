@@ -126,3 +126,64 @@
 .los-purse__menu button:hover {
     background: var(--los-soft-2);
 }
+
+/* Seasonal currency strips under the bar. */
+
+.los-purse .volt-purse__other {
+    gap: 6px;
+    margin-top: 0;
+}
+
+.los-purse .volt-purse-seasonal-currency {
+    height: 30px;
+    min-height: 30px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.los-purse .volt-purse-seasonal-currency::before {
+    border: 1px solid var(--los-line);
+    border-image-source: none;
+    border-radius: 10px;
+    background: var(--los-glass);
+    backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .06);
+}
+
+.los-purse .volt-purse-seasonal-currency:hover::before {
+    border-color: rgba(77, 163, 255, .5);
+}
+
+.los-purse .volt-purse-seasonal-currency .seasonal-text,
+.los-purse .volt-purse-seasonal-currency .seasonal-amount {
+    top: 7px;
+}
+
+.los-purse .volt-purse-seasonal-currency .seasonal-text {
+    left: 10px;
+    width: 95px;
+    color: var(--los-text);
+}
+
+.los-purse .volt-purse-seasonal-currency .seasonal-amount {
+    left: 96px;
+    color: var(--los-dim);
+}
+
+.los-purse .volt-purse-seasonal-currency .seasonal-badge {
+    top: 2px;
+    left: 164px;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    -webkit-mask-box-image-source: none;
+}
+
+.los-purse .volt-purse-seasonal-currency .seasonal-image,
+.los-purse .volt-purse-seasonal-currency .seasonal-icon {
+    top: 2px;
+    left: 2px;
+    width: 22px;
+    height: 22px;
+}
