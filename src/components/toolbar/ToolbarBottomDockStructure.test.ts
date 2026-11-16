@@ -24,5 +24,4 @@ describe('AIR bottom dock integration', () => {
         expect(friendsCss).toContain('.friend-bar .friend-bar-button.left:disabled{opacity:.2}');
         expect(friendsCss).toContain('.friend-bar .friend-bar-button.right:disabled{opacity:.2}');
     });
-
 });

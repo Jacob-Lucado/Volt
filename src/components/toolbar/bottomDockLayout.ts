@@ -25,9 +25,7 @@ export const resolveBottomDockLayout = (measurements: BottomDockMeasurements): B
     const chatWidth = Math.max(1, measurements.chatWidth ?? AIR_CHAT_WIDTH);
     const centeredLeft = (measurements.viewportWidth - chatWidth) / 2;
     const centeredRight = centeredLeft + chatWidth;
-    const canCenter =
-        centeredLeft >= measurements.leftEdge + AIR_RAIL_CLEARANCE &&
-        centeredRight <= measurements.rightEdge - AIR_RAIL_CLEARANCE;
+    const canCenter = centeredLeft >= measurements.leftEdge + AIR_RAIL_CLEARANCE && centeredRight <= measurements.rightEdge - AIR_RAIL_CLEARANCE;
 
     if (canCenter) {
         return { chatRaised: false, chatBottom: AIR_DOCKED_CHAT_BOTTOM };

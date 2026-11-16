@@ -1,13 +1,41 @@
-import { CreateLinkEvent, Dispose, DropBounce, EaseOut, FindNewFriendsMessageComposer, GetSessionDataManager, JumpBy, Motions, VoltToolbarAnimateIconEvent, PerkEnum, Queue, SessionDataPreferencesEvent, Wait } from '@volt/renderer';
+import {
+    CreateLinkEvent,
+    Dispose,
+    DropBounce,
+    EaseOut,
+    FindNewFriendsMessageComposer,
+    GetSessionDataManager,
+    JumpBy,
+    Motions,
+    PerkEnum,
+    Queue,
+    SessionDataPreferencesEvent,
+    VoltToolbarAnimateIconEvent,
+    Wait
+} from '@volt/renderer';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 import { CSSProperties, FC, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Permission } from '../../api/permissions';
 import { GetConfigurationValue, localizeWithFallback, MessengerIconState, OpenMessengerChat, SendMessageComposer, VisitDesktop } from '../../api';
+import { Permission } from '../../api/permissions';
 import dividerImg from '../../assets/images/toolbar/air/divider.png';
 import memenuBgImg from '../../assets/images/toolbar/air/memenu-bg.png';
 import memenuCircleImg from '../../assets/images/toolbar/air/memenu-circle.png';
 import { Flex, LayoutAvatarImageView, LayoutItemCountView } from '../../common';
-import { useAchievements, useBuildHeight, useDailyTasks, useFriends, useHasPermission, useInventoryUnseenTracker, useMessageEvent, useMessenger, useVoltEvent, useOpenIssueCount, useRewardTracks, useSessionInfo, useWiredTools } from '../../hooks';
+import {
+    useAchievements,
+    useBuildHeight,
+    useDailyTasks,
+    useFriends,
+    useHasPermission,
+    useInventoryUnseenTracker,
+    useMessageEvent,
+    useMessenger,
+    useOpenIssueCount,
+    useRewardTracks,
+    useSessionInfo,
+    useVoltEvent,
+    useWiredTools
+} from '../../hooks';
 import { useGroupForumUnreadStore } from '../../state/groupForumUnreadStore';
 import { usePerkAllowed } from '../../state/perkAllowancesStore';
 import { AIR_RAISED_CHAT_BOTTOM } from './bottomDockLayout';
@@ -37,30 +65,24 @@ const LEFT_COLLAPSED_STORAGE_KEY = 'nitro.toolbar.leftCollapsed';
 // UI flag 1 (SessionDataManager.setFriendBarState): set while the friend bar is expanded.
 const FRIEND_BAR_UI_FLAG = 1;
 
+const readCollapsedPreference = (key: string): boolean => {
+    if (typeof window === 'undefined') return false;
 
-const readCollapsedPreference = (key: string): boolean =>
-{
-    if(typeof window === 'undefined') return false;
-
-    try
-    {
+    try {
         return window.localStorage.getItem(key) === '1';
-    }
-    catch
-    {
+    } catch {
         return false;
     }
 };
 
-export const ToolbarView: FC<{ isInRoom: boolean }> = props =>
-{
+export const ToolbarView: FC<{ isInRoom: boolean }> = (props) => {
     const { isInRoom } = props;
-    const [ isMeExpanded, setMeExpanded ] = useState(false);
-    const [ isProgressionExpanded, setProgressionExpanded ] = useState(false);
-    const [ isTouchLayout, setIsTouchLayout ] = useState(false);
-    const [ leftCollapsed, setLeftCollapsed ] = useState(() => readCollapsedPreference(LEFT_COLLAPSED_STORAGE_KEY));
-    const [ rightCollapsed, setRightCollapsed ] = useState(() => !((GetSessionDataManager()?.uiFlags ?? 0) & FRIEND_BAR_UI_FLAG));
-    const [ staffStackBottom, setStaffStackBottom ] = useState<number | null>(null);
+    const [isMeExpanded, setMeExpanded] = useState(false);
+    const [isProgressionExpanded, setProgressionExpanded] = useState(false);
+    const [isTouchLayout, setIsTouchLayout] = useState(false);
+    const [leftCollapsed, setLeftCollapsed] = useState(() => readCollapsedPreference(LEFT_COLLAPSED_STORAGE_KEY));
+    const [rightCollapsed, setRightCollapsed] = useState(() => !((GetSessionDataManager()?.uiFlags ?? 0) & FRIEND_BAR_UI_FLAG));
+    const [staffStackBottom, setStaffStackBottom] = useState<number | null>(null);
     const useGuideTool = usePerkAllowed(PerkEnum.USE_GUIDE_TOOL);
     const cameraAllowed = usePerkAllowed(PerkEnum.CAMERA);
     const leftDockRef = useRef<HTMLDivElement>(null);
@@ -99,32 +121,39 @@ export const ToolbarView: FC<{ isInRoom: boolean }> = props =>
     const gamesAvailable = GetConfigurationValue<boolean>('games_icon_enabled', GetConfigurationValue<boolean>('game.center.enabled', false));
     // BUILDER (HTIE_ICON_BUILDER): next to the catalogue in the room and hotel view while builders.club.enabled is on.
     const buildersClubEnabled = GetConfigurationValue<boolean>('builders.club.enabled', true);
-    const [ messengerNotifyFrame, setMessengerNotifyFrame ] = useState(0);
-    const chatFrameStyle = useMemo<CSSProperties | undefined>(() =>
-    {
-        if(touchLayout) return undefined;
+    const [messengerNotifyFrame, setMessengerNotifyFrame] = useState(0);
+    const chatFrameStyle = useMemo<CSSProperties | undefined>(() => {
+        if (touchLayout) return undefined;
 
         // chatinput_window_new keeps its place above the bottom bar; it never moves into the bar.
-        return { bottom: `${ AIR_RAISED_CHAT_BOTTOM }px` };
-    }, [ touchLayout ]);
+        return { bottom: `${AIR_RAISED_CHAT_BOTTOM}px` };
+    }, [touchLayout]);
 
     const railMaxWidthClass = 'max-w-[calc(50vw-12px)]';
     const chatFramePositionClass = touchLayout ? 'bottom-[90px]' : '';
-    const leftNavVariants = useMemo<Variants>(() => ({
-        hidden: { opacity: 0, x: isInRoom ? -10 : 0, y: isInRoom ? 0 : 8, pointerEvents: 'none' },
-        visible: { opacity: 1, x: 0, y: 0, pointerEvents: 'auto' }
-    }), [ isInRoom ]);
-    const rightNavVariants = useMemo<Variants>(() => ({
-        hidden: { opacity: 0, x: 10, pointerEvents: 'none' },
-        visible: { opacity: 1, x: 0, pointerEvents: 'auto' }
-    }), []);
-    const mobileNavVariants = useMemo<Variants>(() => ({
-        hidden: { opacity: 0, y: 8, pointerEvents: 'none' },
-        visible: { opacity: 1, y: 0, pointerEvents: 'auto' }
-    }), []);
+    const leftNavVariants = useMemo<Variants>(
+        () => ({
+            hidden: { opacity: 0, x: isInRoom ? -10 : 0, y: isInRoom ? 0 : 8, pointerEvents: 'none' },
+            visible: { opacity: 1, x: 0, y: 0, pointerEvents: 'auto' }
+        }),
+        [isInRoom]
+    );
+    const rightNavVariants = useMemo<Variants>(
+        () => ({
+            hidden: { opacity: 0, x: 10, pointerEvents: 'none' },
+            visible: { opacity: 1, x: 0, pointerEvents: 'auto' }
+        }),
+        []
+    );
+    const mobileNavVariants = useMemo<Variants>(
+        () => ({
+            hidden: { opacity: 0, y: 8, pointerEvents: 'none' },
+            visible: { opacity: 1, y: 0, pointerEvents: 'auto' }
+        }),
+        []
+    );
 
-    useEffect(() =>
-    {
+    useEffect(() => {
         const query = window.matchMedia('(pointer: coarse), (hover: none)');
         const updateTouchLayout = () => setIsTouchLayout(query.matches);
 
@@ -134,48 +163,36 @@ export const ToolbarView: FC<{ isInRoom: boolean }> = props =>
         return () => query.removeEventListener('change', updateTouchLayout);
     }, []);
 
-    useEffect(() =>
-    {
-        if(iconState !== MessengerIconState.UNREAD)
-        {
+    useEffect(() => {
+        if (iconState !== MessengerIconState.UNREAD) {
             setMessengerNotifyFrame(0);
             return;
         }
 
-        const interval = window.setInterval(() => setMessengerNotifyFrame(value => (value === 0 ? 1 : 0)), 500);
+        const interval = window.setInterval(() => setMessengerNotifyFrame((value) => (value === 0 ? 1 : 0)), 500);
 
         return () => window.clearInterval(interval);
-    }, [ iconState ]);
+    }, [iconState]);
 
-    useEffect(() =>
-    {
-        try
-        {
+    useEffect(() => {
+        try {
             window.localStorage.setItem(LEFT_COLLAPSED_STORAGE_KEY, leftCollapsed ? '1' : '0');
-        }
-        catch
-        {
-        }
-    }, [ leftCollapsed ]);
+        } catch {}
+    }, [leftCollapsed]);
 
-    useVoltEvent<SessionDataPreferencesEvent>(SessionDataPreferencesEvent.UPDATED, event => setRightCollapsed(!(event.uiFlags & FRIEND_BAR_UI_FLAG)));
+    useVoltEvent<SessionDataPreferencesEvent>(SessionDataPreferencesEvent.UPDATED, (event) => setRightCollapsed(!(event.uiFlags & FRIEND_BAR_UI_FLAG)));
 
-    const toggleFriendBar = (collapsed: boolean) =>
-    {
+    const toggleFriendBar = (collapsed: boolean) => {
         setRightCollapsed(collapsed);
         GetSessionDataManager()?.setFriendBarState(!collapsed);
     };
 
-    useEffect(() =>
-    {
-        const measure = () =>
-        {
+    useEffect(() => {
+        const measure = () => {
             const roomTools = document.querySelector('.volt-room-tools-container') as HTMLElement | null;
-            const next = roomTools
-                ? Math.max(8, Math.round(window.innerHeight - roomTools.getBoundingClientRect().top + 15))
-                : null;
+            const next = roomTools ? Math.max(8, Math.round(window.innerHeight - roomTools.getBoundingClientRect().top + 15)) : null;
 
-            setStaffStackBottom(prevValue => (prevValue === next ? prevValue : next));
+            setStaffStackBottom((prevValue) => (prevValue === next ? prevValue : next));
         };
 
         measure();
@@ -183,30 +200,26 @@ export const ToolbarView: FC<{ isInRoom: boolean }> = props =>
         const interval = window.setInterval(measure, 400);
         window.addEventListener('resize', measure);
 
-        return () =>
-        {
+        return () => {
             window.clearInterval(interval);
             window.removeEventListener('resize', measure);
         };
-    }, [ isInRoom ]);
+    }, [isInRoom]);
 
-    useLayoutEffect(() =>
-    {
-        if(touchLayout) return;
+    useLayoutEffect(() => {
+        if (touchLayout) return;
 
-        const positionMenus = () =>
-        {
-            for(const [ slot, menu ] of [
-                [ meSlotRef.current, meMenuRef.current ],
-                [ progressionSlotRef.current, progressionMenuRef.current ]
-            ])
-            {
-                if(!slot || !menu) continue;
+        const positionMenus = () => {
+            for (const [slot, menu] of [
+                [meSlotRef.current, meMenuRef.current],
+                [progressionSlotRef.current, progressionMenuRef.current]
+            ]) {
+                if (!slot || !menu) continue;
 
                 const bounds = slot.getBoundingClientRect();
                 const left = bounds.left + bounds.width / 2 - menu.offsetWidth / 2;
 
-                menu.style.left = `${ Math.round(Math.max(3, Math.min(left, window.innerWidth - menu.offsetWidth - 3))) }px`;
+                menu.style.left = `${Math.round(Math.max(3, Math.min(left, window.innerWidth - menu.offsetWidth - 3)))}px`;
             }
         };
 
@@ -214,51 +227,48 @@ export const ToolbarView: FC<{ isInRoom: boolean }> = props =>
 
         const observer = new ResizeObserver(positionMenus);
 
-        for(const element of [ leftDockRef.current, meMenuRef.current, progressionMenuRef.current ])
-        {
-            if(element) observer.observe(element);
+        for (const element of [leftDockRef.current, meMenuRef.current, progressionMenuRef.current]) {
+            if (element) observer.observe(element);
         }
 
         window.addEventListener('resize', positionMenus);
 
-        return () =>
-        {
+        return () => {
             observer.disconnect();
             window.removeEventListener('resize', positionMenus);
         };
-    }, [ isMeExpanded, isProgressionExpanded, leftCollapsed, touchLayout ]);
+    }, [isMeExpanded, isProgressionExpanded, leftCollapsed, touchLayout]);
 
+    useVoltEvent<VoltToolbarAnimateIconEvent>(VoltToolbarAnimateIconEvent.ANIMATE_ICON, (event) => {
+        const animationIconToToolbar = (iconName: string, image: HTMLImageElement, x: number, y: number) => {
+            const target = document.body.getElementsByClassName(iconName)[0] as HTMLElement;
 
-    useVoltEvent<VoltToolbarAnimateIconEvent>(VoltToolbarAnimateIconEvent.ANIMATE_ICON, event =>
-    {
-        const animationIconToToolbar = (iconName: string, image: HTMLImageElement, x: number, y: number) =>
-        {
-            const target = (document.body.getElementsByClassName(iconName)[0] as HTMLElement);
-
-            if(!target) return;
+            if (!target) return;
 
             image.className = 'toolbar-icon-animation';
             image.style.visibility = 'visible';
-            image.style.left = (x + 'px');
-            image.style.top = (y + 'px');
+            image.style.left = x + 'px';
+            image.style.top = y + 'px';
 
             document.body.append(image);
 
             const targetBounds = target.getBoundingClientRect();
             const imageBounds = image.getBoundingClientRect();
-            const left = (imageBounds.x - targetBounds.x);
-            const top = (imageBounds.y - targetBounds.y);
-            const squared = Math.sqrt(((left * left) + (top * top)));
-            const wait = (500 - Math.abs(((((1 / squared) * 100) * 500) * 0.5)));
+            const left = imageBounds.x - targetBounds.x;
+            const top = imageBounds.y - targetBounds.y;
+            const squared = Math.sqrt(left * left + top * top);
+            const wait = 500 - Math.abs((1 / squared) * 100 * 500 * 0.5);
             const height = 20;
-            const motionName = (`ToolbarBouncing[${ iconName }]`);
+            const motionName = `ToolbarBouncing[${iconName}]`;
 
-            if(!Motions.getMotionByTag(motionName))
-            {
-                Motions.runMotion(new Queue(new Wait((wait + 8)), new DropBounce(target, 400, 12))).tag = motionName;
+            if (!Motions.getMotionByTag(motionName)) {
+                Motions.runMotion(new Queue(new Wait(wait + 8), new DropBounce(target, 400, 12))).tag = motionName;
             }
 
-            const motion = new Queue(new EaseOut(new JumpBy(image, wait, ((targetBounds.x - imageBounds.x) + height), (targetBounds.y - imageBounds.y), 100, 1), 1), new Dispose(image));
+            const motion = new Queue(
+                new EaseOut(new JumpBy(image, wait, targetBounds.x - imageBounds.x + height, targetBounds.y - imageBounds.y, 100, 1), 1),
+                new Dispose(image)
+            );
 
             Motions.runMotion(motion);
         };
@@ -268,7 +278,6 @@ export const ToolbarView: FC<{ isInRoom: boolean }> = props =>
 
     return (
         <>
-
             <AnimatePresence>
                 {/* Both menus sit right above the bottom bar, centred over their icon and kept 3px inside the screen. */}
                 {!touchLayout && isProgressionExpanded && (
@@ -336,8 +345,7 @@ export const ToolbarView: FC<{ isInRoom: boolean }> = props =>
             >
                 <button
                     type="button"
-                    onClick={() =>
-                    {
+                    onClick={() => {
                         setProgressionExpanded(false);
                         setLeftCollapsed((value) => !value);
                     }}
@@ -361,8 +369,7 @@ export const ToolbarView: FC<{ isInRoom: boolean }> = props =>
                                 <motion.div ref={progressionSlotRef} variants={itemVariants} className="relative tb-slot">
                                     <ToolbarItemView
                                         icon="progression"
-                                        onClick={(event) =>
-                                        {
+                                        onClick={(event) => {
                                             setMeExpanded(false);
                                             setProgressionExpanded((value) => !value);
                                             event.stopPropagation();
@@ -409,8 +416,7 @@ export const ToolbarView: FC<{ isInRoom: boolean }> = props =>
                         <motion.div
                             className="tb-memenu-avatar"
                             aria-label={localizeWithFallback('toolbar.icon.label.memenu', 'Me')}
-                            onClick={(event) =>
-                            {
+                            onClick={(event) => {
                                 setProgressionExpanded(false);
                                 setMeExpanded((value) => !value);
                                 event.stopPropagation();
@@ -547,8 +553,7 @@ export const ToolbarView: FC<{ isInRoom: boolean }> = props =>
                         </AnimatePresence>
                         <motion.div
                             className="tb-memenu-avatar"
-                            onClick={(event) =>
-                            {
+                            onClick={(event) => {
                                 setMeExpanded((value) => !value);
                                 event.stopPropagation();
                             }}
@@ -556,8 +561,11 @@ export const ToolbarView: FC<{ isInRoom: boolean }> = props =>
                             <LayoutAvatarImageView airMeMenu={true} direction={3} figure={userFigure} />
                         </motion.div>
                         <img src={memenuCircleImg} alt="" className="tb-memenu-circle" />
-                        {(unseenProgMenuCount + unreadForumsCount) > 0 && (
-                            <LayoutItemCountView count={unseenProgMenuCount + unreadForumsCount} className="pointer-events-none absolute -right-1 -top-1 z-10" />
+                        {unseenProgMenuCount + unreadForumsCount > 0 && (
+                            <LayoutItemCountView
+                                count={unseenProgMenuCount + unreadForumsCount}
+                                className="pointer-events-none absolute -right-1 -top-1 z-10"
+                            />
                         )}
                     </motion.div>
                     {isInRoom && (

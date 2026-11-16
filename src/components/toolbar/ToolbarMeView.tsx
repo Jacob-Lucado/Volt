@@ -1,7 +1,8 @@
 import { CreateLinkEvent, GetRoomEngine, GetSessionDataManager, RoomObjectCategory } from '@volt/renderer';
 import { Dispatch, FC, PropsWithChildren, SetStateAction, useEffect, useRef } from 'react';
 import { DispatchUiEvent, GetConfigurationValue, GetRoomSession, GetUserProfile, localizeWithFallback } from '../../api';
-import { Flex, LayoutItemCountView } from '../../common';
+import { LayoutItemCountView } from '../../common';
+import { LosIcon } from '../../common/lucadoos';
 import { GuideToolEvent } from '../../events';
 import { useGroupForumUnreadStore } from '../../state/groupForumUnreadStore';
 
@@ -10,15 +11,13 @@ export const ToolbarMeView: FC<
         useGuideTool: boolean;
         setMeExpanded: Dispatch<SetStateAction<boolean>>;
     }>
-> = (props) =>
-{
+> = (props) => {
     const { useGuideTool = false, setMeExpanded = null, children = null } = props;
     const elementRef = useRef<HTMLDivElement>(null);
     // MeMenuNewController.unseenForumsCount: the forums item carries the number of the user's forums with unread messages.
     const unreadForumsCount = useGroupForumUnreadStore((state) => state.unreadForumsCount);
 
-    useEffect(() =>
-    {
+    useEffect(() => {
         const roomSession = GetRoomSession();
 
         if (!roomSession) return;
@@ -26,10 +25,8 @@ export const ToolbarMeView: FC<
         GetRoomEngine().selectRoomObject(roomSession.roomId, roomSession.ownRoomIndex, RoomObjectCategory.UNIT);
     }, []);
 
-    useEffect(() =>
-    {
-        const onClick = (event: MouseEvent) =>
-        {
+    useEffect(() => {
+        const onClick = (event: MouseEvent) => {
             if (elementRef.current && elementRef.current.contains(event.target as Node)) return;
 
             setMeExpanded(false);
@@ -37,52 +34,54 @@ export const ToolbarMeView: FC<
 
         const timeout = window.setTimeout(() => document.addEventListener('click', onClick), 0);
 
-        return () =>
-        {
+        return () => {
             window.clearTimeout(timeout);
             document.removeEventListener('click', onClick);
         };
     }, [setMeExpanded]);
 
-    const open = (action: () => void) =>
-    {
+    const open = (action: () => void) => {
         setMeExpanded(false);
         action();
     };
 
     return (
-        <Flex alignItems="center" className="volt-toolbar-me-popup" gap={2} innerRef={elementRef}>
+        <div ref={elementRef} className="los-menu">
             {GetConfigurationValue('guides.enabled') && useGuideTool && (
-                <div className="tbme-item" onClick={() => open(() => DispatchUiEvent(new GuideToolEvent(GuideToolEvent.TOGGLE_GUIDE_TOOL)))}>
-                    <span className="volt-icon icon-me-helper-tool" />
+                <button
+                    type="button"
+                    className="los-menu__item"
+                    onClick={() => open(() => DispatchUiEvent(new GuideToolEvent(GuideToolEvent.TOGGLE_GUIDE_TOOL)))}
+                >
+                    <LosIcon name="help" size={16} />
                     <span>{localizeWithFallback('widget.memenu.guide', 'Helper tool')}</span>
-                </div>
+                </button>
             )}
-            <div className="tbme-item" onClick={() => open(() => GetUserProfile(GetSessionDataManager().userId))}>
-                <span className="volt-icon icon-me-profile" />
+            <button type="button" className="los-menu__item" onClick={() => open(() => GetUserProfile(GetSessionDataManager().userId))}>
+                <LosIcon name="user" size={16} />
                 <span>{localizeWithFallback('widget.memenu.profile', 'My profile')}</span>
-            </div>
-            <div className="tbme-item" onClick={() => open(() => CreateLinkEvent('navigator/search/myworld_view'))}>
-                <span className="volt-icon icon-me-rooms" />
+            </button>
+            <button type="button" className="los-menu__item" onClick={() => open(() => CreateLinkEvent('navigator/search/myworld_view'))}>
+                <LosIcon name="home" size={16} />
                 <span>{localizeWithFallback('widget.memenu.myrooms', 'My rooms')}</span>
-            </div>
-            <div className="tbme-item" onClick={() => open(() => CreateLinkEvent('avatar-editor/show'))}>
-                <span className="volt-icon icon-me-clothing" />
+            </button>
+            <button type="button" className="los-menu__item" onClick={() => open(() => CreateLinkEvent('avatar-editor/show'))}>
+                <LosIcon name="shirt" size={16} />
                 <span>{localizeWithFallback('widget.memenu.editavatar', 'Change looks')}</span>
-            </div>
-            <div className="tbme-item" onClick={() => open(() => CreateLinkEvent('groupforum/list/my'))}>
-                <span className="volt-icon icon-me-forums" />
+            </button>
+            <button type="button" className="los-menu__item" onClick={() => open(() => CreateLinkEvent('groupforum/list/my'))}>
+                <LosIcon name="chat" size={16} />
                 <span>{localizeWithFallback('widget.memenu.forums', 'Forums')}</span>
                 {unreadForumsCount > 0 && <LayoutItemCountView count={unreadForumsCount} />}
-            </div>
+            </button>
             {/* MeMenuNewController (toolbar/memenu/MeMenuNewController.as:29): Collectibles shows only when both hub flags are on. */}
             {GetConfigurationValue('classic.collectibles.hub.enabled') && GetConfigurationValue('collectibles.hub.enabled') && (
-                <div className="tbme-item" onClick={() => open(() => CreateLinkEvent('collectibles/open'))}>
-                    <span className="volt-icon icon-me-collectibles" />
+                <button type="button" className="los-menu__item" onClick={() => open(() => CreateLinkEvent('collectibles/open'))}>
+                    <LosIcon name="grid" size={16} />
                     <span>{localizeWithFallback('memenu.collectibles', 'Collectibles')}</span>
-                </div>
+                </button>
             )}
             {children}
-        </Flex>
+        </div>
     );
 };

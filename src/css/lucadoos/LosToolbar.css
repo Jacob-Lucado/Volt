@@ -101,3 +101,54 @@
     height: 24px;
     margin-top: 11px;
 }
+
+/* Me and Progress menus: glass lists that open above their toolbar button. */
+
+.los-menu {
+    display: flex;
+    flex-direction: column;
+    min-width: 190px;
+    margin-bottom: 6px;
+    padding: 5px;
+    border: 1px solid rgba(148, 176, 214, .22);
+    border-radius: 12px;
+    background: rgba(15, 23, 36, .94);
+    backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .06);
+    color: #e8eef5;
+    font-family: Inter, 'Segoe UI', system-ui, sans-serif;
+    font-size: 13px;
+}
+
+.los-menu__item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    height: 32px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.los-menu__item:hover {
+    background: rgba(148, 176, 214, .16);
+}
+
+.los-menu__item .los-icon {
+    flex: none;
+    color: #93a4ba;
+}
+
+.los-menu__item:hover .los-icon {
+    color: #4da3ff;
+}
+
+.los-menu__item > span {
+    flex: 1;
+}

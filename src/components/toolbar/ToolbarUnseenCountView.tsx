@@ -13,16 +13,10 @@ export const ToolbarUnseenCountView: FC<ToolbarUnseenCountViewProps> = (props) =
 
     if (count === 0) return null;
 
-    const text = (count < 0) ? ' ' : String(count);
+    const text = count < 0 ? ' ' : String(count);
     return (
         <span className={`tb-unseen-count ${className}`} aria-hidden="true">
-            <NativeText
-                background={0xae1e19}
-                className="tb-unseen-count__text"
-                overrides={{ bold: true }}
-                text={text}
-                textStyle="il_regular_white"
-            />
+            <NativeText background={0xae1e19} className="tb-unseen-count__text" overrides={{ bold: true }} text={text} textStyle="il_regular_white" />
         </span>
     );
 };
