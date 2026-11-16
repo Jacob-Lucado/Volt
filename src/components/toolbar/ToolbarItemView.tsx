@@ -1,5 +1,6 @@
 import { DetailedHTMLProps, HTMLAttributes, PropsWithChildren, Ref } from 'react';
 import { localizeWithFallback } from '../../api';
+import { LosIcon, LosIconName } from '../../common/lucadoos';
 import { classNames } from '../../layout';
 
 type ToolbarItemViewProps = PropsWithChildren<{
@@ -27,9 +28,28 @@ const TOOLBAR_LABELS: Record<string, [string, string]> = {
     buildheight: ['toolbar.icon.label.buildheight', 'Build height']
 };
 
-export const ToolbarItemView = ({ ref, icon = null, className = null, title, 'aria-label': ariaLabel, ...rest }: ToolbarItemViewProps) =>
-{
+const TOOLBAR_ICONS: Record<string, LosIconName> = {
+    habbo: 'hotel',
+    house: 'home',
+    rooms: 'compass',
+    progression: 'trophy',
+    game: 'gamepad',
+    stories: 'image',
+    catalog: 'bag',
+    buildersclub: 'hammer',
+    inventory: 'box',
+    'wired-tools': 'bolt',
+    camera: 'camera',
+    friendall: 'group',
+    friendsearch: 'usersearch',
+    message: 'chat',
+    modtools: 'shield',
+    buildheight: 'height'
+};
+
+export const ToolbarItemView = ({ ref, icon = null, className = null, title, 'aria-label': ariaLabel, ...rest }: ToolbarItemViewProps) => {
     const labelDefinition = TOOLBAR_LABELS[icon];
+    const lineIcon = TOOLBAR_ICONS[icon];
     const label = title ?? (labelDefinition ? localizeWithFallback(...labelDefinition) : undefined);
 
     return (
@@ -37,8 +57,10 @@ export const ToolbarItemView = ({ ref, icon = null, className = null, title, 'ar
             ref={ref}
             data-toolbar-tooltip={label}
             aria-label={ariaLabel ?? label}
-            className={classNames('cursor-pointer relative', `volt-icon icon-${icon}`, className)}
+            className={classNames('cursor-pointer relative', `volt-icon icon-${icon}`, lineIcon && 'los-tb', className)}
             {...rest}
-        />
+        >
+            {lineIcon && <LosIcon name={lineIcon} size={20} />}
+        </div>
     );
 };
