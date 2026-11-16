@@ -1,8 +1,27 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { CSSProperties, FC, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { GetConfigurationValue, LocalizeText } from '../../../../../api';
+import { BadgeRarityKey, GetConfigurationValue, getCachedBadgeRarityStat, LocalizeText } from '../../../../../api';
 import { LayoutBadgeImageView } from '../../../../../common';
 import { useInventoryBadges } from '../../../../../hooks';
+
+/** class_3478.getGlowColor: rare or higher glow in the tier colour; an uncommon badge glows only when badge_rarity.uncommon is on. */
+const BADGE_GLOW_COLORS: Partial<Record<BadgeRarityKey, string>> = {
+    rare: '#85f97f',
+    epic: '#66baff',
+    mythical: '#c376d6',
+    legendary: '#d62f24',
+    unique: '#cc9200'
+};
+
+const UNCOMMON_GLOW_COLOR = '#b36e07';
+
+const getBadgeGlowColor = (badgeCode: string): string | null => {
+    const rarity = getCachedBadgeRarityStat(badgeCode)?.rarity;
+
+    if (rarity === 'uncommon') return GetConfigurationValue<boolean>('badge_rarity.uncommon', false) ? UNCOMMON_GLOW_COLOR : null;
+
+    return BADGE_GLOW_COLORS[rarity] ?? null;
+};
 
 interface InfoStandBadgeSlotProps {
     slotIndex: number;
@@ -80,6 +99,7 @@ export const InfoStandBadgeSlotView: FC<InfoStandBadgeSlotProps> = ({ slotIndex,
     const [isDragOver, setIsDragOver] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const [justDropped, setJustDropped] = useState(false);
+    const [glowColor, setGlowColor] = useState<string | null>(null);
     const [pickerPosition, setPickerPosition] = useState<{ top: number; left: number } | null>(null);
     const slotRef = useRef<HTMLDivElement>(null);
     const showPicker = pickerPosition !== null;
@@ -149,6 +169,12 @@ export const InfoStandBadgeSlotView: FC<InfoStandBadgeSlotProps> = ({ slotIndex,
         [isOwnUser, slotIndex, swapBadges, setBadgeAtSlot]
     );
 
+    const playGlow = useCallback(() => {
+        if (!badgeCode) return;
+
+        setGlowColor(getBadgeGlowColor(badgeCode));
+    }, [badgeCode]);
+
     const handleSlotClick = useCallback(() => {
         if (!isOwnUser || badgeCode || !slotRef.current) return;
 
@@ -186,8 +212,12 @@ export const InfoStandBadgeSlotView: FC<InfoStandBadgeSlotProps> = ({ slotIndex,
                     ${isOwnUser && !badgeCode ? 'is-empty cursor-pointer' : ''}
                     ${isDragging ? 'opacity-30' : ''}
                     ${isDragOver ? 'is-drag-over' : ''}
-                    ${justDropped ? 'animate-drop-settle' : ''}`}
+                    ${justDropped ? 'animate-drop-settle' : ''}
+                    ${glowColor ? 'is-glowing' : ''}`}
                 draggable={isOwnUser && !!badgeCode}
+                style={glowColor ? ({ '--badge-glow': glowColor } as CSSProperties) : undefined}
+                onAnimationEnd={() => setGlowColor(null)}
+                onMouseEnter={playGlow}
                 onDragEnd={onDragEnd}
                 onDragLeave={onDragLeave}
                 onDragOver={onDragOver}

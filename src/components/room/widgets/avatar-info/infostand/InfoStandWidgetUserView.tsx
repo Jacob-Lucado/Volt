@@ -134,6 +134,7 @@ export const InfoStandWidgetUserView: FC<InfoStandWidgetUserViewProps> = (props)
     const badgesRank = avatarInfo.badgesRank;
     const isOwnUser = avatarInfo.type === AvatarInfoUser.OWN_USER;
     const mottoMaxLength = GetConfigurationValue<number>('motto.max.length', 38);
+    const showRelationships = GetConfigurationValue<boolean>('relationship.status.enabled', true);
     const showAchievementScore = GetConfigurationValue<boolean>('activity.point.display.enabled', true);
 
     return (
@@ -240,7 +241,7 @@ export const InfoStandWidgetUserView: FC<InfoStandWidgetUserViewProps> = (props)
                 {badgesRank >= 0 && (
                     <>
                         <div className="volt-infostand__rule" />
-                        <div className="volt-infostand__score">{localizeWithFallback('infostand.text.badges_rank', `Badge rank: #${badgesRank}`, ['rank'], [`#${badgesRank}`])}</div>
+                        <div className="volt-infostand__score volt-infostand__score--rank" onClick={() => CreateLinkEvent('badge_leaderboard/0/-1/0')}>{localizeWithFallback('infostand.text.badges_rank', `Badge rank: #${badgesRank}`, ['rank'], [`#${badgesRank}`])}</div>
                     </>
                 )}
                 {showAchievementScore && (
@@ -270,9 +271,11 @@ export const InfoStandWidgetUserView: FC<InfoStandWidgetUserViewProps> = (props)
                     </>
                 )}
                 <div className="volt-infostand__rule" />
-                <div className="volt-infostand__relationships">
-                    <InfoStandWidgetUserRelationshipsView relationships={relationships} />
-                </div>
+                {showRelationships && (
+                    <div className="volt-infostand__relationships">
+                        <InfoStandWidgetUserRelationshipsView relationships={relationships} />
+                    </div>
+                )}
                 {GetConfigurationValue('user.tags.enabled') && (
                     <Column className="mt-1" gap={1}>
                         <InfoStandWidgetUserTagsView tags={GetSessionDataManager().tags} />
