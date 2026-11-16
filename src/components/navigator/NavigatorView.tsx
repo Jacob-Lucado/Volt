@@ -23,13 +23,13 @@ import {
     useNavigatorUiStore,
     useVoltEvent
 } from '../../hooks';
+import { LosNavigatorRoomPopup } from './lucado/LosNavigatorRoomPopup';
 import { LosNavigatorWindow } from './lucado/LosNavigatorWindow';
 import { NavigatorDoorStateView } from './views/NavigatorDoorStateView';
 import { NavigatorRoomCreatorView } from './views/NavigatorRoomCreatorView';
 import { NavigatorRoomInfoView } from './views/NavigatorRoomInfoView';
 import { NavigatorRoomLinkView } from './views/NavigatorRoomLinkView';
 import { NavigatorRoomSettingsView } from './views/room-settings/NavigatorRoomSettingsView';
-import { NavigatorRoomInfoPopupView } from './views/search/NavigatorRoomInfoPopupView';
 
 const SEARCH_LINK_TABS = new Set(['official_view', 'hotel_view', 'roomads_view', 'myworld_view']);
 
@@ -168,7 +168,7 @@ export const NavigatorView: FC<{}> = () => {
             <WidgetErrorBoundary name="NavigatorRoomCreator">
                 <NavigatorRoomCreatorView />
             </WidgetErrorBoundary>
-            <NavigatorRoomInfoPopupView />
+            <LosNavigatorRoomPopup />
             <WidgetErrorBoundary name="NavigatorDoorState">
                 <NavigatorDoorStateView />
             </WidgetErrorBoundary>

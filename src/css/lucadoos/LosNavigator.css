@@ -326,3 +326,134 @@
     background: none;
     cursor: ns-resize;
 }
+
+/* Room card beside a Navigator row */
+
+.los-room-popup {
+    position: fixed;
+    z-index: 1070;
+    gap: 10px;
+    width: 340px;
+    padding: 12px;
+    transform: translateY(-50%);
+}
+
+.los-room-popup__top {
+    display: flex;
+    gap: 12px;
+}
+
+.los-room-popup__thumb {
+    flex: none;
+    border-radius: 8px;
+    image-rendering: pixelated;
+}
+
+.los-room-popup__copy {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+    min-width: 0;
+}
+
+.los-room-popup__copy b {
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+.los-room-popup__copy p {
+    flex: 1;
+    margin: 0;
+    color: var(--los-dim);
+    overflow-wrap: anywhere;
+}
+
+.los-room-popup__link {
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--los-accent) !important;
+    cursor: pointer;
+}
+
+.los-room-popup__link:hover {
+    text-decoration: underline;
+}
+
+.los-room-popup__facts {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 3px 12px;
+    margin: 0;
+}
+
+.los-room-popup__facts dt {
+    color: var(--los-dim);
+}
+
+.los-room-popup__facts dd {
+    margin: 0;
+}
+
+.los-room-popup__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.los-room-popup__tags button {
+    padding: 2px 8px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--los-soft-2);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.los-room-popup__tags button:hover {
+    background: rgba(77, 163, 255, .3);
+}
+
+.los-room-popup__event {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    border: 1px solid rgba(238, 180, 37, .45);
+    border-radius: 8px;
+    background: rgba(238, 180, 37, .1);
+}
+
+.los-room-popup__event > .los-icon {
+    color: #eeb425;
+}
+
+.los-room-popup__event p {
+    margin: 2px 0;
+}
+
+.los-room-popup__event small {
+    color: var(--los-dim);
+}
+
+.los-room-popup__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.los-room-popup__actions .los-button {
+    flex: 1;
+    height: 30px;
+    padding: 0 8px;
+    font-size: 12.5px;
+}
+
+.los-button.is-on {
+    border-color: rgba(77, 163, 255, .6);
+    background: rgba(77, 163, 255, .2);
+}
