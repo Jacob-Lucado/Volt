@@ -745,3 +745,106 @@
 .los-gift__avatar > .avatar-image {
     background-position: 60% 80% !important;
 }
+
+/* Front page: one tall feature, three wide ones and the voucher box. */
+
+.los-front {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 8px;
+    height: 100%;
+    min-height: 0;
+}
+
+.los-front__side {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    min-height: 0;
+}
+
+.los-front__item {
+    position: relative;
+    display: block;
+    flex: 1 1 0;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--los-line);
+    border-radius: 10px;
+    background: rgba(8, 13, 22, .5);
+    color: #fff;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.los-front__art {
+    position: absolute;
+    inset: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    image-rendering: pixelated;
+    transition: transform .25s;
+}
+
+.los-front__item:hover .los-front__art {
+    transform: scale(1.04);
+}
+
+.los-front__item:hover {
+    border-color: #4da3ff;
+}
+
+.los-front__title {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 28px 12px 10px;
+    background: linear-gradient(transparent, rgba(6, 10, 18, .88));
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.25;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .6);
+}
+
+.los-voucher {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px 12px;
+    border: 1px solid var(--los-line);
+    border-radius: 10px;
+    background: linear-gradient(100deg, rgba(77, 163, 255, .16), rgba(124, 108, 255, .1));
+}
+
+.los-voucher__text {
+    font-size: 12.5px;
+}
+
+.los-voucher__row {
+    display: flex;
+    gap: 8px;
+}
+
+.los-window.los-cat .los-voucher .los-input {
+    flex: 1;
+    min-width: 0;
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid var(--los-line) !important;
+    border-radius: 8px !important;
+    background: rgba(8, 13, 22, .5) !important;
+    color: var(--los-text) !important;
+    box-shadow: none !important;
+    font-size: 13px !important;
+}
+
+.los-voucher .los-button {
+    height: 30px;
+    padding: 0 14px;
+}

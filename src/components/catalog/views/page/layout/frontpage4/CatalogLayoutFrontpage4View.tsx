@@ -33,14 +33,14 @@ export const CatalogLayoutFrontpage4View: FC<CatalogLayoutProps> = (props) => {
     }, [page, hideNavigation]);
 
     return (
-        <div className="volt-cfp">
+        <div className="los-front">
             {frontPageItems[0] && <CatalogLayoutFrontPageItemView first item={frontPageItems[0]} onSelect={selectItem} />}
-            <div className="volt-cfp-list">
+            <div className="los-front__side">
                 {frontPageItems.slice(1, MAX_FRONT_PAGE_ITEMS).map((item, index) => (
                     <CatalogLayoutFrontPageItemView key={`${item.itemName}-${index}`} item={item} onSelect={selectItem} />
                 ))}
+                <CatalogRedeemVoucherView text={page.localization.getText(1)} />
             </div>
-            <CatalogRedeemVoucherView text={page.localization.getText(1)} />
         </div>
     );
 };

@@ -1,7 +1,6 @@
 import { FrontPageItem } from '@volt/renderer';
 import { FC } from 'react';
 import { GetConfigurationValue } from '../../../../../../api';
-import { NativeText } from '../../../../../../common/native-text/NativeText';
 
 export interface CatalogLayoutFrontPageItemViewProps {
     item: FrontPageItem;
@@ -21,19 +20,15 @@ export const CatalogLayoutFrontPageItemView: FC<CatalogLayoutFrontPageItemViewPr
     const imageUrl = item.itemPromoImage ? GetConfigurationValue<string>('image.library.url', '') + item.itemPromoImage : null;
 
     return (
-        <div className={`volt-cfp-item ${first ? 'is-first' : ''}`}>
-            <div className="volt-cfp-item-image" style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : undefined} />
-            <div className="volt-cfp-item-title">
-                <NativeText transparent background={0x333333} maxWidth={first ? 164 : 340} text={item.itemName} textStyle="ubuntu_condensed_title" />
-            </div>
-            {/* event_catcher_region reacts on mouse down (WME_DOWN), not on click. */}
-            <button
-                aria-label={item.itemName}
-                className="volt-cfp-item-region"
-                type="button"
-                onKeyDown={(event) => (event.key === 'Enter' || event.key === ' ') && onSelect(item)}
-                onMouseDown={() => onSelect(item)}
-            />
-        </div>
+        // The original reacts on mouse down, not on click.
+        <button
+            className={`los-front__item${first ? ' is-first' : ''}`}
+            type="button"
+            onKeyDown={(event) => (event.key === 'Enter' || event.key === ' ') && onSelect(item)}
+            onMouseDown={() => onSelect(item)}
+        >
+            <span className="los-front__art" style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : undefined} />
+            <span className="los-front__title">{item.itemName}</span>
+        </button>
     );
 };

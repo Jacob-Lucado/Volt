@@ -2,7 +2,7 @@ import { RedeemVoucherMessageComposer, VoucherRedeemErrorMessageEvent, VoucherRe
 import { FC, KeyboardEvent, useState } from 'react';
 import { LocalizeText, SendMessageComposer } from '../../../../../api';
 import { useMessageEvent, useNotification } from '../../../../../hooks';
-import { CatalogAirHtmlTextView } from '../layout/CatalogAirHtmlTextView';
+import { getCatalogPlainText } from '../../../catalogLocalization.helpers';
 
 export interface CatalogRedeemVoucherViewProps {
     text: string;
@@ -60,21 +60,21 @@ export const CatalogRedeemVoucherView: FC<CatalogRedeemVoucherViewProps> = (prop
     });
 
     return (
-        <div className="volt-cfp-voucher">
-            {/* ctlg_txt2 (10, 6): formatted_text in u_regular over the #51bbee border. */}
-            <CatalogAirHtmlTextView transparent background={0x51bbee} className="volt-cfp-voucher-text" html={text ?? ''} width={272} />
-            <div className="volt-cfp-voucher-input">
+        <div className="los-voucher">
+            <span className="los-voucher__text">{getCatalogPlainText(text ?? '')}</span>
+            <div className="los-voucher__row">
                 <input
+                    className="los-input"
                     name="voucher_code"
                     type="text"
                     value={voucher}
                     onChange={(event) => setVoucher(event.target.value)}
                     onKeyDown={(event: KeyboardEvent<HTMLInputElement>) => event.key === 'Enter' && redeemVoucher(event)}
                 />
+                <button className="los-button los-button--primary" disabled={isWaiting} type="button" onClick={() => redeemVoucher()}>
+                    {LocalizeText('redeem')}
+                </button>
             </div>
-            <button className="volt-cfp-voucher-button" type="button" onClick={() => redeemVoucher()}>
-                {LocalizeText('redeem')}
-            </button>
         </div>
     );
 };
