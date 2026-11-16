@@ -87,7 +87,17 @@ const useChatWidgetState = () => {
     };
 
     const scheduleLineFlush = () => {
-        if (lineFlushFrameRef.current || isDisposed.current) return;
+        if (isDisposed.current) return;
+
+        // A hidden tab gets no frames. Lines go in now, so the chat stage can replay them at their arrival times on return.
+        if (document.hidden) {
+            cancelLineFlush();
+            flushQueuedLines();
+
+            return;
+        }
+
+        if (lineFlushFrameRef.current) return;
 
         lineFlushFrameRef.current = window.requestAnimationFrame(flushQueuedLines);
     };
