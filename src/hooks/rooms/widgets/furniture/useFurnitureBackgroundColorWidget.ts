@@ -1,9 +1,12 @@
-import { ApplyTonerComposer, GetRoomEngine, RoomEngineTriggerWidgetEvent, RoomObjectVariable } from '@volt/renderer';
+import { ApplyTonerComposer, GetRoomEngine, IRoomSession, RoomControllerLevel, RoomEngineTriggerWidgetEvent, RoomObjectVariable } from '@volt/renderer';
 import { useState } from 'react';
-import { CanManipulateFurniture, SendMessageComposer } from '../../../../api';
+import { HasPermission, Permission, SendMessageComposer } from '../../../../api';
 import { useVoltEvent } from '../../../events';
 import { useFurniRemovedEvent } from '../../engine';
 import { useRoom } from '../../useRoom';
+
+const canUseToner = (roomSession: IRoomSession) =>
+    !!roomSession && (roomSession.isRoomOwner || roomSession.controllerLevel >= RoomControllerLevel.GUEST || HasPermission(Permission.RoomOwnerAny));
 
 const useFurnitureBackgroundColorWidgetState = () => {
     const [objectId, setObjectId] = useState(-1);
@@ -26,16 +29,16 @@ const useFurnitureBackgroundColorWidgetState = () => {
     };
 
     useVoltEvent<RoomEngineTriggerWidgetEvent>(RoomEngineTriggerWidgetEvent.REQUEST_BACKGROUND_COLOR, (event) => {
-        if (!CanManipulateFurniture(roomSession, event.objectId, event.category)) return;
+        if (!canUseToner(roomSession)) return;
 
         const roomObject = GetRoomEngine().getRoomObject(event.roomId, event.objectId, event.category);
         const model = roomObject.model;
 
         setObjectId(event.objectId);
         setCategory(event.category);
-        setHue(parseInt(model.getValue<string>(RoomObjectVariable.FURNITURE_ROOM_BACKGROUND_COLOR_HUE)) || 0);
-        setSaturation(parseInt(model.getValue<string>(RoomObjectVariable.FURNITURE_ROOM_BACKGROUND_COLOR_SATURATION)) || 0);
-        setLightness(parseInt(model.getValue<string>(RoomObjectVariable.FURNITURE_ROOM_BACKGROUND_COLOR_LIGHTNESS)) || 0);
+        setHue(Math.max(model.getValue<number>(RoomObjectVariable.FURNITURE_ROOM_BACKGROUND_COLOR_HUE) || 0, 0));
+        setSaturation(Math.max(model.getValue<number>(RoomObjectVariable.FURNITURE_ROOM_BACKGROUND_COLOR_SATURATION) || 0, 0));
+        setLightness(Math.max(model.getValue<number>(RoomObjectVariable.FURNITURE_ROOM_BACKGROUND_COLOR_LIGHTNESS) || 0, 0));
     });
 
     useFurniRemovedEvent(objectId !== -1 && category !== -1, (event) => {
