@@ -193,24 +193,25 @@ body,
 /* Friend bar "find friends" tabs as glass chips. */
 
 .friend-bar-add-tab[class*="frame-"] {
-    outline: none;
+    outline: 1px solid rgba(148, 176, 214, .22);
+    outline-offset: -1px;
     border-image-source: none;
     border-radius: 10px;
     background: rgba(148, 176, 214, .1);
-    box-shadow: inset 0 0 0 1px rgba(148, 176, 214, .22);
     transition: background .12s;
 }
 
 .friend-bar-add-tab[class*="frame-"]:hover,
 .friend-bar-add-tab[class*="frame-"].is-exposed {
     background: rgba(77, 163, 255, .2);
-    box-shadow: inset 0 0 0 1px rgba(77, 163, 255, .5);
+    outline-color: rgba(77, 163, 255, .5);
 }
 
 .friend-bar-add-tab[class*="frame-"].is-selected {
     background: rgba(15, 23, 36, .94);
     backdrop-filter: blur(18px) saturate(1.4);
-    box-shadow: inset 0 0 0 1px rgba(148, 176, 214, .25), 0 16px 36px rgba(0, 0, 0, .45);
+    outline-color: rgba(148, 176, 214, .25);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, .45);
 }
 
 .friend-bar-add-tab__title {
