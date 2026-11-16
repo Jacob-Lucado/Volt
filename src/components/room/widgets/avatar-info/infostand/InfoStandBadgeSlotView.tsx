@@ -197,7 +197,7 @@ export const InfoStandBadgeSlotView: FC<InfoStandBadgeSlotProps> = ({ slotIndex,
                 onDoubleClick={handleDoubleClick}
             >
                 {badgeCode ? (
-                    <LayoutBadgeImageView badgeCode={badgeCode} showInfo={true} showRarityInfo={true} highlightRarity={true} />
+                    <LayoutBadgeImageView badgeCode={badgeCode} showInfo={true} showRarityInfo={true} />
                 ) : (
                     isOwnUser && (
                         <span className="volt-infostand__badge-slot-plus" aria-hidden="true">
