@@ -45,6 +45,9 @@
     --habbo-skin-button-settings: url("../../assets/images/habbo-skin/slices/button-settings-default.png");
     --habbo-skin-button-settings-hover: url("../../assets/images/habbo-skin/slices/button-settings-hover.png");
     --habbo-skin-button-settings-pressed: url("../../assets/images/habbo-skin/slices/button-settings-pressed.png");
+    --habbo-skin-button-logout: url("../../assets/images/habbo-skin/slices/button-logout-default.png");
+    --habbo-skin-button-logout-hover: url("../../assets/images/habbo-skin/slices/button-logout-hover.png");
+    --habbo-skin-button-logout-pressed: url("../../assets/images/habbo-skin/slices/button-logout-pressed.png");
     --habbo-skin-border-white: url("../../assets/images/habbo-skin/slices/border-white.png");
 }
 
