@@ -25,8 +25,8 @@ import {
 } from '../../hooks';
 import { LosNavigatorRoomPopup } from './lucado/LosNavigatorRoomPopup';
 import { LosNavigatorWindow } from './lucado/LosNavigatorWindow';
+import { LosRoomCreator } from './lucado/LosRoomCreator';
 import { NavigatorDoorStateView } from './views/NavigatorDoorStateView';
-import { NavigatorRoomCreatorView } from './views/NavigatorRoomCreatorView';
 import { NavigatorRoomInfoView } from './views/NavigatorRoomInfoView';
 import { NavigatorRoomLinkView } from './views/NavigatorRoomLinkView';
 import { NavigatorRoomSettingsView } from './views/room-settings/NavigatorRoomSettingsView';
@@ -166,7 +166,7 @@ export const NavigatorView: FC<{}> = () => {
                 />
             )}
             <WidgetErrorBoundary name="NavigatorRoomCreator">
-                <NavigatorRoomCreatorView />
+                <LosRoomCreator />
             </WidgetErrorBoundary>
             <LosNavigatorRoomPopup />
             <WidgetErrorBoundary name="NavigatorDoorState">
