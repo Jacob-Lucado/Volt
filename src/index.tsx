@@ -111,6 +111,7 @@ import './css/lucadoos/LosPurse.css';
 import './css/lucadoos/LosChat.css';
 import './css/lucadoos/LosToolbar.css';
 import './css/lucadoos/LosInventory.css';
+import './css/lucadoos/LosCatalog.css';
 import './css/common/ClassicScrollbar.css';
 
 // bootstrap.ts mounts the app once the configuration has loaded.

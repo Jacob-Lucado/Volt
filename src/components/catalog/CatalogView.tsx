@@ -1,23 +1,21 @@
 import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
 import { FC, useCallback, useEffect } from 'react';
 import { CatalogType, GetConfigurationValue, LocalizeShortNumber, LocalizeText } from '../../api';
-import { LayoutCurrencyIcon, VoltCardContentView, VoltCardHeaderView, VoltCardTabsItemView, VoltCardTabsView, VoltCardView } from '../../common';
-import { NativeCenteredField } from '../../common/native-text/NativeCenteredField';
-import { NativeText } from '../../common/native-text/NativeText';
+import { DraggableWindow, LayoutCurrencyIcon } from '../../common';
+import { LosWindow } from '../../common/lucadoos';
 import { CatalogEffectsHost, useCatalogActions, useCatalogData, useCatalogUiState, usePurse } from '../../hooks';
 import { useCatalogPageQuery } from '../../hooks/catalog/useCatalogQueries';
 import { getCatalogHeaderDescription, getCatalogPlainText } from './catalogLocalization.helpers';
 import { parseCatalogTabLabel } from './catalogTabLabel';
+import { LosCatalogNav } from './lucado/LosCatalogNav';
 import { CatalogLoadingStateView } from './views/CatalogLoadingStateView';
+import { CatalogPlacedOfferConfirmView } from './views/CatalogPlacedOfferConfirmView';
 import { CatalogBuilderHeaderView } from './views/catalog-header/CatalogBuilderHeaderView';
 import { CatalogIconView } from './views/catalog-icon/CatalogIconView';
 import { CatalogGiftView } from './views/gift/CatalogGiftView';
-import { CatalogPlacedOfferConfirmView } from './views/CatalogPlacedOfferConfirmView';
-import { CatalogBreadcrumbView } from './views/navigation/CatalogBreadcrumbView';
-import { CatalogNavigationView } from './views/navigation/CatalogNavigationView';
 import { CatalogSearchView } from './views/page/common/CatalogSearchView';
-import { GetCatalogLayout } from './views/page/layout/GetCatalogLayout';
 import { catalogPageHidesLeftPane } from './views/page/layout/catalogLayoutRegistry';
+import { GetCatalogLayout } from './views/page/layout/GetCatalogLayout';
 import { MarketplacePostOfferView } from './views/page/layout/marketplace/MarketplacePostOfferView';
 
 // The Builders Club page icon (LocalizationCatalogWidget: builder pages show icon_193 in the header).
@@ -28,35 +26,6 @@ const BUILDER_HEADER_IMAGE = 'catalog_header_roombuilder';
 
 /** AIR HabboCatalog.toggleCatalog: the Builders Club catalogue is only there while builders.club.enabled is on. */
 const isBuildersClubEnabled = () => GetConfigurationValue<boolean>('builders.club.enabled', true);
-
-/** catalog.header.description is a 475px window; its TextField wraps like a 479px field (the AIR wrap matches from 478 up). */
-const HEADER_DESCRIPTION_FIELD_WIDTH = 479;
-
-const TAB_WIDTH = 110;
-const TAB_STRIP_WIDTH = 560;
-
-/** The tab caption (u_regular, black), centred on the tab and drawn for the inactive, hovered and selected skins it can sit on. */
-const CatalogTabLabel: FC<{ text: string; width: number }> = ({ text, width }) => (
-    <NativeCenteredField className="volt-catalog-tab-label" width={width}>
-        {(
-            [
-                ['default', 0xc3c2b8],
-                ['hover', 0xf6f5f0],
-                ['selected', 0xeef2f7]
-            ] as const
-        ).map(([state, background]) => (
-            <NativeText
-                key={state}
-                ariaHidden={state !== 'default'}
-                nativeResolution
-                background={background}
-                className={`volt-catalog-tab-label-${state}`}
-                text={text}
-                textStyle="u_regular"
-            />
-        ))}
-    </NativeCenteredField>
-);
 
 const getCatalogTypeFromLink = (type?: string) => {
     switch ((type || '').toLowerCase()) {
@@ -111,8 +80,6 @@ const CatalogViewInner: FC<{}> = () => {
     const hideCatalogNavigation = useCallback(() => setNavigationHidden(true), [setNavigationHidden]);
 
     const visibleTabs = rootNode?.children.filter((child) => child.isVisible) ?? [];
-    // tab_button is 110px; when more tabs than fit the 560px strip they share it on whole pixels.
-    const tabWidth = Math.min(TAB_WIDTH, Math.floor(TAB_STRIP_WIDTH / Math.max(1, visibleTabs.length)));
 
     // Search draws into the page already open. The result page is synthetic, so the pane follows the page that stayed open.
     const searchKeepsOpenPane = !!searchResult && currentPage?.pageId === -1;
@@ -201,129 +168,92 @@ const CatalogViewInner: FC<{}> = () => {
     return (
         <>
             {isVisible && (
-                <VoltCardView
-                    classNames={['volt-catalog-window', ...(isBuilder ? ['is-builder'] : [])]}
-                    frameStyle={3}
-                    isResizable
-                    resizeAxis="vertical"
-                    uniqueKey="catalog"
-                >
-                    <VoltCardHeaderView headerText="" onCloseClick={() => setIsVisible(false)}>
-                        {/* header_3 caption: u_frame_title in white, centred over the title bar (frame_3 leaves 6px left and 8px right: 556px). */}
-                        <NativeCenteredField className="volt-catalog-title" width={556}>
-                            <NativeText
-                                nativeResolution
-                                background={isBuilder ? 0xd79c34 : 0x377998}
-                                overrides={{ color: 0xffffff }}
-                                text={isBusy ? LocalizeText('generic.loading') || 'Loading...' : LocalizeText(isBuilder ? 'builder.catalog.title' : 'catalog.title')}
-                                textStyle="u_frame_title"
-                            />
-                        </NativeCenteredField>
-                    </VoltCardHeaderView>
-                    <div className="volt-catalog-mobile-header">
-                        <div className="volt-catalog-mobile-currency">
-                            <div className="volt-catalog-coin">
-                                <span>{LocalizeShortNumber(purse?.credits ?? 0)}</span>
-                                <LayoutCurrencyIcon type={-1} />
+                <DraggableWindow uniqueKey="catalog" handleSelector=".los-window__bar" constrainToViewport={true}>
+                    <LosWindow
+                        className={`los-cat volt-catalog-window${isBuilder ? ' is-builder' : ''}`}
+                        icon={isBuilder ? 'hammer' : 'bag'}
+                        title={isBusy ? LocalizeText('generic.loading') || 'Loading...' : LocalizeText(isBuilder ? 'builder.catalog.title' : 'catalog.title')}
+                        onClose={() => setIsVisible(false)}
+                    >
+                        {/* The Builders Club catalogue has no tabs. */}
+                        {!isBuilder && (
+                            <div className="los-tabs los-cat__tabs" role="tablist">
+                                {visibleTabs.map((child) => (
+                                    <button
+                                        key={child.id}
+                                        type="button"
+                                        role="tab"
+                                        aria-selected={child === currentTab}
+                                        className={`los-tab${child === currentTab ? ' is-active' : ''}`}
+                                        title={child.localization}
+                                        onClick={() => {
+                                            if (searchResult) setSearchResult(null);
+                                            showTab(child);
+                                        }}
+                                    >
+                                        {getSwfTabLabel(child.localization)}
+                                    </button>
+                                ))}
                             </div>
-                            {displayedCurrencies.map((type) => (
-                                <div key={type} className="volt-catalog-coin">
-                                    <span>{LocalizeShortNumber(purse?.activityPoints?.get(type) ?? 0)}</span>
-                                    <LayoutCurrencyIcon type={type} />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    {/* HabboCatalog.useNonTabbedCatalog: the Builders Club catalogue (catalog_ubuntu) has no tabs. */}
-                    {!isBuilder && (
-                        <VoltCardTabsView classNames={['volt-catalog-tabs-shell']} justifyContent="start">
-                            {visibleTabs.map((child) => (
-                                <VoltCardTabsItemView
-                                    key={child.id}
-                                    isActive={child === currentTab}
-                                    style={{ width: tabWidth, flexBasis: tabWidth }}
-                                    title={child.localization}
-                                    onClick={() => {
-                                        if (searchResult) setSearchResult(null);
-
-                                        showTab(child);
-                                    }}
-                                >
-                                    <CatalogTabLabel text={getSwfTabLabel(child.localization)} width={tabWidth} />
-                                </VoltCardTabsItemView>
-                            ))}
-                        </VoltCardTabsView>
-                    )}
-                    <div className={`volt-catalog-standard-header ${isBuilder ? 'is-builder' : ''}`}>
-                        <div
-                            className="volt-catalog-standard-header-bg"
-                            style={headerImage ? { backgroundImage: `url(${headerImage})` } : undefined}
-                        />
-                        <div className="volt-catalog-standard-header-icon">
-                            <CatalogIconView icon={isBuilder ? BUILDER_HEADER_ICON : (activeCatalogNode?.iconId ?? rootNode?.iconId ?? 1)} />
-                        </div>
-                        <div className="volt-catalog-standard-header-copy">
-                            {isBuilder ? (
-                                <CatalogBuilderHeaderView />
-                            ) : (
-                                <>
-                                    {/* catalog.header.title (80, 11) u_headline_big and catalog.header.description (80, 34), white over the header picture. */}
-                                    <NativeText
-                                        nativeResolution
-                                        transparent
-                                        background={0x131d2e}
-                                        className="volt-catalog-standard-header-title"
-                                        overrides={{ color: 0xffffff }}
-                                        text={
-                                            searchResult
+                        )}
+                        <div className="los-cat__header">
+                            {headerImage && <div className="los-cat__header-art" style={{ backgroundImage: `url(${headerImage})` }} />}
+                            <div className="los-cat__header-icon">
+                                <CatalogIconView icon={isBuilder ? BUILDER_HEADER_ICON : (activeCatalogNode?.iconId ?? rootNode?.iconId ?? 1)} />
+                            </div>
+                            <div className="los-cat__header-copy">
+                                {isBuilder ? (
+                                    <CatalogBuilderHeaderView />
+                                ) : (
+                                    <>
+                                        <strong>
+                                            {searchResult
                                                 ? LocalizeText('catalog.search.header')
-                                                : getSwfTabLabel(activeCatalogNode?.localization ?? LocalizeText('catalog.title'))
-                                        }
-                                        textStyle="u_headline_big"
-                                    />
-                                    <NativeText
-                                        nativeResolution
-                                        transparent
-                                        background={0x131d2e}
-                                        className="volt-catalog-standard-header-description"
-                                        maxWidth={HEADER_DESCRIPTION_FIELD_WIDTH}
-                                        overrides={{ color: 0xffffff }}
-                                        text={getCatalogPlainText(
-                                            searchResult
-                                                ? LocalizeText('catalog.search.results', ['count', 'needle'], [String(searchResult.offers.length), searchResult.searchValue])
-                                                : getCatalogHeaderDescription(currentPage?.layoutCode, currentPage?.localization)
-                                        )}
-                                        textStyle="u_regular"
-                                    />
-                                </>
-                            )}
-                        </div>
-                    </div>
-                    <VoltCardContentView classNames={['volt-catalog-content-shell']}>
-                        <div className={`volt-catalog-stage ${sidebarHidden ? 'is-navigation-hidden' : ''}`}>
-                            {!sidebarHidden && (
-                                <div className="volt-catalog-sidebar">
-                                    <div className="volt-catalog-search-shell">
-                                        <CatalogSearchView />
-                                    </div>
-                                    <div className="volt-catalog-navigation-shell">
-                                        {currentTab && <CatalogNavigationView isBuilder={isBuilder} node={currentTab} />}
-                                    </div>
-                                </div>
-                            )}
-                            <div aria-busy={isBusy} className="volt-catalog-layout-shell">
-                                <div className="volt-catalog-layout-header-shell">
-                                    <CatalogBreadcrumbView />
-                                    <div className="volt-catalog-layout-hero">
-                                        {!!currentPage?.localization?.getImage(0) && <img alt="" src={currentPage.localization.getImage(0)} />}
-                                    </div>
-                                </div>
-                                <div className="volt-catalog-layout-container">{GetCatalogLayout(currentPage, hideCatalogNavigation)}</div>
+                                                : getSwfTabLabel(activeCatalogNode?.localization ?? LocalizeText('catalog.title'))}
+                                        </strong>
+                                        <p>
+                                            {getCatalogPlainText(
+                                                searchResult
+                                                    ? LocalizeText(
+                                                          'catalog.search.results',
+                                                          ['count', 'needle'],
+                                                          [String(searchResult.offers.length), searchResult.searchValue]
+                                                      )
+                                                    : getCatalogHeaderDescription(currentPage?.layoutCode, currentPage?.localization)
+                                            )}
+                                        </p>
+                                    </>
+                                )}
+                            </div>
+                            <div className="los-cat__purse">
+                                <span>
+                                    <LayoutCurrencyIcon type={-1} />
+                                    {LocalizeShortNumber(purse?.credits ?? 0)}
+                                </span>
+                                {displayedCurrencies.map((type) => (
+                                    <span key={type}>
+                                        <LayoutCurrencyIcon type={type} />
+                                        {LocalizeShortNumber(purse?.activityPoints?.get(type) ?? 0)}
+                                    </span>
+                                ))}
                             </div>
                         </div>
-                    </VoltCardContentView>
-                    {(isBusy || catalogLoadError) && <CatalogLoadingStateView error={catalogLoadError} onRetry={retryCurrentPage} />}
-                </VoltCardView>
+                        <div className={`los-cat__body${sidebarHidden ? ' is-wide' : ''}`}>
+                            {!sidebarHidden && (
+                                <div className="los-cat__sidebar">
+                                    <CatalogSearchView />
+                                    {currentTab && <LosCatalogNav node={currentTab} />}
+                                </div>
+                            )}
+                            <div aria-busy={isBusy} className="los-cat__page">
+                                <div className="volt-catalog-layout-shell">
+                                    <div className="volt-catalog-layout-container">{GetCatalogLayout(currentPage, hideCatalogNavigation)}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {(isBusy || catalogLoadError) && <CatalogLoadingStateView error={catalogLoadError} onRetry={retryCurrentPage} />}
+                    </LosWindow>
+                </DraggableWindow>
             )}
             <CatalogGiftView />
             <CatalogPlacedOfferConfirmView />

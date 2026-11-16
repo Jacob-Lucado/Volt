@@ -10,7 +10,7 @@ import {
     PageLocalization,
     SearchResult
 } from '../../../../../api';
-import { NativeText } from '../../../../../common/native-text/NativeText';
+import { LosIcon } from '../../../../../common/lucadoos';
 import { useCatalogActions, useCatalogData, useCatalogUiState } from '../../../../../hooks';
 import { useCatalogStore } from '../../../../../hooks/catalog/catalogStore';
 import { getNodesByOfferIdFromMap } from '../../../../../hooks/catalog/useCatalog.helpers';
@@ -134,33 +134,23 @@ export const CatalogSearchView: FC<{}> = () => {
     const hasQuery = searchValue.length > 0;
 
     return (
-        <div className="volt-catalog-search">
-            {/* search.helper: ${catalog.search} in 0x666666 at blend 0.5 (0xb2b2b2 on the white field) until something is typed. */}
-            {!hasQuery && (
-                <NativeText
-                    nativeResolution
-                    background={0xffffff}
-                    className="volt-catalog-search-helper"
-                    overrides={{ color: 0xb2b2b2 }}
-                    text={LocalizeText('catalog.search')}
-                    textStyle="u_regular"
-                />
-            )}
+        <div className="los-cat__search">
+            <LosIcon name="search" size={14} />
             <input
                 ref={inputRef}
                 aria-label={LocalizeText('catalog.search')}
-                className="volt-catalog-search-input"
+                className="los-input"
+                placeholder={LocalizeText('catalog.search')}
                 type="text"
                 value={searchValue}
                 onChange={onSearchChange}
                 onKeyDown={onSearchKeyDown}
             />
-            <button
-                aria-label={hasQuery ? localizeWithFallback('generic.clear', 'Clear') : LocalizeText('catalog.search')}
-                className={`volt-catalog-search-pen${hasQuery ? ' is-filled' : ' is-empty'}`}
-                type="button"
-                onClick={clearSearch}
-            />
+            {hasQuery && (
+                <button aria-label={localizeWithFallback('generic.clear', 'Clear')} className="los-cat__search-clear" type="button" onClick={clearSearch}>
+                    <LosIcon name="close" size={12} />
+                </button>
+            )}
         </div>
     );
 };
