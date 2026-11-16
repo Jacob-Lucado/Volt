@@ -151,7 +151,7 @@
 }
 
 .volt-collectibles-text.is-wallet {
-    color: #8f9db1;
+    color: #909eb0;
 }
 
 .volt-collectibles-html {
@@ -311,7 +311,7 @@
 
 .volt-collectibles-progress-bar {
     position: absolute;
-    background: #112e31;
+    background: #111923;
 }
 
 .volt-collectibles-progress-top {
@@ -351,17 +351,17 @@
 
 .volt-collectibles-nav-highlight-outer {
     position: absolute;
-    background: #82d1ed;
+    background: #82b0ed;
 }
 
 .volt-collectibles-nav-highlight-inner {
     position: absolute;
-    background: #63c5e9;
+    background: #639de9;
 }
 
 .volt-collectibles-nav-title {
     position: absolute;
-    color: #666666;
+    color: #546478;
     font-weight: 700;
     line-height: 17px;
     white-space: nowrap;

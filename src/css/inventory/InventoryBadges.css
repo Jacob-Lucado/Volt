@@ -160,7 +160,7 @@
     font-size: 12px;
     line-height: 17px;
     font-weight: bold;
-    color: #000;
+    color: #000000;
 }
 
 .volt-inventory-badges-footer-desc {
@@ -174,7 +174,7 @@
     overflow: hidden;
     font-size: 12px;
     line-height: 14px;
-    color: #000;
+    color: #000000;
 }
 
 .volt-inventory-badges-footer-meta {
@@ -198,7 +198,7 @@
     font-size: 9px;
     font-weight: 700;
     line-height: 17px;
-    color: #fff;
+    color: #ffffff;
 }
 
 /* wearBadge_button (282,40) 179x28 right aligned, fitted to its caption. */

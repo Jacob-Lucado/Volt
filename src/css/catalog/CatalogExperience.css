@@ -8,7 +8,7 @@
     max-height: 64px;
     padding: 0;
     overflow: hidden;
-    color: #fff;
+    color: #ffffff;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     pointer-events: none;
     background: none;
@@ -34,7 +34,7 @@
     z-index: 1;
     flex: 0 0 auto;
     overflow: hidden;
-    background: #fff;
+    background: #ffffff;
 }
 
 /* Centered in the 360x348 teaser bitmap, then clipped by the 240px product view. */
@@ -161,7 +161,7 @@
 }
 
 .volt-catalog-offer-preview.is-badge .volt-catalog-preview-details {
-    color: var(--catalog-standard-text, #222);
+    color: var(--catalog-standard-text, #1e2226);
     background: none;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
 }
@@ -228,7 +228,7 @@
     height: 22px;
     padding: 0;
     border: 0;
-    background: url("@/assets/images/catalog/air/colour-grid/ctlg_clr_27x22_1.png") no-repeat #fff;
+    background: url("@/assets/images/catalog/air/colour-grid/ctlg_clr_27x22_1.png") no-repeat #ffffff;
     cursor: pointer;
     image-rendering: var(--volt-pixel-art, pixelated);
 }
@@ -252,7 +252,7 @@
 }
 
 .volt-catalog-colour-swatch:focus-visible {
-    outline: 1px dotted #000;
+    outline: 1px dotted #000000;
     outline-offset: 1px;
 }
 
@@ -267,7 +267,7 @@
     color: var(--catalog-standard-text);
     font-size: 11px;
     font-weight: 700;
-    background: rgba(236, 236, 228, 0.78);
+    background: rgba(230, 232, 234, 0.78);
 }
 
 :is(.content-area, .volt-card-content-shell) :is(.volt-catalog-loading-state, .volt-catalog-purchase-confirm-summary) > span {
@@ -468,7 +468,7 @@
     place-items: center;
     min-height: 90px;
     padding: 16px;
-    color: #555;
+    color: #475363;
     font-size: 11px;
     text-align: center;
 }
@@ -478,7 +478,7 @@
     grid-template-rows: minmax(110px, 45%) 1fr;
     height: 100%;
     min-height: 0;
-    color: #222;
+    color: #1e2226;
     background: #e3e9f1;
 }
 
@@ -502,7 +502,7 @@
     min-height: 0;
     padding: 9px;
     overflow: auto;
-    border-top: 1px solid #aaa;
+    border-top: 1px solid #9ca8b8;
     background: #f7f9fc;
     font-size: 11px;
     line-height: 15px;
@@ -519,7 +519,7 @@
     height: 100%;
     min-height: 0;
     padding: 7px;
-    color: #222;
+    color: #1e2226;
     background: #e3e9f1;
 }
 
@@ -528,8 +528,8 @@
     display: grid;
     place-items: center;
     overflow: hidden;
-    border: 1px solid #aaa;
-    background: #c6c6c0;
+    border: 1px solid #9ca8b8;
+    background: #bbc2cb;
 }
 
 .volt-catalog-sold-limited-preview > img {
@@ -551,7 +551,7 @@
     padding: 4px 7px;
     border: 1px solid #7a1b1b;
     border-radius: 3px;
-    color: #fff;
+    color: #ffffff;
     background: #b43a36;
     font-size: 10px;
 }
@@ -953,7 +953,7 @@
 
 .volt-catalog-purchase-confirm-button.is-cancel:disabled {
     border-image-source: var(--habbo-skin-shiny-disabled) !important;
-    color: #777777 !important;
+    color: #60748e !important;
 }
 
 .volt-catalog-purchase-confirm-button.is-buy {
@@ -978,7 +978,7 @@
 
 .volt-catalog-purchase-confirm-button.is-buy:disabled {
     border-image-source: var(--habbo-skin-shiny-thick-green-disabled) !important;
-    color: #eeeeee !important;
+    color: #edeeef !important;
 }
 
 .volt-catalog-purchase-confirm-button:focus-visible {

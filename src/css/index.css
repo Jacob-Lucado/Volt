@@ -22,7 +22,7 @@
     select:focus {
         --tw-ring-offset-shadow: 0 0 #0000;
         --tw-ring-shadow: 0 0 #0000;
-        border-color: #6b7280;
+        border-color: #5f728c;
     }
 }
 
@@ -213,7 +213,7 @@ body {
     height: 100%;
     min-height: 100%;
     overflow: hidden;
-	background-color: #000;
+	background-color: #000000;
     -webkit-user-select: none;
     user-select: none;
     overscroll-behavior: none;
@@ -355,8 +355,8 @@ body {
 
     .toolbar {
         @apply relative;
-        background: rgb(33, 33, 33);
-        background: linear-gradient(0deg, rgba(33, 33, 33, 0.9) 0%, rgba(51, 51, 51, 0.9) 100%);
+        background: rgb(30, 33, 36);
+        background: linear-gradient(0deg, rgba(30, 33, 36, 0.9) 0%, rgba(45, 50, 57, 0.9) 100%);
 
         &::before {
             content: "";
@@ -437,7 +437,7 @@ body {
         font-weight: bold;
         margin-top: 5px;
         margin-right: 17px;
-        color: #000;
+        color: #000000;
     }
 }
 
@@ -547,13 +547,13 @@ body {
     height: var(--volt-grid-column-min-height, unset);
     background-position: center;
     background-repeat: no-repeat;
-    background-color: #cdd3d9;
-    border: 2px solid #c4cabf;
+    background-color: #ced2d8;
+    border: 2px solid #bdc3cc;
     border-radius: 6px;
 }
 
 .layout-grid-item.is-grid-active {
-    border-color: #aeb7aa;
+    border-color: #a4afbd;
 }
 
 .volt-friends-spritesheet {
@@ -664,11 +664,11 @@ body {
     width: min(300px, calc(100vw - 16px));
     min-width: 0;
     max-width: calc(100vw - 16px);
-    background: #efefef;
-    border: 1px solid #8d8d8d !important;
+    background: #eeeff0;
+    border: 1px solid #778aa3 !important;
     border-radius: 6px !important;
-    box-shadow: inset 0 0 0 1px #fff !important;
-    color: #000;
+    box-shadow: inset 0 0 0 1px #ffffff !important;
+    color: #000000;
     outline: none !important;
     overflow: hidden;
 
@@ -687,7 +687,7 @@ body {
 
         .volt-card-title {
             display: block;
-            color: #000 !important;
+            color: #000000 !important;
             font-size: 11px !important;
             font-weight: 700 !important;
             line-height: 21px;
@@ -709,9 +709,9 @@ body {
             width: 18px;
             height: 18px;
             min-width: 18px;
-            border: 1px solid #777;
+            border: 1px solid #60748e;
             border-radius: 5px;
-            background: linear-gradient(180deg, #f9f9f9 0%, #cacaca 100%);
+            background: linear-gradient(180deg, #f9f9f9 0%, #c3c9d1 100%);
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
         }
 
@@ -724,7 +724,7 @@ body {
             width: 10px;
             height: 2px;
             border-radius: 2px;
-            background: #6a6a6a;
+            background: #57677d;
             margin: 0;
             transform-origin: center;
         }
@@ -740,7 +740,7 @@ body {
 
     .volt-wired__content {
         position: relative;
-        background: #efefef !important;
+        background: #eeeff0 !important;
         border: 0 !important;
         box-shadow: none !important;
         padding: 0 !important;
@@ -770,9 +770,9 @@ body {
         align-items: center;
         gap: 10px;
         padding: 22px 10px 7px 12px;
-        background: linear-gradient(180deg, #e5e5e5 0%, #d7d7d7 100%);
+        background: linear-gradient(180deg, #e3e5e7 0%, #d3d6db 100%);
         overflow: hidden;
-        color: #000;
+        color: #000000;
     }
 
     .volt-wired__summary-bg {
@@ -812,7 +812,7 @@ body {
     }
 
     .volt-wired__summary-kind {
-        color: #000;
+        color: #000000;
         font-size: 10px;
         font-weight: 700;
         letter-spacing: 0.08em;
@@ -821,7 +821,7 @@ body {
     }
 
     .volt-wired__summary-title {
-        color: #4a4a4a !important;
+        color: #3f4855 !important;
         font-size: 15px !important;
         font-weight: 700 !important;
         line-height: 1.02;
@@ -858,8 +858,8 @@ body {
     hr {
         height: 1px;
         border: 0;
-        background: #bababa;
-        box-shadow: 0 1px 0 #fff;
+        background: #b0b9c4;
+        box-shadow: 0 1px 0 #ffffff;
         margin: 0 !important;
     }
 
@@ -879,10 +879,10 @@ body {
     input[type='number'],
     textarea {
         min-height: 24px;
-        border: 1px solid #8d8d8d !important;
+        border: 1px solid #778aa3 !important;
         border-radius: 4px !important;
         background: #f6f6f6 !important;
-        color: #000 !important;
+        color: #000000 !important;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
         font-size: 12px;
         padding: 3px 6px;
@@ -897,9 +897,9 @@ body {
         min-height: 22px !important;
         border: 2px solid var(--habbo-blue-header-border, #2a3b56) !important;
         border-radius: 4px !important;
-        background: linear-gradient(180deg, #f2f8fb 0%, #d4e6ef 44%, #a8c9d8 45%, #d9e9f0 100%) !important;
+        background: linear-gradient(180deg, #f2f6fb 0%, #d4e0ef 44%, #a8bdd8 45%, #d9e3f0 100%) !important;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 1px 0 rgba(0, 0, 0, 0.1) !important;
-        color: var(--habbo-text, #151515) !important;
+        color: var(--habbo-text, #131517) !important;
         font-weight: 700;
         text-shadow: 0 1px 0 rgba(255, 255, 255, 0.75);
         padding-top: 0 !important;
@@ -915,7 +915,7 @@ body {
     .volt-wired__button--primary {
         border-color: var(--habbo-blue-header, #131d2e) !important;
         background: linear-gradient(180deg, #33486a 0%, #24344c 44%, #162235 100%) !important;
-        color: #fff !important;
+        color: #ffffff !important;
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
     }
 
@@ -937,7 +937,7 @@ body {
         padding: 0 !important;
         border: 0;
         background: transparent;
-        color: #000;
+        color: #000000;
         font: inherit;
         text-align: center;
         text-decoration: underline;
@@ -963,23 +963,23 @@ body {
         width: 18px;
         height: 18px;
         padding: 0;
-        border: 1px solid #8e8e8e;
+        border: 1px solid #798ba3;
         border-radius: 4px;
-        background: linear-gradient(180deg, #f6f6f6 0%, #e4e4e4 49%, #d0d0d0 50%, #ececec 100%);
-        color: #7b7b7b;
+        background: linear-gradient(180deg, #f6f6f6 0%, #e2e4e6 49%, #cacfd6 50%, #ebeced 100%);
+        color: #637893;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
     }
 
     .volt-wired__selection-toggle.is-active.volt-wired__selection-toggle--primary {
         border-color: #66793c;
         background: linear-gradient(180deg, #a5b56e 0%, #8ea25a 100%);
-        color: #fff;
+        color: #ffffff;
     }
 
     .volt-wired__selection-toggle.is-active.volt-wired__selection-toggle--secondary {
         border-color: #6172b7;
         background: linear-gradient(180deg, #8d9bdd 0%, #7383cb 100%);
-        color: #fff;
+        color: #ffffff;
     }
 
     .volt-wired__selection-toggle:disabled {
@@ -1045,7 +1045,7 @@ body {
         min-width: 18px;
         min-height: 18px;
         padding: 0;
-        border: 1px solid #8e8e8e;
+        border: 1px solid #798ba3;
         border-radius: 4px;
         background: transparent;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
@@ -1073,7 +1073,7 @@ body {
     }
 
     .volt-wired__give-var-target--global.is-active {
-        background: linear-gradient(180deg, #7bc4f0 0%, #5497d2 100%);
+        background: linear-gradient(180deg, #7baef0 0%, #5497d2 100%);
     }
 
     .volt-wired__give-var-target--context.is-active {
@@ -1081,7 +1081,7 @@ body {
     }
 
     .volt-wired__give-var-target.is-active {
-        border-color: #4d4d4d;
+        border-color: #414b59;
         box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.72), inset 0 1px 0 rgba(255, 255, 255, 0.92);
     }
 
@@ -1271,10 +1271,10 @@ body {
         min-width: 96px;
         height: 20px;
         padding: 0 6px;
-        border: 1px solid #cfcfcf;
+        border: 1px solid #c9ced5;
         border-radius: 6px;
-        background: #f3f3f3;
-        color: #9a9a9a;
+        background: #f2f3f4;
+        color: #8898ac;
         font-size: 11px;
         line-height: 20px;
     }
@@ -1284,17 +1284,17 @@ body {
         width: 100%;
         align-items: flex-start;
         padding: 6px 8px;
-        border: 1px solid #b7b7b7;
+        border: 1px solid #acb6c2;
         border-radius: 5px;
-        background: linear-gradient(180deg, #fbfbfb 0%, #efefef 100%);
+        background: linear-gradient(180deg, #fbfbfb 0%, #eeeff0 100%);
         text-align: left;
         cursor: pointer;
         transition: background 0.12s ease, border-color 0.12s ease;
     }
 
     .volt-wired__placeholder-preview:hover {
-        background: linear-gradient(180deg, #ffffff 0%, #f4f4f4 100%);
-        border-color: #909090;
+        background: linear-gradient(180deg, #ffffff 0%, #f3f4f5 100%);
+        border-color: #7b8da5;
     }
 
     .volt-wired__placeholder-preview.is-copied {
@@ -1321,15 +1321,15 @@ body {
     .volt-slider .track {
         height: 4px;
         border-radius: 999px;
-        border: 1px solid #9a9a9a;
+        border: 1px solid #8898ac;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
 
         &.track-0 {
-            background: linear-gradient(180deg, #7f9fb1 0%, #64889e 100%);
+            background: linear-gradient(180deg, #4c596b 0%, #424d5b 100%);
         }
 
         &.track-1 {
-            background: linear-gradient(180deg, #e9e9e9 0%, #d5d5d5 100%);
+            background: linear-gradient(180deg, #e7e9eb 0%, #d0d4da 100%);
         }
     }
 
@@ -1338,16 +1338,16 @@ body {
         height: 12px;
         margin-top: 3px;
         border-radius: 50%;
-        border: 1px solid #7f7f7f;
-        background: linear-gradient(180deg, #fefefe 0%, #dadada 100%);
+        border: 1px solid #667c98;
+        background: linear-gradient(180deg, #fefefe 0%, #d6d9de 100%);
         box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
 }
 
 .volt-card-shell.volt-wired {
-    border: 1px solid #8d8d8d !important;
-    border-color: #8d8d8d !important;
-    box-shadow: inset 0 0 0 1px #fff !important;
+    border: 1px solid #778aa3 !important;
+    border-color: #778aa3 !important;
+    box-shadow: inset 0 0 0 1px #ffffff !important;
     outline: none !important;
 }
 
@@ -1382,24 +1382,24 @@ body {
 }
 
 .avatar-parts {
-    border: 1px solid #c5c3c0 !important;
+    border: 1px solid #bac1cb !important;
     position: relative;
     aspect-ratio: 1;
     width: 100%;
     max-width: 64px;
     border-radius: 0.3rem !important;
     overflow: hidden !important;
-    background-color: #e9e8e4;
+    background-color: #e4e6e9;
 
     &:hover {
-        box-shadow: inset 0 0 0 3px #dbdad5 !important;
-        background-color: #cecdc8 !important;
+        box-shadow: inset 0 0 0 3px #d4d7dc !important;
+        background-color: #c4cad2 !important;
     }
 
     &:active,
     &.part-selected {
-        box-shadow: inset 0 0 0 3px #c5c3c0 !important;
-        background-color: #b1b1b1 !important;
+        box-shadow: inset 0 0 0 3px #bac1cb !important;
+        background-color: #a5afbd !important;
     }
 
     &.is-loading::after {
@@ -1427,7 +1427,7 @@ body {
     padding: 3px;
     height: 50px;
     border-radius: 0.3rem;
-    background-color: #a7a6a2;
+    background-color: #95a2b4;
     width: 48px;
 }
 
@@ -1582,7 +1582,7 @@ body {
 }
 
 .saved-outfits-title {
-    color: #a7a6a2;
+    color: #95a2b4;
     font-weight: bold;
 }
 
@@ -1590,7 +1590,7 @@ body {
 /* Wired chest (Scrigno) — Sulake chest_generic / coins_chest / furni_chest UI  */
 /* -------------------------------------------------------------------------- */
 [class*='volt-widget-chest'] {
-    color: #2e2e2e;
+    color: #282d34;
 
     .volt-chest__button {
         display: inline-flex;
@@ -1599,11 +1599,11 @@ body {
         box-sizing: border-box;
         min-height: 22px;
         padding: 0 10px;
-        border: 1px solid #b9b2a0;
+        border: 1px solid #9fabba;
         border-radius: 3px;
-        background: linear-gradient(180deg, #f3f0e8 0%, #e9e6df 48%, #ddd8cc 49%, #ebe8e0 100%);
+        background: linear-gradient(180deg, #ecedef 0%, #e2e4e6 48%, #d0d4d9 49%, #e3e5e8 100%);
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
-        color: #555;
+        color: #475363;
         font-size: 11px;
         font-weight: 700;
         line-height: 1;
@@ -1617,7 +1617,7 @@ body {
     }
 
     .volt-chest__button:active:not(:disabled) {
-        background: linear-gradient(180deg, #e4e0d6 0%, #d8d4c8 100%);
+        background: linear-gradient(180deg, #d9dde1 0%, #cacfd6 100%);
         box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12);
     }
 
@@ -1650,11 +1650,11 @@ body {
     .volt-chest__button--dialog {
         min-height: 22px;
         padding: 0 12px;
-        border: 1px solid #8e8e8e;
+        border: 1px solid #798ba3;
         border-radius: 6px;
-        background: linear-gradient(180deg, #fcfcfc 0%, #e8e8e8 46%, #d5d5d5 47%, #efefef 100%);
+        background: linear-gradient(180deg, #fcfcfc 0%, #e6e8ea 46%, #d0d4da 47%, #eeeff0 100%);
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
-        color: #000;
+        color: #000000;
     }
 
     .volt-chest__button--dialog-primary {
@@ -1664,14 +1664,14 @@ body {
         border-radius: 6px;
         background: linear-gradient(180deg, #a5b56e 0%, #8ea25a 49%, #7f9350 50%, #96a866 100%);
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
-        color: #fff;
+        color: #ffffff;
         text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
     }
 
     .volt-chest__button--dialog-primary:disabled {
-        border-color: #8e8e8e;
-        background: linear-gradient(180deg, #fcfcfc 0%, #e8e8e8 46%, #d5d5d5 47%, #efefef 100%);
-        color: #888;
+        border-color: #798ba3;
+        background: linear-gradient(180deg, #fcfcfc 0%, #e6e8ea 46%, #d0d4da 47%, #eeeff0 100%);
+        color: #71859f;
         text-shadow: none;
     }
 
@@ -1682,9 +1682,9 @@ body {
         width: 24px;
         height: 24px;
         padding: 0;
-        border: 1px solid #cfcabc;
+        border: 1px solid #bec4cd;
         border-radius: 4px;
-        background: #f1f0ee;
+        background: #eeeff1;
         cursor: pointer;
         flex-shrink: 0;
     }
@@ -1695,10 +1695,10 @@ body {
 
     .volt-chest__input {
         box-sizing: border-box;
-        border: 1px solid #b9b2a0;
+        border: 1px solid #9fabba;
         border-radius: 2px;
-        background: #fff;
-        color: #2e2e2e;
+        background: #ffffff;
+        color: #282d34;
         font-size: 11px;
         text-align: center;
     }
@@ -1754,13 +1754,13 @@ body {
         font-size: 11px;
         font-weight: 700;
         line-height: 1;
-        color: #555;
+        color: #475363;
         white-space: nowrap;
         cursor: pointer;
         user-select: none;
-        border: 1px solid #b9b2a0;
+        border: 1px solid #9fabba;
         border-radius: 3px;
-        background: linear-gradient(180deg, #f5f3ef 0%, #e9e6df 48%, #dedad2 49%, #ebe8e1 100%);
+        background: linear-gradient(180deg, #f1f2f3 0%, #e2e4e6 48%, #d4d7dc 49%, #e4e6e8 100%);
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
     }
 
@@ -1769,7 +1769,7 @@ body {
     }
 
     .volt-chest__btn:active:not(:disabled) {
-        background: linear-gradient(180deg, #dedad2 0%, #d5d0c8 48%, #cac5bd 49%, #d8d4cc 100%);
+        background: linear-gradient(180deg, #d4d7dc 0%, #c9ced4 48%, #bbc2cc 49%, #cdd1d7 100%);
         box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12);
     }
 
@@ -1799,10 +1799,10 @@ body {
         font-size: 14px;
         font-weight: 700;
         line-height: 1;
-        color: #2e2e2e;
-        border-color: #cfcabc;
+        color: #282d34;
+        border-color: #bec4cd;
         border-radius: 4px;
-        background: #f1f0ee;
+        background: #eeeff1;
         box-shadow: none;
     }
 
@@ -1812,10 +1812,10 @@ body {
         padding: 0 4px;
         font-size: 11px;
         text-align: center;
-        color: #000;
-        border: 1px solid #b9b2a0;
+        color: #000000;
+        border: 1px solid #9fabba;
         border-radius: 2px;
-        background: #fff;
+        background: #ffffff;
     }
 
     .volt-chest__input--coin {
@@ -1859,10 +1859,10 @@ body {
     input[type='number'],
     textarea {
         min-height: 22px;
-        border: 1px solid #8d8d8d !important;
+        border: 1px solid #778aa3 !important;
         border-radius: 4px !important;
         background: #f6f6f6 !important;
-        color: #000 !important;
+        color: #000000 !important;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
         font-size: 12px;
         padding: 3px 6px;
@@ -1878,9 +1878,9 @@ body {
     .volt-chest__grid-border {
         width: 255px;
         flex-shrink: 0;
-        border: 1px solid #e3e3e3;
+        border: 1px solid #e0e3e6;
         border-radius: 3px;
-        background: #fff;
+        background: #ffffff;
         overflow: hidden;
     }
 
@@ -1888,9 +1888,9 @@ body {
         position: relative;
         margin: 4px 5px 0;
         height: 24px;
-        border: 1px solid #d0d0d0;
+        border: 1px solid #cacfd6;
         border-radius: 3px;
-        background: #fff;
+        background: #ffffff;
     }
 
     .volt-chest__search-placeholder {
@@ -1898,7 +1898,7 @@ body {
         left: 8px;
         top: 4px;
         font-size: 11px;
-        color: #666;
+        color: #546478;
         opacity: 0.5;
         pointer-events: none;
     }
@@ -1911,7 +1911,7 @@ body {
         background: transparent !important;
         box-shadow: none !important;
         font-size: 11px;
-        color: #666;
+        color: #546478;
         text-align: left;
     }
 
@@ -1924,7 +1924,7 @@ body {
         padding: 0;
         border: none;
         background: transparent;
-        color: #666;
+        color: #546478;
         font-size: 14px;
         line-height: 1;
         cursor: pointer;
@@ -1966,10 +1966,10 @@ body {
         inset: 0;
         z-index: 3;
         pointer-events: none;
-        border: 2px solid #aeb7aa;
+        border: 2px solid #a4afbd;
         border-radius: 4px;
-        box-shadow: inset 0 0 0 1px #fff;
-        background: rgba(228, 231, 223, 0.35);
+        box-shadow: inset 0 0 0 1px #ffffff;
+        background: rgba(224, 227, 230, 0.35);
     }
 
     .volt-chest__grid-cell-inner {
@@ -1978,7 +1978,7 @@ body {
         top: 1px;
         width: 40px;
         height: 40px;
-        border: 1px solid #cbcbcb;
+        border: 1px solid #c4cad2;
         border-radius: 3px;
         background: #fafafa;
         overflow: hidden;
@@ -2029,10 +2029,10 @@ body {
         min-width: 11px;
         height: 14px;
         padding: 0 1px;
-        border: 1px solid #fff;
+        border: 1px solid #ffffff;
         border-radius: 1px;
         color: #1b2a40;
-        background: #fff;
+        background: #ffffff;
         font-size: 10px;
         font-weight: 700;
         line-height: 12px;
@@ -2048,9 +2048,9 @@ body {
 
     .volt-chest__preview-box {
         height: 211px;
-        border: 1px solid #d8d8d8;
+        border: 1px solid #d4d7dc;
         border-radius: 3px;
-        background: #fff;
+        background: #ffffff;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -2103,14 +2103,14 @@ body {
     .volt-chest__footer {
         margin: 8px -10px -10px;
         padding: 8px 10px 10px;
-        background: #dadada;
-        border-top: 1px solid #c0c0c0;
+        background: #d6d9de;
+        border-top: 1px solid #b7bfc9;
     }
 
     .volt-chest__footer-capacity {
         margin-bottom: 6px;
         padding-bottom: 6px;
-        border-bottom: 1px solid #b0b0b0;
+        border-bottom: 1px solid #a4aebc;
     }
 
     /* Locking sits above the capacity row, the way the official window stacks them. */
@@ -2121,7 +2121,7 @@ body {
         gap: 4px 12px;
         margin-bottom: 6px;
         padding-bottom: 6px;
-        border-bottom: 1px solid #b0b0b0;
+        border-bottom: 1px solid #a4aebc;
     }
 
     .volt-chest__option {
@@ -2188,7 +2188,7 @@ body {
     .volt-chest__deposit-panel {
         margin-top: 8px;
         padding: 8px;
-        border: 1px solid #d8d8d8;
+        border: 1px solid #d4d7dc;
         border-radius: 3px;
         background: #f8f8f8;
     }
@@ -2211,7 +2211,7 @@ body {
         width: 42px;
         height: 42px;
         padding: 0;
-        border: 1px solid #cbcbcb;
+        border: 1px solid #c4cad2;
         border-radius: 3px;
         background: #fafafa;
         cursor: pointer;
@@ -2232,14 +2232,14 @@ body {
 
     .volt-chest__deposit-full {
         margin-top: 6px;
-        color: #a33;
+        color: #aa3333;
     }
 }
 
 /* AIR Ubuntu chest settings: bordered groups and 7px section spacing. */
 .volt-chest-settings .volt-card-content-shell { max-height: calc(100vh / 2.4 + 60px); overflow-y: auto; }
-.volt-chest-settings__section { display: grid; gap: 5px; min-width: 0; margin: 0; padding: 7px; border: 1px solid #b0b0a8; border-radius: 3px; }
+.volt-chest-settings__section { display: grid; gap: 5px; min-width: 0; margin: 0; padding: 7px; border: 1px solid #9faab9; border-radius: 3px; }
 .volt-chest-settings__section > legend { float: none; width: auto; margin: 0; padding: 0 3px; font-size: 12px; font-weight: bold; }
-.volt-chest-settings__wired-notifications { display: grid; gap: 3px; min-width: 0; margin-top: 7px; padding: 7px 0 0; border: 0; border-top: 1px solid #b0b0a8; }
+.volt-chest-settings__wired-notifications { display: grid; gap: 3px; min-width: 0; margin-top: 7px; padding: 7px 0 0; border: 0; border-top: 1px solid #9faab9; }
 .volt-chest-settings__wired-notifications:disabled { opacity: 0.5; }
 .volt-chest-settings .habbo-dropmenu { width: 100%; min-width: 0; }

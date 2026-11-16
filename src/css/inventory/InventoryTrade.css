@@ -29,7 +29,7 @@
     font-family: HabboAirUbuntu, sans-serif;
     font-size: 12px;
     line-height: 17px;
-    color: #000;
+    color: #000000;
 }
 
 .volt-trade-panel {
@@ -255,7 +255,7 @@
     border-image-width: 5px !important;
     border-image-repeat: stretch !important;
     background: transparent !important;
-    color: #111 !important;
+    color: #101112 !important;
     font-family: HabboAirUbuntu, sans-serif !important;
     font-size: 12px !important;
     font-weight: 400 !important;
@@ -308,7 +308,7 @@
     border: 3px solid transparent !important;
     border-image: var(--habbo-skin-border-white) 6 fill / 3px stretch !important;
     background: transparent !important;
-    color: #000;
+    color: #000000;
     font-family: HabboAirUbuntu, sans-serif;
     font-size: 12px !important;
     line-height: 13px;
@@ -330,7 +330,7 @@
     border-image-width: 5px !important;
     border-image-repeat: stretch !important;
     background: transparent !important;
-    color: #111 !important;
+    color: #101112 !important;
     font-family: HabboAirUbuntu, sans-serif;
     font-size: 12px !important;
     font-weight: 400 !important;
@@ -364,7 +364,7 @@
     border-style: solid;
     border-width: 0 6px;
     border-image: url('@/assets/images/inventory/trading/note-orange.png') 0 6 fill / 0 6px stretch;
-    color: #000;
+    color: #000000;
     white-space: nowrap;
     image-rendering: pixelated;
 }
@@ -397,7 +397,7 @@
     font-weight: 700;
     line-height: 17px;
     text-align: center;
-    color: #000;
+    color: #000000;
 }
 
 /* The trade grid shows the thumb clipped to 40x40: frame and icon start at the cell corner, not 1px in. */

@@ -29,7 +29,7 @@
     font-family: Ubuntu, sans-serif;
     font-size: 10px;
     line-height: 12px;
-    color: #000;
+    color: #000000;
 
     > * {
         position: absolute;
@@ -63,8 +63,8 @@
         box-sizing: border-box;
         width: 29px;
         height: 27px;
-        border-top: 1px solid #999;
-        border-left: 1px solid #999;
+        border-top: 1px solid #8797ab;
+        border-left: 1px solid #8797ab;
     }
 
     .volt-toner__label {
@@ -129,7 +129,7 @@
     box-sizing: border-box;
     width: 274px;
     height: 222px;
-    color: #000;
+    color: #000000;
     font-family: Volter, monospace;
     font-size: 9px;
     line-height: 10px;
@@ -190,7 +190,7 @@
 }
 
 .volt-dimmer__title-text {
-    color: #fff;
+    color: #ffffff;
     filter: var(--volt-native-text-halo);
 }
 
@@ -249,7 +249,7 @@
     left: 30px;
     width: 212px;
     top: 139px;
-    color: #999;
+    color: #8797ab;
 }
 
 .volt-dimmer__tabs {
@@ -371,7 +371,7 @@
     padding: 2px 8px 0 !important;
     border: 3px solid transparent !important;
     border-image: var(--habbo-skin-button) 3 fill / 3px stretch !important;
-    color: #000 !important;
+    color: #000000 !important;
     line-height: 20px;
     white-space: nowrap;
 
@@ -385,7 +385,7 @@
 
     &:disabled {
         border-image-source: var(--habbo-skin-button-disabled) !important;
-        color: #50636c !important;
+        color: #4e5c6e !important;
         cursor: default;
     }
 }
@@ -683,7 +683,7 @@
         left: 5px;
         width: 175px;
         height: 135px;
-        color: #000;
+        color: #000000;
         font-family: Volter, monospace;
         font-size: 9px;
         line-height: 12px;
@@ -884,11 +884,11 @@
 
 .volt-widget-high-score {
     border-radius: 0.3rem;
-    border: solid 1px #000;
+    border: solid 1px #000000;
 
     .header {
         border-image-source: none !important;
-        background-color: #40403e;
+        background-color: #363e48;
         border-radius: 0.3rem 0.3rem 0 0;
     }
 
@@ -897,17 +897,17 @@
     }
 
     .section-border {
-        border: solid 1px #8c8a88;
+        border: solid 1px #7487a0;
     }
 
     .high-score-content {
         height: 100%;
-        background-color: #000;
+        background-color: #000000;
         border-radius: 0.3rem;
     }
 
     .score-footer {
-        color: #9a9896;
+        color: #8596ab;
         font-weight: bold;
     }
 }
@@ -1185,7 +1185,7 @@
 .volt-recolor {
     width: 388px;
     height: 551px;
-    color: #000;
+    color: #000000;
     font-family: Ubuntu, sans-serif;
     font-size: 11px;
     line-height: 17px;
@@ -1229,7 +1229,7 @@
         padding: 1px;
         border: 1px solid #b0bdce;
         border-radius: 5px;
-        background: #fff;
+        background: #ffffff;
     }
 
     .volt-recolor__preview--original {

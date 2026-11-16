@@ -134,7 +134,7 @@
     left: 0;
     width: 103px;
     height: calc(114px + var(--air-quest-extra, 0px));
-    background: #646464;
+    background: #526276;
 }
 
 .air-quest-entry[data-accepted='true'] .air-quest-campaign {
@@ -151,13 +151,13 @@
 .air-quest-campaign-top {
     top: 2px;
     height: calc(110px + var(--air-quest-extra, 0px));
-    background: #bababa;
+    background: #b0b9c4;
 }
 
 .air-quest-campaign-bottom {
     top: calc(57px + var(--air-quest-extra-floor, 0px));
     height: calc(55px + var(--air-quest-extra-floor, 0px));
-    background: #ababab;
+    background: #9da9b9;
 }
 
 .air-quest-entry[data-accepted='true'] .air-quest-campaign-top {
@@ -199,8 +199,8 @@
 
 /* Rounded surfaces of the Quest layout: a 1px outline with the stair-step corner of the border skin (5, 3-4, 2, 1, 1, 0). */
 .air-quest-round {
-    --air-round-outline: #5d5d5a;
-    --air-round-fill: #c8c8c8;
+    --air-round-outline: #4c596b;
+    --air-round-fill: #c1c7cf;
     background: var(--air-round-outline);
     clip-path: polygon(
         5px 0,
@@ -292,8 +292,8 @@
 }
 
 .air-quest-block-header {
-    --air-round-outline: #505050;
-    --air-round-fill: #8d8d8d;
+    --air-round-outline: #434e5d;
+    --air-round-fill: #778aa3;
     position: absolute;
     top: 6px;
     left: 5px;
@@ -302,7 +302,7 @@
 }
 
 .air-quest-block[data-accepted='true'] .air-quest-block-header {
-    --air-round-outline: #61594a;
+    --air-round-outline: #475464;
     --air-round-fill: #edb23a;
 }
 
@@ -494,7 +494,7 @@
     box-sizing: border-box;
     border: 0;
     background-color: transparent;
-    background-image: repeating-linear-gradient(#b8b7b7 0 1px, transparent 1px 2px), linear-gradient(to right, #535353 0 1px, #ffffff 1px 16px, #535353 16px 17px);
+    background-image: repeating-linear-gradient(#adb6c2 0 1px, transparent 1px 2px), linear-gradient(to right, #465160 0 1px, #ffffff 1px 16px, #465160 16px 17px);
     background-repeat: no-repeat, no-repeat;
     /* the grip fills the lift between 7px under the cap and 7px above the foot */
     background-size: 7px calc(100% - 14px), 17px 100%;

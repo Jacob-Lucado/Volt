@@ -15,16 +15,16 @@
     --habbo-panel: #f7f9fc;
     --habbo-tab: #c3cedc;
     --habbo-tab-active: #e6ebf2;
-    --habbo-grid: #cdd3d9;
-    --habbo-grid-active: #ececec;
-    --habbo-select: #63c5e9;
-    --habbo-select-outer: #82d1ed;
+    --habbo-grid: #ced2d8;
+    --habbo-grid-active: #ebeced;
+    --habbo-select: #639de9;
+    --habbo-select-outer: #82b0ed;
     --habbo-close: #921911;
     --habbo-close-hover: #b9322a;
-    --habbo-toolbar: #555555;
+    --habbo-toolbar: #475363;
     --habbo-nav-border: #eef2f7;
-    --habbo-text: #151515;
-    --habbo-text-muted: #666666;
+    --habbo-text: #131517;
+    --habbo-text-muted: #546478;
     --habbo-success: #00800b;
     --habbo-danger: #a81a12;
     --habbo-buy-top: #3dcc45;
@@ -38,14 +38,14 @@
     --habbo-tab-h: 32px;
     --habbo-tab-cap: 9px;
     --habbo-header-controls-w: 43px;
-    --habbo-purse-bg: rgba(104, 102, 97, 0.65);
-    --habbo-purse-divider: #444444;
-    --habbo-purse-hc-border: rgba(59, 57, 51, 0.8);
+    --habbo-purse-bg: rgba(83, 98, 118, 0.65);
+    --habbo-purse-divider: #3a434e;
+    --habbo-purse-hc-border: rgba(48, 54, 62, 0.8);
     --habbo-purse-credit: #d5af22;
-    --habbo-purse-diamond: #38caeb;
+    --habbo-purse-diamond: #3886eb;
     --habbo-purse-ducket: #d787d7;
-    --habbo-purse-help: #217bb5;
-    --habbo-purse-settings: #726b86;
+    --habbo-purse-help: #223e63;
+    --habbo-purse-settings: #617590;
     --habbo-purse-hc: #3b9333;
     --habbo-purse-hc-dark: #2d7228;
     --habbo-purse-hc-text: #00c1c4;
@@ -68,7 +68,7 @@
     border-image-width: 3px !important;
     border-image-repeat: stretch !important;
     background: transparent !important;
-    color: #111111 !important;
+    color: #101112 !important;
     font-family: Volter, Arial, sans-serif;
     font-size: 9px;
     font-weight: 400;
@@ -97,7 +97,7 @@
 .habbo-btn-secondary.pointer-events-none,
 .habbo-btn-slice.pointer-events-none {
     border-image-source: var(--habbo-skin-button-disabled) !important;
-    color: #777777 !important;
+    color: #60748e !important;
     opacity: 1;
     cursor: not-allowed;
     filter: none;
@@ -164,7 +164,7 @@
     cursor: not-allowed;
 }
 
-/* AIR has no dedicated red button style; Volt danger uses shiny × purse logout #DE5347. */
+/* AIR has no dedicated red button style; Volt danger uses shiny × purse logout #de5347. */
 .habbo-btn-danger {
     display: inline-flex;
     align-items: center;
@@ -323,7 +323,7 @@ input[type='radio']:checked,
 
 input[type='checkbox']:focus-visible,
 input[type='radio']:focus-visible {
-    outline: 1px solid #4b7ea1;
+    outline: 1px solid #36465b;
     outline-offset: 1px;
 }
 

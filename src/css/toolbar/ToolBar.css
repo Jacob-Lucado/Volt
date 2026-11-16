@@ -13,11 +13,11 @@
     pointer-events: none;
     border: 8px solid transparent;
     border-width: 7px 7px 8px;
-    border-image-source: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAfUlEQVR42t1TOQ6AMAxzqj4K+EsHFsSTqi4d+pfCs5iQIEcpYsNbYtkeEhMkCmyE60BctC6zqYwp30xOcWmJDJPgNbJuu9hN4yB2xFM1oWYQU4Z7SmzxDh/wB7F2jhbv2OeYBvxMAOB7EiwQL0PnbwNAoI4mmQ2jF3UUtTwA9QQkZLsBXqMAAAAASUVORK5CYII=");
+    border-image-source: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAfklEQVR42mNkwASLGXCDWGQOI7qm4KQynDrXzutCMQSmeTE+TTgMiWXBJnn55G4MMV1zVwwxRnRbsWnEZsDaeV0MTIRsxCfPxEABGA6asUUHPnkmtJSD0wD0aGJgYGBgIcYGXIARPTMQmbYZGBgYYhmJyEk4cxgjCdkRI1sCAPpeJGZNETrCAAAAAElFTkSuQmCC");
     border-image-slice: 7 7 8;
     border-image-width: 7px 7px 8px;
     border-image-repeat: stretch;
-    background-color: rgba(46, 45, 41, 0.6392156862745098);
+    background-color: rgba(38, 43, 49, 0.6392156862745098);
     background-clip: padding-box;
     image-rendering: var(--volt-pixel-art, pixelated);
 }
@@ -26,7 +26,7 @@
     min-height: 44px;
     border: 1px solid rgba(0, 0, 0, 0.50);
     border-radius: 7px;
-    background: rgba(46, 45, 44, 0.76);
+    background: rgba(40, 44, 50, 0.76);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.12),
         inset 0 -1px 0 rgba(0, 0, 0, 0.35),
@@ -55,10 +55,10 @@
     padding: 0 6px;
     transform: translateX(-50%);
     border: 6px solid transparent;
-    border-image-source: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAQAAADY4iz3AAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAd0SU1FB+oKBAseCoYYJJIAAAA/SURBVBjTY2SAA+VnDAwMDHelYHxGZGEYgEgzYkrAJBmxSUAkmRhwAkbsehgYGBjw6MJnIHnOwOsvvKGBPQwBDksRG4f3nNQAAAAASUVORK5CYII=");
+    border-image-source: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAUklEQVR42mNkwALkldWfwdgP796UQpdnxKUYHSBrZiJGA7o8EzEa0DUyMZABGIm1BRmQZRN5mrDFAz7w8O5NKfKdR6xtMHVM+JILrhTBSE7aAwCpwyLINVh+eQAAAABJRU5ErkJggg==");
     border-image-slice: 6 fill;
     border-image-width: 6px;
-    color: #fff;
+    color: #ffffff;
     content: attr(data-toolbar-tooltip);
     font-family: UbuntuRegular, sans-serif;
     font-size: 9px;
@@ -224,7 +224,7 @@
     display: block;
     width: 6px;
     height: 8px;
-    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAICAYAAADaxo44AAAAXklEQVR42m2Nuw2AMBQD70XsEXahomKJNKmYJTShCLuRSUxBhPhdY+ksyyaJbV0ACHFWyQkAR+MuAazlQwLm/iRAx4ve+/NDkoU4X8Veq4ZxwiRhZp8fB1ByouT0WB5wIyX2MwvnwwAAAABJRU5ErkJggg==") center / 6px 8px no-repeat;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAICAYAAADaxo44AAAAb0lEQVR42m2NsQ2CUAAF7wFD2OEuVFSULPAbEhMWsGQBCAkWOgCbMIU1K1g9C8iPote85K54ss3jNgAQmtbdOAOQsPMpAbTvlzylq5J/EiDjwDnPtw/bul7qGJbny0VZIdtI+vnJAO5TD6DQ1DG+AU3hKNNRLoi1AAAAAElFTkSuQmCC") center / 6px 8px no-repeat;
     content: "";
     image-rendering: var(--volt-pixel-art, pixelated);
 }
@@ -234,7 +234,7 @@
     filter: drop-shadow(-1px 1px 0 rgba(0, 0, 0, 0.28));
 }
 
-/* bottom_bar_left main_toolbar sibling, not the arrow container: style-2 #3b3933 border at (-6, 0), 20x43, clipped by the bar. The collapse regions have no hover skin. */
+/* bottom_bar_left main_toolbar sibling, not the arrow container: style-2 #30363e border at (-6, 0), 20x43, clipped by the bar. The collapse regions have no hover skin. */
 .tb-collapse--left,
 .tb-collapse--right {
     overflow: hidden;
@@ -253,7 +253,7 @@
     justify-content: center;
     cursor: pointer;
     border-radius: 9px;
-    background: rgba(18, 16, 14, 0.80);
+    background: rgba(15, 16, 17, 0.80);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -261,7 +261,7 @@
     transition: background 0.15s, border-color 0.15s;
 
     &:hover {
-        background: rgba(30, 26, 20, 0.88);
+        background: rgba(23, 25, 27, 0.88);
         border-color: rgba(255, 255, 255, 0.13);
     }
 }
@@ -335,7 +335,7 @@
     height: 48px;
 }
 
-/* collapse_left / collapse_right: 15x46 regions, a 20x43 style-2 #3b3933 border at (x,1) clipped by the region, arrow at (4,18). */
+/* collapse_left / collapse_right: 15x46 regions, a 20x43 style-2 #30363e border at (x,1) clipped by the region, arrow at (4,18). */
 .tb-collapse--friendbar-left,
 .tb-collapse--friendbar-right {
     overflow: hidden;
@@ -360,7 +360,7 @@
 }
 
 .tbme-panel {
-    background: rgba(46, 45, 44, 0.92);
+    background: rgba(40, 44, 50, 0.92);
     border: 1px solid rgba(0, 0, 0, 0.65);
     border-radius: 7px;
     padding: 10px 12px;
@@ -370,14 +370,14 @@
 }
 
 /* me_menu_new_view.xml / prog_menu_view.xml border style 6: habbo_skin_border_6 (habbo_skin_ubuntu_png 80,10 20x20,
-   8/4/8) multiplied by the window colour #3b3933, fully opaque: #2b2924 fill, #3b3933 bevel, black outline. */
+   8/4/8) multiplied by the window colour #30363e, fully opaque: #23272c fill, #30363e bevel, black outline. */
 .volt-toolbar-me-popup {
     box-sizing: border-box;
     min-width: max-content;
     height: 53px;
     border: 0 solid transparent;
     border-radius: 0;
-    border-image-source: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAgElEQVR42u2UMQ6AIBAE5wi9/MXK+H5i5V/wBVhpooDhwJLtCGGyFDtCmoguUjpEgHWZVTS/7Q/WBYxaUAEsNncZwlEFcW7K/v/RrhaWg/ptx7Q0+3pj+DkDOIC9wNyUtPMzL2OooO/ZAdja0WvleEu1w4cAIo2WLhaUTv0n5j8BV+IkZPTyL4IAAAAASUVORK5CYII=");
+    border-image-source: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAg0lEQVR42u2UsQqAIBRFzxPXCPqSpsY+vtHJLwmiD7CpoNLwaaN3E/FwHe4R3gnoIqlDABinWUXzbrmxTmDQghJgsbHLfVuzIF0/RP9/a5cLi0G9WzAlzb7eGH5OAzZgLTA2Je38zMMYKuhzdgA2d/RaOV5SrfAhgEihpZMFpVL/L/MfX9QkZ41R334AAAAASUVORK5CYII=");
     border-image-slice: 8 fill;
     border-image-width: 8px;
     border-image-repeat: stretch;
@@ -399,7 +399,7 @@
     align-items: center;
     justify-content: flex-start;
     padding: 0;
-    color: #fff;
+    color: #ffffff;
     font-family: UbuntuRegular, sans-serif;
     font-size: 9px;
     line-height: 14px;
@@ -470,12 +470,12 @@
 .volt-icon.icon-progression-leaderboards {
     width: 32px;
     height: 30px;
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABdUExURQAAAPfERf77a//1Kf/mGf/SCv2yAfKPAf////u/B/X3+PaoBO7x8tne4uHm6dri5cfR1c7X29bd4eWEAaGutvm1BbfGzmZucu+0Q6VGAMpkANp3AYEvANNzAAAAACfs3O0AAAAfdFJOU////////////////////////////////////////wDNGXYQAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAGXRFWHRTb2Z0d2FyZQBQYWludC5ORVQgNS4xLjExiggWzgAAALhlWElmSUkqAAgAAAAFABoBBQABAAAASgAAABsBBQABAAAAUgAAACgBAwABAAAAAgAAADEBAgARAAAAWgAAAGmHBAABAAAAbAAAAAAAAABgAAAAAQAAAGAAAAABAAAAUGFpbnQuTkVUIDUuMS4xMQAAAwAAkAcABAAAADAyMzABoAMAAQAAAAEAAAAFoAQAAQAAAJYAAAAAAAAAAgABAAIABAAAAFI5OAACAAcABAAAADAxMDAAAAAABjXUc7KPcjsAAAErSURBVChTdZLZcsMgDEVvtAAqCcFBZG36/5/ZgWx+aDVjI3RspCuBn48BWO9W7mazWW9XLhH9R/hvAmJeo7cHIQ1K8gm8VqIQEcMn1WMFVENEQgyqz9oxVMBERJG+ElREbIR+gJzNWDTYJBZU2CxnAJmIdHyWttttGgcoEU2iYoaU0q6UskspwUw0j/OyqmFf63I4HJZa9zDVjFEbMlmD17osS62OZpRH+KGlT1Qn6A9N84nUO46THNE7xQcBHMwBXv3k1RGY4VOPe8GZGvZ7YLwanVHcAXgq6EQNuFwvQCPqKGn+5QVdiFqLIbZGJB3FR9XwE7oEYRrGEqTjNMloaWdllmHMyn1eldnxkUdv18v35XrTkec9H8QY76P1AO4xTjlPMgfyHOXL/wUUkiPOLuaTjQAAAABJRU5ErkJggg==");
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAADn0lEQVR42qWWTUhcVxTHf1fnw9EmBp1irLHWOGlroIIQUkqz0ISYRXYtBKGrhNBCZ+WidNPlbLoodtEKKcGsAkHaLEKkWKl2kW5KIZCCaeJM1ExeVByNY+uM72Pe6eI6V8cZG4ccGObec+85//P9rqI6kl1rdVAhVQ1A/t55s4mcmTywfKAaN8Lvv71rN3lguZoqw4VypqoVOTCI+G7cAChnCt+N783RK4GIPG/Vq9QC/q9/Q2pBH2i+8IokvhsX341L4Y6SjWElgGwMKyncUebsZUDq/0pVHtQD4M/n2UzB4SFBRFBKsTGsaOiCmrciWlFPbl+dqkL9406HCbzTtMPIZFE9OUSEfH6LSKQOpZQ2ItpornmP1gj222UYAUByt3QlB1tqdV2fPg7Zdchk8efz+IdCFd31VgvUzC9pb6KNBE4fx51+og1dLgBQP+iJ6ZO6jz/bkX54A2+1sMsqGxFhPbuhd45jwqYphztdINCcpfbMVQBqga2frpU2o3p4A6KNeI/WtFf9WnGRZp88JVK349HK6nrJuVIKdzoM967rUGey5TnJ3QoQORkyYQj22yTn0mTW9OW6cJC68A7Ilu2wZbsARJsaiXW261w265DnZxzqBz0AVewTVT/okZ9xkO7LAFgJRayznZmUta3U3VbslADMpCxine1YCW2vdF8uAahUbrLdybi//EDmvkfbV8Lo2AQnu9rKEj+Tsrhy6QJWQhHtDRAc+FR3ePD7Et1lHf/vdyNmHe3VKTvW0lSxuor84r298ntBBJDRsQkODwnKmSLUFyNQ8AB4trxmLP/2+o8mhEV+oOAR6ouhnCkOD2nPizpNiEbHJmR0bELS1qIA8uLuOfHduFgJPUaSc2lJzqVll2AJz0roEfPi7jkBJG0tGp1meoyOTYiIGBB7PGjmUhEIkJsDyB9X9X+RVwTw3bjY40EDIiIGRO3yhvMf9tDe1oo9HiTUG0Ve/wiAxa91nA81QEMXbKbgn00t2Prl57o8V27j3M8QvuiSthaZ/P0BVy5dMGPF0BeJa6Wl9vMINaeO8sbQu0jorOG/tv1TzhSs3Mb/cwl16miJnoH+DypOYZMkezxIqC+mvxtdHZqZXS8vr8Yj5jtDVwfOb0nCF92yARzYbyJL6Cx063EzezPP+qow+xSSyxBrgRNvwpHmJU58EjENDMmK477iQ8J+7GE/1nlYeCa8983+L6S/vBwdx0aqfhJJlU+nl97/DxnD5JQclUtLAAAAAElFTkSuQmCC");
 }
 
 
 .volt-toolbar-me-popup .tbme-item:hover {
-    color: #21cff4;
+    color: #217cf4;
 }
 
 .volt-toolbar-me-popup .tbme-item:hover .volt-icon {

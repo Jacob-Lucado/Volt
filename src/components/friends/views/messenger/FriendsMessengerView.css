@@ -30,7 +30,7 @@
     border-radius: 0;
     background: transparent;
     filter: drop-shadow(0 0 10px rgba(0, 0, 0, .35));
-    color: #000;
+    color: #000000;
     font-family: MessengerUbuntu, Arial, sans-serif;
     font-kerning: normal;
     font-synthesis: none;
@@ -71,7 +71,7 @@
     left: 8px;
     height: 15px;
     overflow: hidden;
-    color: #000;
+    color: #000000;
     font-size: 10px;
     font-weight: 700;
     line-height: 14px;
@@ -216,7 +216,7 @@
     width: calc(100% - 1px);
     height: 15px;
     overflow: hidden;
-    color: #444;
+    color: #3a434e;
     font-size: 10px;
     font-weight: 700;
     line-height: 15px;
@@ -227,8 +227,8 @@
     height: 2px;
     min-width: 0;
     flex: 1;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #fff;
+    border-top: 1px solid #c6cbd2;
+    border-bottom: 1px solid #ffffff;
     transform: translateY(-.5px);
     content: "";
 }
@@ -261,7 +261,7 @@
     border-radius: 0;
     background: transparent;
     box-shadow: none;
-    color: #000;
+    color: #000000;
     font-size: 10px;
     font-weight: 700;
     line-height: 13px;
@@ -390,7 +390,7 @@
     background: transparent;
     overflow: hidden;
     text-align: left;
-    color: #555;
+    color: #475363;
     font-size: 10px;
     font-weight: 700;
     line-height: 15px;
@@ -403,7 +403,7 @@
     width: 100%;
     min-height: 18px;
     padding: 7px 0;
-    color: #000;
+    color: #000000;
     overflow-wrap: break-word;
     font-size: 11px;
     line-height: 13px;
@@ -445,7 +445,7 @@
 .messenger-window .messenger-message-time {
     width: 131px;
     height: 16px;
-    color: #555;
+    color: #475363;
     font-size: 11px;
     line-height: 16px;
 }
@@ -495,7 +495,7 @@
 .messenger-window .messenger-status-notification {
     width: calc(100cqw - 27px);
     padding: 10px 0;
-    color: #000;
+    color: #000000;
     font-size: 11px;
     line-height: 13px;
     text-align: center;
@@ -520,13 +520,13 @@
     border-radius: 0;
     outline: 0;
     background: transparent;
-    color: #000;
+    color: #000000;
     font-size: 11px;
     line-height: 17px;
 }
 
 .messenger-window .messenger-input-row input::placeholder {
-    color: #888;
+    color: #71859f;
     opacity: 1;
 }
 
@@ -607,7 +607,7 @@
     z-index: 9999;
     width: 256px;
     transform: translateY(-100%);
-    color: #000;
+    color: #000000;
     font-family: MessengerUbuntu, Arial, sans-serif;
     font-synthesis: none;
     image-rendering: pixelated;
@@ -662,7 +662,7 @@
     outline: 0;
     background: transparent;
     box-shadow: none;
-    color: #333;
+    color: #2d3239;
     font-size: 11px;
     line-height: 17px;
 }
@@ -673,7 +673,7 @@
     left: 1px;
     width: 111px;
     height: 17px;
-    color: #888;
+    color: #71859f;
     font-size: 11px;
     line-height: 17px;
     pointer-events: none;
@@ -721,7 +721,7 @@
     display: block;
     height: 18px;
     margin: 0 0 2px;
-    color: #111;
+    color: #101112;
     font-size: 10px;
     font-weight: 400;
     line-height: 18px;
@@ -754,11 +754,11 @@
 }
 
 .messenger-picker-host .messenger-habbicon-grid .empty {
-    background: rgba(221, 221, 221, .4);
+    background: rgba(217, 221, 225, .4);
 }
 
 .messenger-picker-host .messenger-habbicon-grid button:hover {
-    background: #eeeeee;
+    background: #edeeef;
 }
 
 .messenger-picker-host .messenger-habbicon-grid button span {

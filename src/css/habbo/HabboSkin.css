@@ -58,7 +58,7 @@
     background: transparent !important;
     box-shadow: none !important;
     border-radius: 0 !important;
-    color: #111111 !important;
+    color: #101112 !important;
     text-shadow: none !important;
     image-rendering: var(--volt-pixel-art, pixelated) !important;
 }
@@ -80,7 +80,7 @@
 .volt-catalog-window .volt-catalog-swf-gift-button:disabled,
 .volt-catalog-window .volt-catalog-swf-gift-button.pointer-events-none {
     border-image-source: var(--habbo-skin-button-disabled) !important;
-    color: #777777 !important;
+    color: #60748e !important;
     opacity: 1 !important;
 }
 
@@ -93,7 +93,7 @@
     background: transparent !important;
     box-shadow: none !important;
     border-radius: 0 !important;
-    color: #111111 !important;
+    color: #101112 !important;
     text-shadow: none !important;
 }
 
@@ -108,7 +108,7 @@
 .volt-catalog-window .volt-catalog-standard-gift-button:disabled,
 .volt-catalog-window .volt-catalog-standard-gift-button.pointer-events-none {
     border-image-source: var(--habbo-skin-shiny-disabled) !important;
-    color: #777777 !important;
+    color: #60748e !important;
 }
 
 .volt-catalog-window .volt-catalog-swf-buy-button,

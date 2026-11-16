@@ -27,8 +27,8 @@
 /* catalog.header.background.border (1, 0, 568x90) runs from edge to edge right under the title bar and covers the frame
    border. The 2px border is drawn inside, so the header image (blend 0.1) also tints it as in AIR. */
 .volt-catalog-standard-header.is-builder {
-    background: #2d2724;
-    box-shadow: inset 0 0 0 2px #4e4844;
+    background: #24282d;
+    box-shadow: inset 0 0 0 2px #3e4854;
 }
 
 /* builder.mode.header: title at (80, 11) 24px, membership at (80, 41) and limit at (80, 56). Flash lays the glyphs out
@@ -103,7 +103,7 @@
     position: absolute;
     top: 3px;
     left: 7px;
-    color: #000;
+    color: #000000;
     font-family: UbuntuRegular, Ubuntu, sans-serif;
     font-size: 10px;
     line-height: 11px;
@@ -166,7 +166,7 @@
     border-image: var(--builder-button-default) 5 fill / 5px stretch;
     border-radius: 0;
     background: transparent;
-    color: #fff;
+    color: #ffffff;
     cursor: pointer;
     image-rendering: pixelated;
 }
@@ -197,7 +197,7 @@
 
 /* White over the card text colour that :is(.content-area, .volt-card-content-shell) span sets. */
 .volt-catalog-builder-widget .volt-catalog-builder-button > span {
-    color: #fff;
+    color: #ffffff;
 }
 
 .volt-catalog-builder-button.is-place-one {

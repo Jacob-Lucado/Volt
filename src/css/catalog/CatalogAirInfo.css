@@ -18,16 +18,16 @@
 }
 
 .volt-catalog-air-html.is-dom a {
-    color: #333333;
+    color: #2d3239;
     text-decoration: underline;
 }
 
 .volt-catalog-air-html.is-dom a:hover {
-    color: #336a95;
+    color: #293c54;
 }
 
 .volt-catalog-air-html.is-dom a:active {
-    color: #41b7d9;
+    color: #2d507d;
 }
 
 /* AIR priceDisplayWidget: border style 6, 29 high, price_box_new at (3, 4). */
@@ -77,7 +77,7 @@
     overflow: hidden;
 }
 
-/* layout_info_rentables: a #d8d8d8 border style 2 (17, 20, 328x425); the itemlist_vertical at 10,9 (309x407), spacing 3. */
+/* layout_info_rentables: a #d4d7dc border style 2 (17, 20, 328x425); the itemlist_vertical at 10,9 (309x407), spacing 3. */
 .volt-air-info-rentables {
     position: absolute;
     top: 20px;
@@ -352,7 +352,7 @@
     left: 6px;
 }
 
-/* A #e0e0e0 border style 3 (17, 385, 324x40). */
+/* A #dde0e3 border style 3 (17, 385, 324x40). */
 .volt-air-bundle-info {
     position: absolute;
     top: 385px;
@@ -432,7 +432,7 @@
     bottom: 6px;
 }
 
-/* playPreviewContainer (7, 195, 175x36): border style 2 in #cccccc at blend 0.5, play_preview_text (u_small) at 9,11. */
+/* playPreviewContainer (7, 195, 175x36): border style 2 in #c6cbd2 at blend 0.5, play_preview_text (u_small) at 9,11. */
 .volt-catalog-sound-layout .volt-catalog-sound-listen-panel {
     border: 0;
     background: none;
@@ -455,7 +455,7 @@
     left: 9px;
 }
 
-/* specialInfoWidget (110, 28, 142x73): ctlg_special_img centred, ctlg_special_txt (italic 11, #333333, centred) at 2,28. */
+/* specialInfoWidget (110, 28, 142x73): ctlg_special_img centred, ctlg_special_txt (italic 11, #2d3239, centred) at 2,28. */
 .volt-catalog-sound-special-info {
     position: absolute;
     top: 28px;

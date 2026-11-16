@@ -298,7 +298,7 @@
     min-width: 100px;
     justify-content: flex-start;
     overflow: visible;
-    color: #151515;
+    color: #131517;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 12px;
     font-weight: 700;
@@ -687,7 +687,7 @@
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-    color: #111 !important;
+    color: #101112 !important;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif !important;
     font-size: 12px !important;
     font-weight: 700 !important;
@@ -716,7 +716,7 @@
     padding: 0 8px 0 6px;
     overflow: hidden;
     background: #eef2f7;
-    box-shadow: inset 1px 0 #000;
+    box-shadow: inset 1px 0 #000000;
 }
 
 .volt-avatar-editor-wardrobe-header {
@@ -733,7 +733,7 @@
 
 .volt-avatar-editor .volt-avatar-editor-wardrobe-title {
     overflow: hidden;
-    color: #83827e;
+    color: #677d9a;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif !important;
     font-size: 12px !important;
     font-weight: 700;
@@ -761,7 +761,7 @@
     padding: 3px 3px 0 4px;
     overflow: hidden;
     border: 0;
-    background: #cbcbcb;
+    background: #c4cad2;
     image-rendering: var(--volt-pixel-art, pixelated);
 }
 
@@ -1025,8 +1025,8 @@
     top: 2px;
     width: 18px;
     height: 14px;
-    border: 1px solid #ddd;
-    background: #666;
+    border: 1px solid #d9dde1;
+    background: #546478;
     overflow: hidden;
     display: flex;
     justify-content: flex-start;
@@ -1040,15 +1040,15 @@
     top: 41px;
     width: 42px;
     height: 5px;
-    border: 1px solid #ddd;
-    background: #000;
+    border: 1px solid #d9dde1;
+    background: #000000;
 }
 
 .volt-avatar-editor-effect-duration > div { height: 3px; background: #20bf20; }
 .volt-avatar-editor-effect-name { position: absolute; left: 351px; top: 400px; width: 120px; display: flex; justify-content: center; }
 .volt-avatar-editor-effect-activate { position: absolute; left: 21px; top: 443px; width: 300px; display: flex; justify-content: center; }
 .volt-avatar-editor-effect-time { position: absolute; left: 357px; top: 417px; width: 120px; height: 17px; display: flex; justify-content: center; }
-.volt-avatar-editor-effect-time-bar { position: absolute; left: 1px; top: 1px; width: 120px; height: 16px; background: #000; }
+.volt-avatar-editor-effect-time-bar { position: absolute; left: 1px; top: 1px; width: 120px; height: 16px; background: #000000; }
 .volt-avatar-editor-effect-time-bar > div { height: 16px; background: #20bf20; }
 .volt-avatar-editor-effect-time > span { mix-blend-mode: multiply; }
 .volt-avatar-editor-effect-time > .volt-avatar-editor-effect-time-ink { position: absolute !important; filter: invert(1) brightness(0.4); mix-blend-mode: plus-lighter; }
@@ -1086,7 +1086,7 @@
     background-blend-mode: multiply;
 }
 
-/* collectible_avatar_info: 122x20 at (356, 345) of the editor content, #454545, bold 10px centred. */
+/* collectible_avatar_info: 122x20 at (356, 345) of the editor content, #3b444f, bold 10px centred. */
 .volt-avatar-editor-nft-info {
     position: absolute;
     left: 357px;
@@ -1098,5 +1098,5 @@
     justify-content: center;
     padding-top: 3px;
     box-sizing: border-box;
-    background: #454545;
+    background: #3b444f;
 }

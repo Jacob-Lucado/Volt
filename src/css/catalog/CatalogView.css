@@ -2,16 +2,16 @@
     /* habbo_skin_frame_3 fill. */
     --catalog-standard-bg: #eef2f7;
     --catalog-standard-panel: #f7f9fc;
-    --catalog-standard-panel-2: #e7e7df;
-    --catalog-standard-border: #9d9d96;
-    --catalog-standard-border-dark: #6f6f6a;
-    --catalog-standard-text: #222222;
-    --catalog-standard-muted: #666666;
+    --catalog-standard-panel-2: #e0e3e6;
+    --catalog-standard-border: #8797ac;
+    --catalog-standard-border-dark: #586a81;
+    --catalog-standard-text: #1e2226;
+    --catalog-standard-muted: #546478;
     --catalog-standard-blue: #24344c;
     --catalog-standard-blue-dark: #131d2e;
     --catalog-standard-blue-border: #2a3b56;
-    --catalog-standard-select: #63c5e9;
-    --catalog-standard-select-outer: #82d1ed;
+    --catalog-standard-select: #639de9;
+    --catalog-standard-select-outer: #82b0ed;
     /* Quantity stepper +/- sprites, kept identical to origin/main so the
        glyphs stay put through hover/active/disabled states. */
     --habbo-stepper-plus: url("../../assets/images/catalog/buttons/plus.png");
@@ -77,7 +77,7 @@
 }
 
 .volt-catalog-window :where(.bg-white\/50, .bg-white\/80) {
-    background: rgba(247, 247, 242, 0.82) !important;
+    background: rgba(244, 244, 245, 0.82) !important;
     color: var(--catalog-standard-text) !important;
 }
 
@@ -166,7 +166,7 @@
     left: 80px;
     top: 11px;
     width: 475px;
-    color: #fff;
+    color: #ffffff;
 }
 
 .volt-catalog-standard-header-title {
@@ -292,7 +292,7 @@
     border: 0 !important;
     border-radius: 0 !important;
     background: transparent !important;
-    color: #666666 !important;
+    color: #546478 !important;
     font-family: Ubuntu, sans-serif !important;
     font-size: 12px !important;
     box-shadow: none !important;
@@ -417,7 +417,7 @@
 .volt-catalog-navigation-node.is-child .volt-catalog-navigation-item {
     gap: 9px;
     padding-left: calc(15px + var(--volt-catalog-navigation-indent, 0px));
-    color: #52819a;
+    color: #394658;
     font-style: italic;
 }
 
@@ -519,7 +519,7 @@
     left: 145px;
     width: 15px;
     height: 15px;
-    background-color: #999;
+    background-color: #8797ab;
     mask: url("../../assets/images/catalog/air/skin/icon-triangle-right.png") 0 0 no-repeat;
 }
 
@@ -598,7 +598,7 @@
     height: 100%;
     padding: 0;
     overflow: hidden;
-    background: #000;
+    background: #000000;
 }
 
 /* Follows the product view now that the product view follows the page. */
@@ -616,7 +616,7 @@
     font-size: 12px !important;
     font-weight: 700 !important;
     line-height: 15px !important;
-    text-shadow: 0 1px 0 #000;
+    text-shadow: 0 1px 0 #000000;
 }
 
 .volt-catalog-offer-preview > .shadow-room-previewer {
@@ -658,7 +658,7 @@
 }
 
 .volt-catalog-offer-preview.is-badge .volt-catalog-preview-title {
-    color: #33332e !important;
+    color: #2b3036 !important;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
@@ -674,7 +674,7 @@
     height: 460px;
     min-height: 460px;
     overflow: hidden;
-    color: #222;
+    color: #1e2226;
     background: var(--catalog-standard-bg, #e3e9f1);
 }
 
@@ -808,7 +808,7 @@
     width: 360px;
     height: 240px;
     overflow: hidden;
-    background: #000;
+    background: #000000;
 }
 
 .volt-catalog-badge-preview.is-empty {
@@ -829,7 +829,7 @@
     width: 280px;
     max-height: 64px;
     overflow: hidden;
-    color: #fff;
+    color: #ffffff;
     pointer-events: none;
 }
 
@@ -912,7 +912,7 @@
 
 .volt-catalog-badge-product-copy .volt-catalog-product-details-name,
 .volt-catalog-badge-product-copy .volt-catalog-product-details-description {
-    color: #fff !important;
+    color: #ffffff !important;
     opacity: 1 !important;
 }
 
@@ -952,7 +952,7 @@
     outline: 0;
     background: transparent !important;
     box-shadow: none !important;
-    color: #000 !important;
+    color: #000000 !important;
     font-family: Ubuntu, sans-serif !important;
     font-size: 12px !important;
     line-height: 14px !important;
@@ -992,7 +992,7 @@
     padding: 0;
     border: 8px solid transparent;
     border-radius: 0;
-    border-image-source: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABrSURBVDhP7dSxEYBACETR7dJmbMEy7MROLATHQAb2cOTQMbrgE8ELgYjABuAc6Zp7hvZt7ophxXixtwsNwXWZUoVgFbtDHcjL2QY4wEL/gRXU3ipYRQMsBispyE+VF5+yt+59fZH72G9gaxwJZL9A0RMtPQAAAABJRU5ErkJggg==");
+    border-image-source: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAk0lEQVR42u2Vuw2AMBBDz1G2QNmEBdgJUSB2YgE2QcxhqkT5CfKhxF0uuiensAOS4gtAOHgRSfhnHYPOY67huT0LBkkBwFpQLDNuQhI6d7nuQxFkma7UsYgE7kphOagZN1Etzp52lHysH/gDe4G5KNXGT9nItEDj2AX11evUlYOtLzuorTH/dSSRAHvkgK31n/sGbnpARvyaTy8YAAAAAElFTkSuQmCC");
     border-image-slice: 8 fill;
     border-image-width: 8px;
     border-image-repeat: stretch;
@@ -1014,7 +1014,7 @@
 }
 
 :is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget, .volt-catalog-guild-price) .volt-catalog-price-frame .volt-catalog-standard-price-text {
-    color: #111 !important;
+    color: #101112 !important;
     font-family: Ubuntu, Arial, sans-serif;
     font-size: 14px !important;
     font-weight: 700 !important;
@@ -1031,7 +1031,7 @@
 }
 
 :is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget, .volt-catalog-guild-price) .volt-catalog-price-frame .is-credits .volt-currency-icon {
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAD/SURBVEhLtZSBDYMwDAQzTTtNR2GmrlBW6SBlhFSO9OFsnJRKraUngPH5ZSCl1lr+oXZ43i8HtWQpdhhqWhuTBNZtrlGDA1hQFa7LXGxATgvdIFSF2+pFt3bNBoQ7MKECqXC57mA7l9hAcAeObgnmqrwacGR03cEZNILlUhCtmevTYCq6jNdfgW2lToBvHSw3hBMc8wSz2WmwxDydfwRbIhZzLMpRbKAX68DRdSwcic8ZuEMF5g8i5ywcSUA1GoHdSASO89a5VgO/HgGqzw1gu+lczcAGTKApuMOzmVMAOuhhE3Jb3v4gizPRZYNmm1AMV3RCPiZgRQRE5SHwr/UG8Hq+iW3+jYQAAAAASUVORK5CYII=") !important;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABmElEQVR42rWVPVLDMBCF32Z8AMIhQgU1TdxE4y4ORyAXoKR04ZKSHCA5ArE7xpUralOFQ2DfYCnEWrJs2UmRndFY0c+3T9KTQsyMa0QAAN+Hu17H/fMJRDSalZnJNzfwArcErsdVSeKhBMEQVIBZMg6WcUTENpyIDNiGCjBUXdBNaOpNacZx3YcH9rIEKsCy0N/iE0jfdP3l0cDfv0wCgVf7BQHATNT6IlSAisxvFWng0CpsVuBT60byasD2V5LbqgFQcI4nQ2USugrbtgJ+V/iitCcVQJxOTlnP7FOOUwfiqBZgU3b7skT32facXaR2pK13eZi5Pbym1Pt1jo/tCxSn2oYqAjY73UTyCBER18fu5KmbJ1uTJdrrO+20uPcICbQp9XKnDkmAKtJldxp2BdEc7D48clCyr6HSdXublivg9smoBZC7dotpjoxrIA6nD2i5GoS2byqq/aLjQQAMgOsjmOvh8vuhx/yXtRRhtYql4WH7k0v2+QbZhOiOymq/yDt2kzfUvT0X/hvlPR97wOcmyL0X5BrxB6981enzqS0oAAAAAElFTkSuQmCC") !important;
 }
 
 .volt-catalog-sound-layout {
@@ -1041,7 +1041,7 @@
     height: 460px;
     min-height: 460px;
     overflow: hidden;
-    color: #222;
+    color: #1e2226;
     background: var(--catalog-standard-bg, #e3e9f1);
 }
 
@@ -1120,8 +1120,8 @@
     z-index: 4;
     width: 175px;
     height: 36px;
-    border: 1px solid rgba(204, 204, 204, 0.9);
-    background: rgba(204, 204, 204, 0.5);
+    border: 1px solid rgba(198, 203, 210, 0.9);
+    background: rgba(198, 203, 210, 0.5);
     font-size: 10px;
 }
 
@@ -1143,10 +1143,10 @@
     height: 22px;
     min-height: 22px;
     padding: 0 4px !important;
-    border: 1px solid #111111 !important;
+    border: 1px solid #101112 !important;
     border-radius: 3px !important;
-    background: linear-gradient(180deg, #f7f7f7 0%, #dedede 100%) !important;
-    color: #111111 !important;
+    background: linear-gradient(180deg, #f7f7f7 0%, #dbdee1 100%) !important;
+    color: #101112 !important;
     font-size: 10px !important;
     font-weight: 700 !important;
     line-height: 20px !important;
@@ -1155,12 +1155,12 @@
 }
 
 .volt-catalog-sound-listen-button:hover:not(:disabled) {
-    background: linear-gradient(180deg, #ffffff 0%, #e9e9e9 100%) !important;
+    background: linear-gradient(180deg, #ffffff 0%, #e7e9eb 100%) !important;
     filter: none;
 }
 
 .volt-catalog-sound-listen-button:active:not(:disabled) {
-    background: linear-gradient(180deg, #cdcdcd 0%, #eeeeee 100%) !important;
+    background: linear-gradient(180deg, #c7ccd3 0%, #edeeef 100%) !important;
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.24) !important;
 }
 
@@ -1180,9 +1180,9 @@
     min-height: 0;
     padding: 3px;
     overflow: hidden;
-    border: 1px solid #777;
+    border: 1px solid #60748e;
     border-radius: 6px;
-    background: #c9c9c3;
+    background: #bec5ce;
 }
 
 .volt-catalog-sound-grid .volt-classic-scroll-area-viewport {
@@ -1233,7 +1233,7 @@
     height: 460px;
     min-height: 460px;
     overflow: hidden;
-    color: #000;
+    color: #000000;
     font-family: UbuntuRegular, Ubuntu, sans-serif;
 }
 
@@ -1370,7 +1370,7 @@
     outline: 0;
     background: transparent !important;
     box-shadow: none !important;
-    color: #000 !important;
+    color: #000000 !important;
     font-family: UbuntuRegular, Ubuntu, sans-serif;
     font-size: 12px !important;
     font-weight: 700;
@@ -1485,7 +1485,7 @@
     }
 
     .volt-catalog-window .layout-grid-item:not(.has-highlight) {
-        background-color: #e4e7df !important;
+        background-color: #e0e3e6 !important;
         border: 2px solid transparent !important;
         border-radius: 4px !important;
         box-shadow: none !important;
@@ -1507,7 +1507,7 @@
     .volt-catalog-window .layout-grid-item.is-active {
         background-color: #ffffff !important;
         background-image: none !important;
-        border: 2px solid #62c4e8 !important;
+        border: 2px solid #629ce8 !important;
         box-shadow: none !important;
     }
 
@@ -1529,10 +1529,10 @@
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-    border: 1px solid #a1a19b;
+    border: 1px solid #8d9caf;
     border-radius: 4px;
     background: #ffffff;
-    box-shadow: inset 0 0 0 1px #63c5e9;
+    box-shadow: inset 0 0 0 1px #639de9;
     pointer-events: none;
 }
 
@@ -1558,7 +1558,7 @@
     min-width: 26px !important;
     min-height: 26px !important;
     margin: 1px !important;
-    border: 1px solid #2a2a2a !important;
+    border: 1px solid #25292f !important;
     border-radius: 2px !important;
     box-shadow:
         inset 1px 1px 0 rgba(255, 255, 255, 0.35),
@@ -1567,7 +1567,7 @@
 }
 
 .volt-catalog-window .layout-grid-item.has-highlight:hover {
-    border-color: #000 !important;
+    border-color: #000000 !important;
     box-shadow:
         inset 1px 1px 0 rgba(255, 255, 255, 0.5),
         inset -1px -1px 0 rgba(0, 0, 0, 0.25),
@@ -1575,11 +1575,11 @@
 }
 
 .volt-catalog-window .layout-grid-item.has-highlight.is-active {
-    border-color: #000 !important;
+    border-color: #000000 !important;
     box-shadow:
         inset 0 0 0 2px #ffffff,
-        inset 0 0 0 3px #000,
-        0 0 0 1px #63c5e9 !important;
+        inset 0 0 0 3px #000000,
+        0 0 0 1px #639de9 !important;
 }
 
 .volt-catalog-grid-offer-icon {
@@ -1802,7 +1802,7 @@
     gap: 3px;
     width: 100%;
     padding-right: 4px;
-    color: #000;
+    color: #000000;
     font-size: 11px;
     font-weight: 700;
     line-height: 12px;
@@ -2037,7 +2037,7 @@
     left: 20px;
     height: 17px;
     line-height: 0;
-    color: #666;
+    color: #546478;
     font-size: 12px;
     font-weight: 400;
     line-height: 17px;
@@ -2121,7 +2121,7 @@
     border-image-width: 3px !important;
     border-image-repeat: stretch !important;
     background: transparent !important;
-    color: #111111 !important;
+    color: #101112 !important;
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif !important;
     font-size: 11px !important;
     font-weight: 700 !important;
@@ -2152,7 +2152,7 @@
 .volt-catalog-window .volt-catalog-standard-button.pointer-events-none,
 .volt-catalog-window .volt-catalog-standard-button:disabled {
     border-image-source: var(--habbo-skin-button-disabled) !important;
-    color: #777777 !important;
+    color: #60748e !important;
     opacity: 1 !important;
     cursor: not-allowed !important;
 }
@@ -2205,7 +2205,7 @@
     position: relative;
     width: 200px;
     height: 25px;
-    color: #000;
+    color: #000000;
 }
 
 .volt-catalog-standard-spinner-label {
@@ -2214,7 +2214,7 @@
     top: 3px;
     height: 17px;
     line-height: 0;
-    color: #666666;
+    color: #546478;
     font-family: UbuntuRegular, Ubuntu, sans-serif;
     font-size: 12px;
     font-weight: 400;
@@ -2346,7 +2346,7 @@
     justify-content: flex-start;
     gap: 3px;
     min-height: 24px;
-    color: #222;
+    color: #1e2226;
     font-size: 11px;
 }
 
@@ -2363,7 +2363,7 @@
 }
 
 .volt-catalog-standard-price-text {
-    color: #222 !important;
+    color: #1e2226 !important;
     font-size: 11px !important;
     font-weight: 700 !important;
     line-height: 17px !important;
@@ -2372,7 +2372,7 @@
 .volt-catalog-standard-price-original {
     position: relative;
     display: inline-block;
-    color: #999999 !important;
+    color: #8797ab !important;
     font-size: 11px !important;
     font-weight: 700 !important;
     line-height: 17px !important;
@@ -2427,7 +2427,7 @@
     height: 17px;
     margin-left: -2px;
     margin-top: 3px;
-    color: #222222;
+    color: #1e2226;
     font-size: 12px;
     font-weight: 700;
     line-height: 17px;
@@ -2459,18 +2459,18 @@
 .volt-catalog-window .volt-catalog-preview-price .volt-catalog-standard-price-text {
     color: #ffffff !important;
     text-shadow:
-        0 0 2px #000,
-        1px 1px 1px #000,
-        -1px 1px 1px #000,
-        1px -1px 1px #000,
-        -1px -1px 1px #000 !important;
+        0 0 2px #000000,
+        1px 1px 1px #000000,
+        -1px 1px 1px #000000,
+        1px -1px 1px #000000,
+        -1px -1px 1px #000000 !important;
 }
 
 .volt-catalog-standard-price-plus {
     display: inline-block;
     width: 7px;
     height: 17px;
-    color: #666;
+    color: #546478;
     font-size: 11px;
     font-weight: 700;
     line-height: 17px;
@@ -2495,8 +2495,8 @@
 .volt-catalog-preview-btn svg {
     width: 14px !important;
     height: 14px !important;
-    color: #111 !important;
-    fill: #111 !important;
+    color: #101112 !important;
+    fill: #101112 !important;
     flex-shrink: 0 !important;
     display: block !important;
 }
@@ -2812,7 +2812,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 4px;
-    background: #e4e7df;
+    background: #e0e3e6;
 }
 
 .volt-catalog-bundle-main-item > .volt-catalog-grid-offer-icon {
@@ -2827,10 +2827,10 @@
 .volt-catalog-bundle-frame {
     box-sizing: border-box;
     padding: 8px;
-    border: 1px solid #8a8882;
+    border: 1px solid #6e839e;
     border-radius: 4px;
-    background: #d9d9d5;
-    box-shadow: inset 1px 1px #ffffff, inset -1px -1px #b0aea8;
+    background: #d3d6db;
+    box-shadow: inset 1px 1px #ffffff, inset -1px -1px #9faab9;
 }
 
 /* Show at most 5 rows of items; scroll when the bundle holds more. Rows are pinned
@@ -2849,10 +2849,10 @@
     box-sizing: border-box;
     margin-inline-start: auto;
     padding: 3px 10px;
-    /* 1px black outer edge, then a 2px #e3c47c ring, then the #a58d57 face. */
+    /* 1px black outer edge, then a 2px #e3c47c ring, then the #657b97 face. */
     border: 1px solid #000000;
     border-radius: 10px;
-    background: #a58d57;
+    background: #657b97;
     box-shadow: inset 0 0 0 2px #e3c47c;
 }
 
@@ -2864,7 +2864,7 @@
 /* page_text_details sits at the top of a room bundle (e.g. "Also available in the Credit
    page") — small, muted and left-aligned, above both columns. */
 .volt-catalog-bundle-details {
-    color: #6b6b6b;
+    color: #57687f;
     line-height: 1.2;
 }
 
@@ -2885,7 +2885,7 @@
     /* 1px black outer edge, then a 2px white ring, then the grey plate face. */
     border: 1px solid #000000;
     border-radius: 9px;
-    background: #b7b6ae;
+    background: #a7b1be;
     box-shadow: inset 0 0 0 2px #ffffff, inset 0 6px 0 rgba(255, 255, 255, 0.25), inset 0 -4px 0 rgba(0, 0, 0, 0.12);
 }
 

@@ -22,7 +22,7 @@ describe('interface scrollbar theme', () => {
 
         expect(entry).toContain("document.documentElement.classList.add('has-classic-scrollbar')");
         expect(rootRule).toContain('scrollbar-color: auto');
-        expect(css).toMatch(/@supports not selector\(::\-webkit-scrollbar\)[\s\S]*scrollbar-color:\s*#d9d9d9 #bdbbb3/);
+        expect(css).toMatch(/@supports not selector\(::\-webkit-scrollbar\)[\s\S]*scrollbar-color:\s*#d5d8dd #adb7c3/);
         expect(scrollbar).toContain('width: 17px');
         expect(scrollbar).toContain('height: 17px');
         expect(thumb).toContain('min-height: 12px');

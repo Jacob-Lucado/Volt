@@ -1,7 +1,7 @@
 /*
  * v75 settings windows (HabboToolbarCom): me_menu_sound_settings_xml 312x170, toolbar_chat_settings_xml 257x269,
  * me_menu_other_settings_xml 242 wide with a content-driven height, custom_word_filter_settings_xml 242x248.
- * Every window is a borderless style-6 border (#79756e, 8px corners) placed at (1,1) inside a clipping root; controls sit at the
+ * Every window is a borderless style-6 border (#5e7189, 8px corners) placed at (1,1) inside a clipping root; controls sit at the
  * absolute XML coordinates (x/y include that 1px offset). Text is u_regular: Ubuntu 12px, white on the frame.
  */
 
@@ -78,7 +78,7 @@
     position: absolute;
     top: 25px;
     height: 1px;
-    background: #2f2f2f;
+    background: #292e35;
 }
 
 .us-text {

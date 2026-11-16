@@ -7,15 +7,28 @@ Every slice keeps its exact size and nine-slice cuts, so no window layout moves.
 
 LucadoOS(TM) is a trademark of Jacob Lucado.
 """
+import base64
 import colorsys
+import io
 import os
+import re
 
 from PIL import Image, ImageDraw
 
 IMAGES = os.path.join('src', 'assets', 'images')
 SLICES = os.path.join(IMAGES, 'habbo-skin', 'slices')
 # Window art only. Room, avatar and toolbar icon art keeps its own colours.
-UI_FOLDERS = ('habbo-skin', 'catalog', 'navigator', 'inventory', 'friends', 'purse', 'purse-swf', 'chat-input-swf', 'infostand', 'notifications', 'rightside')
+UI_FOLDERS = (
+    'habbo-skin', 'catalog', 'navigator', 'inventory', 'friends', 'purse', 'purse-swf', 'chat-input-swf', 'infostand', 'notifications', 'rightside',
+    'avatar-menu', 'help', 'groups', 'user-profile', 'user-settings', 'achievements', 'quests', 'room-widgets', 'room-tools-swf', 'wired',
+    'wiredtools', 'floorplan-editor', 'floorplaneditor', 'camera', 'ui', 'scrollbar', 'toolbar-swf', 'modtool', 'hc-center', 'trax',
+)
+# The toolbar folder is mostly icons, so only its frames and backgrounds are listed.
+TOOLBAR_ART = ('collapse-border-3b3933', 'divider', 'friend-tab-border-74dbfa', 'friend-tab-border-7fc8de', 'friend-tab-border-91e1f9', 'friends-browse-bg', 'memenu-bg', 'memenu-circle')
+# Window art whose classic teal becomes LucadoOS blue. Currency icons keep their colours.
+TEAL_FOLDERS = ('habbo-skin', 'navigator', 'inventory', 'friends', 'notifications', 'infostand', 'chat-input-swf', 'avatar-menu')
+# Stylesheets left alone: this skin's own file, chat bubbles and name colours, the loading screen, and the purse with its currency colours.
+CSS_SKIP = ('css/lucadoos', 'css/chat', 'css/loading', 'css/purse')
 SS = 8  # Shapes are drawn 8 times larger, then scaled down for smooth edges.
 
 NAVY_TOP, NAVY_BOTTOM = (30, 45, 68), (17, 26, 41)
@@ -155,25 +168,88 @@ def recolor(name):
     image.save(path)
 
 
-def cool_greys(path):
-    """Turns a bitmap's warm and neutral greys into LucadoOS blue-greys. Lightness stays, so contrast does too."""
-    image = Image.open(path)
+def cool_grey(r, g, b):
+    """A warm or neutral grey as a LucadoOS blue-grey. Lightness stays, so contrast does too."""
+    hue, lightness, saturation = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
+    if saturation > .2 and not (.08 < hue < .2 and saturation < .35):
+        return None
+    tint = .2 * (1 - abs(2 * lightness - 1)) ** .5
+    return tuple(round(c * 255) for c in colorsys.hls_to_rgb(214 / 360, lightness, tint))
+
+
+def teal_as_navy(r, g, b):
+    """The classic teal as LucadoOS blue: dark and mid teals go navy, light ones go sky blue."""
+    hue, lightness, saturation = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
+    if not (183 / 360 <= hue <= 207 / 360) or saturation < .22:
+        return None
+    # Vivid mid blues are accents and status colours, so they only change hue and stay bright.
+    if lightness < .62 and not (saturation > .7 and lightness > .45):
+        lightness, saturation = lightness * .55 + .03, saturation * .7
+    return tuple(round(c * 255) for c in colorsys.hls_to_rgb(214 / 360, lightness, saturation))
+
+
+def retint(r, g, b, teal):
+    return cool_grey(r, g, b) or (teal_as_navy(r, g, b) if teal else None) or (r, g, b)
+
+
+def retint_image(image, teal):
     if getattr(image, 'is_animated', False):
-        return
+        return None
     image = image.convert('RGBA')
     pixels = image.load()
     for y in range(image.height):
         for x in range(image.width):
             r, g, b, a = pixels[x, y]
-            if a == 0:
-                continue
-            hue, lightness, saturation = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
-            if saturation > .2 and not (.08 < hue < .2 and saturation < .35):
-                continue
-            tint = .2 * (1 - abs(2 * lightness - 1)) ** .5
-            nr, ng, nb = colorsys.hls_to_rgb(214 / 360, lightness, tint)
-            pixels[x, y] = (round(nr * 255), round(ng * 255), round(nb * 255), a)
-    image.save(path)
+            if a:
+                pixels[x, y] = retint(r, g, b, teal) + (a,)
+    return image
+
+
+def retint_file(path, teal):
+    image = retint_image(Image.open(path), teal)
+    if image is not None:
+        image.save(path)
+
+
+HEX = re.compile(r'#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b')
+RGB = re.compile(r'(rgba?\(\s*)(\d{1,3})(\s*,?\s*)(\d{1,3})(\s*,?\s*)(\d{1,3})')
+DATA_PNG = re.compile(r'data:image/png;base64,([A-Za-z0-9+/=]+)')
+
+
+def retint_css(path):
+    """Gives a stylesheet's own colours and inlined bitmaps the same treatment as the bitmap files."""
+    with open(path, encoding='utf-8') as file:
+        css = file.read()
+
+    def hex_colour(match):
+        digits = match.group(1)
+        if len(digits) == 3:
+            digits = ''.join(c * 2 for c in digits)
+        return '#%02x%02x%02x' % retint(int(digits[0:2], 16), int(digits[2:4], 16), int(digits[4:6], 16), True)
+
+    def rgb_colour(match):
+        r, g, b = retint(int(match.group(2)), int(match.group(4)), int(match.group(6)), True)
+        return f'{match.group(1)}{r}{match.group(3)}{g}{match.group(5)}{b}'
+
+    def inlined(encoded):
+        try:
+            image = retint_image(Image.open(io.BytesIO(base64.b64decode(encoded))), True)
+        except Exception:
+            return encoded
+        if image is None:
+            return encoded
+        out = io.BytesIO()
+        image.save(out, 'PNG', optimize=True)
+        return base64.b64encode(out.getvalue()).decode()
+
+    # Splitting on the inlined bitmaps keeps their base64 text away from the colour patterns.
+    pieces = DATA_PNG.split(css)
+    for i, piece in enumerate(pieces):
+        pieces[i] = 'data:image/png;base64,' + inlined(piece) if i % 2 else RGB.sub(rgb_colour, HEX.sub(hex_colour, piece))
+    out = ''.join(pieces)
+    if out != css:
+        with open(path, 'w', encoding='utf-8') as file:
+            file.write(out)
 
 
 def main():
@@ -181,7 +257,18 @@ def main():
         for folder, _, names in os.walk(os.path.join(IMAGES, part)):
             for name in names:
                 if name.endswith('.png'):
-                    cool_greys(os.path.join(folder, name))
+                    retint_file(os.path.join(folder, name), part in TEAL_FOLDERS)
+
+    for name in TOOLBAR_ART:
+        retint_file(os.path.join(IMAGES, 'toolbar', 'air', name + '.png'), True)
+
+    for root in ('src/css', 'src/components'):
+        for folder, _, names in os.walk(root):
+            if any(part in folder.replace(os.sep, '/') for part in CSS_SKIP):
+                continue
+            for name in names:
+                if name.endswith('.css'):
+                    retint_css(os.path.join(folder, name))
 
     frame('frame-ubuntu-3', NAVY_TOP, NAVY_BOTTOM, ACCENT)
     frame('frame-ubuntu-3-teal', NAVY_TOP, NAVY_BOTTOM, ACCENT)

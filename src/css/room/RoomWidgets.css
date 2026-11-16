@@ -23,7 +23,7 @@
         width: 164px;
         height: var(--room-tools-height);
         transition: transform 140ms cubic-bezier(0.215, 0.61, 0.355, 1);
-        color: #cccccc;
+        color: #c6cbd2;
     }
 
     .volt-room-tools::before {
@@ -69,7 +69,7 @@
         flex: 0 0 30px;
         width: 130px;
         height: 30px;
-        color: #cccccc;
+        color: #c6cbd2;
     }
 
     .room-tools-zoom-row::after {
@@ -80,7 +80,7 @@
         width: 125px;
         height: 1px;
         /* the line's own 0.5 blend does not show on the v75 client; only the window's 0.8 does */
-        background: #707070;
+        background: #5b6d85;
     }
 
     /* text fields draw their glyphs 2px right and 1px down of the XML origin (Glaze text margins) */
@@ -134,12 +134,12 @@
         width: 130px;
         height: 25px;
         cursor: pointer;
-        color: #bbbbbb;
+        color: #b1bac5;
     }
 
     .room-tool-row--achievements,
     .room-tool-row--settings {
-        color: #cccccc;
+        color: #c6cbd2;
     }
 
     .room-tool-row:hover {
@@ -330,7 +330,7 @@
     transform: translateX(-50%);
     font-size: large;
     background: rgba(0, 0, 0, 0.95);
-    box-shadow: inset 0px 5px rgba(10, 10, 10, 0.6), inset 0 -4px rgba(0, 0, 0, 0.6);
+    box-shadow: inset 0px 5px rgba(9, 10, 11, 0.6), inset 0 -4px rgba(0, 0, 0, 0.6);
     border-radius: 0.375rem;
     transition: all 0.2s ease;
     z-index: 21;
@@ -405,12 +405,12 @@
 }
 
 .tags {
-    background-color: #1B2834;
-    color: #12597f;
+    background-color: #1b2834;
+    color: #172c49;
     font-size: 10px;
 
     &:hover {
-        color: #419AD2;
+        color: #2f4e77;
     }
 }
 
@@ -564,7 +564,7 @@
     position: relative;
     height: 26px;
     margin: 0 -1px 0 0;
-    color: #999999;
+    color: #8797ab;
     font-family: Ubuntu, sans-serif;
     font-size: 11px;
     font-weight: 700;
@@ -602,7 +602,7 @@
     padding: 1px 0 0 4px;
     border: 0;
     background: transparent;
-    color: #999999;
+    color: #8797ab;
     font-family: Ubuntu, sans-serif;
     font-size: 10px;
     font-weight: 700;
@@ -614,7 +614,7 @@
 
 .swf-chat-font-option.is-active {
     border-image: url("../../assets/images/habbo-skin/slices/border-2-white.png") 5 fill / 5px stretch;
-    color: #333333;
+    color: #2d3239;
 }
 
 .swf-chat-font-option.is-active:hover {
@@ -673,7 +673,7 @@
     min-height: 24px !important;
     max-height: 24px !important;
     padding: 0 !important;
-    color: #777777 !important;
+    color: #60748e !important;
     font-family: Ubuntu, sans-serif;
     font-size: 17px !important;
     line-height: 24px !important;
@@ -683,7 +683,7 @@
 }
 
 .swf-chat-input .swf-chat-input-field::placeholder {
-    color: #777777 !important;
+    color: #60748e !important;
     opacity: 1;
 }
 
@@ -846,9 +846,9 @@
     min-width: 151px;
     padding: 7px 4px 5px;
     overflow: hidden;
-    border: 1px solid #1c1b1a;
+    border: 1px solid #191b1d;
     border-radius: 4px;
-    background: #6e6b67;
+    background: #57687e;
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.6);
     color: #ffffff;
     font-family: Ubuntu, Arial, sans-serif;
@@ -865,7 +865,7 @@
     padding: 0 6px 0 26px;
     overflow: hidden;
     border: 0;
-    border-bottom: 1px solid #171717;
+    border-bottom: 1px solid #151719;
     border-radius: 0;
     background: transparent;
     color: #ffffff;
@@ -887,8 +887,8 @@
     overflow: hidden;
     border: 0;
     border-radius: 0;
-    background: #2d2a27;
-    color: #fff;
+    background: #25292f;
+    color: #ffffff;
     font-size: 11px;
     font-weight: 400;
     line-height: 26px;
@@ -898,15 +898,15 @@
 }
 
 .volt-context-menu .volt-context-menu-item + .volt-context-menu-item {
-    border-top: 1px solid #151515;
+    border-top: 1px solid #131517;
 }
 
 .volt-context-menu .volt-context-menu-item:hover {
-    background: #45413d;
+    background: #38404a;
 }
 
 .volt-context-menu .volt-context-menu-item.disabled {
-    color: #9a9895;
+    color: #8595aa;
     cursor: default;
     opacity: 1;
 }
@@ -931,8 +931,8 @@
     height: 18px;
     margin: 0;
     border-radius: 0 0 2px 2px;
-    background: #45413d;
-    color: #fff;
+    background: #38404a;
+    color: #ffffff;
     cursor: pointer;
 }
 
@@ -1117,7 +1117,7 @@
 .air-avatar-menu-buttons > .volt-context-menu-item.disabled,
 .air-avatar-menu-buttons > .volt-context-menu-item.disabled:hover {
     background: transparent;
-    color: #585553;
+    color: #475464;
 }
 
 .air-avatar-menu-buttons > .volt-context-menu-item.disabled::before,
@@ -1127,7 +1127,7 @@
 }
 
 .air-avatar-menu-buttons > .volt-context-menu-item.air-avatar-menu-item--locked {
-    color: #585553;
+    color: #475464;
 }
 
 .air-avatar-menu-buttons > .volt-context-menu-item.air-avatar-menu-item--locked::before,
@@ -1163,15 +1163,15 @@
     box-sizing: border-box;
     width: 12px;
     height: 12px;
-    border: 1px solid #fff;
-    background: #3d3d3d;
+    border: 1px solid #ffffff;
+    background: #353c45;
 }
 
 .air-avatar-menu-checkbox.is-checked::after {
     position: absolute;
     inset: 2px;
     content: '';
-    background: #fff;
+    background: #ffffff;
 }
 
 .air-avatar-menu-toggle-label {
@@ -1762,16 +1762,16 @@
 
 .volt-camera-viewfinder {
     display: block;
-    background: #000;
+    background: #000000;
     image-rendering: var(--volt-pixel-art, pixelated);
 }
 
 .volt-pet-package-preview {
     align-self: stretch;
     min-height: 110px;
-    border: 1px solid #6f6f6f;
+    border: 1px solid #5a6c84;
     border-radius: 6px;
-    background: linear-gradient(180deg, #aee0f2 0%, #cfeef8 48%, #eaf8fc 100%);
+    background: linear-gradient(180deg, #aecbf2 0%, #cfe1f8 48%, #eaf2fc 100%);
     box-shadow: inset 0 0 0 2px #ffffff, inset 0 3px 5px rgba(0, 0, 0, 0.12);
 }
 
@@ -1844,7 +1844,7 @@
     line-height: 1;
     font-family: Ubuntu, sans-serif;
     font-size: 12px;
-    color: #000;
+    color: #000000;
 }
 
 .volt-room-promote-edit .volt-room-promote-edit__title {
@@ -1880,10 +1880,10 @@
     width: 217px;
     margin: 0;
     padding: 1px 3px 0;
-    border: 1px solid #000;
+    border: 1px solid #000000;
     border-radius: 0;
-    background: #fff;
-    color: #000;
+    background: #ffffff;
+    color: #000000;
     font: 400 12px/14px Ubuntu, sans-serif;
     outline: 0;
     resize: none;
@@ -1919,8 +1919,8 @@ textarea.volt-room-promote-edit__input {
     top: -14px;
     max-width: 217px;
     padding: 0 3px;
-    border: 1px solid #000;
-    background: #fff;
+    border: 1px solid #000000;
+    background: #ffffff;
     white-space: nowrap;
 }
 
@@ -1963,7 +1963,7 @@ textarea.volt-room-promote-edit__input {
 .volt-room-promote-edit.is-native-surface .volt-room-promote-edit__input {
     border-color: transparent !important;
     background: transparent !important;
-    caret-color: #000;
+    caret-color: #000000;
 }
 
 /* Furniture context menus: the *_menu layouts (115 wide, 4px content margin) on the shared avatar-menu bubble. Each layout places its own title (--air-menu-title-x), the

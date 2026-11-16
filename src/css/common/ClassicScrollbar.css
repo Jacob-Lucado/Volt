@@ -11,7 +11,7 @@
 @supports not selector(::-webkit-scrollbar) {
     .has-classic-scrollbar,
     .has-classic-scrollbar * {
-        scrollbar-color: #d9d9d9 #bdbbb3 !important;
+        scrollbar-color: #d5d8dd #adb7c3 !important;
     }
 }
 
@@ -207,7 +207,7 @@
 .has-classic-scrollbar .volt-scrollbar-native,
 .has-classic-scrollbar .volt-scrollbar-native * {
     scrollbar-width: thin !important;
-    scrollbar-color: #8d8d8d transparent !important;
+    scrollbar-color: #778aa3 transparent !important;
 }
 
 /* AIR opt-in scrollbar skin (navigator results etc.) */

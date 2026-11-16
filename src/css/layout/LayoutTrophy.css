@@ -11,7 +11,7 @@
     background-image: url('@/assets/images/room-widgets/trophy-widget/trophy-spritesheet.png');
 
     &.trophy-2 {
-        --trophy-patch: #c9bdcc;
+        --trophy-patch: #bdc3cc;
         background-position: 0px 173px;
     }
 

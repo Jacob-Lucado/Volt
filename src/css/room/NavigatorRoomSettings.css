@@ -8,7 +8,7 @@
     min-height: 477px;
     max-height: 477px;
     resize: none !important;
-    color: #000;
+    color: #000000;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 12px;
 }
@@ -88,7 +88,7 @@
     font-size: 12px;
     font-weight: 400;
     line-height: 17px;
-    color: #000;
+    color: #000000;
     white-space: nowrap;
 }
 
@@ -140,9 +140,9 @@
     border-image-width: 6px !important;
     border-image-repeat: stretch !important;
     border-radius: 0 !important;
-    background-color: #fbfbf9 !important;
+    background-color: #fafafa !important;
     box-shadow: none !important;
-    color: #000;
+    color: #000000;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 12px;
     line-height: 15px;
@@ -156,9 +156,9 @@
     resize: none;
 }
 
-/* ros_room_settings idle inputs use the text field's 1px #959595 border. */
+/* ros_room_settings idle inputs use the text field's 1px #8292a8 border. */
 .volt-room-settings .ros-input.ros-idle-timeout {
-    border: 1px solid #959595 !important;
+    border: 1px solid #8292a8 !important;
     border-image-source: none !important;
     padding: 1px;
 }
@@ -172,9 +172,9 @@
     font-family: sans-serif;
 }
 
-/* an errored field falls back to the text field's 1px #959595 border so the error colour fills it */
+/* an errored field falls back to the text field's 1px #8292a8 border so the error colour fills it */
 .volt-room-settings .ros-input:not(.ros-idle-timeout).is-invalid {
-    border: 1px solid #959595 !important;
+    border: 1px solid #8292a8 !important;
     border-image-source: none !important;
 }
 
@@ -215,7 +215,7 @@
     display: block;
     height: 20px;
     padding: 2px 3px 0 2px;
-    color: #000;
+    color: #000000;
     font-family: Volter, monospace;
     font-size: 9px;
     font-weight: 400;
@@ -323,7 +323,7 @@
     border-radius: 0;
     background: transparent;
     box-shadow: none;
-    color: #111;
+    color: #101112;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 12px;
     line-height: 15px;
@@ -416,7 +416,7 @@
 }
 
 .volt-room-settings .ros-user-row.is-odd {
-    background: #fff;
+    background: #ffffff;
 }
 
 .volt-room-settings .ros-user-row.is-selected {
@@ -462,7 +462,7 @@
     width: 80px;
     height: 17px;
     overflow: hidden;
-    color: #000;
+    color: #000000;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 12px;
     line-height: 17px;
@@ -497,7 +497,7 @@
     min-height: 203px;
     max-height: 203px;
     resize: none !important;
-    color: #000;
+    color: #000000;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 12px;
 }
@@ -530,7 +530,7 @@
 
 .volt-ros-confirm .ros-button.ros-button-red {
     border-image-source: var(--habbo-skin-shiny-red);
-    color: #fff;
+    color: #ffffff;
     font-weight: 700;
 }
 
@@ -552,7 +552,7 @@
     min-height: 230px;
     max-height: 230px;
     resize: none !important;
-    color: #000;
+    color: #000000;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 12px;
 }
@@ -582,7 +582,7 @@
     padding: 0;
     border: 0;
     background: transparent;
-    color: #000;
+    color: #000000;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 12px;
     line-height: 17px;
@@ -612,7 +612,7 @@
     cursor: pointer;
     border: 0;
     background: #eef2f7;
-    color: #000;
+    color: #000000;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 12px;
     line-height: 20px;
@@ -622,7 +622,7 @@
 }
 
 .volt-ros-filter .ros-filter-row.is-odd {
-    background: #fff;
+    background: #ffffff;
 }
 
 .volt-ros-filter .ros-filter-row.is-selected {
@@ -707,7 +707,7 @@
 
 /* filter_users_input is a 1px black text field on the search strip; the shared input skin is a border image */
 .volt-room-settings .ros-input.ros-filter-input {
-    border: 1px solid #000 !important;
+    border: 1px solid #000000 !important;
     border-image-source: none !important;
     background-color: transparent !important;
 }

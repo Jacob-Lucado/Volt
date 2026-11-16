@@ -179,7 +179,7 @@
   .volt-infostand__rule {
     height: 1px;
     margin: 3px 0;
-    background: #333333;
+    background: #2d3239;
   }
 
   .volt-infostand__rule--footer {
@@ -398,7 +398,7 @@
     line-height: 15px;
 
     &.is-placeholder {
-      color: #aaaaaa;
+      color: #9ca8b8;
     }
   }
 
@@ -447,7 +447,7 @@
     flex: 0 0 auto;
     align-self: center;
     margin-left: 4px;
-    color: #aaaaaa;
+    color: #9ca8b8;
     font-family: Volter, monospace;
     font-size: 9px;
     font-weight: bold;
@@ -515,8 +515,8 @@
     border-radius: 0;
     box-shadow: none;
     background: transparent;
-    caret-color: #aaaaaa;
-    color: #aaaaaa;
+    caret-color: #9ca8b8;
+    color: #9ca8b8;
     font-family: Volter, monospace;
     font-size: 9px;
     font-style: normal;
@@ -533,7 +533,7 @@
       border-radius: 0;
       box-shadow: none;
       background: transparent;
-      color: #aaaaaa;
+      color: #9ca8b8;
       font-style: normal;
     }
   }
@@ -545,7 +545,7 @@
     .text-tags {
       padding: 2px;
       border-radius: 3px;
-      background: #333;
+      background: #2d3239;
       margin-right: 5px;
       margin-bottom: 10px;
       cursor: pointer;
@@ -570,12 +570,12 @@
     div {
         line-height: 28px;
         text-align: center;
-        color: #000;
+        color: #000000;
         font-weight: bold;
     }
 }
 
-/* furni_view: border style 2, #3d3d3d, 6px caps. Close style 1 uses
+/* furni_view: border style 2, #353c45, 6px caps. Close style 1 uses
    one fixed 15px bitmap at (0,0) inside its 18x16 control for every state. */
 .volt-furni-infostand {
     position: relative;
@@ -620,7 +620,7 @@
     background: #543d18;
 }
 
-/* furni_view infostand_element_list: x=10 y=10 w=170, itemlist spacing 5, 1px #333333 spacers;
+/* furni_view infostand_element_list: x=10 y=10 w=170, itemlist spacing 5, 1px #2d3239 spacers;
    controller: border.height = list.height + 20, name_text.height = textHeight + 5. */
 .volt-furni-infostand__list {
     display: flex;
@@ -652,7 +652,7 @@
 .volt-furni-infostand__rule {
     flex: 0 0 1px;
     height: 1px;
-    background: #333333;
+    background: #2d3239;
 }
 
 /* image_container 170 x (image + 5px top/bottom), image box x=5 w=140 centred, plaque widgets at x=128 y=6. */
@@ -960,8 +960,8 @@
   width: 162px;
   height: 16px;
   box-sizing: border-box;
-  border: 1px solid #dadada;
-  background: #3a3a3a;
+  border: 1px solid #d6d9de;
+  background: #323942;
 }
 
 .volt-pet-infostand__bar-fill,
@@ -1033,7 +1033,7 @@
   font-size: 13px;
   font-weight: bold;
   line-height: 23px;
-  color: #fff;
+  color: #ffffff;
   text-align: center;
   filter: var(--volt-native-text-halo);
 }
@@ -1046,7 +1046,7 @@
   font-size: 9px;
   font-style: normal;
   line-height: 12px;
-  color: #121212;
+  color: #111213;
   text-align: center;
   filter: var(--volt-native-text-halo);
 }
@@ -1061,7 +1061,7 @@
   font-style: normal;
   font-weight: bold;
   line-height: 13px;
-  color: #121212;
+  color: #111213;
   text-align: center;
   filter: var(--volt-native-text-halo);
 }

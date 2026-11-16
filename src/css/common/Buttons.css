@@ -24,7 +24,7 @@ input[type=number] {
 
 .btn-primary,
 .btn-success {
-  color: #fff;
+  color: #ffffff;
   padding: 0.25rem 0.5rem;
   font-size: .7875rem;
   font-weight: 700;
@@ -50,7 +50,7 @@ input[type=number] {
 }
 
 .btn-danger{
-  color: #fff;
+  color: #ffffff;
   padding: 0.25rem 0.5rem;
   font-size: .7875rem;
   font-weight: 700;
@@ -75,7 +75,7 @@ input[type=number] {
 }
 
 .btn-warning{
-  color: #111111;
+  color: #101112;
   border: 3px solid transparent;
   border-image-source: var(--habbo-skin-button);
   border-image-slice: 3 fill;
@@ -98,25 +98,25 @@ input[type=number] {
 }
 
 .btn-dark {
-  color: #fff;
-  background-color: #212131;
-  border: 2px solid #1c1c2a;
+  color: #ffffff;
+  background-color: #24282e;
+  border: 2px solid #1f2327;
   box-shadow: none!important;
   border-radius: 8px;
   padding: 4px 11px 4px 11px;
 }
 
 .btn-dark:hover{
-  background-color: #212131;
-  border: 2px solid #1c1c2a;
+  background-color: #24282e;
+  border: 2px solid #1f2327;
   box-shadow: none!important;
   border-radius: 8px;
   padding: 4px 11px 4px 11px;
 }
 
 .btn-friendsgen{
-  background-color: #424354;
-  border: 2px solid #63647a;
+  background-color: #3f4957;
+  border: 2px solid #5a6c83;
   border-radius: 10px;
 }
 
