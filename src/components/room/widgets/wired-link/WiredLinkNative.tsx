@@ -33,7 +33,7 @@ export const WiredLinkBorder: FC<PropsWithChildren<{ kind: keyof typeof SKINS; c
     </div>;
 };
 
-export const WiredLinkText: FC<{ text: string; background?: number; color?: number; bold?: boolean; size?: number; underline?: boolean }> = ({ text, background = 0xe9e9e1, color = 0, bold = false, size = 12, underline = false }) =>
+export const WiredLinkText: FC<{ text: string; background?: number; color?: number; bold?: boolean; size?: number; underline?: boolean }> = ({ text, background = 0xeef2f7, color = 0, bold = false, size = 12, underline = false }) =>
     <NativeText text={text} textStyle="u_regular" background={background} overrides={{ color, bold, size, underline }} />;
 
 export const WiredLinkAction: FC<{ text: string; onClick: () => void; background?: number; color?: number; className?: string; disabled?: boolean }> = ({ text, onClick, background, color = 0x0000ee, className = '', disabled = false }) =>

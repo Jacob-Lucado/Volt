@@ -75,12 +75,12 @@ export const InterfaceColorTabView: FC<{}> = () => {
 
     const onReset = useCallback(() => {
         resetSettings();
-        setColor(hexToRgba('#418db0', 1));
+        setColor(hexToRgba('#24344c', 1));
     }, [resetSettings]);
 
     const onDelete = useCallback(() => {
         updateSettings({ colorMode: 'default' });
-        setColor(hexToRgba('#418db0', 1));
+        setColor(hexToRgba('#24344c', 1));
     }, [updateSettings]);
 
     const onExport = useCallback(() => {

@@ -66,7 +66,7 @@ export const InventoryFurnitureDeleteView: FC<{}> = (props) => {
     return (
         <VoltCardView className="min-w-0 w-[min(340px,calc(100vw-16px))] max-w-[calc(100vw-16px)] max-h-[calc(100vh-16px)]" uniqueKey="inventory-delete">
             <VoltCardHeaderView headerText={localizeWithFallback('inventory.delete.confirm_delete.title', 'Delete furniture')} onCloseClick={onClose} />
-            <div className="bg-[#DFDFDF] p-2">
+            <div className="bg-[#e6ebf2] p-2">
                 <div className="flex items-center gap-2">
                     <div className="shrink-0 w-[64px] h-[64px] bg-white rounded flex items-center justify-center">
                         <LayoutFurniImageView

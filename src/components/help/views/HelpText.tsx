@@ -3,7 +3,7 @@ import { SanitizeHtml } from '../../../api';
 import { NativeText } from '../../../common/native-text/NativeText';
 import { NativeTextStyleName } from '../../../common/native-text/NativeTextStyles';
 
-export const HELP_PANEL_COLOR = 0xe9e9e1;
+export const HELP_PANEL_COLOR = 0xeef2f7;
 export const HELP_WHITE_COLOR = 0xffffff;
 export const HELP_USER_HEADER_COLOR = 0x8899a2;
 

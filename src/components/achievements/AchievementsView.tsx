@@ -108,7 +108,7 @@ export const AchievementsView: FC = () => {
                         <div className="air-achievements-category-footer">
                             {/* The score field overlaps the last row of the bar by one pixel, so it is drawn first. */}
                             <AchievementText
-                                background={0xe9e9e1}
+                                background={0xeef2f7}
                                 bold
                                 color={0x444444}
                                 size={13}

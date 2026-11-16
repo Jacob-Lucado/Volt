@@ -28,14 +28,14 @@ export const CatalogPriceDisplayWidgetView: FC<CatalogPriceDisplayWidgetViewProp
             {price.hasDiscount && (
                 <SubpixelText
                     transparent
-                    background={0xe9e9e1}
+                    background={0xeef2f7}
                     className="volt-catalog-standard-price-original"
                     color={0x999999}
                     text={String(price.originalPrice)}
                     textStyle="u_bold"
                 />
             )}
-            <SubpixelText transparent background={0xe9e9e1} className="volt-catalog-standard-price-text" text={String(price.price)} textStyle="u_bold" />
+            <SubpixelText transparent background={0xeef2f7} className="volt-catalog-standard-price-text" text={String(price.price)} textStyle="u_bold" />
         </>
     );
 
@@ -48,7 +48,7 @@ export const CatalogPriceDisplayWidgetView: FC<CatalogPriceDisplayWidgetViewProp
                 </div>
             )}
             {separator && offer.priceInCredits > 0 && offer.priceInActivityPoints > 0 && (
-                <SubpixelText transparent background={0xe9e9e1} className="volt-catalog-standard-price-plus" text="+" textStyle="u_bold" />
+                <SubpixelText transparent background={0xeef2f7} className="volt-catalog-standard-price-plus" text="+" textStyle="u_bold" />
             )}
             {offer.priceInActivityPoints > 0 && (
                 <div className="volt-catalog-standard-price-pill is-activity-points" data-currency-type={offer.activityPointType}>

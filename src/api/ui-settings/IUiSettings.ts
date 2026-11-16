@@ -7,7 +7,7 @@ export interface IUiSettings {
 
 export const DEFAULT_UI_SETTINGS: IUiSettings = {
     colorMode: 'default',
-    headerColor: '#418db0',
+    headerColor: '#24344c',
     headerImageUrl: '',
     headerAlpha: 100
 };
@@ -38,8 +38,8 @@ export const PRESET_COLORS: string[] = [
     '#CC33FF',
     '#FF66CC',
     '#FF99CC',
-    '#418db0',
-    '#376275',
+    '#24344c',
+    '#2a3b56',
     '#2DABC2',
     '#2B91A7',
     '#283F5D'
@@ -52,7 +52,7 @@ export interface IThemePreset {
 }
 
 export const THEME_PRESETS: IThemePreset[] = [
-    { name: 'default', color: '#418db0', alpha: 100 },
+    { name: 'default', color: '#24344c', alpha: 100 },
     { name: 'ocean', color: '#0077B6', alpha: 100 },
     { name: 'forest', color: '#2D6A4F', alpha: 100 },
     { name: 'sunset', color: '#E76F51', alpha: 100 },

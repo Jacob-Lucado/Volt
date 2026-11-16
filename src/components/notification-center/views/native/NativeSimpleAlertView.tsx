@@ -101,7 +101,7 @@ export const NativeSimpleAlertView: FC<NativeSimpleAlertViewProps> = (props) => 
                             <div className="volt-native-alert-message-list" style={{ maxHeight: messageMaxHeight ?? undefined }}>
                                 {plainMessage !== null ? (
                                     <div className="volt-native-alert-message uses-native-text">
-                                        <NativeText text={plainMessage} textStyle="il_regular" background={0xe9e9e1} maxWidth={282} />
+                                        <NativeText text={plainMessage} textStyle="il_regular" background={0xeef2f7} maxWidth={282} />
                                     </div>
                                 ) : (
                                     <div className="volt-native-alert-message" dangerouslySetInnerHTML={{ __html: messageMarkup }} />

@@ -49,14 +49,14 @@ export const AvatarEditorEffectsView: FC = () =>
     return <div ref={container} className="volt-avatar-editor-effects">
         <div className="volt-avatar-editor-effects-heading">
             <img src={fxSrc} alt="" draggable={false} />
-            <NativeText text={LocalizeText('inventory.effects')} textStyle="u_bold" background={0xe9e9e1} overrides={{ size: 20 }} />
+            <NativeText text={LocalizeText('inventory.effects')} textStyle="u_bold" background={0xeef2f7} overrides={{ size: 20 }} />
         </div>
         <button type="button" className="volt-avatar-editor-effects-shop" onClick={() => CreateLinkEvent(`catalog/open/${GetConfigurationValue<string>('avatareditor.effects.buy.button.catalog.page.name', EFFECTS_CATALOG_PAGE)}`)}>
             <NativeText text={LocalizeText('avatareditor.effects.shop')} textStyle="button_shiny_bold" background={0xffffff} />
         </button>
         {effects.length === 0 ? <div className="volt-avatar-editor-effects-empty">
-            <NativeText text={LocalizeText('avatar.editor.content.title')} textStyle="u_bold" background={0xe9e9e1} overrides={{ size: 20 }} />
-            <NativeText className="volt-avatar-editor-effects-notification" text={LocalizeText('avatar.editor.content.notification')} textStyle="u_regular" background={0xe9e9e1} maxWidth={298} />
+            <NativeText text={LocalizeText('avatar.editor.content.title')} textStyle="u_bold" background={0xeef2f7} overrides={{ size: 20 }} />
+            <NativeText className="volt-avatar-editor-effects-notification" text={LocalizeText('avatar.editor.content.notification')} textStyle="u_regular" background={0xeef2f7} maxWidth={298} />
         </div> : <div className="volt-avatar-editor-parts-grid volt-avatar-editor-effects-grid">
             <ClassicScrollAreaView contentClassName="volt-avatar-editor-effect-items" scrollStep={50}>
                 {[null, ...effects].map(effect =>
@@ -75,8 +75,8 @@ export const AvatarEditorEffectsView: FC = () =>
             </ClassicScrollAreaView>
         </div>}
         {selected && <>
-            <div className="volt-avatar-editor-effect-name"><NativeText text={LocalizeText(`fx_${selected.type}`)} textStyle="u_bold" background={0xe9e9e1} overrides={{ color: 0x666666 }} maxWidth={120} /></div>
-            {!selected.active && !selected.permanent ? <div className="volt-avatar-editor-effect-activate"><NativeText text={LocalizeText('avatareditor.save.to.activate')} textStyle="u_regular" background={0xe9e9e1} overrides={{ color: 0x666666 }} maxWidth={300} /></div> : <div className="volt-avatar-editor-effect-time">
+            <div className="volt-avatar-editor-effect-name"><NativeText text={LocalizeText(`fx_${selected.type}`)} textStyle="u_bold" background={0xeef2f7} overrides={{ color: 0x666666 }} maxWidth={120} /></div>
+            {!selected.active && !selected.permanent ? <div className="volt-avatar-editor-effect-activate"><NativeText text={LocalizeText('avatareditor.save.to.activate')} textStyle="u_regular" background={0xeef2f7} overrides={{ color: 0x666666 }} maxWidth={300} /></div> : <div className="volt-avatar-editor-effect-time">
                 <div className="volt-avatar-editor-effect-time-bar"><div style={{ width: Math.floor(120 * (selected.permanent ? 1 : secondsLeft / selected.duration)) }} /></div>
                 <NativeText text={getTimeText()} textStyle="u_regular" background={0xffffff} />
                 <span aria-hidden="true" className="volt-avatar-editor-effect-time-ink"><NativeText text={getTimeText()} textStyle="u_regular" background={0xffffff} /></span>

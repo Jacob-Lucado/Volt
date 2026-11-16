@@ -31,7 +31,7 @@ import titleImage from '../../../../../../assets/images/catalog/air/recycler/fur
 
 const OPERATION_TIMEOUT_MS = 12000;
 
-/** The page colour under the texts: 0xe9e9e1 under the layout's 0x21ffffff fill. */
+/** The page colour under the texts: 0xeef2f7 under the layout's 0x21ffffff fill. */
 const PAGE_BACKGROUND = 0xecece5;
 
 /** recyclerWidget slot_bg_1..12: four columns 37px apart, rows at y 0, 44 and 90 of the slots container (37, 359). */
@@ -229,7 +229,7 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
                     <img alt="" className="volt-catalog-recycler-frank" draggable={false} src={frankImage} />
                     <div className="volt-catalog-recycler-bubble">
                         <NativeText
-                            background={0xe9e9e1}
+                            background={0xeef2f7}
                             maxWidth={107}
                             text={localizeWithFallback('recycler.broken', LocalizeText('recycler.info.closed'))}
                             textStyle="u_regular"

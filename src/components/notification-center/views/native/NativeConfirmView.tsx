@@ -35,10 +35,10 @@ export const NativeConfirmView: FC<NativeConfirmViewProps> = ({ title, message, 
                 </div>
                 <div className="volt-native-confirm-body">
                     <div className="volt-native-confirm-text">
-                        <NativeText nativeResolution transparent background={0xe9e9e1} maxWidth={253} text={message} textStyle="u_regular" />
+                        <NativeText nativeResolution transparent background={0xeef2f7} maxWidth={253} text={message} textStyle="u_regular" />
                     </div>
                     <button className="volt-native-link volt-native-confirm-cancel" type="button" onClick={onCancel}>
-                        <NativeText nativeResolution transparent background={0xe9e9e1} overrides={{ underline: true }} text={cancelText} textStyle="u_regular" />
+                        <NativeText nativeResolution transparent background={0xeef2f7} overrides={{ underline: true }} text={cancelText} textStyle="u_regular" />
                     </button>
                     <button className="volt-native-button is-thick volt-native-confirm-ok" type="button" onClick={onConfirm}>
                         {confirmText}

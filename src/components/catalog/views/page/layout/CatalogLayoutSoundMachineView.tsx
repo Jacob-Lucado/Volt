@@ -14,7 +14,7 @@ import { CatalogAirCentredView, CatalogAirStaticImageView } from './CatalogAirSt
 import { CatalogLayoutProps } from './CatalogLayout.types';
 
 /** The catalog page colour behind the AIR text rasters. */
-const PAGE_BACKGROUND = 0xe9e9e1;
+const PAGE_BACKGROUND = 0xeef2f7;
 /** playPreviewContainer: a #cccccc border style 2 at blend 0.5 over the page colour. */
 const LISTEN_PANEL_BACKGROUND = 0xdbdbd7;
 

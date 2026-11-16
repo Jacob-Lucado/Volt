@@ -158,7 +158,7 @@ export const QuestCompletedView: FC<{}> = () => {
                 {!lastQuestInCampaign && rewardVisible && (
                     <button type="button" className="air-quest-completed-link" onClick={onCatalog}>
                         <AchievementText
-                            background={0xe9e9e1}
+                            background={0xeef2f7}
                             text={localizeWithFallback('quests.completed.cataloglink', 'Go shopping with %currencyname%').replace('%currencyname%', currencyName)}
                             underline
                             x={0}

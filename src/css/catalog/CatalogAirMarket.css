@@ -103,7 +103,7 @@
 
 /*
  * AIR layout_marketplace (1769) and layout_marketplace_own_items (1723). The page is 360x460; the outer container's
- * 0x21ffffff fill over the 0xe9e9e1 page gives 0xecece5.
+ * 0x21ffffff fill over the 0xeef2f7 page gives 0xecece5.
  */
 .volt-catalog-market-layout {
     position: relative;

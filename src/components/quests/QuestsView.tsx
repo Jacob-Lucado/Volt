@@ -165,7 +165,7 @@ export const QuestsView: FC<{}> = () => {
                         </ClassicScrollAreaView>
                         <div className="air-quests-hc-info">
                             <AchievementText
-                                background={0xe9e9e1}
+                                background={0xeef2f7}
                                 maxWidth={349}
                                 text={
                                     hasClub

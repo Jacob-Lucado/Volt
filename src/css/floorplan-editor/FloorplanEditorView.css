@@ -1699,7 +1699,7 @@
 .fp-bc-drop-item.is-highlighted { background: #ebebeb; }
 .fp-bc-drop-item[aria-selected="true"].is-highlighted { background: #dddddd; }
 
-/* v75 floor_plan_export_import_xml (379x374, colour 0x418db0): everything is placed in dialog coordinates measured on the running client. */
+/* v75 floor_plan_export_import_xml (379x374, colour 0x24344c): everything is placed in dialog coordinates measured on the running client. */
 .volt-floorplan-import.is-official.volt-card-shell.volt-card-frame-3 {
     padding: 0 !important;
 }

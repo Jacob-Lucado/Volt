@@ -5,7 +5,7 @@
 .volt-groups-window .volt-card-content,
 .volt-groups-window .volt-card-content-shell,
 .volt-groups-content {
-    background: #eeeee7 !important;
+    background: #eef2f7 !important;
     color: #111111;
 }
 .volt-groups-window .volt-card-tabs {
@@ -23,7 +23,7 @@
 }
 .volt-groups-window .volt-card-tabs-item.active,
 .volt-groups-window .volt-card-tabs-item:hover {
-    background: #eeeee7;
+    background: #eef2f7;
 }
 .volt-groups-window input,
 .volt-groups-window textarea,
@@ -90,7 +90,7 @@
     height: 398px;
     padding: 0 !important;
     overflow: hidden !important;
-    background: #eeeee7 !important;
+    background: #eef2f7 !important;
 }
 .volt-group-members-search {
     position: absolute;
@@ -573,7 +573,7 @@
     height: 398px !important;
     padding: 0 !important;
     overflow: hidden !important;
-    background: #eeeee7 !important;
+    background: #eef2f7 !important;
 }
 .volt-group-members-search {
     position: absolute !important;

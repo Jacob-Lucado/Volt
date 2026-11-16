@@ -1987,16 +1987,16 @@
 }
 
 .volt-reward-track-admin {
-    --rta-bg: #ecece4;
-    --rta-panel: #f7f7f2;
+    --rta-bg: #eef2f7;
+    --rta-panel: #f7f9fc;
     --rta-panel-top: #fffdf5;
     --rta-panel-alt: #e9e9df;
     --rta-border: #9d9d96;
     --rta-border-dark: #5f5f59;
     --rta-text: #20201d;
     --rta-muted: #60605a;
-    --rta-blue: #418db0;
-    --rta-blue-dark: #0e3f52;
+    --rta-blue: #24344c;
+    --rta-blue-dark: #131d2e;
     --rta-blue-light: #dcecf5;
     --rta-green: #1a7f2c;
     --rta-danger: #b83b32;
@@ -2383,7 +2383,7 @@
     padding: 2px 6px;
     border: 2px solid var(--rta-border-dark);
     border-radius: 4px;
-    background: #fffdf4;
+    background: #fbfcfe;
     color: var(--rta-text);
     font: inherit;
     font-size: 11px;
@@ -2464,7 +2464,7 @@
     max-height: calc(100vh - 16px);
     border: 2px solid #1c3f52;
     border-radius: 6px;
-    background: #ecece4;
+    background: #eef2f7;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
     overflow: hidden;
 }
@@ -2476,7 +2476,7 @@
     justify-content: center;
     min-height: 31px;
     padding: 0 30px;
-    background: linear-gradient(180deg, #58a8c5 0%, #418db0 45%, #0e3f52 100%);
+    background: linear-gradient(180deg, #58a8c5 0%, #24344c 45%, #131d2e 100%);
     color: #ffffff;
     font-size: 14px;
     font-weight: 700;

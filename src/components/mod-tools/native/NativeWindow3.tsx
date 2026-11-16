@@ -9,10 +9,10 @@ import '../../../css/mod-tools/NativeWindow3.css';
 import { parseNativeSkin } from './NativeSkin';
 import { NativeSkinView } from './NativeSkinView';
 
-// Window-manager style 3 (the Ubuntu skin): frame_3 coloured 0xff418db0, close button, shiny thick button, Ubuntu text styles.
+// Window-manager style 3 (the Ubuntu skin): frame_3 coloured 0xff24344c, close button, shiny thick button, Ubuntu text styles.
 const SKINS = { frame: parseNativeSkin(frameXml), close: parseNativeSkin(closeXml), thick: parseNativeSkin(thickXml) };
 
-export const FRAME3_COLOR = 0x418db0;
+export const FRAME3_COLOR = 0x24344c;
 /** The title bar of frame_3 after the frame colour multiplies the skin (the title text sits on it). */
 export const FRAME3_TITLE_COLOR = 0x377998;
 

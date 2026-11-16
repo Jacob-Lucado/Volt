@@ -10,7 +10,7 @@ import { CatalogPurchaseWidgetView } from '../widgets/CatalogPurchaseWidgetView'
 import { CatalogTotalPriceWidget } from '../widgets/CatalogTotalPriceWidget';
 import { CatalogLayoutProps } from './CatalogLayout.types';
 
-const PAGE_BACKGROUND = 0xe9e9e1;
+const PAGE_BACKGROUND = 0xeef2f7;
 
 /**
  * AIR layout_guild_forum: authored 360x662, the catalog sets the page to 460 high, so the bottom widgets move up by 202 and

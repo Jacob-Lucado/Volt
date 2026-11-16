@@ -17,7 +17,7 @@ import { CatalogTotalPriceWidget } from '../widgets/CatalogTotalPriceWidget';
 import { CatalogViewProductWidgetView } from '../widgets/CatalogViewProductWidgetView';
 import { CatalogLayoutProps } from './CatalogLayout.types';
 
-const PAGE_BACKGROUND = 0xe9e9e1;
+const PAGE_BACKGROUND = 0xeef2f7;
 
 /**
  * AIR layout_guild_custom_furni (360x460): the product view, the special info, the group badge, a 125px item grid, the

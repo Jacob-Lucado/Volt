@@ -6,7 +6,7 @@ import { getCatalogPlainText } from '../../../catalogLocalization.helpers';
 import { CatalogCentredImageView } from '../widgets/CatalogCentredImageView';
 import { CatalogLayoutProps } from './CatalogLayout.types';
 
-const PAGE_BACKGROUND = 0xe9e9e1;
+const PAGE_BACKGROUND = 0xeef2f7;
 
 /**
  * AIR layout_guild_frontpage (360x460). Page text 0 only fills the catalog header, text 1 is ctlg_description, text 2 is

@@ -1,0 +1,191 @@
+/* The LucadoOS look for the client. Loaded last, on top of the client's own styles.
+   Window frames, tabs, buttons and scrollbars are bitmap slices: scripts/lucadoos/make-skin.py draws those.
+   This file covers what is painted in CSS. Sizes never change here, only paint.
+   LucadoOS(TM) is a trademark of Jacob Lucado. */
+
+:root {
+    --los-navy-top: #1e2d44;
+    --los-navy-bottom: #111a29;
+    --los-edge: #0a101a;
+    --los-accent: #4da3ff;
+    --los-accent-2: #7c6cff;
+    --los-paper: #eef2f7;
+    --los-paper-edge: #b0bdce;
+    --los-ink: #1c2738;
+    --los-muted: #5b6b80;
+
+    --habbo-blue: #24344c;
+    --habbo-blue-light: #3a5173;
+    --habbo-blue-highlight: #33486a;
+    --habbo-blue-dark: #162235;
+    --habbo-blue-header: #131d2e;
+    --habbo-blue-header-border: #2a3b56;
+    --habbo-frame-border: var(--los-edge);
+    --habbo-surface: #e6ebf2;
+    --habbo-surface-warm: var(--los-paper);
+    --habbo-panel: #f7f9fc;
+    --habbo-tab: #c3cedc;
+    --habbo-tab-active: var(--los-paper);
+    --habbo-grid: #d2dbe7;
+    --habbo-grid-active: #f2f5f9;
+    --habbo-select: var(--los-accent);
+    --habbo-select-outer: #8ec5ff;
+    --habbo-nav-border: var(--los-paper);
+    --habbo-text: var(--los-ink);
+    --habbo-text-muted: var(--los-muted);
+    --habbo-toolbar: #111a29;
+}
+
+/* ---------------------------------------------------------------- loading screen */
+
+html,
+body,
+.classic-loading-screen {
+    background:
+        radial-gradient(1100px 650px at 12% -5%, rgba(77, 163, 255, .22), transparent 62%),
+        radial-gradient(900px 600px at 105% 105%, rgba(124, 108, 255, .2), transparent 60%),
+        #0f1724;
+}
+
+.classic-loading-screen__photo,
+.classic-loading-screen__bar > div {
+    display: none;
+}
+
+.classic-loading-screen::before {
+    content: "LucadoOS";
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: calc(50% - 70px);
+    text-align: center;
+    font: 200 64px/1 "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, sans-serif;
+    letter-spacing: .04em;
+    background: linear-gradient(90deg, #8ec5ff, #b4a8ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    pointer-events: none;
+}
+
+.classic-loading-screen::after {
+    content: "LucadoOS\2122  is a trademark of Jacob Lucado.";
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 14px;
+    text-align: center;
+    font: 11px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: rgba(205, 217, 232, .45);
+    pointer-events: none;
+}
+
+.classic-loading-screen .classic-loading-screen__text {
+    top: calc(50% + 14px);
+    color: rgba(205, 217, 232, .8);
+    font: 500 15px/20px system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* The client only fills its own bar late in loading, so this one always moves. */
+.classic-loading-screen .classic-loading-screen__bar {
+    top: calc(50% + 48px);
+    left: calc(50% - 150px);
+    width: 300px;
+    height: 4px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(148, 176, 214, .16);
+}
+
+.classic-loading-screen .classic-loading-screen__bar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 35%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--los-accent), var(--los-accent-2));
+    animation: lucadoos-boot 1.4s ease-in-out infinite;
+}
+
+@keyframes lucadoos-boot {
+    from { left: -35%; }
+    to { left: 100%; }
+}
+
+.classic-loading-screen .classic-loading-screen__percent {
+    top: calc(50% + 64px);
+    color: rgba(205, 217, 232, .5);
+    font: 600 12px/16px system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.classic-loading-screen--error .classic-loading-screen__bar {
+    display: none;
+}
+
+.classic-loading-screen .classic-loading-screen__error {
+    top: calc(50% + 48px);
+}
+
+/* ---------------------------------------------------------------- toolbar */
+
+.volt-toolbar-hobba {
+    border-image-source: none;
+    border-color: transparent;
+    background: linear-gradient(180deg, rgba(24, 36, 56, .9), rgba(13, 20, 32, .94));
+    background-clip: border-box;
+    backdrop-filter: blur(14px) saturate(1.4);
+    box-shadow: inset 0 8px 0 -7px rgba(148, 176, 214, .35), 0 -6px 24px rgba(0, 0, 0, .35);
+}
+
+.volt-toolbar-mobile-hobba {
+    border-color: rgba(148, 176, 214, .25);
+    border-radius: 12px;
+    background: rgba(15, 23, 36, .88);
+    box-shadow: inset 0 1px 0 rgba(148, 176, 214, .2), 0 6px 18px rgba(0, 0, 0, .35);
+}
+
+/* ---------------------------------------------------------------- windows painted in CSS */
+
+.volt-card,
+.volt-card-shell:not(.volt-wired):not(.volt-card-frame-3) {
+    border: 1px solid var(--los-edge) !important;
+    border-radius: 9px;
+    filter: drop-shadow(0 10px 18px rgba(5, 12, 24, .45));
+}
+
+.volt-card-shell:not(.volt-card-frame-3) > .volt-card-header-shell,
+.volt-card > .volt-card-header {
+    background: linear-gradient(180deg, var(--los-navy-top), var(--los-navy-bottom));
+    border-bottom: 1px solid var(--los-accent);
+    border-radius: 8px 8px 0 0;
+    box-shadow: inset 0 1px rgba(255, 255, 255, .1);
+}
+
+.volt-card-tabs,
+.volt-card-tabs-shell {
+    background: #dfe6ef;
+    border-bottom-color: var(--los-paper-edge);
+}
+
+/* ---------------------------------------------------------------- navigator */
+
+.volt-navigator-air {
+    --navigator-air-orange: var(--los-accent);
+    --navigator-air-row: #e3eefb;
+    --navigator-air-row-alt: #f7f9fc;
+    --navigator-air-surface: var(--los-paper);
+    --navigator-air-name: #1d4f8f;
+}
+
+.volt-navigator-air__skin::before {
+    background: transparent;
+}
+
+.volt-navigator-air__tab-shelf {
+    background: #dfe6ef;
+}
+
+.volt-navigator-air__tab-shelf::after {
+    background: var(--los-paper-edge);
+}

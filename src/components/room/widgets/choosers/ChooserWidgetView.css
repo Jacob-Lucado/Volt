@@ -22,7 +22,7 @@
 .air-chooser__search { position: relative; border-image: url('../../../../assets/images/habbo-skin/slices/border-5.png') 5 fill / 5px stretch; }
 .air-chooser__search input { position: absolute; top: 4px; left: 6px; width: calc(100% - 29px); height: 18px; margin: 0; padding: 0; border: 0; border-radius: 0; outline: 0; box-shadow: none; background: transparent; color: #666; font: inherit; }
 .air-chooser__search input::placeholder { color: #666; opacity: .5; }
-.air-chooser__search:focus-within { outline: 1px solid #418db0; border-radius: 5px; }
+.air-chooser__search:focus-within { outline: 1px solid #24344c; border-radius: 5px; }
 .air-chooser__clear { position: absolute; right: 2px; top: 3px; width: 20px; height: 20px; padding: 0; border: 0; background: url('../../../../assets/images/habbo-skin/slices/close-black.png') center no-repeat; cursor: pointer; }
 .air-chooser__table { position: relative; display: flex; flex-direction: column; flex: 1; min-height: 50px; padding: 5px; border-image: url('../../../../assets/images/habbo-skin/slices/border-white.png') 6 fill / 6px stretch; }
 .air-chooser__heading, .air-chooser__row { display: grid; grid-template-columns: 65% 35%; }
@@ -34,7 +34,7 @@
 .air-chooser__row > div { min-width: 0; overflow: hidden; }
 .air-chooser__row button { display: block; width: 100%; height: 20px; padding: 1px 4px 0; margin: 0; border: 0; border-radius: 0; background: transparent; color: inherit; font: inherit; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
 .air-chooser__row:hover button, .air-chooser__row.is-selected button { background: #b9e4f3; }
-.air-chooser__row button:focus-visible { outline: 1px solid #418db0; outline-offset: -1px; }
+.air-chooser__row button:focus-visible { outline: 1px solid #24344c; outline-offset: -1px; }
 .air-chooser__empty { position: absolute; inset: 29px 5px 5px; display: grid; place-items: center; color: #333; pointer-events: none; }
 .air-chooser__footer { display: flex; align-items: flex-start; justify-content: space-between; gap: 4px; flex: none; height: 17px; margin-top: 7px; white-space: nowrap; }
 .air-chooser__footer [role='status'] { color: #777; }

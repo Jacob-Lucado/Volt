@@ -2,7 +2,7 @@ import { CSSProperties, FC, useLayoutEffect, useRef, useState } from 'react';
 import { NativeText } from '../../../common/native-text/NativeText';
 import { NativeTextStyleName } from '../../../common/native-text/NativeTextStyles';
 
-export const CAMERA_PANEL_COLOR = 0xe9e9e1;
+export const CAMERA_PANEL_COLOR = 0xeef2f7;
 export const CAMERA_BOX_COLOR = 0xc7c6bf;
 export const CAMERA_COMPETITION_COLOR = 0x4d1725;
 

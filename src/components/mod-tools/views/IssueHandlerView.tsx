@@ -200,7 +200,7 @@ export const IssueHandlerView: FC<IssueHandlerProps> = ({
                     onResize(750, h);
                 }}>
                 {/* left column */}
-                <div className="native0-box" style={{ left: left.x, top: left.y, width: left.width, height: Math.min(left.height + stretch, height - 32), backgroundColor: '#418db0' }} />
+                <div className="native0-box" style={{ left: left.x, top: left.y, width: left.width, height: Math.min(left.height + stretch, height - 32), backgroundColor: '#24344c' }} />
                 {/* the column is not clipped: below 515 its content is taller than the window and runs up over the frame's header like the classic client's */}
                 <div style={{ position: 'absolute', left: left.x, top: left.y, width: left.width, height: Math.min(left.height + stretch, height - 32) }}>
                 <div style={{ position: 'absolute', left: 0, top: 0, width: 285, height: 1200, willChange: 'transform', pointerEvents: 'none', clipPath: 'polygon(0 -4px, 100% -4px, 100% 100%, 0 100%)' }}>

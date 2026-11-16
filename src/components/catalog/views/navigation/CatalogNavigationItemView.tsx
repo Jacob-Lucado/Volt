@@ -81,7 +81,7 @@ export const CatalogNavigationItemView: FC<CatalogNavigationItemViewProps> = (pr
                         nativeResolution
                         background={isBuilder ? 0xff8d00 : 0x63c5e9}
                         className="volt-catalog-navigation-label-selected"
-                        overrides={{ color: 0xffffff, etchingColor: isBuilder ? 0xcf7200 : 0xb4b4ae, etchingPosition: 'top' }}
+                        overrides={{ color: 0xffffff, etchingColor: isBuilder ? 0xcf7200 : 0xb0bdce, etchingPosition: 'top' }}
                         text={swfLabel}
                         textStyle={child ? 'u_bold_italic' : 'u_bold'}
                     />

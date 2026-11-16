@@ -44,8 +44,8 @@ export const Text: FC<TextProps> = (props) => {
         const newClassNames: string[] = [truncate ? 'block' : 'inline'];
 
         if (variant) {
-            if (variant === 'primary') newClassNames.push('text-[#418db0]');
-            if (variant == 'secondary') newClassNames.push('text-[#376275]');
+            if (variant === 'primary') newClassNames.push('text-[#24344c]');
+            if (variant == 'secondary') newClassNames.push('text-[#2a3b56]');
             if (variant === 'black') newClassNames.push('text-[#000000]');
             if (variant == 'dark') newClassNames.push('text-[#18181b]');
             if (variant === 'gray') newClassNames.push('text-[#6b7280]');

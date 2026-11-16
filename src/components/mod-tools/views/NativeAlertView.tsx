@@ -4,7 +4,7 @@ import { NativeText } from '../../../common/native-text/NativeText';
 import { useModAlertStore } from '../../../hooks';
 import { Native3Frame, Native3ThickButton } from '../native/NativeWindow3';
 
-const BODY_COLOR = 0xe9e9e1;
+const BODY_COLOR = 0xeef2f7;
 
 // habbo_window_alert (frame style 3, 278 wide, content at the margins (6, 25)): the summary text field is 210 wide at (27, 14) and at least 57 high, the button row
 // (215 wide at x 26, only Ok shown, so centred) sits 10px under it, and the window is centred on the desktop.

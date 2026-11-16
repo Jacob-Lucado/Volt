@@ -22,7 +22,7 @@ import { CatalogPriceBoxView } from '../widgets/CatalogPriceBoxView';
 import { BUILDERS_CLUB_ADDONS_LAYOUT, BuildersClubButton, getBuildersClubOfferName, useBuildersClubSecondsLeft } from './buildersClub.helpers';
 
 /** The page colour, the row fill (border style 2 tinted 0xd7d7cf) and the row header (border style 3 tinted 0xafafa9). */
-const PAGE_COLOR = 0xe9e9e1;
+const PAGE_COLOR = 0xeef2f7;
 const ROW_COLOR = 0xd7d7cf;
 const HEADER_COLOR = 0xafafa9;
 

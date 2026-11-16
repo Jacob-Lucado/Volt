@@ -392,7 +392,7 @@
 }
 
 .volt-room-settings .ros-search {
-    background: #e9e9e1;
+    background: #eef2f7;
 }
 
 .volt-room-settings .ros-list {
@@ -412,7 +412,7 @@
 
 /* zI row colours: even e9e9e1, odd white, selected 9ab8d9, hover b6d9ff (hover wins); the hover arrow only shows on hover */
 .volt-room-settings .ros-user-row {
-    background: #e9e9e1;
+    background: #eef2f7;
 }
 
 .volt-room-settings .ros-user-row.is-odd {
@@ -611,7 +611,7 @@
     overflow: hidden;
     cursor: pointer;
     border: 0;
-    background: #e9e9e1;
+    background: #eef2f7;
     color: #000;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 12px;

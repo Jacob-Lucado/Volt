@@ -9,7 +9,7 @@
     max-height: none !important;
     resize: none !important;
     padding: 0 !important;
-    --volt-card-surface: #e9e9e1;
+    --volt-card-surface: #eef2f7;
     border: 0 !important;
     font-family: HabboAirUbuntu, Ubuntu, sans-serif;
     image-rendering: var(--volt-pixel-art, pixelated);

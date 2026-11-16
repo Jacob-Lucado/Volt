@@ -13,7 +13,7 @@ import { buildNewPetPaletteChoices, buildPetPurchaseExtraData, filterPetPalettes
 import { CatalogPetPriceDisplayView } from './CatalogPetPriceDisplayView';
 
 /** The catalog page colour behind the AIR text rasters. */
-const PAGE_BACKGROUND = 0xe9e9e1;
+const PAGE_BACKGROUND = 0xeef2f7;
 /** PetsCatalogWidget / NewPetsCatalogWidget.onApproveNameResult: results 1 to 4 name an alert text. */
 const NAME_ERROR_KEYS: Record<number, string> = { 1: 'long', 2: 'short', 3: 'chars', 4: 'bobba' };
 

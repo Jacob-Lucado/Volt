@@ -116,7 +116,7 @@
     width: 316px;
 }
 
-/* vip_buy_item: outer frame 0x969696 (320x75) with the 0xdfdfdf fill at 1,1 (320x73, clipped on the right). */
+/* vip_buy_item: outer frame 0x969696 (320x75) with the 0xe6ebf2 fill at 1,1 (320x73, clipped on the right). */
 .volt-air-club-vip-item {
     position: relative;
     flex: 0 0 auto;
@@ -219,7 +219,7 @@
     width: 340px;
 }
 
-/* club header border at 10,0 (340x22, 0xdfdfdf) with club_header (u_headline_small) at 0,2, 307 wide. */
+/* club header border at 10,0 (340x22, 0xe6ebf2) with club_header (u_headline_small) at 0,2, 307 wide. */
 .volt-air-club-header {
     position: absolute;
     top: 0;
@@ -273,7 +273,7 @@
     overflow: hidden;
 }
 
-/* club_buy_hc_item frames 0x9b9448 over 0xebeada; club_buy_vip_item 0x969696 over 0xdfdfdf. 151x67, fill at 1,1. */
+/* club_buy_hc_item frames 0x9b9448 over 0xebeada; club_buy_vip_item 0x969696 over 0xe6ebf2. 151x67, fill at 1,1. */
 .volt-air-club-item,
 .volt-air-club-info-item {
     position: relative;
@@ -414,7 +414,7 @@
     left: 9px;
 }
 
-/* club_remaining_bg at 10,410 (340x25, 0xdfdfdf) with club_remaining at 6,5. */
+/* club_remaining_bg at 10,410 (340x25, 0xe6ebf2) with club_remaining at 6,5. */
 .volt-air-club-remaining {
     position: absolute;
     top: 410px;

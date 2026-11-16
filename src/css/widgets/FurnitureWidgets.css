@@ -184,8 +184,8 @@
         box-sizing: border-box;
         height: 15px;
         padding-top: 1px;
-        background: #418db0;
-        box-shadow: -11px 0 0 #418db0, 9px 0 0 #418db0;
+        background: #24344c;
+        box-shadow: -11px 0 0 #24344c, 9px 0 0 #24344c;
     }
 }
 
@@ -200,7 +200,7 @@
     left: 250px;
     width: 15px;
     height: 15px;
-    background: #418db0 url('@/assets/images/room-widgets/dimmer-widget/close.png') 1px 0 no-repeat !important;
+    background: #24344c url('@/assets/images/room-widgets/dimmer-widget/close.png') 1px 0 no-repeat !important;
 }
 
 .volt-dimmer__panel,
@@ -1113,7 +1113,7 @@
         width: 100%;
         min-height: 120px;
         border-radius: 2px;
-        background-color: #0E3F52;
+        background-color: #131d2e;
 
         .mysterytrophy-image {
             width: 80px;
@@ -1134,7 +1134,7 @@
         width: 100%;
         min-height: 120px;
         border-radius: 2px;
-        background-color: #E9E9E1;
+        background-color: #eef2f7;
 
         .input-mysterytrophy-dialog {
             width: min(380px, 100%);
@@ -1227,7 +1227,7 @@
         width: 108px;
         height: 124px;
         padding: 1px;
-        border: 1px solid #b4b4ae;
+        border: 1px solid #b0bdce;
         border-radius: 5px;
         background: #fff;
     }
@@ -1268,9 +1268,9 @@
         box-sizing: border-box;
         width: 360px;
         padding: 3px;
-        border: 1px solid #b4b4ae;
+        border: 1px solid #b0bdce;
         border-radius: 5px;
-        background: #f7f7f2;
+        background: #f7f9fc;
     }
 
     .volt-recolor__grid--palette {

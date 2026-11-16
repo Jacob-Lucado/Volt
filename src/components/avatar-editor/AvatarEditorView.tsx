@@ -202,7 +202,7 @@ export const AvatarEditorView: FC<{}> = (props) => {
             <VoltCardContentView className="volt-avatar-editor-content" gap={0}>
                 <div className="volt-avatar-editor-stage">
                     <div className="volt-avatar-editor-nameplate">
-                        <div className="volt-avatar-editor-name-text"><NativeText text={GetSessionDataManager().userName} textStyle="u_headline_big" background={0x0e3f52} overrides={{ size: 12, color: 0xffffff }} /></div>
+                        <div className="volt-avatar-editor-name-text"><NativeText text={GetSessionDataManager().userName} textStyle="u_headline_big" background={0x131d2e} overrides={{ size: 12, color: 0xffffff }} /></div>
                     </div>
                     <div className="volt-avatar-editor-tab-row">
                         <VoltCardTabsView classNames={['avatar-editor-tabs']}>

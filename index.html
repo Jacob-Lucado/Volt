@@ -6,22 +6,33 @@
     <meta name="referrer" content="strict-origin" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Volt</title>
-    <!-- The loading screen's photo frame paints with the page, before any script runs.
-         LoadingView draws the same frame in the same place once React mounts. -->
+    <!-- The LucadoOS boot screen paints with the page, before any script runs.
+         LoadingView shows the same mark in the same place once React mounts. -->
     <style>
-        html, body { margin: 0; background: #0e151c; }
-        .boot-loading-screen { position: fixed; inset: 0; overflow: hidden; background: #0e151c; }
-        .boot-loading-screen__photo { position: absolute; top: calc(50% - 250px); left: calc(50% - 250px); width: 500px; height: 434px; }
-        .boot-loading-screen__photo img { position: absolute; top: 0; left: 0; pointer-events: none; }
+        html, body { margin: 0; background: #0f1724; }
+        .boot-loading-screen {
+            position: fixed; inset: 0; overflow: hidden;
+            background:
+                radial-gradient(1100px 650px at 12% -5%, rgba(77, 163, 255, .22), transparent 62%),
+                radial-gradient(900px 600px at 105% 105%, rgba(124, 108, 255, .2), transparent 60%),
+                #0f1724;
+        }
+        .boot-loading-screen__mark {
+            position: fixed; left: 0; right: 0; top: calc(50% - 70px); text-align: center;
+            font: 200 64px/1 "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, sans-serif; letter-spacing: .04em;
+            background: linear-gradient(90deg, #8ec5ff, #b4a8ff); -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .boot-loading-screen__text {
+            position: fixed; left: 0; right: 0; top: calc(50% + 14px); text-align: center;
+            font: 500 15px/20px system-ui, -apple-system, "Segoe UI", sans-serif; color: rgba(205, 217, 232, .8);
+        }
     </style>
 </head>
 <body>
     <div id="root">
         <div class="boot-loading-screen">
-            <div class="boot-loading-screen__photo">
-                <img src="/src/assets/images/loading/splash_bg.png" alt="" draggable="false" />
-                <img src="/src/assets/images/loading/splash_top.png" alt="" draggable="false" />
-            </div>
+            <div class="boot-loading-screen__mark">LucadoOS</div>
+            <div class="boot-loading-screen__text">Starting up...</div>
         </div>
     </div>
     <!-- With nginx SSI on for this page ("ssi on; ssi_silent_errors on;"), the boot configuration ships

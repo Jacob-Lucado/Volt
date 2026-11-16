@@ -1,4 +1,4 @@
-.wired-contract .volt-card-content-shell { padding: 0 7px 7px; gap: 7px; color: #000; background: #e9e9e1; }
+.wired-contract .volt-card-content-shell { padding: 0 7px 7px; gap: 7px; color: #000; background: #eef2f7; }
 .wired-contract__editable { border: 0; margin: 0; padding: 0; min-width: 0; }
 .wired-contract__section { display: flex; flex-direction: column; gap: 5px; margin: 7px 0 0; padding: 7px 0 0; min-width: 0; border: 0; border-top: 1px solid #b5b5b5; }
 .wired-contract__section:disabled { opacity: 0.5; }

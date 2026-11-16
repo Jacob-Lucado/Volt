@@ -5,7 +5,7 @@ import { NativeText } from '../../../../../../common/native-text/NativeText';
 import { SubpixelText } from '../../../../../../common/native-text/SubpixelText';
 import { CatalogAirShinyButton } from '../CatalogAirShinyButton';
 
-/** The page colour under the search texts: 0xe9e9e1 under the layout's 0x21ffffff fill. */
+/** The page colour under the search texts: 0xeef2f7 under the layout's 0x21ffffff fill. */
 export const MARKETPLACE_PAGE_BACKGROUND = 0xecece5;
 
 const LABEL_COLOR = 0x666666;

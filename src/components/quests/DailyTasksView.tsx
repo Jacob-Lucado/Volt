@@ -379,7 +379,7 @@ export const DailyTasksView: FC<{}> = () => {
                     <div className="air-dt-hc" style={{ top: SPACING + extra + listHeight + SPACING }}>
                         <AchievementText
                             align="center"
-                            background={0xe9e9e1}
+                            background={0xeef2f7}
                             height={17}
                             maxWidth={289}
                             text={

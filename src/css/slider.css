@@ -10,11 +10,11 @@
         overflow: hidden;
 
         &.track-0 {
-            background-color: #418db0;
+            background-color: #24344c;
         }
 
         &.track-1 {
-            background-color: #b6bec5;
+            background-color: #c3cedc;
         }
     }
 

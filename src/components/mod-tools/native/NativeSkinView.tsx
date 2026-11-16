@@ -22,7 +22,7 @@ const loadImage = (url: string): Promise<HTMLImageElement> => {
 
 const tinted = new Map<string, HTMLCanvasElement>();
 
-/** BitmapSkinRenderer colorTransform: every colour channel is multiplied by (window colour channel / 255), the alpha channel is kept; products are rounded (the native title bar 0xd7dbdc x 0x418db0 gives 0x377998). */
+/** BitmapSkinRenderer colorTransform: every colour channel is multiplied by (window colour channel / 255), the alpha channel is kept; products are rounded (the native title bar 0xd7dbdc x 0x24344c gives 0x377998). */
 const tint = (image: HTMLImageElement, url: string, rect: NativeSkinRect, color: number): HTMLCanvasElement => {
     const key = `${url}|${rect.x},${rect.y},${rect.width},${rect.height}|${color}`;
     let canvas = tinted.get(key);

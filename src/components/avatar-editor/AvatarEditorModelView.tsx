@@ -80,11 +80,11 @@ export const AvatarEditorModelView: FC<{
                     <>
                         <button type="button" className="category-item gender-category-item" onClick={() => setGender(AvatarFigurePartType.MALE)}>
                             <AvatarEditorIcon icon="male" selected={gender === FigureDataContainer.MALE} />
-                            <NativeText className="volt-avatar-editor-gender-text" text={LocalizeText('avatareditor.generic.boy')} textStyle="u_bold" background={0xe9e9e1} />
+                            <NativeText className="volt-avatar-editor-gender-text" text={LocalizeText('avatareditor.generic.boy')} textStyle="u_bold" background={0xeef2f7} />
                         </button>
                         <button type="button" className="category-item gender-category-item" onClick={() => setGender(AvatarFigurePartType.FEMALE)}>
                             <AvatarEditorIcon icon="female" selected={gender === FigureDataContainer.FEMALE} />
-                            <NativeText className="volt-avatar-editor-gender-text" text={LocalizeText('avatareditor.generic.girl')} textStyle="u_bold" background={0xe9e9e1} />
+                            <NativeText className="volt-avatar-editor-gender-text" text={LocalizeText('avatareditor.generic.girl')} textStyle="u_bold" background={0xeef2f7} />
                         </button>
                     </>
                 )}

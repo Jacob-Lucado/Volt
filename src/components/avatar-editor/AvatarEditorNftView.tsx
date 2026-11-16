@@ -40,8 +40,8 @@ export const AvatarEditorNftView: FC = () =>
     };
 
     return <div className="volt-avatar-editor-hotlooks volt-avatar-editor-nfts">
-        <NativeText className="volt-avatar-editor-hotlooks-title" text={LocalizeText('avatareditor.nfts.title')} textStyle="u_bold" background={0xe9e9e1} overrides={{ size: 20 }} />
-        <NativeText className="volt-avatar-editor-hotlooks-choose" text={LocalizeText('avatareditor.nfts.choose')} textStyle="u_regular" background={0xe9e9e1} />
+        <NativeText className="volt-avatar-editor-hotlooks-title" text={LocalizeText('avatareditor.nfts.title')} textStyle="u_bold" background={0xeef2f7} overrides={{ size: 20 }} />
+        <NativeText className="volt-avatar-editor-hotlooks-choose" text={LocalizeText('avatareditor.nfts.choose')} textStyle="u_regular" background={0xeef2f7} />
         <div className="volt-avatar-editor-nfts-grid">
             <ClassicScrollAreaView contentClassName="volt-avatar-editor-nfts-items" scrollStep={50}>
                 {nftAvatars.map((avatar, index) => <button

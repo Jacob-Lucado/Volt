@@ -11,7 +11,7 @@ import { CatalogAirStaticImageView } from './CatalogAirStaticImageView';
 import { CatalogLayoutProps } from './CatalogLayout.types';
 
 /** The catalog page colour behind the AIR text rasters. */
-const PAGE_BACKGROUND = 0xe9e9e1;
+const PAGE_BACKGROUND = 0xeef2f7;
 /** The centre colour of the #e0e0e0 border_slot. */
 const SLOT_BACKGROUND = 0xe0e0e0;
 /** gridItem: 36x36, columns placed side by side without spacing. */

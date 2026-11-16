@@ -346,7 +346,7 @@
 
 .volt-collectibles-nav-highlight {
     position: absolute;
-    background: #b4b4ae;
+    background: #b0bdce;
 }
 
 .volt-collectibles-nav-highlight-outer {
@@ -368,7 +368,7 @@
 }
 
 .volt-collectibles-nav-title.is-etched {
-    text-shadow: 0 -1px 0 #b4b4ae;
+    text-shadow: 0 -1px 0 #b0bdce;
 }
 
 .volt-collectibles-nav-title.is-active {

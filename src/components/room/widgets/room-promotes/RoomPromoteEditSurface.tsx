@@ -180,8 +180,8 @@ export const RoomPromoteEditSurface: FC<RoomPromoteEditSurfaceProps> = (props) =
         {
             const p = latest.current;
             const caption = raster('caption', p.caption, 0x377998);
-            const nameLabel = raster('nameLabel', p.nameLabel, 0xe9e9e1);
-            const descriptionLabel = raster('descriptionLabel', p.descriptionLabel, 0xe9e9e1);
+            const nameLabel = raster('nameLabel', p.nameLabel, 0xeef2f7);
+            const descriptionLabel = raster('descriptionLabel', p.descriptionLabel, 0xeef2f7);
 
             if (!frame || !closeImages || p.captionLeft === undefined || !caption || !nameLabel || !descriptionLabel) return null;
 
@@ -524,8 +524,8 @@ export const RoomPromoteEditSurface: FC<RoomPromoteEditSurfaceProps> = (props) =
             <canvas ref={canvasRef} aria-hidden="true" className="volt-room-promote-edit__surface" />
             <div aria-hidden="true" className="volt-room-promote-edit__sources">
                 <NativeText background={0x377998} nativeResolution overrides={{ color: 0xffffff }} text={props.caption} textStyle="u_frame_title" onRaster={rasterHandlers.caption} />
-                <NativeText background={0xe9e9e1} nativeResolution text={props.nameLabel} textStyle="u_bold" onRaster={rasterHandlers.nameLabel} />
-                <NativeText background={0xe9e9e1} nativeResolution text={props.descriptionLabel} textStyle="u_bold" onRaster={rasterHandlers.descriptionLabel} />
+                <NativeText background={0xeef2f7} nativeResolution text={props.nameLabel} textStyle="u_bold" onRaster={rasterHandlers.nameLabel} />
+                <NativeText background={0xeef2f7} nativeResolution text={props.descriptionLabel} textStyle="u_bold" onRaster={rasterHandlers.descriptionLabel} />
                 <NativeText background={0xffffff} nativeResolution text={props.name} textStyle="u_regular" onRaster={rasterHandlers.nameWhite} />
                 <NativeText background={0xffe91b} nativeResolution text={props.name} textStyle="u_regular" onRaster={rasterHandlers.nameYellow} />
                 <NativeText background={0xffffff} maxWidth={217} nativeResolution text={props.description} textStyle="u_regular" onRaster={rasterHandlers.descriptionWhite} />

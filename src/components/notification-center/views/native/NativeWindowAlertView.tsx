@@ -77,7 +77,7 @@ export const NativeWindowAlertView: FC<NativeWindowAlertViewProps> = ({ title, m
                 </div>
                 <div className="volt-native-window-alert-body">
                     <div className="volt-native-window-alert-text">
-                        <NativeText text={message} textStyle="u_regular" background={0xe9e9e1} maxWidth={210} />
+                        <NativeText text={message} textStyle="u_regular" background={0xeef2f7} maxWidth={210} />
                     </div>
                     <button ref={okRef} className="volt-native-button is-thick volt-native-window-alert-ok" type="button" onClick={onClose}>
                         <span className="volt-native-window-alert-ok-label">

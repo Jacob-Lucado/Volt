@@ -21,13 +21,13 @@
     overflow: hidden;
     border: 1px solid #969696;
     border-radius: 0;
-    background: #dfdfdf;
-    box-shadow: inset 0 0 0 1px #dfdfdf;
+    background: #e6ebf2;
+    box-shadow: inset 0 0 0 1px #e6ebf2;
 }
 
 /* vip_buy_item border style 2 = habbo_skin_border_colorless (2939_class_848) over the blue skin atlas.
    The 13x13 9-slice is pre-tinted per colour (habbo-border-colorless-<hex>-13.png): channel = source * tint / 255, alpha kept.
-   Outer frame (0x969696) is z0, inner fill (0xdfdfdf, 1px inset, clipped at the right edge) is z1, content is z2. */
+   Outer frame (0x969696) is z0, inner fill (0xe6ebf2, 1px inset, clipped at the right edge) is z1, content is z2. */
 .volt-club-offer.is-wide {
     width: 320px;
     height: 75px;

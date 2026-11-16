@@ -7,7 +7,7 @@ import { AirPivotPoint, CatalogAirStaticImageView } from './CatalogAirStaticImag
 import { CatalogLayoutProps } from './CatalogLayout.types';
 
 /** The catalog page colour behind the AIR text rasters. */
-const PAGE_BACKGROUND = 0xe9e9e1;
+const PAGE_BACKGROUND = 0xeef2f7;
 /** layout_info_rentables: the centre of the #d8d8d8 border style 2. */
 const RENTABLES_BACKGROUND = 0xd8d8d8;
 /** layout_recycler_info: the centre of the #fbc362 border style 2. */

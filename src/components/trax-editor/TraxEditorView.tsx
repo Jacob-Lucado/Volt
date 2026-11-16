@@ -487,7 +487,7 @@ export const TraxEditorView: FC<{}> = () =>
                                         onClick={() => openSong(song)}
                                         className="flex cursor-pointer items-center gap-2 rounded-lg border p-2"
                                         style={{
-                                            borderColor: isOpen ? '#2e6f8a' : 'rgba(0, 0, 0, 0.2)',
+                                            borderColor: isOpen ? '#162235' : 'rgba(0, 0, 0, 0.2)',
                                             background: isOpen ? 'linear-gradient(#eaf7fe, #d2ecf9)' : 'linear-gradient(#ffffff, #ececec)',
                                             boxShadow: isOpen ? '0 0 5px rgba(46, 111, 138, 0.55)' : '0 1px 2px rgba(0, 0, 0, 0.15)'
                                         }}
@@ -504,7 +504,7 @@ export const TraxEditorView: FC<{}> = () =>
                                             <span className="block truncate text-[12px] font-bold" style={{ color: '#222222' }}>{song.name}</span>
                                             <span className="block text-[10px]" style={{ color: 'rgba(0, 0, 0, 0.5)' }}>♪ {formatStamp(song.length)}</span>
                                         </div>
-                                        {isOpen && <span className="shrink-0 text-[12px]" style={{ color: '#2e6f8a' }}>▶</span>}
+                                        {isOpen && <span className="shrink-0 text-[12px]" style={{ color: '#162235' }}>▶</span>}
                                     </div>
                                 );
                             })}

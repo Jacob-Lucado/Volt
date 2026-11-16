@@ -103,7 +103,7 @@ export const CatalogLayoutDefaultView: FC<CatalogLayoutDefaultViewProps> = (prop
                         {hasTeaserText && (
                             <NativeText
                                 nativeResolution
-                                background={0xe9e9e1}
+                                background={0xeef2f7}
                                 className="volt-catalog-welcome-description"
                                 maxWidth={280}
                                 overrides={{ italic: true }}
@@ -135,7 +135,7 @@ export const CatalogLayoutDefaultView: FC<CatalogLayoutDefaultViewProps> = (prop
                     </div>
                     <div className="volt-catalog-total-price-slot">
                         <span className="volt-catalog-total-price-label">
-                            <NativeText nativeResolution background={0xe9e9e1} overrides={{ color: 0x666666 }} text={LocalizeText('catalog.bundlewidget.price')} textStyle="u_regular" />
+                            <NativeText nativeResolution background={0xeef2f7} overrides={{ color: 0x666666 }} text={LocalizeText('catalog.bundlewidget.price')} textStyle="u_regular" />
                         </span>
                         <CatalogTotalPriceWidget classNames={['volt-catalog-total-price-value']} />
                     </div>

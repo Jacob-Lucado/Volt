@@ -141,7 +141,7 @@ export const MarketplacePostOfferView: FC<{}> = () =>
                     />
                 </div>
                 <div className="volt-market-offer-name">
-                    <NativeText text={furniTitle} textStyle="u_headline_medium" background={0xe9e9e1} maxWidth={190} />
+                    <NativeText text={furniTitle} textStyle="u_headline_medium" background={0xeef2f7} maxWidth={190} />
                 </div>
                 <div className="volt-market-offer-expiration">
                     <NativeText
@@ -151,12 +151,12 @@ export const MarketplacePostOfferView: FC<{}> = () =>
                             [String(marketplaceConfiguration.offerTime / 24)]
                         )}
                         textStyle="u_regular"
-                        background={0xe9e9e1}
+                        background={0xeef2f7}
                         maxWidth={268}
                     />
                 </div>
                 <div className="volt-market-offer-label is-price">
-                    <NativeText text={LocalizeText('inventory.marketplace.make_offer.price_request')} textStyle="u_headline_small" background={0xe9e9e1} />
+                    <NativeText text={LocalizeText('inventory.marketplace.make_offer.price_request')} textStyle="u_headline_small" background={0xeef2f7} />
                 </div>
                 <div className="volt-market-offer-field is-price">
                     <input
@@ -173,7 +173,7 @@ export const MarketplacePostOfferView: FC<{}> = () =>
                     <NativeText
                         text={LocalizeText('sellinmarketplace.amount', ['max_amount'], [maxAmount.toString()])}
                         textStyle="u_headline_small"
-                        background={0xe9e9e1}
+                        background={0xeef2f7}
                     />
                 </div>
                 <div className="volt-market-offer-field is-amount">
@@ -197,7 +197,7 @@ export const MarketplacePostOfferView: FC<{}> = () =>
                                     ]
                                 )}
                                 textStyle="u_regular"
-                                background={0xe9e9e1}
+                                background={0xeef2f7}
                             />
                         </div>
                     )}
@@ -206,7 +206,7 @@ export const MarketplacePostOfferView: FC<{}> = () =>
                             <NativeText
                                 text={LocalizeText('inventory.marketplace.make_offer.lowest_price', ['price'], [itemStats.lowestCurrentPrice.toString()])}
                                 textStyle="u_regular"
-                                background={0xe9e9e1}
+                                background={0xeef2f7}
                             />
                         </div>
                     )}
@@ -216,7 +216,7 @@ export const MarketplacePostOfferView: FC<{}> = () =>
                                 <NativeText
                                     text={LocalizeText('inventory.marketplace.make_offer.suggested_price', ['price'], [suggestedPrice.toString()])}
                                     textStyle="u_regular"
-                                    background={0xe9e9e1}
+                                    background={0xeef2f7}
                                 />
                             </div>
                             <VoltButton

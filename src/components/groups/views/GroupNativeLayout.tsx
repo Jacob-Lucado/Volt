@@ -5,7 +5,7 @@ import { NativeFontStyle } from '../../../common/native-text/NativeFont';
 import { NativeTextStyleName } from '../../../common/native-text/NativeTextStyles';
 
 // groups_main_window client coordinates: the frame draws 33px of title above them.
-export const GROUP_SURFACE = 0xe9e9e1;
+export const GROUP_SURFACE = 0xeef2f7;
 export const GROUP_HEADER_SURFACE = 0xb3b099;
 // The caption's field sits above the 33px frame header; its glyphs start 12px below the window top.
 const TITLE_Y = 9;
@@ -107,7 +107,7 @@ interface GroupBoxProps {
     children?: ReactNode;
 }
 
-/** border style 0 (white, or tinted 0xffc300 / 0xcc0000 / 0xaaaaaa), 5 (outline), or style 3 (slot) white or tinted 0xe9e9e1 / 0xbebba5. */
+/** border style 0 (white, or tinted 0xffc300 / 0xcc0000 / 0xaaaaaa), 5 (outline), or style 3 (slot) white or tinted 0xeef2f7 / 0xbebba5. */
 export const GroupBox: FC<GroupBoxProps> = ({ kind, x, y, width, height, className = '', onClick, children }) => (
     <div className={`volt-group-native__box is-${kind} ${className}`} style={{ left: x, top: y, width, height }} onClick={onClick}>
         {children}

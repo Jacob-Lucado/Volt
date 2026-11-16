@@ -104,6 +104,8 @@ import './css/camera/CameraWidget.css';
 import './css/catalog/CatalogGiftView.css';
 import './css/navigator/NavigatorView.css';
 import './css/quests/RewardTrackView.css';
+// The LucadoOS look paints over the classic skin. Only the scrollbar theme comes after it.
+import './css/lucadoos/LucadoOS.css';
 import './css/common/ClassicScrollbar.css';
 
 // bootstrap.ts mounts the app once the configuration has loaded.

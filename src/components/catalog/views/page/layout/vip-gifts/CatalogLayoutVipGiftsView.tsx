@@ -9,7 +9,7 @@ import { ClubGiftText, getGiftRequirementText, getPastClubDaysText } from './clu
 import { VipGiftItem } from './VipGiftItemView';
 
 /** The catalog page colour behind the AIR text rasters (ctlg_presents paints no background). */
-const PAGE_BACKGROUND = 0xe9e9e1;
+const PAGE_BACKGROUND = 0xeef2f7;
 
 let isSelectingGift = false;
 

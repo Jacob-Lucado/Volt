@@ -18,7 +18,7 @@ import silverStar from '../../../../../../assets/images/catalog/air/recycler/sta
 const STARS = [bronzeStar, silverStar, goldStar, diamondStar, rubyStar, pinkStar, greenStar, greyStar];
 
 /** The page colour behind the product texts; the level header sits on the white border style 0. */
-const PAGE_BACKGROUND = 0xe9e9e1;
+const PAGE_BACKGROUND = 0xeef2f7;
 const LEVEL_BACKGROUND = 0xffffff;
 
 const getPrizeName = (product: RecyclerPrizeProduct) => GetFurnitureData(product.productClassId, product.productType)?.name || product.name;

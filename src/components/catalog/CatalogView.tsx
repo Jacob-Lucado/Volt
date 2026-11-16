@@ -42,7 +42,7 @@ const CatalogTabLabel: FC<{ text: string; width: number }> = ({ text, width }) =
             [
                 ['default', 0xc3c2b8],
                 ['hover', 0xf6f5f0],
-                ['selected', 0xeceae0]
+                ['selected', 0xeef2f7]
             ] as const
         ).map(([state, background]) => (
             <NativeText
@@ -271,7 +271,7 @@ const CatalogViewInner: FC<{}> = () => {
                                     <NativeText
                                         nativeResolution
                                         transparent
-                                        background={0x0e3f52}
+                                        background={0x131d2e}
                                         className="volt-catalog-standard-header-title"
                                         overrides={{ color: 0xffffff }}
                                         text={
@@ -284,7 +284,7 @@ const CatalogViewInner: FC<{}> = () => {
                                     <NativeText
                                         nativeResolution
                                         transparent
-                                        background={0x0e3f52}
+                                        background={0x131d2e}
                                         className="volt-catalog-standard-header-description"
                                         maxWidth={HEADER_DESCRIPTION_FIELD_WIDTH}
                                         overrides={{ color: 0xffffff }}

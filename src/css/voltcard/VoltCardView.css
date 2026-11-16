@@ -1,11 +1,11 @@
 :root {
     --volt-card-border: var(--habbo-frame-border, #283f5d);
-    --volt-card-frame: #376275;
-    --volt-card-surface: var(--habbo-surface, #dfdfdf);
+    --volt-card-frame: #2a3b56;
+    --volt-card-surface: var(--habbo-surface, #e6ebf2);
     --volt-card-surface-raised: var(--habbo-grid-active, #ececec);
-    --volt-card-header: var(--habbo-blue, #418db0);
-    --volt-card-header-highlight: var(--habbo-blue-highlight, #5ba4c4);
-    --volt-card-header-shadow: var(--habbo-blue-dark, #2e6f8a);
+    --volt-card-header: var(--habbo-blue, #24344c);
+    --volt-card-header-highlight: var(--habbo-blue-highlight, #33486a);
+    --volt-card-header-shadow: var(--habbo-blue-dark, #162235);
     --volt-card-text: var(--habbo-text, #151515);
     --volt-card-muted: var(--habbo-text-muted, #666666);
     --volt-card-focus: #ffd95a;
@@ -34,7 +34,7 @@
     width: 100%;
     margin: 0;
     padding: 0 34px;
-    background: #347d93;
+    background: #1e2d44;
     border: 0;
     border-bottom: 1px solid #0f1b22;
     border-radius: 5px 5px 0 0;
@@ -346,14 +346,14 @@
 
 .volt-card-panel {
     background: rgba(0, 0, 0, 0.04) !important;
-    border: 1px solid var(--habbo-tab, #b6bec5) !important;
+    border: 1px solid var(--habbo-tab, #c3cedc) !important;
     border-radius: 4px !important;
     box-shadow: none !important;
 }
 
 .volt-card-row {
     background: rgba(0, 0, 0, 0.035) !important;
-    border: 1px solid var(--habbo-tab, #b6bec5) !important;
+    border: 1px solid var(--habbo-tab, #c3cedc) !important;
     border-radius: 4px !important;
     box-shadow: none !important;
     transition: background-color .15s ease, border-color .15s ease;
@@ -365,7 +365,7 @@
 }
 
 .volt-card-divider {
-    border-color: var(--habbo-tab, #b6bec5) !important;
+    border-color: var(--habbo-tab, #c3cedc) !important;
     box-shadow: none !important;
 }
 
@@ -375,7 +375,7 @@
 }
 
 .volt-card-shell :where(.border, .border-muted, .border-card-grid-item-border, .border-card-grid-item-border-active, .border-white, .border-white\/10, .border-white\/20, .border-white\/30) {
-    border-color: var(--habbo-tab, #b6bec5) !important;
+    border-color: var(--habbo-tab, #c3cedc) !important;
     box-shadow: none !important;
 }
 

@@ -27,7 +27,7 @@ const AddNode: FC<{ onClick: () => void }> = ({ onClick }) => {
 };
 
 const L = LocalizeText;
-const T: FC<{ text: string; bold?: boolean; background?: number }> = ({ text, bold, background = 0xe9e9e1 }) => <NativeText text={text} background={background} textStyle={bold ? 'u_bold' : 'u_regular'} />;
+const T: FC<{ text: string; bold?: boolean; background?: number }> = ({ text, bold, background = 0xeef2f7 }) => <NativeText text={text} background={background} textStyle={bold ? 'u_bold' : 'u_regular'} />;
 const Section: FC<PropsWithChildren<{ title: string; disabled?: boolean; headerOption?: ReactNode }>> = ({ title, disabled, children, headerOption }) => <fieldset className="wired-contract__section" disabled={disabled}><div className="wired-contract__section-title"><T text={title} bold />{headerOption}</div>{children}</fieldset>;
 const CollapsedSection: FC<PropsWithChildren<{ title: string; disabled?: boolean }>> = ({ title, disabled, children }) => {
     const [open, setOpen] = useState(false);

@@ -12,7 +12,7 @@ const TYPE_ICONS: Record<string, string> = { error: wiredErrorIcon, warning: wir
 const ErrorInfoTexts: FC<{ name: string; text: string }> = ({ name, text }) => (
     <>
         <WiredMenuLabel bold align="resize" className="volt-wired-error-info__name" text={name} width={101} />
-        <NativeText nativeResolution transparent background={0xe9e9e1} className="volt-wired-error-info__text" maxWidth={319} text={text} textStyle="u_regular" />
+        <NativeText nativeResolution transparent background={0xeef2f7} className="volt-wired-error-info__text" maxWidth={319} text={text} textStyle="u_regular" />
     </>
 );
 

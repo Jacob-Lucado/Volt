@@ -100,7 +100,7 @@ export const RoomPromoteEditWidgetView: FC<RoomPromoteEditWidgetViewProps> = ({ 
             )}
             <div className="volt-room-promote-edit__client">
                 <div className="volt-room-promote-edit__label" style={{ top: 4 }}>
-                    <NativeText background={0xe9e9e1} nativeResolution text={LocalizeText('navigator.eventsettings.name')} textStyle="u_bold" />
+                    <NativeText background={0xeef2f7} nativeResolution text={LocalizeText('navigator.eventsettings.name')} textStyle="u_bold" />
                 </div>
                 {hasNameError && <div className="volt-room-promote-edit__error">{LocalizeText('navigator.eventsettings.nameerr')}</div>}
                 <RoomPromoteField
@@ -117,7 +117,7 @@ export const RoomPromoteEditWidgetView: FC<RoomPromoteEditWidgetViewProps> = ({ 
                     onEditingChange={(editing) => setFocusedField((current) => (editing ? 'name' : current === 'name' ? null : current))}
                 />
                 <div className="volt-room-promote-edit__label" style={{ top: 40 }}>
-                    <NativeText background={0xe9e9e1} nativeResolution text={LocalizeText('navigator.eventsettings.desc')} textStyle="u_bold" />
+                    <NativeText background={0xeef2f7} nativeResolution text={LocalizeText('navigator.eventsettings.desc')} textStyle="u_bold" />
                 </div>
                 <RoomPromoteField
                     height={88}

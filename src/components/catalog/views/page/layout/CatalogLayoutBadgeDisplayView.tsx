@@ -32,7 +32,7 @@ export const CatalogLayoutBadgeDisplayView: FC<CatalogLayoutProps> = (props) => 
                         {!!teaserText && (
                             <NativeText
                                 nativeResolution
-                                background={0xe9e9e1}
+                                background={0xeef2f7}
                                 className="volt-catalog-welcome-description"
                                 maxWidth={280}
                                 overrides={{ italic: true }}

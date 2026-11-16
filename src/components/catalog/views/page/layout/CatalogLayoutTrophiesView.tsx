@@ -10,7 +10,7 @@ import { CatalogAirPriceDisplayView } from './CatalogAirPriceDisplayView';
 import { CatalogLayoutProps } from './CatalogLayout.types';
 
 /** The catalog page colour behind the AIR text rasters. */
-const PAGE_BACKGROUND = 0xe9e9e1;
+const PAGE_BACKGROUND = 0xeef2f7;
 
 type TrophyMetal = 'g' | 's' | 'b';
 

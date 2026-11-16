@@ -74,7 +74,7 @@ export const AvatarEditorWardrobeView: FC<{}> = () => {
     return (
         <aside className="volt-avatar-editor-wardrobe" aria-label={LocalizeText('avatareditor.wardrobe.title')}>
             <div className="volt-avatar-editor-wardrobe-header">
-                <NativeText className="volt-avatar-editor-wardrobe-title" text={LocalizeText('avatareditor.wardrobe.title')} textStyle="u_bold" background={0xe9e9e1} overrides={{ color: 0x83827e }} />
+                <NativeText className="volt-avatar-editor-wardrobe-title" text={LocalizeText('avatareditor.wardrobe.title')} textStyle="u_bold" background={0xeef2f7} overrides={{ color: 0x83827e }} />
                 <img src={hcIconSrc} alt="" draggable={false} className="volt-avatar-editor-wardrobe-hc" />
             </div>
             <div className="volt-avatar-editor-wardrobe-slots">

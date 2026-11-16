@@ -8,7 +8,7 @@ import { CatalogAirPriceDisplayView } from './CatalogAirPriceDisplayView';
 import { CatalogLayoutProps } from './CatalogLayout.types';
 
 /** The catalog page colour behind the AIR text rasters. */
-const PAGE_BACKGROUND = 0xe9e9e1;
+const PAGE_BACKGROUND = 0xeef2f7;
 
 /**
  * AIR layout_spaces_new (360x460): productViewWidget (0, 0, 360x240, NO_ROOM_CANVAS) with ctlg_product_name (u_bold) and

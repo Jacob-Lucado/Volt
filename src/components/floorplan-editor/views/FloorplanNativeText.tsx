@@ -2,7 +2,7 @@ import { CSSProperties, FC, useLayoutEffect, useRef, useState } from 'react';
 import { NativeText } from '../../../common/native-text/NativeText';
 import { NativeTextStyleName } from '../../../common/native-text/NativeTextStyles';
 
-export const FLOORPLAN_PANEL_COLOR = 0xe9e9e1;
+export const FLOORPLAN_PANEL_COLOR = 0xeef2f7;
 export const FLOORPLAN_BOX_COLOR = 0xbdbdb5;
 
 interface FloorplanNativeTextProps {

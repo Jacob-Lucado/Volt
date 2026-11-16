@@ -13,9 +13,9 @@ import { SettingsWindow } from './SettingsWindow';
 // ModifyCustomFilterResult codes of the v75 word filter window: 1 added a word, 3 removed one.
 const RESULT_ADDED = 1;
 const RESULT_REMOVED = 3;
-// Row colours of the v75 list: odd rows white, even rows #e9e9e1, selected #9ab8d9, hovered #b6d9ff.
+// Row colours of the v75 list: odd rows white, even rows #eef2f7, selected #9ab8d9, hovered #b6d9ff.
 const ROW_COLOR_ODD = '#ffffff';
-const ROW_COLOR_EVEN = '#e9e9e1';
+const ROW_COLOR_EVEN = '#eef2f7';
 const ROW_COLOR_SELECTED = '#9ab8d9';
 const ROW_COLOR_HOVER = '#b6d9ff';
 

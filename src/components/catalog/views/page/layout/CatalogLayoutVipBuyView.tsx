@@ -22,11 +22,11 @@ import { CatalogClubPurchaseConfirmView } from './CatalogClubPurchaseConfirmView
 import { CatalogLayoutProps } from './CatalogLayout.types';
 import { getClubMembershipSummary, getClubPurchaseLayout, getHcCenterLinkHtml, groupClubOffers, toPlainClubText } from './clubPurchase.helpers';
 
-/** The page colour (0xe9e9e1) under the layout root, which paints white at alpha 0x21 (color 0x2121ffffff). */
+/** The page colour (0xeef2f7) under the layout root, which paints white at alpha 0x21 (color 0x2121ffffff). */
 const PAGE_BACKGROUND = 0xecece5;
 /** border style 2 (border_colorless) tints used by the club layouts and their items. */
 const GREY_FRAME = 0x969696;
-const GREY_FILL = 0xdfdfdf;
+const GREY_FILL = 0xe6ebf2;
 const HC_FRAME = 0x9b9448;
 const HC_FILL = 0xebeada;
 

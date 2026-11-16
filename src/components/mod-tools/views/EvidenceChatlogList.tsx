@@ -19,7 +19,7 @@ import { Native0Button, Native0Rows, Native0Scrollbar } from '../native/NativeWi
 export type EvidenceChatlogKind = 'user' | 'room' | 'cfh';
 
 const rectOf = (node: NativeNode) => ({ x: nativeNumber(node, 'x'), y: nativeNumber(node, 'y'), width: nativeNumber(node, 'width'), height: nativeNumber(node, 'height') });
-const FRAME_COLOR = 0x418db0;
+const FRAME_COLOR = 0x24344c;
 const ZEBRA = 0xc3ecfa;
 const WHITE = 0xffffff;
 /** Q5._r6c80a12d5cc1f7 / _r0ddfbe3e000602: the rows of the chatters the window was opened for (the reported user: 0, the caller: 1). */

@@ -119,7 +119,7 @@ export const NativeText: FC<NativeTextProps> = ({
     style,
     nativeResolution = false,
     onRaster,
-    transparent = false,
+    transparent = true,
     width: fixedWidth,
     tinted: tintedProp,
     ariaHidden = false

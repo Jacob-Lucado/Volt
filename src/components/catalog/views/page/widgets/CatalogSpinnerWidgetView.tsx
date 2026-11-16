@@ -111,7 +111,7 @@ export const CatalogSpinnerWidgetView: FC<{}> = () => {
     return (
         <div className="volt-catalog-standard-spinner">
             <label className="volt-catalog-standard-spinner-label" htmlFor={quantityInputId}>
-                <NativeText nativeResolution background={0xe9e9e1} overrides={{ color: 0x666666 }} text={LocalizeText('catalog.bundlewidget.quantity')} textStyle="u_regular" />
+                <NativeText nativeResolution background={0xeef2f7} overrides={{ color: 0x666666 }} text={LocalizeText('catalog.bundlewidget.quantity')} textStyle="u_regular" />
             </label>
             {freeItemCount > 0 && (
                 <div className="volt-catalog-standard-spinner-discount">

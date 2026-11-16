@@ -81,7 +81,7 @@ export const CatalogLayoutRecolorableFurnitureView: FC<CatalogLayoutProps> = (pr
             colourGrid={
                 <div className="volt-catalog-recolorable-palette">
                     <NativeText
-                        background={0xe9e9e1}
+                        background={0xeef2f7}
                         className="volt-catalog-recolorable-palette-caption"
                         text={LocalizeText('catalog.recolorable.palette')}
                         textStyle="u_small"

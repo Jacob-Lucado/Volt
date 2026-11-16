@@ -11,8 +11,8 @@ export const FORUM_PAGE_SIZE = 20;
 export const stripTags = (text: string) => text.replace(/<[^>]*>/g, '').replace(/</g, '');
 
 // The surface of the forum windows and the dark teal header band (HabboFriendBarCom groupforum_*).
-export const FORUM_SURFACE = 0xe9e9e1;
-export const FORUM_HEADER = 0x0e3f52;
+export const FORUM_SURFACE = 0xeef2f7;
+export const FORUM_HEADER = 0x131d2e;
 
 /** GroupForumView.getAsDaysHoursMinutes: FriendlyTime with the ".ago" texts and a threshold of 1, so a unit rolls over as soon as the next bigger one is exceeded ("90 seconds" is "2 minutes ago"). */
 export const forumAge = (seconds: number): string => FriendlyTime.format(seconds, '.ago', 1);

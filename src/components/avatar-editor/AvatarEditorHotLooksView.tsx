@@ -10,8 +10,8 @@ export const AvatarEditorHotLooksView: FC = () =>
 
     // HotLooksModel.selectHotLook: a look without a figure stays listed but is not loaded.
     return <div className="volt-avatar-editor-hotlooks">
-        <NativeText className="volt-avatar-editor-hotlooks-title" text={LocalizeText('avatareditor.hotlooks.title')} textStyle="u_bold" background={0xe9e9e1} overrides={{ size: 20 }} />
-        <NativeText className="volt-avatar-editor-hotlooks-choose" text={LocalizeText('avatareditor.hotlooks.choose')} textStyle="u_regular" background={0xe9e9e1} />
+        <NativeText className="volt-avatar-editor-hotlooks-title" text={LocalizeText('avatareditor.hotlooks.title')} textStyle="u_bold" background={0xeef2f7} overrides={{ size: 20 }} />
+        <NativeText className="volt-avatar-editor-hotlooks-choose" text={LocalizeText('avatareditor.hotlooks.choose')} textStyle="u_regular" background={0xeef2f7} />
         <div className="volt-avatar-editor-hotlooks-grid">
             {hotLooks.filter(look => look.gender.toUpperCase() === gender).map((look, index) => <button
                 type="button" key={index} className="volt-avatar-editor-hotlook" aria-label={LocalizeText('avatareditor.hotlooks.choose')}

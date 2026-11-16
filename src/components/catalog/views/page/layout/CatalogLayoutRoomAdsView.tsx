@@ -16,7 +16,7 @@ import { CatalogPurchaseWidgetView } from '../widgets/CatalogPurchaseWidgetView'
 import { CatalogLayoutProps } from './CatalogLayout.types';
 
 /** The catalog page colour behind the AIR text rasters. */
-const PAGE_BACKGROUND = 0xe9e9e1;
+const PAGE_BACKGROUND = 0xeef2f7;
 
 /** RoomAdsCatalogWidget.setDefaultRoom: names longer than 25 characters are cut and end in "...". */
 const getRoomCaption = (name: string) => (name.length > 25 ? name.substring(0, 25) + '...' : name);

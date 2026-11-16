@@ -1266,7 +1266,7 @@
     padding-bottom: 5px;
 }
 
-/* layout_notification_popup_xml: content origin (3,36); list at (3,2) min 46 high; message column at x=1, 293 wide; frame colour 0x67a3bf */
+/* layout_notification_popup_xml: content origin (3,36); list at (3,2) min 46 high; message column at x=1, 293 wide; frame colour 0x3a5173 */
 .volt-card-shell.volt-card-frame-3.volt-native-alert.is-popup {
     width: max-content;
     min-width: 306px;
@@ -1281,7 +1281,7 @@
     right: 2px;
     left: 2px;
     height: 31px;
-    background: linear-gradient(#67a3bf 0 2px, #578ca5 2px);
+    background: linear-gradient(#3a5173 0 2px, #578ca5 2px);
     pointer-events: none;
 }
 

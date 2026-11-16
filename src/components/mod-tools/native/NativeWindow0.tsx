@@ -17,7 +17,7 @@ import headerXml from '../../../assets/mod-tools/skins/skin-header.xml?raw';
 import { NativeSkin, parseNativeSkin } from './NativeSkin';
 import { NativeSkinView } from './NativeSkinView';
 
-// Legacy window-manager style 0 (habbo_element_description_xml): blue frame 0xff418db0, white border, default button, checkbox, dropmenu, close button.
+// Legacy window-manager style 0 (habbo_element_description_xml): blue frame 0xff24344c, white border, default button, checkbox, dropmenu, close button.
 const SKINS = {
     frame: parseNativeSkin(frameXml),
     header: parseNativeSkin(headerXml),
@@ -39,7 +39,7 @@ const withoutEntities = (skin: NativeSkin, layoutName: string, keep: (name: stri
 });
 const DROPMENU_LIST = withoutEntities(SKINS.dropmenu, 'dropmenu_frame', (name) => name !== 'arrow');
 
-export const FRAME_COLOR = 0x418db0;
+export const FRAME_COLOR = 0x24344c;
 
 const rect = (x: number, y: number, width: number, height: number): CSSProperties => ({ left: x, top: y, width, height });
 

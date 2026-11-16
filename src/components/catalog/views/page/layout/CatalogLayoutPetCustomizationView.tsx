@@ -11,7 +11,7 @@ import { buildPetCustomizationPreview, PetCustomizationPreview } from './petCust
 import { CatalogPetPriceDisplayView } from './pets/CatalogPetPriceDisplayView';
 
 /** The catalog page colour behind the AIR text rasters. */
-const PAGE_BACKGROUND = 0xe9e9e1;
+const PAGE_BACKGROUND = 0xeef2f7;
 
 /** PetPreviewCatalogWidget.init draws a white horse (type 15) on palette 2 before a product is picked. */
 const DEFAULT_PREVIEW: PetCustomizationPreview = { typeId: 15, paletteId: 2, parts: [] };
