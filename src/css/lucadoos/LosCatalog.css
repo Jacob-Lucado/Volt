@@ -405,3 +405,116 @@
 .los-cat__defs {
     position: absolute;
 }
+
+/* Purchase confirmation. */
+
+.los-confirm {
+    width: 380px;
+}
+
+.los-confirm.is-collectible {
+    --los-glass: rgba(24, 24, 28, .94);
+}
+
+.los-confirm__body {
+    display: flex;
+    gap: 14px;
+    padding: 16px 16px 4px;
+}
+
+.los-confirm__preview {
+    display: grid;
+    flex: 0 0 116px;
+    place-items: center;
+    height: 116px;
+    overflow: hidden;
+    border: 1px solid var(--los-line);
+    border-radius: 12px;
+    background: radial-gradient(120% 90% at 50% 100%, rgba(77, 163, 255, .18), rgba(124, 108, 255, .06) 60%, transparent), rgba(8, 13, 22, .5);
+}
+
+.los-confirm__preview > * {
+    max-width: 100%;
+    max-height: 100%;
+    image-rendering: pixelated;
+}
+
+.los-confirm__details {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.los-confirm__name {
+    font-size: 15px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.los-confirm__quantity,
+.los-confirm__bonus {
+    color: var(--los-dim);
+    font-size: 12.5px;
+    font-weight: 600;
+}
+
+.los-confirm__bonus {
+    color: #3ddc97;
+}
+
+.los-confirm__cost {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 8px;
+    color: var(--los-dim);
+}
+
+.los-confirm__price {
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+    height: 26px;
+    padding: 0 9px;
+    border: 1px solid var(--los-line);
+    border-radius: 13px;
+    background: var(--los-soft);
+    color: var(--los-text);
+}
+
+.los-confirm__disclaimer,
+.los-confirm__limited {
+    margin: 10px 16px 0;
+    color: var(--los-dim);
+    font-size: 12px;
+}
+
+.los-confirm__disclaimer {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    cursor: pointer;
+}
+
+.los-confirm__limited {
+    padding: 7px 10px;
+    border: 1px solid rgba(238, 180, 37, .35);
+    border-radius: 8px;
+    background: rgba(238, 180, 37, .1);
+    color: #f3d38a;
+}
+
+.los-confirm__actions {
+    display: flex;
+    gap: 8px;
+    padding: 16px;
+}
+
+.los-confirm__actions .los-button {
+    flex: 1;
+    height: 34px;
+}

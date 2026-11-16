@@ -1,8 +1,9 @@
-import { CSSProperties, FC, KeyboardEvent, ReactNode, useEffect, useRef, useState } from 'react';
+import { FC, KeyboardEvent, ReactNode, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { GetConfigurationValue, IPurchasableOffer, LocalizeText, ProductTypeEnum } from '../../../api';
 import { getCatalogBundlePrice, ICatalogBundleDiscountRuleset } from '../../../api/catalog/CatalogBundleDiscount';
-import frameBase from '../../../assets/images/habbo-skin/slices/frame-ubuntu-3-base.png';
-import { LayoutCurrencyIcon, LayoutFurniImageView, useTintedSkin, VoltCardContentView, VoltCardHeaderView, VoltCardView } from '../../../common';
+import { LayoutCurrencyIcon, LayoutFurniImageView } from '../../../common';
+import { LosIcon } from '../../../common/lucadoos';
 
 interface CatalogPurchaseConfirmViewProps {
     offer: IPurchasableOffer;
@@ -18,8 +19,17 @@ interface CatalogPurchaseConfirmViewProps {
 }
 
 export const CatalogPurchaseConfirmView: FC<CatalogPurchaseConfirmViewProps> = (props) => {
-    const { offer = null, quantity = 1, bundleDiscountRuleset = null, isGift = false, isSubmitting = false, onConfirm = null, onCancel = null, preview = null, frameColor = null } = props;
-    const tintedFrame = useTintedSkin(frameColor === null ? null : frameBase, frameColor, 33);
+    const {
+        offer = null,
+        quantity = 1,
+        bundleDiscountRuleset = null,
+        isGift = false,
+        isSubmitting = false,
+        onConfirm = null,
+        onCancel = null,
+        preview = null,
+        frameColor = null
+    } = props;
     const dialogRef = useRef<HTMLDivElement>(null);
     const spendingDisclaimerEnabled = GetConfigurationValue<boolean>('disclaimer.credit_spending.enabled', false) === true;
     const [spendingDisclaimerAccepted, setSpendingDisclaimerAccepted] = useState(!spendingDisclaimerEnabled);
@@ -79,83 +89,86 @@ export const CatalogPurchaseConfirmView: FC<CatalogPurchaseConfirmViewProps> = (
     const iconUrl = typeof offer.product?.getIconUrl === 'function' ? offer.product.getIconUrl(offer) : null;
     const isFurniture = offer.product?.productType === ProductTypeEnum.FLOOR || offer.product?.productType === ProductTypeEnum.WALL;
     const isLimited = !!offer.product?.isUniqueLimitedItem;
-    const contentClassNames = [
-        'volt-catalog-purchase-confirm-content',
-        spendingDisclaimerEnabled ? 'has-disclaimer' : '',
-        isLimited ? 'has-limited' : ''
-    ].filter(Boolean);
 
-    return (
-        <VoltCardView
-            innerRef={dialogRef}
-            aria-label={title}
-            aria-modal="true"
-            classNames={['volt-catalog-purchase-confirm']}
-            frameStyle={3}
-            isResizable={false}
-            role="dialog"
-            style={tintedFrame ? ({ '--volt-card-frame-3': tintedFrame } as CSSProperties) : undefined}
-            tabIndex={-1}
-            theme="primary-slim"
-            onKeyDown={onKeyDown}
-        >
-            <VoltCardHeaderView headerText={title} onCloseClick={onCancel} />
-            <VoltCardContentView classNames={contentClassNames} overflow="hidden">
-                <div className="volt-catalog-purchase-confirm-preview">
-                    {preview ?? (isFurniture ? (
-                        <LayoutFurniImageView
-                            aria-label={offer.localizationName}
-                            direction={90}
-                            extraData={offer.product.extraParam}
-                            productClassId={offer.product.productClassId}
-                            productType={offer.product.productType}
-                            role="img"
-                            scale={0.5}
-                        />
-                    ) : (
-                        !!iconUrl && <img alt={offer.localizationName} src={iconUrl} />
-                    ))}
-                </div>
-                <div className="volt-catalog-purchase-confirm-properties">
-                    <strong className="volt-catalog-purchase-confirm-product">{offer.localizationName}</strong>
-                    {quantity > 1 && <strong className="volt-catalog-purchase-confirm-quantity">X {quantity}</strong>}
-                    {freeItemCount > 0 && (
-                        <strong className="volt-catalog-purchase-confirm-free-quantity">
-                            {LocalizeText('shop.bonus.items.count', ['amount'], [freeItemCount.toString()])}
-                        </strong>
-                    )}
-                    <div className="volt-catalog-purchase-confirm-summary">
-                        <span>{LocalizeText('catalog.purchase.confirmation.dialog.cost')}</span>
-                        <span className="volt-catalog-purchase-confirm-cost">
+    return createPortal(
+        <div className="los-dialog-backdrop">
+            <div
+                ref={dialogRef}
+                aria-label={title}
+                aria-modal="true"
+                className={`los-window los-dialog los-confirm${frameColor === null ? '' : ' is-collectible'}`}
+                role="dialog"
+                tabIndex={-1}
+                onKeyDown={onKeyDown}
+            >
+                <header className="los-window__bar">
+                    <LosIcon name={isGift ? 'gift' : 'bag'} />
+                    <span className="los-window__title">{title}</span>
+                    <span className="los-window__actions">
+                        <button
+                            type="button"
+                            className="los-window__button los-window__button--close"
+                            aria-label={LocalizeText('generic.close')}
+                            onClick={onCancel}
+                        >
+                            <LosIcon name="close" size={14} />
+                        </button>
+                    </span>
+                </header>
+                <div className="los-confirm__body">
+                    <div className="los-confirm__preview">
+                        {preview ??
+                            (isFurniture ? (
+                                <LayoutFurniImageView
+                                    aria-label={offer.localizationName}
+                                    direction={90}
+                                    extraData={offer.product.extraParam}
+                                    productClassId={offer.product.productClassId}
+                                    productType={offer.product.productType}
+                                    role="img"
+                                    scale={0.5}
+                                />
+                            ) : (
+                                !!iconUrl && <img alt={offer.localizationName} src={iconUrl} />
+                            ))}
+                    </div>
+                    <div className="los-confirm__details">
+                        <strong className="los-confirm__name">{offer.localizationName}</strong>
+                        {quantity > 1 && <strong className="los-confirm__quantity">X {quantity}</strong>}
+                        {freeItemCount > 0 && (
+                            <strong className="los-confirm__bonus">{LocalizeText('shop.bonus.items.count', ['amount'], [freeItemCount.toString()])}</strong>
+                        )}
+                        <div className="los-confirm__cost">
+                            <span>{LocalizeText('catalog.purchase.confirmation.dialog.cost')}</span>
                             {hasCredits && (
-                                <span className="volt-catalog-purchase-confirm-price" data-currency-type="-1">
+                                <span className="los-confirm__price" data-currency-type="-1">
                                     <strong>{credits}</strong>
                                     <LayoutCurrencyIcon type={-1} />
                                 </span>
                             )}
                             {hasActivityPoints && (
-                                <span className="volt-catalog-purchase-confirm-price" data-currency-type={offer.activityPointType}>
+                                <span className="los-confirm__price" data-currency-type={offer.activityPointType}>
                                     <strong>{hasCredits ? `+ ${activityPoints}` : activityPoints}</strong>
                                     <LayoutCurrencyIcon big type={offer.activityPointType} />
                                 </span>
                             )}
                             {!hasCredits && !hasActivityPoints && (
-                                <span className="volt-catalog-purchase-confirm-price" data-currency-type="-1">
+                                <span className="los-confirm__price" data-currency-type="-1">
                                     <strong>0</strong>
                                     <LayoutCurrencyIcon type={-1} />
                                 </span>
                             )}
-                        </span>
+                        </div>
                     </div>
                 </div>
                 {spendingDisclaimerEnabled && (
-                    <label className="volt-catalog-purchase-confirm-disclaimer">
+                    <label className="los-confirm__disclaimer">
                         <input checked={spendingDisclaimerAccepted} type="checkbox" onChange={(event) => setSpendingDisclaimerAccepted(event.target.checked)} />
                         <span>{LocalizeText('disclaimer.credit_spending')}</span>
                     </label>
                 )}
                 {isLimited && (
-                    <div className="volt-catalog-purchase-confirm-limited" role="status">
+                    <div className="volt-catalog-purchase-confirm-limited los-confirm__limited" role="status">
                         <span>
                             {LocalizeText('unique.items.left')} <strong>{offer.product.uniqueLimitedItemsLeft}</strong>
                             {' / '}
@@ -163,20 +176,16 @@ export const CatalogPurchaseConfirmView: FC<CatalogPurchaseConfirmViewProps> = (
                         </span>
                     </div>
                 )}
-                <div className="volt-catalog-purchase-confirm-actions">
-                    <button className="volt-catalog-purchase-confirm-button is-cancel" disabled={isSubmitting} type="button" onClick={onCancel}>
+                <div className="los-confirm__actions">
+                    <button className="los-button" disabled={isSubmitting} type="button" onClick={onCancel}>
                         {LocalizeText('catalog.purchase_confirmation.cancel')}
                     </button>
-                    <button
-                        className="volt-catalog-purchase-confirm-button is-buy"
-                        disabled={isSubmitting || !spendingDisclaimerAccepted}
-                        type="button"
-                        onClick={onConfirm}
-                    >
+                    <button className="los-button los-button--primary" disabled={isSubmitting || !spendingDisclaimerAccepted} type="button" onClick={onConfirm}>
                         {LocalizeText(isGift ? 'catalog.purchase_confirmation.gift' : `catalog.purchase_confirmation.${offer.isRentOffer ? 'rent' : 'buy'}`)}
                     </button>
                 </div>
-            </VoltCardContentView>
-        </VoltCardView>
+            </div>
+        </div>,
+        document.body
     );
 };
