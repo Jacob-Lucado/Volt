@@ -3,6 +3,7 @@ import { CSSProperties, FC, useEffect, useId, useState } from 'react';
 import { FriendlyTime, GetConfigurationValue, GetGroupInformation, GetUserProfile, LocalizeText, ReportType, SendMessageComposer } from '../../../../api';
 import nativeAtlas from '../../../../assets/images/navigator/air/room-info-native-atlas.png';
 import { LayoutBadgeImageView, LayoutRoomThumbnailView } from '../../../../common';
+import { NativeText } from '../../../../common/native-text/NativeText';
 import { useHelp, useNavigatorData, useNavigatorFavourite, useNavigatorRoomInfoPopupStore, useNavigatorUiStore } from '../../../../hooks';
 import { classNames } from '../../../../layout';
 
@@ -97,6 +98,9 @@ const EventSkin = () => {
     );
 };
 
+const BODY = 0xe9e9e1;
+const BUBBLE_TEXT = { background: BODY, nativeResolution: true } as const;
+
 const getTradeModeText = (tradeMode: number) => {
     switch (tradeMode) {
         case 1:
@@ -159,8 +163,12 @@ export const NavigatorRoomInfoPopupView: FC<{}> = () => {
                         {hasGroup && <LayoutBadgeImageView badgeCode={room.groupBadgeCode} className="volt-navigator-air__room-badge" isGroup={true} />}
                     </LayoutRoomThumbnailView>
                     <div className="volt-navigator-air__room-popover-copy">
-                        <div className="volt-navigator-air__room-popover-title">{room.roomName}</div>
-                        <div className="volt-navigator-air__room-popover-description">{room.description}</div>
+                        <div className="volt-navigator-air__room-popover-title">
+                            <NativeText text={room.roomName} textStyle="u_bold" background={0xffffff} maxWidth={214} nativeResolution />
+                        </div>
+                        <div className="volt-navigator-air__room-popover-description">
+                            <NativeText text={room.description} textStyle="u_regular" background={0xffffff} maxWidth={214} nativeResolution />
+                        </div>
                     </div>
                 </div>
                 {(showOwner || hasGroup) && (
@@ -184,7 +192,9 @@ export const NavigatorRoomInfoPopupView: FC<{}> = () => {
                                 >
                                     <image href={nativeAtlas} width={256} height={256} />
                                 </svg>
-                                <span>{room.ownerName}</span>
+                                <span>
+                                    <NativeText text={room.ownerName} textStyle="u_bold" overrides={{ underline: true }} maxWidth={130} {...BUBBLE_TEXT} />
+                                </span>
                             </button>
                         )}
                         {hasGroup && (
@@ -197,28 +207,44 @@ export const NavigatorRoomInfoPopupView: FC<{}> = () => {
                                 }}
                             >
                                 <i className="volt-navigator-air__group" />
-                                <span>{room.groupName}</span>
+                                <span>
+                                    <NativeText text={room.groupName} textStyle="u_bold" overrides={{ underline: true }} maxWidth={170} {...BUBBLE_TEXT} />
+                                </span>
                             </button>
                         )}
                     </div>
                 )}
                 <div className="volt-navigator-air__room-popover-details">
                     <div className="volt-navigator-air__room-popover-properties">
-                        <span className="is-label">{LocalizeText('navigator.roompopup.property.trading')}</span>
-                        <span>{getTradeModeText(room.tradeMode)}</span>
+                        <span className="is-label">
+                            <NativeText text={LocalizeText('navigator.roompopup.property.trading')} textStyle="u_bold" {...BUBBLE_TEXT} />
+                        </span>
+                        <span>
+                            <NativeText text={getTradeModeText(room.tradeMode)} textStyle="u_regular" {...BUBBLE_TEXT} />
+                        </span>
                         {rankingEnabled && (
                             <>
-                                <span className="is-label">{LocalizeText('navigator.roompopup.property.ranking')}</span>
-                                <span>{room.ranking}</span>
+                                <span className="is-label">
+                                    <NativeText text={LocalizeText('navigator.roompopup.property.ranking')} textStyle="u_bold" {...BUBBLE_TEXT} />
+                                </span>
+                                <span>
+                                    <NativeText text={String(room.ranking)} textStyle="u_regular" {...BUBBLE_TEXT} />
+                                </span>
                             </>
                         )}
-                        <span className="is-label">{LocalizeText('navigator.roompopup.property.max_users')}</span>
-                        <span>{room.maxUserCount}</span>
+                        <span className="is-label">
+                            <NativeText text={LocalizeText('navigator.roompopup.property.max_users')} textStyle="u_bold" {...BUBBLE_TEXT} />
+                        </span>
+                        <span>
+                            <NativeText text={String(room.maxUserCount)} textStyle="u_regular" {...BUBBLE_TEXT} />
+                        </span>
                     </div>
                     <div className="volt-navigator-air__room-popover-actions">
                         <button type="button" onClick={() => toggleFavourite()}>
                             <i className={classNames('icon icon-navigator-favorite-room', isFavourite ? 'active' : '')} />
-                            <span>{LocalizeText('navigator.room.popup.room.info.favorite')}</span>
+                            <span>
+                                <NativeText text={LocalizeText('navigator.room.popup.room.info.favorite')} textStyle="u_regular" {...BUBBLE_TEXT} />
+                            </span>
                         </button>
                         <button
                             type="button"
@@ -230,7 +256,9 @@ export const NavigatorRoomInfoPopupView: FC<{}> = () => {
                             }}
                         >
                             <i className={classNames('icon icon-navigator-my-room', isHome ? 'active' : '')} />
-                            <span>{LocalizeText('navigator.room.popup.room.info.home')}</span>
+                            <span>
+                                <NativeText text={LocalizeText('navigator.room.popup.room.info.home')} textStyle="u_regular" {...BUBBLE_TEXT} />
+                            </span>
                         </button>
                         {isOwner && (
                             <button
@@ -241,7 +269,9 @@ export const NavigatorRoomInfoPopupView: FC<{}> = () => {
                                 }}
                             >
                                 <i className="icon icon-navigator-room-settings" />
-                                <span>{LocalizeText('navigator.room.popup.info.room.settings')}</span>
+                                <span>
+                                    <NativeText text={LocalizeText('navigator.room.popup.info.room.settings')} textStyle="u_regular" {...BUBBLE_TEXT} />
+                                </span>
                             </button>
                         )}
                         {roomReportingEnabled && !isOwner && (
@@ -253,22 +283,26 @@ export const NavigatorRoomInfoPopupView: FC<{}> = () => {
                                 }}
                             >
                                 <i className="icon icon-navigator-room-report" />
-                                <span>{LocalizeText('navigator.room.popup.report.room')}</span>
+                                <span>
+                                    <NativeText text={LocalizeText('navigator.room.popup.report.room')} textStyle="u_regular" {...BUBBLE_TEXT} />
+                                </span>
                             </button>
                         )}
                     </div>
                 </div>
-                <div className="volt-navigator-air__room-popover-bottom">
-                    <div className="volt-navigator-air__room-popover-tag-group">
-                        <div className="volt-navigator-air__room-popover-tags">
-                            {room.tags?.map((tag, index) => (
-                                <button key={index} type="button" className="volt-navigator-air__tag" onClick={() => searchTag(tag)}>
-                                    #{tag}
-                                </button>
-                            ))}
+                <div className={classNames('volt-navigator-air__room-popover-bottom', !room.tags?.length && !hasActiveRoomAd && 'is-empty')}>
+                    {(room.tags?.length > 0 || hasActiveRoomAd) && (
+                        <div className="volt-navigator-air__room-popover-tag-group">
+                            <div className="volt-navigator-air__room-popover-tags">
+                                {room.tags?.map((tag, index) => (
+                                    <button key={index} type="button" className="volt-navigator-air__tag" onClick={() => searchTag(tag)}>
+                                        #{tag}
+                                    </button>
+                                ))}
+                            </div>
+                            {/* Native group role/type/decorate metadata is unavailable in this facade. */}
                         </div>
-                        {/* Native group role/type/decorate metadata is unavailable in this facade. */}
-                    </div>
+                    )}
                     {hasActiveRoomAd && (
                         <div className="volt-navigator-air__room-popover-event">
                             <EventSkin />
