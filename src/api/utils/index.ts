@@ -1,4 +1,5 @@
 export * from './CloneObject';
+export * from './ColorTransitioner';
 export * from './ColorUtils';
 export * from './ConvertSeconds';
 export * from './CopyToClipboard';

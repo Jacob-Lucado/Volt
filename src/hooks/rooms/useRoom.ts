@@ -4,6 +4,7 @@ import {
     GetRenderer,
     GetRoomEngine,
     GetStage,
+    GetTicker,
     IRoomSession,
     VoltAdjustmentFilter,
     VoltSprite,
@@ -22,10 +23,11 @@ import {
     RoomVariableEnum,
     Vector3d
 } from '@volt/renderer';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { registerSharedHook, useSharedHook } from '@/state/useSharedHook';
 import {
     CanManipulateFurniture,
+    ColorTransitioner,
     DispatchUiEvent,
     GetRoomSession,
     IsFurnitureSelectionDisabled,
@@ -49,23 +51,12 @@ const getViewportSize = () => {
 
 const useRoomState = () => {
     const [roomSession, setRoomSession] = useState<IRoomSession>(null);
-    const [roomBackground, setRoomBackground] = useState<VoltSprite>(null);
     const [roomFilter, setRoomFilter] = useState<VoltAdjustmentFilter>(null);
     const [roomMaster, setRoomMaster] = useState<VoltContainer>(null);
+    // The toner color lives apart from the background sprite, so a color set on room entry is kept until the sprite exists.
+    const roomBackgroundColor = useRef(new ColorTransitioner(0, 0));
 
     useWiredFurniOpacity(roomSession?.roomId ?? 0);
-
-    const updateRoomBackgroundColor = (hue: number, saturation: number, lightness: number) => {
-        if (!roomBackground) return;
-
-        const newColor = ColorConverter.hslToRGB(((hue & 0xff) << 16) + ((saturation & 0xff) << 8) + (lightness & 0xff));
-
-        if (!hue && !saturation && !lightness) {
-            roomBackground.tint = 0;
-        } else {
-            roomBackground.tint = newColor;
-        }
-    };
 
     const updateRoomFilter = (color: number) => {
         if (!roomFilter) return;
@@ -76,8 +67,13 @@ const useRoomState = () => {
     useVoltEvent<RoomObjectHSLColorEnabledEvent>(RoomObjectHSLColorEnabledEvent.ROOM_BACKGROUND_COLOR, (event) => {
         if (RoomId.isRoomPreviewerId(event.roomId)) return;
 
-        if (event.enable) updateRoomBackgroundColor(event.hue, event.saturation, event.lightness);
-        else updateRoomBackgroundColor(0, 0, 0);
+        const [hue, saturation, lightness] = event.enable ? [event.hue, event.saturation, event.lightness] : [0, 0, 0];
+
+        roomBackgroundColor.current.startTransition(
+            ColorConverter.hslToRGB(((hue & 0xff) << 16) + ((saturation & 0xff) << 8) + (lightness & 0xff)),
+            lightness,
+            performance.now()
+        );
     });
 
     useVoltEvent<RoomBackgroundColorEvent>(RoomBackgroundColorEvent.ROOM_COLOR, (event) => {
@@ -103,6 +99,7 @@ const useRoomState = () => {
 
         switch (event.type) {
             case RoomEngineEvent.INITIALIZED:
+                roomBackgroundColor.current = new ColorTransitioner(0, 0);
                 SetActiveRoomId(event.roomId);
                 setRoomSession(session);
                 return;
@@ -261,14 +258,19 @@ const useRoomState = () => {
         const filter = new VoltAdjustmentFilter();
         const master = canvas.master;
 
-        background.tint = 0;
+        background.tint = roomBackgroundColor.current.color;
         background.width = width;
         background.height = height;
 
         master.addChildAt(background, 0);
         // A white tint is an identity operation; attach only when the mood light changes it.
 
-        setRoomBackground(background);
+        const updateBackgroundColor = () => {
+            if (roomBackgroundColor.current.updateColor(performance.now())) background.tint = roomBackgroundColor.current.color;
+        };
+
+        GetTicker().add(updateBackgroundColor);
+
         setRoomFilter(filter);
         setRoomMaster(master);
 
@@ -321,7 +323,7 @@ const useRoomState = () => {
         viewport?.addEventListener('scroll', resize);
 
         return () => {
-            setRoomBackground(null);
+            GetTicker().remove(updateBackgroundColor);
             setRoomFilter(null);
             setRoomMaster(null);
             updateRoomTint(master, filter, 0xffffff);
