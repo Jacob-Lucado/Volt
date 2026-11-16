@@ -67,7 +67,6 @@ import './css/inventory/InventoryMarketplaceOffer.css';
 
 import './css/layout/LayoutTrophy.css';
 
-
 import './css/voltcard/VoltCardView.css';
 import './css/achievements/AchievementsView.css';
 
@@ -108,6 +107,7 @@ import './css/quests/RewardTrackView.css';
 import './css/lucadoos/LucadoOS.css';
 import './css/lucadoos/LosWindow.css';
 import './css/lucadoos/LosNavigator.css';
+import './css/lucadoos/LosPurse.css';
 import './css/common/ClassicScrollbar.css';
 
 // bootstrap.ts mounts the app once the configuration has loaded.
@@ -119,10 +119,7 @@ export const mountApp = () => {
             <QueryClientProvider client={queryClient}>
                 <ErrorBoundary
                     fallbackRender={({ error }) => (
-                        <LoadingView
-                            isError={true}
-                            message={`Something went wrong.\n${(error as Error)?.message ?? 'Unknown error'}`}
-                        />
+                        <LoadingView isError={true} message={`Something went wrong.\n${(error as Error)?.message ?? 'Unknown error'}`} />
                     )}
                 >
                     <App />
