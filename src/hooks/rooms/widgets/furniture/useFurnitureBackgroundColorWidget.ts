@@ -1,6 +1,6 @@
 import { ApplyTonerComposer, GetRoomEngine, RoomEngineTriggerWidgetEvent, RoomObjectVariable } from '@volt/renderer';
-import { useEffect, useState } from 'react';
-import { CanManipulateFurniture, DispatchUiEvent, RoomWidgetUpdateBackgroundColorPreviewEvent, SendMessageComposer } from '../../../../api';
+import { useState } from 'react';
+import { CanManipulateFurniture, SendMessageComposer } from '../../../../api';
 import { useVoltEvent } from '../../../events';
 import { useFurniRemovedEvent } from '../../engine';
 import { useRoom } from '../../useRoom';
@@ -18,8 +18,6 @@ const useFurnitureBackgroundColorWidgetState = () => {
     const toggleToner = () => roomSession.useMultistateItem(objectId);
 
     const onClose = () => {
-        DispatchUiEvent(new RoomWidgetUpdateBackgroundColorPreviewEvent(RoomWidgetUpdateBackgroundColorPreviewEvent.CLEAR_PREVIEW));
-
         setObjectId(-1);
         setCategory(-1);
         setHue(0);
@@ -45,12 +43,6 @@ const useFurnitureBackgroundColorWidgetState = () => {
 
         onClose();
     });
-
-    useEffect(() => {
-        if (objectId === -1 || category === -1) return;
-
-        DispatchUiEvent(new RoomWidgetUpdateBackgroundColorPreviewEvent(RoomWidgetUpdateBackgroundColorPreviewEvent.PREVIEW, hue, saturation, lightness));
-    }, [objectId, category, hue, saturation, lightness]);
 
     return { objectId, hue, saturation, lightness, setHue, setSaturation, setLightness, applyToner, toggleToner, onClose };
 };

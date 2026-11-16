@@ -30,12 +30,11 @@ import {
     GetRoomSession,
     IsFurnitureSelectionDisabled,
     ProcessRoomObjectOperation,
-    RoomWidgetUpdateBackgroundColorPreviewEvent,
     RoomWidgetUpdateRoomObjectEvent,
     SetActiveRoomId,
     StartRoomSession
 } from '../../api';
-import { useMessageEvent, useVoltEvent, useUiEvent } from '../events';
+import { useMessageEvent, useVoltEvent } from '../events';
 import { updateRoomTint } from './updateRoomTint';
 import { useWiredFurniOpacity } from './useWiredFurniOpacity';
 
@@ -53,16 +52,13 @@ const useRoomState = () => {
     const [roomBackground, setRoomBackground] = useState<VoltSprite>(null);
     const [roomFilter, setRoomFilter] = useState<VoltAdjustmentFilter>(null);
     const [roomMaster, setRoomMaster] = useState<VoltContainer>(null);
-    const [originalRoomBackgroundColor, setOriginalRoomBackgroundColor] = useState(0);
 
     useWiredFurniOpacity(roomSession?.roomId ?? 0);
 
-    const updateRoomBackgroundColor = (hue: number, saturation: number, lightness: number, original: boolean = false) => {
+    const updateRoomBackgroundColor = (hue: number, saturation: number, lightness: number) => {
         if (!roomBackground) return;
 
         const newColor = ColorConverter.hslToRGB(((hue & 0xff) << 16) + ((saturation & 0xff) << 8) + (lightness & 0xff));
-
-        if (original) setOriginalRoomBackgroundColor(newColor);
 
         if (!hue && !saturation && !lightness) {
             roomBackground.tint = 0;
@@ -77,21 +73,11 @@ const useRoomState = () => {
         updateRoomTint(roomMaster, roomFilter, color);
     };
 
-    useUiEvent<RoomWidgetUpdateBackgroundColorPreviewEvent>(RoomWidgetUpdateBackgroundColorPreviewEvent.PREVIEW, (event) =>
-        updateRoomBackgroundColor(event.hue, event.saturation, event.lightness)
-    );
-
-    useUiEvent<RoomWidgetUpdateBackgroundColorPreviewEvent>(RoomWidgetUpdateBackgroundColorPreviewEvent.CLEAR_PREVIEW, (event) => {
-        if (!roomBackground) return;
-
-        roomBackground.tint = originalRoomBackgroundColor;
-    });
-
     useVoltEvent<RoomObjectHSLColorEnabledEvent>(RoomObjectHSLColorEnabledEvent.ROOM_BACKGROUND_COLOR, (event) => {
         if (RoomId.isRoomPreviewerId(event.roomId)) return;
 
-        if (event.enable) updateRoomBackgroundColor(event.hue, event.saturation, event.lightness, true);
-        else updateRoomBackgroundColor(0, 0, 0, true);
+        if (event.enable) updateRoomBackgroundColor(event.hue, event.saturation, event.lightness);
+        else updateRoomBackgroundColor(0, 0, 0);
     });
 
     useVoltEvent<RoomBackgroundColorEvent>(RoomBackgroundColorEvent.ROOM_COLOR, (event) => {
@@ -340,7 +326,6 @@ const useRoomState = () => {
             setRoomMaster(null);
             updateRoomTint(master, filter, 0xffffff);
             filter.destroy();
-            setOriginalRoomBackgroundColor(0);
 
             window.removeEventListener('resize', resize);
             viewport?.removeEventListener('resize', resize);
