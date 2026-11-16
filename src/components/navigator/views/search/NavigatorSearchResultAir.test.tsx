@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PerkEnum } from '@volt/renderer';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useNavigatorUiStore } from '../../../../hooks';
 import { usePerkAllowancesStore } from '../../../../state/perkAllowancesStore';
 import { NavigatorSearchResultView } from './NavigatorSearchResultView';

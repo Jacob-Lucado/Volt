@@ -1,0 +1,216 @@
+/* The LucadoOS window and the small parts every rebuilt window shares.
+   LucadoOS(TM) is a trademark of Jacob Lucado. */
+
+.los-window {
+    --los-glass: rgba(15, 23, 36, .9);
+    --los-line: rgba(148, 176, 214, .2);
+    --los-soft: rgba(148, 176, 214, .09);
+    --los-soft-2: rgba(148, 176, 214, .16);
+    --los-text: #e8eef5;
+    --los-dim: #93a4ba;
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 1px solid var(--los-line);
+    border-radius: 12px;
+    background: var(--los-glass);
+    backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .5), inset 0 1px 0 rgba(255, 255, 255, .06);
+    color: var(--los-text);
+    font: 400 13px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    image-rendering: auto;
+    pointer-events: auto;
+}
+
+.los-window *,
+.los-window *::before,
+.los-window *::after {
+    box-sizing: border-box;
+}
+
+.los-window button {
+    font: inherit;
+    color: inherit;
+}
+
+.los-icon {
+    flex: none;
+}
+
+.los-window__bar {
+    display: flex;
+    flex: none;
+    gap: 8px;
+    align-items: center;
+    height: 38px;
+    padding: 0 6px 0 12px;
+    border-bottom: 1px solid var(--los-line);
+    background: linear-gradient(90deg, rgba(77, 163, 255, .14), rgba(124, 108, 255, .1));
+    cursor: move;
+    user-select: none;
+}
+
+.los-window__bar > .los-icon {
+    color: var(--los-accent);
+}
+
+.los-window__title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.los-window__actions {
+    display: flex;
+    gap: 2px;
+}
+
+.los-window__button {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: 7px;
+    background: none;
+    color: var(--los-dim);
+    cursor: pointer;
+}
+
+.los-window__button:hover {
+    background: var(--los-soft-2);
+    color: var(--los-text);
+}
+
+.los-window__button--close:hover {
+    background: #e5484d;
+    color: #fff;
+}
+
+.los-window__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/* Shared parts */
+
+.los-tabs {
+    display: flex;
+    flex: none;
+    gap: 4px;
+    padding: 8px 10px 0;
+}
+
+.los-tab {
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: none;
+    color: var(--los-dim);
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.los-tab:hover {
+    background: var(--los-soft);
+    color: var(--los-text);
+}
+
+.los-tab.is-active {
+    border-color: rgba(77, 163, 255, .55);
+    background: rgba(77, 163, 255, .16);
+    color: #fff;
+}
+
+.los-input,
+.los-select {
+    height: 32px;
+    min-width: 0;
+    padding: 0 10px;
+    border: 1px solid var(--los-line);
+    border-radius: 8px;
+    outline: none;
+    background: rgba(8, 13, 22, .55);
+    color: var(--los-text);
+    font: inherit;
+}
+
+.los-input::placeholder {
+    color: var(--los-dim);
+}
+
+.los-input:focus,
+.los-select:focus {
+    border-color: var(--los-accent);
+}
+
+.los-select option {
+    background: #111a29;
+    color: var(--los-text);
+}
+
+.los-button {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid var(--los-line);
+    border-radius: 8px;
+    background: var(--los-soft);
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.los-button:hover {
+    border-color: rgba(77, 163, 255, .6);
+    background: var(--los-soft-2);
+}
+
+.los-button--primary {
+    border-color: transparent;
+    background: linear-gradient(90deg, var(--los-accent), var(--los-accent-2));
+    color: #fff !important;
+    font-weight: 600;
+}
+
+.los-button--primary:hover {
+    filter: brightness(1.1);
+}
+
+.los-icon-button {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: none;
+    color: var(--los-dim);
+    cursor: pointer;
+}
+
+.los-icon-button:hover {
+    background: var(--los-soft-2);
+    color: var(--los-text);
+}
+
+.los-scroll {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 176, 214, .35) transparent;
+}

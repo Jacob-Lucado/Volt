@@ -83,17 +83,25 @@ const LayoutScrollbarThumb = ({ pressed, id }: { pressed: boolean; id: string })
             <svg className="volt-room-creator-air__thumb-middle" aria-hidden="true" width="17" height="100%">
                 <defs>
                     <pattern id={id + '-middle'} width="17" height="1" patternUnits="userSpaceOnUse">
-                        <svg width="17" height="1" viewBox="0 2 17 1">{image}</svg>
+                        <svg width="17" height="1" viewBox="0 2 17 1">
+                            {image}
+                        </svg>
                     </pattern>
                 </defs>
                 <rect width="17" height="100%" fill={'url(#' + id + '-middle)'} />
             </svg>
-            <svg className="volt-room-creator-air__thumb-top" aria-hidden="true" viewBox="0 0 17 2">{image}</svg>
-            <svg className="volt-room-creator-air__thumb-bottom" aria-hidden="true" viewBox="0 22 17 2">{image}</svg>
+            <svg className="volt-room-creator-air__thumb-top" aria-hidden="true" viewBox="0 0 17 2">
+                {image}
+            </svg>
+            <svg className="volt-room-creator-air__thumb-bottom" aria-hidden="true" viewBox="0 22 17 2">
+                {image}
+            </svg>
             <svg className="volt-room-creator-air__thumb-grip" aria-hidden="true" width="7" height="100%">
                 <defs>
                     <pattern id={id + '-grip'} width="7" height="10" patternUnits="userSpaceOnUse">
-                        <svg width="7" height="10" viewBox="5 7 7 10">{image}</svg>
+                        <svg width="7" height="10" viewBox="5 7 7 10">
+                            {image}
+                        </svg>
                     </pattern>
                 </defs>
                 <rect width="7" height="100%" fill={'url(#' + id + '-grip)'} />
@@ -110,15 +118,15 @@ const RoomLayoutScrollView = ({ children, viewportRef }: { children: ReactNode; 
     const [dragging, setDragging] = useState(false);
     const maxScroll = Math.max(0, scroll.height - LAYOUT_HEIGHT);
     // Lq assigns a fractional height through WindowController.setRectangle (truncation).
-    const thumbHeight = Math.max(12, Math.min(TRACK_HEIGHT, Math.trunc(TRACK_HEIGHT * LAYOUT_HEIGHT / scroll.height)));
-    const thumbTop = maxScroll > 0 ? Math.round(scroll.top / maxScroll * (TRACK_HEIGHT - thumbHeight)) : 0;
+    const thumbHeight = Math.max(12, Math.min(TRACK_HEIGHT, Math.trunc((TRACK_HEIGHT * LAYOUT_HEIGHT) / scroll.height)));
+    const thumbTop = maxScroll > 0 ? Math.round((scroll.top / maxScroll) * (TRACK_HEIGHT - thumbHeight)) : 0;
 
     const updateScroll = useCallback(() => {
         const viewport = viewportRef.current;
         if (!viewport) return;
         const top = viewport.scrollTop;
         const height = viewport.scrollHeight;
-        setScroll((previous) => previous.top === top && previous.height === height ? previous : { top, height });
+        setScroll((previous) => (previous.top === top && previous.height === height ? previous : { top, height }));
     }, [viewportRef]);
 
     useLayoutEffect(() => {
@@ -138,25 +146,43 @@ const RoomLayoutScrollView = ({ children, viewportRef }: { children: ReactNode; 
     return (
         <div className="volt-room-creator-air__layouts">
             <div id={id} ref={viewportRef} className="volt-room-creator-air__layout-viewport" onScroll={updateScroll}>
-                <div ref={contentRef} className="volt-room-creator-air__layout-rows">{children}</div>
+                <div ref={contentRef} className="volt-room-creator-air__layout-rows">
+                    {children}
+                </div>
             </div>
             <div className="volt-room-creator-air__scrollbar" onWheel={(event) => scrollBy(event.deltaY)}>
                 <button
-                    type="button" className="volt-room-creator-air__scroll-up" aria-label="Scroll up" disabled={maxScroll === 0}
-                    onPointerDown={(event) => { if (event.button === 0) scrollBy(-SCROLL_STEP); }}
-                    onClick={(event) => { if (event.detail === 0) scrollBy(-SCROLL_STEP); }}
+                    type="button"
+                    className="volt-room-creator-air__scroll-up"
+                    aria-label="Scroll up"
+                    disabled={maxScroll === 0}
+                    onPointerDown={(event) => {
+                        if (event.button === 0) scrollBy(-SCROLL_STEP);
+                    }}
+                    onClick={(event) => {
+                        if (event.detail === 0) scrollBy(-SCROLL_STEP);
+                    }}
                 />
-                <div className="volt-room-creator-air__scroll-track" onPointerDown={(event) => {
-                    if (maxScroll === 0 || event.button !== 0 || event.target !== event.currentTarget) return;
-                    const y = event.clientY - event.currentTarget.getBoundingClientRect().top;
-                    if (y < thumbTop) scrollBy(-(LAYOUT_HEIGHT - SCROLL_STEP));
-                    else if (y > thumbTop + thumbHeight) scrollBy(LAYOUT_HEIGHT - SCROLL_STEP);
-                }}>
+                <div
+                    className="volt-room-creator-air__scroll-track"
+                    onPointerDown={(event) => {
+                        if (maxScroll === 0 || event.button !== 0 || event.target !== event.currentTarget) return;
+                        const y = event.clientY - event.currentTarget.getBoundingClientRect().top;
+                        if (y < thumbTop) scrollBy(-(LAYOUT_HEIGHT - SCROLL_STEP));
+                        else if (y > thumbTop + thumbHeight) scrollBy(LAYOUT_HEIGHT - SCROLL_STEP);
+                    }}
+                >
                     {maxScroll > 0 && (
                         <div
                             className="volt-room-creator-air__scroll-thumb"
-                            role="scrollbar" aria-orientation="vertical" aria-label={LocalizeText('navigator.createroom.chooselayoutcaption')}
-                            aria-controls={id} aria-valuemin={0} aria-valuemax={maxScroll} aria-valuenow={scroll.top} tabIndex={0}
+                            role="scrollbar"
+                            aria-orientation="vertical"
+                            aria-label={LocalizeText('navigator.createroom.chooselayoutcaption')}
+                            aria-controls={id}
+                            aria-valuemin={0}
+                            aria-valuemax={maxScroll}
+                            aria-valuenow={scroll.top}
+                            tabIndex={0}
                             style={{ height: thumbHeight, top: thumbTop }}
                             onKeyDown={(event) => {
                                 const viewport = viewportRef.current;
@@ -179,18 +205,27 @@ const RoomLayoutScrollView = ({ children, viewportRef }: { children: ReactNode; 
                             onPointerMove={(event) => {
                                 const drag = dragRef.current;
                                 if (drag?.pointerId !== event.pointerId || !viewportRef.current) return;
-                                viewportRef.current.scrollTop = drag.scrollTop + (event.clientY - drag.y) * maxScroll / (TRACK_HEIGHT - thumbHeight);
+                                viewportRef.current.scrollTop = drag.scrollTop + ((event.clientY - drag.y) * maxScroll) / (TRACK_HEIGHT - thumbHeight);
                             }}
-                            onPointerUp={stopDragging} onPointerCancel={stopDragging} onLostPointerCapture={stopDragging}
+                            onPointerUp={stopDragging}
+                            onPointerCancel={stopDragging}
+                            onLostPointerCapture={stopDragging}
                         >
                             <LayoutScrollbarThumb pressed={dragging} id={id} />
                         </div>
                     )}
                 </div>
                 <button
-                    type="button" className="volt-room-creator-air__scroll-down" aria-label="Scroll down" disabled={maxScroll === 0}
-                    onPointerDown={(event) => { if (event.button === 0) scrollBy(SCROLL_STEP); }}
-                    onClick={(event) => { if (event.detail === 0) scrollBy(SCROLL_STEP); }}
+                    type="button"
+                    className="volt-room-creator-air__scroll-down"
+                    aria-label="Scroll down"
+                    disabled={maxScroll === 0}
+                    onPointerDown={(event) => {
+                        if (event.button === 0) scrollBy(SCROLL_STEP);
+                    }}
+                    onClick={(event) => {
+                        if (event.detail === 0) scrollBy(SCROLL_STEP);
+                    }}
                 />
             </div>
         </div>
@@ -202,7 +237,21 @@ export const NavigatorRoomCreatorView: FC = () => {
     const { clubLevel } = useUserDataSnapshot();
     const isCreatorOpen = useNavigatorUiStore((state) => state.isCreatorOpen);
     const canUseStaffCategories = GetSessionDataManager().hasSecurity(7);
-    const { name, nameTouched, description, descriptionTouched, categoryIndex, visitorsIndex, tradeIndex, nameError, nameInvalid, selectedModelName, position, showVersion, setForm } = useRoomCreatorStore();
+    const {
+        name,
+        nameTouched,
+        description,
+        descriptionTouched,
+        categoryIndex,
+        visitorsIndex,
+        tradeIndex,
+        nameError,
+        nameInvalid,
+        selectedModelName,
+        position,
+        showVersion,
+        setForm
+    } = useRoomCreatorStore();
     const canUseSpecialModels = GetSessionDataManager().hasSecurity(4);
     const roomModels = ROOM_MODELS.filter((model) => model.clubLevel !== -1 || canUseSpecialModels);
     const selectedModel = roomModels.find((model) => model.name === selectedModelName) ?? roomModels[0];
@@ -217,8 +266,13 @@ export const NavigatorRoomCreatorView: FC = () => {
             let y = Number.parseFloat(arrow.style.top || '0');
             const step = Math.abs(y) < 2 || Math.abs(y - 15) < 2 ? 1 : 2;
             y += arrowDirectionRef.current ? step : -step;
-            if (y < 0) { arrowDirectionRef.current = true; y = 1; }
-            else if (y > 15) { arrowDirectionRef.current = false; y = 14; }
+            if (y < 0) {
+                arrowDirectionRef.current = true;
+                y = 1;
+            } else if (y > 15) {
+                arrowDirectionRef.current = false;
+                y = 14;
+            }
             arrow.style.top = `${y}px`;
         }, 100);
         return () => window.clearInterval(timer);
@@ -281,10 +335,28 @@ export const NavigatorRoomCreatorView: FC = () => {
     if (!isCreatorOpen || !position) return null;
 
     return (
-        <VoltCardView key={showVersion} uniqueKey="navigator-room-creator" handleSelector=".volt-room-creator-air__caption" frameStyle={3} isResizable={false} dragStyle={{ filter: 'drop-shadow(2.828px 2.828px 2px rgba(0, 0, 0, 0.349))' }} initialPosition={position} unconstrainedPosition={true} onPositionChange={onPositionChange} className="volt-room-creator-air" role="dialog" aria-label={LocalizeText('navigator.createroom.title')}>
+        <VoltCardView
+            key={showVersion}
+            uniqueKey="navigator-room-creator"
+            handleSelector=".volt-room-creator-air__caption"
+            frameStyle={3}
+            isResizable={false}
+            dragStyle={{ filter: 'drop-shadow(2.828px 2.828px 2px rgba(0, 0, 0, 0.349))' }}
+            initialPosition={position}
+            unconstrainedPosition={true}
+            onPositionChange={onPositionChange}
+            className="volt-room-creator-air"
+            role="dialog"
+            aria-label={LocalizeText('navigator.createroom.title')}
+        >
             <div className="volt-card-header-shell volt-room-creator-air__caption">
                 <span className="volt-card-title volt-room-creator-air__title">{LocalizeText('navigator.createroom.title')}</span>
-                <button type="button" className="volt-card-close-button volt-room-creator-air__close" aria-label={LocalizeText('generic.close')} onClick={closeCreator} />
+                <button
+                    type="button"
+                    className="volt-card-close-button volt-room-creator-air__close"
+                    aria-label={LocalizeText('generic.close')}
+                    onClick={closeCreator}
+                />
             </div>
 
             <span className="volt-room-creator-air__label volt-room-creator-air__label--name">{LocalizeText('navigator.roomname')}</span>
@@ -374,7 +446,10 @@ export const NavigatorRoomCreatorView: FC = () => {
                             aria-pressed={isSelected}
                             onClick={() => selectModel(model)}
                             onKeyDown={(event) => {
-                                if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectModel(model); }
+                                if (event.key === 'Enter' || event.key === ' ') {
+                                    event.preventDefault();
+                                    selectModel(model);
+                                }
                             }}
                         >
                             <span className="volt-room-creator-air__thumbnail-bg" aria-hidden="true" />
@@ -390,9 +465,7 @@ export const NavigatorRoomCreatorView: FC = () => {
                             <span className="volt-room-creator-air__thumbnail-tiles">
                                 {model.tileSize} {tileSizeLabel}
                             </span>
-                            {model.clubLevel > 0 && (
-                                <img className="volt-room-creator-air__thumbnail-club" src={vipIconSmall} alt="" width={19} height={10} />
-                            )}
+                            {model.clubLevel > 0 && <img className="volt-room-creator-air__thumbnail-club" src={vipIconSmall} alt="" width={19} height={10} />}
                         </div>
                     );
                 })}
@@ -400,11 +473,7 @@ export const NavigatorRoomCreatorView: FC = () => {
                     <div className="volt-room-creator-air__vip-promo">
                         <img className="volt-room-creator-air__vip-promo-icon" src={vipIconBig} alt="" width={37} height={37} />
                         <span className="volt-room-creator-air__vip-promo-text">{LocalizeText('navigator.createroom.vippromo.text')}</span>
-                        <button
-                            type="button"
-                            className="volt-room-creator-air__vip-promo-link"
-                            onClick={() => CreateLinkEvent('habboUI/open/hccenter')}
-                        >
+                        <button type="button" className="volt-room-creator-air__vip-promo-link" onClick={() => CreateLinkEvent('habboUI/open/hccenter')}>
                             {LocalizeText('navigator.createroom.vippromo.link')}
                         </button>
                     </div>

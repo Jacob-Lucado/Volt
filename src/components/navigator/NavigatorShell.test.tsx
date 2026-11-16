@@ -2,15 +2,20 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-const view = readFileSync(join(process.cwd(), 'src/components/navigator/NavigatorView.tsx'), 'utf8');
+const read = (path: string) => readFileSync(join(process.cwd(), path), 'utf8');
+const view = read('src/components/navigator/NavigatorView.tsx');
+const shell = read('src/components/navigator/lucado/LosNavigatorWindow.tsx');
 
 describe('navigator shell', () => {
-    it('exposes a collapsible quick-links navigation beside the browsing workspace', () => {
-        expect(view).toContain('volt-navigator-air__skin');
-        expect(view).toContain('volt-navigator-air__quick-links');
-        expect(view).toContain('aria-label={quickLinksLabel}');
-        expect(view).toContain('aria-expanded={isOpenSavesSearches}');
-        expect(view).toContain('aria-label={navigatorLabel}');
-        expect(view).toContain('volt-navigator-air__quick-toggle');
+    it('opens the LucadoOS navigator window', () => {
+        expect(view).toContain('<LosNavigatorWindow');
+        expect(view).toContain('showSaved={isOpenSavesSearches}');
+    });
+
+    it('exposes a collapsible quick-links navigation beside the room list', () => {
+        expect(shell).toContain('handleSelector=".los-window__bar"');
+        expect(shell).toContain('aria-pressed={showSaved}');
+        expect(shell).toContain('className="los-navigator__saved los-scroll"');
+        expect(shell).toContain('role="tablist"');
     });
 });

@@ -93,9 +93,16 @@ export const NavigatorRoomSettingsModTabView: FC<NavigatorRoomSettingsTabViewPro
                 />
             </NavigatorRoomSettingsAtView>
             <NavigatorRoomSettingsAtView className="ros-list-border" h={156} w={172} x={8} y={200}>
-                <ClassicScrollAreaView className="ros-scroll ros-scroll-banned" style={{ left: 3, top: 3, width: 165, height: 149 }} viewportClassName="ros-scroll-viewport">
+                <ClassicScrollAreaView
+                    className="ros-scroll ros-scroll-banned"
+                    style={{ left: 3, top: 3, width: 165, height: 149 }}
+                    viewportClassName="ros-scroll-viewport"
+                >
                     {bannedUsers.map((user, index) => (
-                        <div key={user.userId} className={`ros-user-row${index % 2 !== 0 ? ' is-odd' : ''}${selectedUserId === user.userId ? ' is-selected' : ''}`}>
+                        <div
+                            key={user.userId}
+                            className={`ros-user-row${index % 2 !== 0 ? ' is-odd' : ''}${selectedUserId === user.userId ? ' is-selected' : ''}`}
+                        >
                             <button type="button" className="ros-user-bg" onClick={(event) => setSelectedUserId(user.userId)}>
                                 <span className="ros-user-name">{user.userName}</span>
                             </button>

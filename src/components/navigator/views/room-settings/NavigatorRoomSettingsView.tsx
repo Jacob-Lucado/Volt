@@ -1,4 +1,13 @@
-import { RemoveAllRightsMessageComposer, RoomBannedUsersComposer, RoomDataParser, RoomDeleteComposer, RoomSettingsDataEvent, RoomSettingsSaveErrorEvent, RoomSettingsSaveErrorParser, SaveRoomSettingsComposer } from '@volt/renderer';
+import {
+    RemoveAllRightsMessageComposer,
+    RoomBannedUsersComposer,
+    RoomDataParser,
+    RoomDeleteComposer,
+    RoomSettingsDataEvent,
+    RoomSettingsSaveErrorEvent,
+    RoomSettingsSaveErrorParser,
+    SaveRoomSettingsComposer
+} from '@volt/renderer';
 import { FC, useRef, useState } from 'react';
 import { CreateLinkEvent, GetClubMemberLevel, GetMaxVisitorsList, GetSelectedMaxVisitors, IRoomData, LocalizeText, SendMessageComposer } from '../../../../api';
 import { VoltCardContentView, VoltCardHeaderView, VoltCardTabsItemView, VoltCardTabsView, VoltCardView } from '../../../../common';
@@ -30,7 +39,7 @@ interface RoomSettingsForm {
     idle_autokick_timeout_seconds: string;
 }
 
-const parseIdleTimeout = (value: string): number => /^\d+$/.test(value.trim()) ? Number(value.trim()) : -1;
+const parseIdleTimeout = (value: string): number => (/^\d+$/.test(value.trim()) ? Number(value.trim()) : -1);
 
 export const NavigatorRoomSettingsView: FC<{}> = (props) => {
     const [form, setForm] = useState<RoomSettingsForm>(null);
@@ -143,9 +152,10 @@ export const NavigatorRoomSettingsView: FC<{}> = (props) => {
                 if (parser.message === 'idleSleepTimeoutSeconds' || parser.message === 'idleAutokickTimeoutSeconds') {
                     setInputError({
                         field: parser.message === 'idleSleepTimeoutSeconds' ? 'idle_sleep_timeout_seconds' : 'idle_autokick_timeout_seconds',
-                        key: parser.message === 'idleSleepTimeoutSeconds'
-                            ? 'navigator.roomsettings.idle_sleep_timeout.invalid'
-                            : 'navigator.roomsettings.idle_autokick_timeout.invalid'
+                        key:
+                            parser.message === 'idleSleepTimeoutSeconds'
+                                ? 'navigator.roomsettings.idle_sleep_timeout.invalid'
+                                : 'navigator.roomsettings.idle_autokick_timeout.invalid'
                     });
                     setSelectedTab(TABS[3]);
                     return;
@@ -401,15 +411,23 @@ export const NavigatorRoomSettingsView: FC<{}> = (props) => {
                                 onFieldError={setFieldError}
                             />
                         )}
-                        {currentTab === TABS[2] && <NavigatorRoomSettingsRightsTabView handleChange={handleChange} roomData={roomData} onRemoveAll={() => setConfirmKind('removeAllRights')} />}
-                        {currentTab === TABS[3] && <NavigatorRoomSettingsVipChatTabView
-                            handleChange={handleChange}
-                            handleDraftChange={handleDraftChange}
-                            roomData={roomData}
-                            idleSleepTimeoutSeconds={form.idle_sleep_timeout_seconds}
-                            idleAutokickTimeoutSeconds={form.idle_autokick_timeout_seconds}
-                            inputError={inputError}
-                        />}
+                        {currentTab === TABS[2] && (
+                            <NavigatorRoomSettingsRightsTabView
+                                handleChange={handleChange}
+                                roomData={roomData}
+                                onRemoveAll={() => setConfirmKind('removeAllRights')}
+                            />
+                        )}
+                        {currentTab === TABS[3] && (
+                            <NavigatorRoomSettingsVipChatTabView
+                                handleChange={handleChange}
+                                handleDraftChange={handleDraftChange}
+                                roomData={roomData}
+                                idleSleepTimeoutSeconds={form.idle_sleep_timeout_seconds}
+                                idleAutokickTimeoutSeconds={form.idle_autokick_timeout_seconds}
+                                inputError={inputError}
+                            />
+                        )}
                         {currentTab === TABS[4] && <NavigatorRoomSettingsModTabView handleChange={handleChange} roomData={roomData} />}
                     </div>
                     <div ref={setOverlayNode} className="ros-overlay" />

@@ -5,7 +5,6 @@ import { describe, expect, it } from 'vitest';
 const read = (relative: string) => readFileSync(join(process.cwd(), relative), 'utf8');
 
 describe('AIR navigator visual contract', () => {
-
     it('searches only on explicit submit rather than a live debounce', () => {
         const search = read('src/components/navigator/views/search/NavigatorSearchView.tsx');
 

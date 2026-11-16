@@ -1,12 +1,6 @@
 import { GetSessionDataManager } from '@volt/renderer';
 import { FC, useEffect, useState } from 'react';
-import {
-    GetClubMemberLevel,
-    GetMaxVisitorsList,
-    GetSelectedMaxVisitors,
-    IRoomData,
-    LocalizeText
-} from '../../../../api';
+import { GetClubMemberLevel, GetMaxVisitorsList, GetSelectedMaxVisitors, IRoomData, LocalizeText } from '../../../../api';
 import removeIconSrc from '../../../../assets/images/navigator/room-settings/remove-icon-bb2200.png';
 import { HabboDropMenuView } from '../../../../common/dropmenu/HabboDropMenuView';
 import { useNavigatorData } from '../../../../hooks';
@@ -39,9 +33,8 @@ export const NavigatorRoomSettingsBasicTabView: FC<NavigatorRoomSettingsTabViewP
     const isSafetyLocked = GetSessionDataManager().isSafetyLocked;
     const visitorOptions = GetMaxVisitorsList(GetClubMemberLevel() > 0, roomData.userCount);
     const selectedVisitors = GetSelectedMaxVisitors(visitorOptions, roomData.userCount);
-    const selectedVisitorIndex = roomData.userCount > visitorOptions[visitorOptions.length - 1]
-        ? visitorOptions.length - 1
-        : visitorOptions.indexOf(selectedVisitors);
+    const selectedVisitorIndex =
+        roomData.userCount > visitorOptions[visitorOptions.length - 1] ? visitorOptions.length - 1 : visitorOptions.indexOf(selectedVisitors);
 
     const saveRoomName = (value = roomName) => {
         if (value.length < ROOM_NAME_MIN_LENGTH) {
@@ -172,8 +165,12 @@ export const NavigatorRoomSettingsBasicTabView: FC<NavigatorRoomSettingsTabViewP
                         onBlur={() => saveTags(1)}
                     />
                 </NavigatorRoomSettingsAtView>
-                {fieldError?.field === 'name' && <RoomSettingsFieldErrorView h={20} message={fieldError.message} overlayNode={overlayNode} w={300} x={0} y={14} />}
-                {fieldError?.field === 'description' && <RoomSettingsFieldErrorView h={39} message={fieldError.message} overlayNode={overlayNode} w={300} x={0} y={51} />}
+                {fieldError?.field === 'name' && (
+                    <RoomSettingsFieldErrorView h={20} message={fieldError.message} overlayNode={overlayNode} w={300} x={0} y={14} />
+                )}
+                {fieldError?.field === 'description' && (
+                    <RoomSettingsFieldErrorView h={39} message={fieldError.message} overlayNode={overlayNode} w={300} x={0} y={51} />
+                )}
                 {tagHasError(roomTag1) && <RoomSettingsFieldErrorView h={15} message={fieldError.message} overlayNode={overlayNode} w={145} x={0} y={254} />}
                 {tagHasError(roomTag2) && <RoomSettingsFieldErrorView h={15} message={fieldError.message} overlayNode={overlayNode} w={145} x={149} y={254} />}
                 <NavigatorRoomSettingsAtView h={20} w={20} x={2} y={312}>
@@ -192,7 +189,10 @@ export const NavigatorRoomSettingsBasicTabView: FC<NavigatorRoomSettingsTabViewP
                     <>
                         <NavigatorRoomSettingsAtView className={isSafetyLocked ? 'ros-disabled' : ''} h={18} w={174} x={59} y={339}>
                             <button type="button" className="ros-link ros-remove-link" disabled={isSafetyLocked} onClick={onDelete}>
-                                <span><img className="ros-remove-icon" src={removeIconSrc} alt="" />{LocalizeText('navigator.roomsettings.delete')}</span>
+                                <span>
+                                    <img className="ros-remove-icon" src={removeIconSrc} alt="" />
+                                    {LocalizeText('navigator.roomsettings.delete')}
+                                </span>
                             </button>
                         </NavigatorRoomSettingsAtView>
                     </>

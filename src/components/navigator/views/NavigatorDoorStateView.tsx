@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { CreateRoomSession, DoorStateType, GoToDesktop, LocalizeText } from '../../../api';
-import { Button, VoltCardContentView, VoltCardHeaderView, VoltCardView, Text } from '../../../common';
+import { Button, Text, VoltCardContentView, VoltCardHeaderView, VoltCardView } from '../../../common';
 import { useDoorState } from '../../../hooks';
 import { VoltInput } from '../../../layout';
 

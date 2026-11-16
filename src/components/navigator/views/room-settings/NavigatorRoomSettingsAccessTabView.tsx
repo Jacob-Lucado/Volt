@@ -123,8 +123,12 @@ export const NavigatorRoomSettingsAccessTabView: FC<NavigatorRoomSettingsTabView
                     </NavigatorRoomSettingsAtView>
                 </>
             )}
-            {showPassword && fieldError?.field === 'password' && <RoomSettingsFieldErrorView h={15} message={fieldError.message} overlayNode={overlayNode} w={193} x={42} y={203} />}
-            {showPassword && fieldError?.field === 'confirm' && <RoomSettingsFieldErrorView h={15} message={fieldError.message} overlayNode={overlayNode} w={193} x={42} y={236} />}
+            {showPassword && fieldError?.field === 'password' && (
+                <RoomSettingsFieldErrorView h={15} message={fieldError.message} overlayNode={overlayNode} w={193} x={42} y={203} />
+            )}
+            {showPassword && fieldError?.field === 'confirm' && (
+                <RoomSettingsFieldErrorView h={15} message={fieldError.message} overlayNode={overlayNode} w={193} x={42} y={236} />
+            )}
             {lockedByBuildersClub && (
                 <NavigatorRoomSettingsAtView className="ros-bc-locked" h={166} w={308} x={0} y={88}>
                     <NavigatorRoomSettingsAtView className="ros-text ros-head" h={19} w={295} x={5} y={10}>

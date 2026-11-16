@@ -14,14 +14,7 @@ export const NavigatorRoomSettingsConfirmView: FC<NavigatorRoomSettingsConfirmVi
     const { title, message, onConfirm, onClose } = props;
 
     return (
-        <VoltCardView
-            className="volt-ros-confirm"
-            frameStyle={3}
-            isResizable={false}
-            offsetLeft={-0.5}
-            offsetTop={-0.5}
-            uniqueKey="volt-room-settings-confirm"
-        >
+        <VoltCardView className="volt-ros-confirm" frameStyle={3} isResizable={false} offsetLeft={-0.5} offsetTop={-0.5} uniqueKey="volt-room-settings-confirm">
             <VoltCardHeaderView headerText={title} onCloseClick={onClose} />
             <VoltCardContentView className="volt-ros-confirm-content" gap={0}>
                 <div className="ros-confirm-message">{message}</div>

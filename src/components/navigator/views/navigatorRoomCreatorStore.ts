@@ -46,5 +46,5 @@ export const useRoomCreatorStore = createVoltStore<RoomCreatorState>()((set) => 
         set((state) => ({ ...initialForm, position: state.position ?? initialPosition, showVersion: state.showVersion + 1 }));
     },
     setForm: (patch) => set(patch),
-    setPosition: (position) => set((state) => state.position?.x === position.x && state.position?.y === position.y ? state : { position })
+    setPosition: (position) => set((state) => (state.position?.x === position.x && state.position?.y === position.y ? state : { position }))
 }));
