@@ -14,7 +14,7 @@ export const CatalogPurchaseSelectionPrompt: FC = () => {
         <span className="volt-catalog-purchase-selection-prompt" role="status">
             <SubpixelText
                 align="center"
-                background={0xd2d1cb}
+                background={0xd1d0ca}
                 className="volt-catalog-purchase-selection-text"
                 color={0x666666}
                 text={text}
