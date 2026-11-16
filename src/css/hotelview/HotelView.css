@@ -24,14 +24,15 @@
     background-color: #333333;
 }
 
+/* background_gradient: pivot bottom left, stretched_y false, so the image keeps its own height and only spans the width. */
 .landing-backdrop-gradient {
     position: absolute;
     right: 0;
     bottom: 38px;
     left: 0;
     height: 1150px;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
+    background-position: left bottom;
+    background-repeat: repeat-x;
 }
 
 .landing-backdrop img {
@@ -47,8 +48,20 @@
     left: 0;
 }
 
+/* background_right ends at x 1171 of the 1172 wide layout and keeps that 1px gap from the right edge. */
 .landing-backdrop-right {
-    right: 0;
+    right: 1px;
+}
+
+/* landing_view_default_dynamic_layout "logo": 145x200 at (100, 0), above the artwork. */
+.landing-logo {
+    position: absolute;
+    top: 0;
+    left: 100px;
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+    image-rendering: var(--volt-pixel-art, pixelated);
 }
 
 /* AIR places the avatar widget 109px from the left and 72px from the bottom, on the mat in the left artwork. */
@@ -59,4 +72,65 @@
     width: 90px;
     height: 130px;
     z-index: 2;
+}
+
+/* dynamic_widget_grid_xml: slot 1, then the centre panes 1px into their container; rows share the taller slot. */
+.landing-dynamic-grid {
+    position: absolute;
+    pointer-events: none;
+}
+
+.landing-dynamic-grid__top {
+    height: var(--landing-top-height);
+}
+
+.landing-dynamic-grid__panes {
+    display: grid;
+    grid-template-columns: var(--landing-left-width) var(--landing-right-width);
+    align-items: start;
+    column-gap: var(--landing-center-spacing);
+    row-gap: var(--landing-pane-spacing);
+    margin-top: calc(var(--landing-top-spacing) + 1px);
+}
+
+.landing-dynamic-grid__slot {
+    min-height: 1px;
+}
+
+.landing-generic-widget {
+    position: relative;
+    box-sizing: border-box;
+}
+
+.landing-generic-widget__bitmap {
+    position: absolute;
+    max-width: none;
+    user-select: none;
+    image-rendering: var(--volt-pixel-art, pixelated);
+}
+
+.landing-generic-widget__content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.landing-element-caption,
+.landing-element-bodytext {
+    line-height: 0;
+}
+
+/* element_button_xml: a 200x48 button at x -11; the illumina skin draws its 178x26 face 11px in. */
+.landing-element-button {
+    position: relative;
+    height: 48px;
+}
+
+.landing-element-button__pill {
+    position: absolute;
+    top: 11px;
+    left: 0;
+    width: 178px;
+    height: 26px;
+    pointer-events: auto;
 }
