@@ -1,0 +1,36 @@
+/* LucadoOS chat bar: the room chat input as a glass pill.
+   LucadoOS(TM) is a trademark of Jacob Lucado. */
+
+.swf-chat-input .swf-chat-style-trigger {
+    background: none;
+}
+
+.swf-chat-input .swf-chat-style-arrow {
+    filter: brightness(0) invert(.75);
+}
+
+.swf-chat-input .swf-chat-input-sizer::before,
+.swf-chat-input .swf-chat-flood::before {
+    inset: 1px 0 1px -8px;
+    border: 1px solid rgba(148, 176, 214, .22);
+    border-image-source: none;
+    border-radius: 12px;
+    background: rgba(15, 23, 36, .88);
+    backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, .4), inset 0 1px 0 rgba(255, 255, 255, .06);
+    transition: border-color .12s;
+}
+
+.swf-chat-input .swf-chat-input-sizer:focus-within::before {
+    border-color: rgba(77, 163, 255, .6);
+}
+
+.swf-chat-input .swf-chat-input-field {
+    color: #e8eef5 !important;
+    font-family: Inter, 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px !important;
+}
+
+.swf-chat-input .swf-chat-input-field::placeholder {
+    color: #93a4ba !important;
+}
