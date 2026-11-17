@@ -1,0 +1,68 @@
+/* The camera, rebuilt as a LucadoOS window. */
+
+.los-window.los-cam { width: 352px; }
+
+.los-cam__body { display: flex; flex-direction: column; gap: 12px; padding: 12px; }
+
+.los-cam__stage {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    overflow: hidden;
+    border: 1px solid var(--los-line);
+    border-radius: 12px;
+    background: #000;
+}
+
+.los-cam .volt-camera-viewfinder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 12px;
+}
+
+.los-cam .volt-camera-capture__flash { top: 0; left: 0; z-index: 3; }
+
+.los-cam__crosshair {
+    position: absolute;
+    inset: 12px;
+    z-index: 2;
+    border: 1px solid rgba(255, 255, 255, .35);
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.los-cam__controls { display: flex; gap: 8px; align-items: center; justify-content: center; min-height: 56px; }
+
+.los-cam__shutter {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border: 3px solid rgba(255, 255, 255, .85);
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4da3ff, #7c6cff);
+    color: #fff;
+    cursor: pointer;
+}
+
+.los-cam__shutter:hover { filter: brightness(1.12); }
+.los-cam__shutter:active { transform: scale(.94); }
+
+.los-cam__roll { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.los-cam__roll.is-empty { opacity: .55; }
+
+.los-cam__slot {
+    display: grid;
+    place-items: center;
+    height: 54px;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--los-line);
+    border-radius: 9px;
+    background: var(--los-soft);
+    cursor: pointer;
+}
+
+.los-cam__slot.is-active { border-color: #4da3ff; }
+.los-cam__slot img { width: 100%; height: 100%; object-fit: cover; }

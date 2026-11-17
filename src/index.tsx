@@ -115,6 +115,7 @@ import './css/lucadoos/LosMessenger.css';
 import './css/lucadoos/LosAvatarEditor.css';
 import './css/lucadoos/LosAchievements.css';
 import './css/lucadoos/LosGroups.css';
+import './css/lucadoos/LosCamera.css';
 import './css/lucadoos/LosSettings.css';
 import './css/lucadoos/LosCards.css';
 import './css/lucadoos/LosModTools.css';

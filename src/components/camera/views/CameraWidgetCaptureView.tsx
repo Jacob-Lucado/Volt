@@ -1,4 +1,4 @@
-import { CreateLinkEvent, GetRenderer, GetRoomSessionManager, VoltLogger, VoltTexture, RequestCameraConfigurationComposer } from '@volt/renderer';
+import { CreateLinkEvent, GetRenderer, GetRoomSessionManager, RequestCameraConfigurationComposer, VoltLogger, VoltTexture } from '@volt/renderer';
 import { FC, useEffect, useRef } from 'react';
 import {
     blitRoomCanvasToViewfinder,
@@ -7,17 +7,17 @@ import {
     deleteTrustedCamera,
     getTrustedCameraViewport,
     getViewfinderRoomFrame,
-    loadTrustedCameraImage,
     LocalizeText,
+    loadTrustedCameraImage,
     NotificationAlertType,
     PlaySound,
     SendMessageComposer,
     SoundNames
 } from '../../../api';
-import { Column, DraggableWindow } from '../../../common';
+import { DraggableWindow } from '../../../common';
+import { LosIcon, LosWindow } from '../../../common/lucadoos';
 import { useCamera, useNotification } from '../../../hooks';
 import { getNextEmptyCameraSlot, willFillLastCameraSlot } from '../CameraAirUtilities';
-import { CameraCenteredText, CameraNativeText } from './CameraNativeText';
 
 export interface CameraWidgetCaptureViewProps {
     onClose: () => void;
@@ -266,69 +266,74 @@ export const CameraWidgetCaptureView: FC<CameraWidgetCaptureViewProps> = (props)
     const hasPictures = cameraRoll.some((picture) => !!picture);
 
     return (
-        <DraggableWindow>
-            <Column center className="volt-camera-capture" gap={0}>
-                <div className="volt-camera-capture__body drag-handler">
-                    <div className="volt-camera-capture__title">
-                        <CameraCenteredText
-                            background={0x000000}
-                            color={0xffffff}
-                            text={LocalizeText('camera.interface.title')}
-                            textStyle="u_frame_title"
-                            width={340}
-                        />
-                    </div>
-                    <button type="button" className="volt-camera-capture__help" aria-label={LocalizeText('generic.help')} onClick={() => CreateLinkEvent('habbopages/camera')} />
-                    <button type="button" className="volt-camera-capture__close" aria-label={LocalizeText('generic.close')} onClick={onClose} />
-                    <div className="volt-camera-viewfinder">
-                        {!selectedPicture && (
-                            <>
-                                <canvas ref={elementRef} className="volt-camera-viewfinder__fallback" width={320} height={320} />
-                                <video ref={videoRef} className="volt-camera-viewfinder__stream" aria-hidden="true" muted playsInline />
-                            </>
-                        )}
-                        {selectedPicture && <img alt="" className="volt-camera-viewfinder__photo" src={selectedPicture.displayUrl} />}
-                    </div>
-                    {!selectedPicture && <div className="volt-camera-capture__crosshair" aria-hidden="true" />}
-                    <div ref={flashRef} className="volt-camera-capture__flash" aria-hidden="true" />
-                    {selectedPicture && (
-                        <div className="volt-camera-capture__preview-actions">
-                            {/* A photo opened before the server's capture arrives can't be edited or bought yet. */}
-                            <button
-                                className="habbo-btn-primary volt-camera-capture__editor-button"
-                                disabled={!selectedPicture.draftId}
-                                title={LocalizeText('camera.editor.button.tooltip')}
-                                type="button"
-                                onClick={onEdit}
-                            >
-                                <CameraNativeText
-                                    background={0x000000}
-                                    color={0xffffff}
-                                    style={{ mixBlendMode: 'screen' }}
-                                    text={LocalizeText('camera.editor.button.text')}
-                                    textStyle="button_shiny_bold"
-                                />
-                            </button>
-                        </div>
-                    )}
+        <DraggableWindow handleSelector=".los-window__bar">
+            <LosWindow
+                className="los-cam"
+                icon="camera"
+                title={LocalizeText('camera.interface.title')}
+                onClose={onClose}
+                actions={
                     <button
                         type="button"
-                        className="volt-camera-capture__shutter"
-                        aria-label={LocalizeText('camera.take.photo.button.tooltip')}
-                        title={LocalizeText('camera.take.photo.button.tooltip')}
-                        onClick={takePicture}
-                    />
-                </div>
-                <div className={`volt-camera-roll${hasPictures ? '' : ' volt-camera-roll--hidden'}`} aria-hidden={!hasPictures}>
-                    {Array.from({ length: CAMERA_ROLL_LIMIT }, (_, index) => {
-                        const picture = cameraRoll[index];
-                        const isActive = index === activeSlotIndex;
-
-                        return (
-                            <div key={index} className={`volt-camera-roll__slot${isActive ? ' volt-camera-roll__slot--active' : ''}`}>
+                        className="los-window__button"
+                        aria-label={LocalizeText('generic.help')}
+                        onClick={() => CreateLinkEvent('habbopages/camera')}
+                    >
+                        <LosIcon name="help" size={14} />
+                    </button>
+                }
+            >
+                <div className="los-cam__body">
+                    <div className="los-cam__stage">
+                        <div className="volt-camera-viewfinder">
+                            {!selectedPicture && (
+                                <>
+                                    <canvas ref={elementRef} className="volt-camera-viewfinder__fallback" width={320} height={320} />
+                                    <video ref={videoRef} className="volt-camera-viewfinder__stream" aria-hidden="true" muted playsInline />
+                                </>
+                            )}
+                            {selectedPicture && <img alt="" className="volt-camera-viewfinder__photo" src={selectedPicture.displayUrl} />}
+                        </div>
+                        {!selectedPicture && <div className="los-cam__crosshair" aria-hidden="true" />}
+                        <div ref={flashRef} className="volt-camera-capture__flash" aria-hidden="true" />
+                    </div>
+                    <div className="los-cam__controls">
+                        {selectedPicture ? (
+                            <>
                                 <button
                                     type="button"
-                                    className="volt-camera-roll__slot-button"
+                                    className="los-button los-button--primary"
+                                    disabled={!selectedPicture.draftId}
+                                    title={LocalizeText('camera.editor.button.tooltip')}
+                                    onClick={onEdit}
+                                >
+                                    {LocalizeText('camera.editor.button.text')}
+                                </button>
+                                <button type="button" className="los-button" title={LocalizeText('camera.delete.button.text')} onClick={onDelete}>
+                                    <LosIcon name="trash" size={14} /> {LocalizeText('camera.delete.button.text')}
+                                </button>
+                            </>
+                        ) : (
+                            <button
+                                type="button"
+                                className="los-cam__shutter"
+                                aria-label={LocalizeText('camera.take.photo.button.tooltip')}
+                                title={LocalizeText('camera.take.photo.button.tooltip')}
+                                onClick={takePicture}
+                            >
+                                <LosIcon name="camera" size={22} />
+                            </button>
+                        )}
+                    </div>
+                    <div className={`los-cam__roll${hasPictures ? '' : ' is-empty'}`}>
+                        {Array.from({ length: CAMERA_ROLL_LIMIT }, (_, index) => {
+                            const picture = cameraRoll[index];
+
+                            return (
+                                <button
+                                    key={index}
+                                    type="button"
+                                    className={`los-cam__slot${index === activeSlotIndex ? ' is-active' : ''}`}
                                     aria-label={picture ? LocalizeText('camera.editor.button.tooltip') : LocalizeText('camera.take.photo.button.tooltip')}
                                     onClick={() => {
                                         setActivePictureSlotIndex(index);
@@ -337,20 +342,11 @@ export const CameraWidgetCaptureView: FC<CameraWidgetCaptureViewProps> = (props)
                                 >
                                     {picture && <img alt="" src={picture.displayUrl} />}
                                 </button>
-                                {picture && selectedPictureIndex === index && (
-                                    <button
-                                        type="button"
-                                        className="volt-camera-roll__delete"
-                                        aria-label={LocalizeText('camera.delete.button.text')}
-                                        title={LocalizeText('camera.delete.button.text')}
-                                        onClick={onDelete}
-                                    />
-                                )}
-                            </div>
-                        );
-                    })}
+                            );
+                        })}
+                    </div>
                 </div>
-            </Column>
+            </LosWindow>
         </DraggableWindow>
     );
 };
