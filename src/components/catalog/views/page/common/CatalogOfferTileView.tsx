@@ -39,6 +39,13 @@ export interface CatalogOfferTileViewProps extends LayoutGridItemProps {
     standardDensity?: boolean;
 }
 
+// Shown when an item has no icon image on the server.
+const MISSING_ICON =
+    'data:image/svg+xml;utf8,' +
+    encodeURIComponent(
+        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='36' height='36' fill='none' stroke='#93a4ba' stroke-width='1.6' stroke-linejoin='round'><path d='M12 3l8 4.5v9L12 21l-8-4.5v-9z'/><path d='M4 7.5l8 4.5 8-4.5M12 12v9'/></svg>"
+    );
+
 export const CatalogOfferTileView: FC<CatalogOfferTileViewProps> = (props) => {
     const {
         offer = null,
@@ -173,8 +180,16 @@ export const CatalogOfferTileView: FC<CatalogOfferTileViewProps> = (props) => {
                         onError={(event) => {
                             if (offer.pricingModel === Offer.PRICING_MODEL_BUNDLE) return;
 
+                            const image = event.currentTarget;
                             const fallbackIconUrl = typeof product.getIconUrl === 'function' ? product.getIconUrl(offer) : null;
-                            if (fallbackIconUrl && event.currentTarget.src !== fallbackIconUrl) event.currentTarget.src = fallbackIconUrl;
+
+                            if (fallbackIconUrl && image.src !== fallbackIconUrl && !image.dataset.tried) {
+                                image.dataset.tried = '1';
+                                image.src = fallbackIconUrl;
+                                return;
+                            }
+
+                            if (image.src !== MISSING_ICON) image.src = MISSING_ICON;
                         }}
                     />
                 )}
