@@ -126,15 +126,6 @@ function getValidRoomObjectDirection(roomObject: any, isPositive: boolean) {
     return direction;
 }
 
-// The server clamps these branding settings to the same limits.
-const BRANDING_NUMBER_RANGES: Record<string, [number, number]> = {
-    offsetX: [-10000, 10000],
-    offsetY: [-10000, 10000],
-    offsetZ: [-2147483648, 2147483647],
-    scale: [10, 500],
-    alpha: [0, 100]
-};
-
 export const InfoStandWidgetFurniView: FC<InfoStandWidgetFurniViewProps> = (props) => {
     const { avatarInfo = null, onClose = null } = props;
     const { roomSession = null } = useRoom();
@@ -829,34 +820,22 @@ export const InfoStandWidgetFurniView: FC<InfoStandWidgetFurniViewProps> = (prop
                             </>
                         )}
                         {furniKeys.length > 0 && (
-                            <>
-                                <div className="volt-furni-infostand__rule" />
-                                <div className="flex flex-col gap-1">
-                                    {furniKeys.map((key, index) => {
-                                        const range = BRANDING_NUMBER_RANGES[key];
-
-                                        return (
-                                            <div key={index} className="flex flex-col gap-[2px]">
-                                                <Text small wrap variant="white">
-                                                    {key}
-                                                </Text>
-                                                <VoltInput
-                                                    inputSize="xs"
-                                                    type={range ? 'number' : 'text'}
-                                                    min={range?.[0]}
-                                                    max={range?.[1]}
-                                                    step={range ? 1 : undefined}
-                                                    placeholder={key === 'imageUrl' || key === 'clickUrl' ? 'https://' : undefined}
-                                                    className="text-black"
-                                                    style={{ color: '#000' }}
-                                                    value={furniValues[index]}
-                                                    onChange={(event) => onFurniSettingChange(index, event.target.value)}
-                                                />
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </>
+                            <div className="volt-furni-infostand__branding">
+                                {furniKeys.map((key, index) => (
+                                    <div key={index} className="volt-furni-infostand__branding-field">
+                                        <span className="volt-furni-infostand__branding-name">{key}</span>
+                                        <textarea
+                                            className="volt-furni-infostand__branding-value"
+                                            spellCheck={false}
+                                            value={furniValues[index] ?? ''}
+                                            onChange={(event) => onFurniSettingChange(index, event.target.value)}
+                                            onKeyDown={(event) => {
+                                                if (event.key === 'Enter') event.preventDefault();
+                                            }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
                         )}
                         {showBuildtools && (
                             <>
@@ -1087,7 +1066,7 @@ export const InfoStandWidgetFurniView: FC<InfoStandWidgetFurniViewProps> = (prop
                 )}
                 {furniKeys.length > 0 && furniValues.length > 0 && furniKeys.length === furniValues.length && (
                     <Button variant="dark" size={null} className="habbo-btn-black" onClick={() => processButtonAction('save_branding_configuration')}>
-                        {LocalizeText('save')}
+                        {localizeWithFallback('infostand.button.savebranding', 'Save changes')}
                     </Button>
                 )}
                 {customKeys.length > 0 && customValues.length > 0 && customKeys.length === customValues.length && (
