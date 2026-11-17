@@ -1,0 +1,224 @@
+/* The friends list, rebuilt as a LucadoOS window. */
+
+.los-window.los-fl {
+    width: 300px;
+    height: 460px;
+}
+
+.los-fl .los-window__body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 10px 10px;
+}
+
+.los-fl .los-tabs {
+    flex: none;
+}
+
+.los-fl__list {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.los-fl__section-head {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    width: 100%;
+    padding: 6px 4px;
+    border: 0;
+    background: transparent;
+    color: var(--los-dim);
+    font: 600 11px/1 Inter, system-ui, sans-serif;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.los-fl__section-head em {
+    margin-left: auto;
+    font-style: normal;
+}
+
+.los-fl__section-head[aria-expanded='true'] .los-icon {
+    transform: rotate(90deg);
+}
+
+.los-fl__row {
+    position: relative;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    height: 36px;
+    padding: 0 8px;
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+.los-fl__row:hover {
+    background: var(--los-soft);
+}
+
+.los-fl__row.is-selected {
+    background: rgba(77, 163, 255, .2);
+}
+
+.los-fl__face {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--los-soft);
+}
+
+.los-fl__dot {
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #52617a;
+}
+
+.los-fl__dot.is-online {
+    background: #4ade80;
+}
+
+.los-fl__name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+}
+
+.los-fl__actions {
+    display: none;
+    gap: 2px;
+    align-items: center;
+}
+
+.los-fl__row:hover .los-fl__actions,
+.los-fl__row:focus-within .los-fl__actions {
+    display: flex;
+}
+
+.los-fl__actions button,
+.los-fl__tool {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--los-dim);
+    cursor: pointer;
+}
+
+.los-fl__actions button:hover,
+.los-fl__tool:hover:not(:disabled) {
+    background: var(--los-soft-2);
+    color: var(--los-text);
+}
+
+.los-fl__tool {
+    width: 32px;
+    height: 32px;
+    background: var(--los-soft);
+}
+
+.los-fl__tool:disabled {
+    opacity: .35;
+    cursor: default;
+}
+
+.los-fl__rel {
+    position: relative;
+}
+
+.los-fl__menu {
+    position: absolute;
+    top: 28px;
+    right: 0;
+    z-index: 5;
+    display: flex;
+    padding: 4px;
+    border: 1px solid var(--los-line);
+    border-radius: 9px;
+    background: var(--los-glass);
+}
+
+.los-fl__outcome {
+    color: var(--los-dim);
+    font-size: 12px;
+}
+
+.los-fl__heading {
+    margin: 8px 4px 2px;
+    color: var(--los-dim);
+    font: 600 11px/1 Inter, system-ui, sans-serif;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.los-fl__badge {
+    margin-left: 6px;
+    padding: 1px 6px;
+    border-radius: 9px;
+    background: #4da3ff;
+    color: #07111f;
+    font-size: 10px;
+}
+
+.los-fl__foot {
+    display: flex;
+    flex: none;
+    gap: 6px;
+    align-items: center;
+}
+
+.los-fl__foot .los-input {
+    flex: 1;
+    min-width: 0;
+}
+
+.los-fl__dialog {
+    width: 320px;
+}
+
+.los-fl__dialog-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+}
+
+.los-fl__note {
+    margin: 0;
+    color: var(--los-dim);
+    font-size: 12px;
+}
+
+.los-fl__text {
+    height: 72px;
+    resize: none;
+}
+
+.los-fl__buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.los-fl .los-tab { text-transform: capitalize; }

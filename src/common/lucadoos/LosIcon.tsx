@@ -9,6 +9,7 @@ const PATHS = {
     bookmark: 'M7 4h10v16l-5-4-5 4z',
     box: 'M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8',
     camera: 'M4 8h3.5l1.5-2h6l1.5 2H20v11H4zM12 10.5a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
+    check: 'M5 12.5l4.5 4.5L19 7.5',
     chart: 'M5 20V11M12 20V4M19 20v-6',
     chat: 'M5 5h14v10H10l-4 4v-4H5z',
     chevron: 'M9 6l6 6-6 6',
@@ -41,6 +42,7 @@ const PATHS = {
     shirt: 'M8 4l4 2 4-2 5 4-3 3-2-1.5V20H8v-9.5L6 12 3 8z',
     swap: 'M4 8h14l-3-3M20 16H6l3 3',
     trophy: 'M8 4h8v5a4 4 0 0 1-8 0zM8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7',
+    trash: 'M5 7h14M10 7V4.5h4V7M7 7l1 13h8l1-13M10.5 11v6M13.5 11v6',
     user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4.5 20a7.5 7.5 0 0 1 15 0',
     usersearch: 'M10 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3.5 19a6.5 6.5 0 0 1 9-6M17 14a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM21 21l-2.2-2.2'
 } as const;

@@ -109,6 +109,7 @@ import './css/lucadoos/LosWindow.css';
 import './css/lucadoos/LosNavigator.css';
 import './css/lucadoos/LosPurse.css';
 import './css/lucadoos/LosFriends.css';
+import './css/lucadoos/LosFriendList.css';
 import './css/lucadoos/LosSettings.css';
 import './css/lucadoos/LosCards.css';
 import './css/lucadoos/LosModTools.css';
