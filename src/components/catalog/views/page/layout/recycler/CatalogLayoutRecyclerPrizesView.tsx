@@ -1,5 +1,5 @@
 import { GetRecyclerPrizesMessageComposer, GetSessionDataManager, RecyclerPrizeLevel, RecyclerPrizeProduct, RecyclerPrizesMessageEvent } from '@volt/renderer';
-import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { FC, PropsWithChildren, SyntheticEvent, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
     GetChatStyleHalfPreviewUrl,
     GetChatStylePreviewUrl,
@@ -96,6 +96,33 @@ const RecyclerPrizeTile: FC<{ product: RecyclerPrizeProduct; active: boolean; on
 const PREVIEW_WIDTH = 360;
 const PREVIEW_HEIGHT = 240;
 
+const RecyclerPreviewCentre: FC<PropsWithChildren> = ({ children }) => {
+    const ref = useRef<HTMLSpanElement>(null);
+
+    useLayoutEffect(() => {
+        const element = ref.current;
+
+        if (!element) return;
+
+        const place = () => {
+            element.style.left = `${Math.floor((PREVIEW_WIDTH - element.offsetWidth) / 2)}px`;
+            element.style.top = `${Math.floor((PREVIEW_HEIGHT - element.offsetHeight) / 2)}px`;
+        };
+        const observer = new ResizeObserver(place);
+
+        place();
+        observer.observe(element);
+
+        return () => observer.disconnect();
+    }, []);
+
+    return (
+        <span ref={ref} className="volt-catalog-recycler-prizes-centre">
+            {children}
+        </span>
+    );
+};
+
 const RecyclerChatBubblePreview: FC<{ styleId: number }> = ({ styleId }) => {
     const style = AIR_CHAT_BUBBLE_STYLES[styleId];
 
@@ -107,10 +134,7 @@ const RecyclerChatBubblePreview: FC<{ styleId: number }> = ({ styleId }) => {
     const fullHeight = Math.max(height, style.pointer.y + style.pointer.size[1]);
 
     return (
-        <span
-            className="volt-catalog-recycler-prizes-bubble"
-            style={{ left: Math.floor((PREVIEW_WIDTH - width) / 2), top: Math.floor((PREVIEW_HEIGHT - fullHeight) / 2), width, height: fullHeight }}
-        >
+        <span className="volt-catalog-recycler-prizes-bubble" style={{ width, height: fullHeight }}>
             <img alt="" draggable={false} src={AIR_STYLE_IMAGES[style.base]} />
             <img alt="" draggable={false} src={AIR_STYLE_IMAGES[style.pointer.image]} style={{ left: pointerX, top: style.pointer.y }} />
         </span>
@@ -149,11 +173,13 @@ export const CatalogLayoutRecyclerPrizesView: FC<CatalogLayoutProps> = ({ page }
                 {selected && (
                     <>
                         <div className="volt-catalog-recycler-prizes-preview">
-                            {isChatStyle(selected) ? (
-                                <RecyclerChatBubblePreview styleId={selected.productClassId} />
-                            ) : (
-                                <LayoutFurniImageView direction={2} productClassId={selected.productClassId} productType={selected.productType} scale={1} />
-                            )}
+                            <RecyclerPreviewCentre>
+                                {isChatStyle(selected) ? (
+                                    <RecyclerChatBubblePreview styleId={selected.productClassId} />
+                                ) : (
+                                    <LayoutFurniImageView direction={2} productClassId={selected.productClassId} productType={selected.productType} scale={1} />
+                                )}
+                            </RecyclerPreviewCentre>
                         </div>
                         <NativeText
                             background={PAGE_BACKGROUND}

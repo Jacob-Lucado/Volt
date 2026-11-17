@@ -796,9 +796,11 @@
 .volt-catalog-recycler-prizes-preview {
     position: absolute;
     inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+}
+
+.volt-catalog-recycler-prizes-centre {
+    position: absolute;
+    display: block;
 }
 
 .volt-catalog-recycler-prizes-name {
@@ -808,7 +810,7 @@
 }
 
 .volt-catalog-recycler-prizes-bubble {
-    position: absolute;
+    position: relative;
     display: block;
 }
 
