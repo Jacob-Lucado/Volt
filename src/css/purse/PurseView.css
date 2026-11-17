@@ -490,23 +490,19 @@
 .volt-purse-seasonal-currency .seasonal-amount {
     position: absolute;
     top: 6px;
-    height: 16px;
+    display: block;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .volt-purse-seasonal-currency .seasonal-text {
     left: 5px;
     width: 105px;
-    color: var(--seasonal-name, #bb7dc3);
+    height: 16px;
 }
 
 .volt-purse-seasonal-currency .seasonal-amount {
     left: 90px;
     width: 60px;
-    color: #ffffff;
-    text-align: right;
 }
 
 .volt-purse-seasonal-currency .seasonal-badge {
@@ -551,10 +547,6 @@
 /* seasonal_icon: icon window at 3,3, fitted to its style's bitmap */
 .volt-purse-seasonal-currency .seasonal-icon {
     position: absolute;
-}
-
-.volt-purse-seasonal-currency .seasonal-amount.is-info {
-    text-decoration: underline;
 }
 
 /* change_overlay: 33x29 in the preset colour, text margins 4/6/6/7, slides from x=0 to x=159 */
