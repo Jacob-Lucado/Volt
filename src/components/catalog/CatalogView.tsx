@@ -28,7 +28,7 @@ const BUILDER_HEADER_IMAGE = 'catalog_header_roombuilder';
 const isBuildersClubEnabled = () => GetConfigurationValue<boolean>('builders.club.enabled', true);
 
 /** Page renderers drawn in the glass style. The rest keep the light sheet. */
-const DARK_RENDERERS = ['default', 'frontpage', 'pets', 'singleBundle'];
+const DARK_RENDERERS = ['default', 'frontpage', 'pets', 'pets3', 'singleBundle'];
 
 const getCatalogTypeFromLink = (type?: string) => {
     switch ((type || '').toLowerCase()) {

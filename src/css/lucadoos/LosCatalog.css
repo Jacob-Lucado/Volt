@@ -851,3 +851,10 @@
     height: 30px;
     padding: 0 14px;
 }
+
+.los-cat__page.is-dark .volt-catalog-pets-info-panel {
+    border: 1px solid var(--los-line);
+    border-image-source: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .05);
+}
