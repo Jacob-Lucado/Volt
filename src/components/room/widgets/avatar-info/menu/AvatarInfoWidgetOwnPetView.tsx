@@ -17,6 +17,7 @@ import { ContextMenuView } from '../../context-menu/ContextMenuView';
 interface AvatarInfoWidgetOwnPetViewProps {
     avatarInfo: AvatarInfoPet;
     onClose: () => void;
+    onRequestBreed?: (petWebId: number) => void;
 }
 
 const MODE_NORMAL: number = 0;
@@ -25,7 +26,7 @@ const MODE_RIDING: number = 2;
 const MODE_MONSTER_PLANT: number = 3;
 
 export const AvatarInfoWidgetOwnPetView: FC<AvatarInfoWidgetOwnPetViewProps> = (props) => {
-    const { avatarInfo = null, onClose = null } = props;
+    const { avatarInfo = null, onClose = null, onRequestBreed = null } = props;
     const [mode, setMode] = useState(MODE_NORMAL);
     const { roomSession = null } = useRoom();
     const { petRespectRemaining = 0, respectPet = null } = useSessionInfo();
@@ -88,7 +89,7 @@ export const AvatarInfoWidgetOwnPetView: FC<AvatarInfoWidgetOwnPetViewProps> = (
                         // _local_9 = _Str_2268.catalog.localization.getLocalization(_local_8);
                         // _local_4 = new RoomWidgetPetCommandMessage(RoomWidgetPetCommandMessage.RWPCM_PET_COMMAND, this._Str_594.id, ((this._Str_594.name + " ") + _local_9));
                     } else if (mode === MODE_MONSTER_PLANT) {
-                        // messageType = RoomWidgetUserActionMessage.REQUEST_BREED_PET;
+                        onRequestBreed?.(avatarInfo.id);
                     }
                     break;
                 case 'harvest':
