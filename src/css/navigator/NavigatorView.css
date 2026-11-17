@@ -255,6 +255,16 @@
     pointer-events: none;
 }
 
+/* The caption is drawn on the surface it sits on: the inactive skin, or the hover skin while the pointer is over the tab. */
+.volt-navigator-air__tab-label > .volt-navigator-air__tab-label-hover,
+.volt-navigator-air__tab:hover .volt-navigator-air__tab-label > .volt-navigator-air__tab-label-default {
+    display: none !important;
+}
+
+.volt-navigator-air__tab:hover .volt-navigator-air__tab-label > .volt-navigator-air__tab-label-hover {
+    display: inline-block !important;
+}
+
 .volt-navigator-air__tab.is-active,
 .volt-navigator-air__tab.is-active:hover {
     height: 32px !important;
