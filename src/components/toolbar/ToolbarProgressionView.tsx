@@ -59,6 +59,10 @@ export const ToolbarProgressionView: FC<ToolbarProgressionViewProps> = ({ achiev
                 <span>{localizeWithFallback('widget.progmenu.achievements', 'Achievements')}</span>
                 {achievementCount > 0 && <LayoutItemCountView count={achievementCount} />}
             </div>
+            <div className="tbme-item" onClick={() => open('daily-hub/toggle')}>
+                <span className="icon-me-dailytasks" />
+                <span>{localizeWithFallback('widget.progmenu.dailyhub', 'Daily Hub')}</span>
+            </div>
             <div className="tbme-item" onClick={() => open('badge-leaderboard/show')}>
                 <span className="volt-icon icon-progression-leaderboards" />
                 <span>{localizeWithFallback('widget.progmenu.leaderboards', 'Leaderboards')}</span>

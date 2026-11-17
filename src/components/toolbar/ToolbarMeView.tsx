@@ -82,6 +82,10 @@ export const ToolbarMeView: FC<
                     <span>{localizeWithFallback('memenu.collectibles', 'Collectibles')}</span>
                 </div>
             )}
+            <div className="tbme-item" onClick={() => open(() => CreateLinkEvent('daily-hub/toggle'))}>
+                <span className="icon-me-dailytasks" />
+                <span>{localizeWithFallback('memenu.dailyhub', 'Daily Hub')}</span>
+            </div>
             {children}
         </Flex>
     );
