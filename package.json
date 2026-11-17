@@ -25,9 +25,7 @@
         "lint:hooks": "eslint --config eslint.hooks.config.mjs ./src",
         "typecheck": "tsgo --noEmit",
         "test": "vitest run",
-        "test:watch": "vitest",
-        "verify:jsonc": "node scripts/verify-jsonc.mjs",
-        "check:protocol": "node scripts/check-protocol-ids.mjs"
+        "test:watch": "vitest"
     },
     "dependencies": {
         "@babel/runtime": "^8.0.5",
