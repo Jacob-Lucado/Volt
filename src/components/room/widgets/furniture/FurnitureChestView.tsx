@@ -19,7 +19,6 @@ import {
     FurnitureDataEvent,
     FurnitureFloorUpdateEvent,
     FurnitureListComposer,
-    FurnitureType,
     GetRoomEngine,
     GetSessionDataManager,
     IChestFurniStoredItem,
@@ -43,7 +42,6 @@ import {
     LocalizeText,
     localizeWithFallback,
     readWiredChestStuffData,
-    SanitizeHtml,
     SendMessageComposer,
     WIRED_CHEST_KIND_COINS,
     WIRED_CHEST_KIND_FURNI,
@@ -55,7 +53,7 @@ import sceneMedium from '../../../../assets/images/chest/light_coins_chest_balan
 import sceneZero from '../../../../assets/images/chest/light_coins_chest_balance_zero.png';
 import bellIcon from '../../../../assets/images/chest/wired_chests_bell_icon.png';
 import gearIcon from '../../../../assets/images/chest/wired_chests_gear_icon.png';
-import { Column, Flex, LayoutCurrencyIcon, LayoutFurniImageView, VoltCardContentView, VoltCardHeaderView, VoltCardView, PIXEL_ART_RENDERING, Text } from '../../../../common';
+import { Column, Flex, LayoutCurrencyIcon, VoltCardContentView, VoltCardHeaderView, VoltCardView, PIXEL_ART_RENDERING, Text } from '../../../../common';
 import { useMessageEvent, useNotification, usePurse } from '../../../../hooks';
 import { useWiredToolsState } from '../../../../hooks/wired-tools/useWiredToolsState';
 import { ChestButton } from './ChestButton';
@@ -64,6 +62,8 @@ import { WIRED_TRANSACTION_LOGS_PAGE_SIZE, WiredTransactionLogsPage, WiredTransa
 import { ChestCheckbox, ChestIconButton, ChestShinyButton, ChestText, ChestTitle } from './chest/ChestAirParts';
 import { ChestLockInfoBubble } from './chest/ChestLockInfoBubble';
 import { ChestNotificationsWindow, ChestSettingsWindow } from './chest/ChestPresetWindows';
+import { ChestUpgradeView } from './chest/ChestUpgradeView';
+import { ChestWiredUpgradeView } from './chest/ChestWiredUpgradeView';
 import { FurniChestContentsView } from './chest/FurniChestContentsView';
 
 interface ChestLogRow {
@@ -755,78 +755,21 @@ export const FurnitureChestView: FC = () => {
                 />
             )}
 
-            {/* ===== UPGRADE ===== */}
+            {/* ===== UPGRADE (chest_upgrade) ===== */}
             {showUpgrade && (
-                <VoltCardView className="volt-widget-chest-upgrade" theme="primary-slim" style={{ width: 340 }}>
-                    <VoltCardHeaderView headerText={LocalizeText('wiredchests.upgrade.title')} onCloseClick={() => setShowUpgrade(false)} />
-                    <VoltCardContentView>
-                        <Column gap={2}>
-                            <Flex alignItems="center" gap={2}>
-                                <div className="volt-chest__upgrade-preview">
-                                    {chestObject.typeId > 0 && <LayoutFurniImageView productType={FurnitureType.FLOOR} productClassId={chestObject.typeId} direction={2} />}
-                                </div>
-                                <Column gap={1}>
-                                    <Text bold>
-                                        {LocalizeText('wiredchests.upgrade.capacity.extra', ['purchase_capacity'], [String(upgradeStep * upgradeQty)])}
-                                    </Text>
-                                    <Text small>
-                                        {LocalizeText('wiredchests.upgrade.capacity.current', ['current_capacity'], [String(capacityMax)])}
-                                    </Text>
-                                    <Text small>
-                                        {LocalizeText('wiredchests.upgrade.capacity.new', ['new_capacity'], [String(capacityMax + upgradeStep * upgradeQty)])}
-                                    </Text>
-                                </Column>
-                            </Flex>
-                            <Flex alignItems="center" gap={2}>
-                                <Text small>{LocalizeText('wiredchests.quantity')}</Text>
-                                <select
-                                    className="form-select form-select-sm"
-                                    value={upgradeQty}
-                                    onChange={(e) => setUpgradeQty(parseInt(e.target.value, 10))}
-                                >
-                                    {upgradeOptions.map((q) => (
-                                        <option key={q} value={q}>
-                                            {q}
-                                        </option>
-                                    ))}
-                                </select>
-                            </Flex>
-                            <Flex alignItems="center" gap={1}>
-                                {COST_CREDITS > 0 && (
-                                    <>
-                                        <LayoutCurrencyIcon type={-1} />
-                                        <Text bold>{COST_CREDITS * upgradeQty}</Text>
-                                    </>
-                                )}
-                                {COST_CREDITS > 0 && COST_DIAMONDS > 0 && <Text bold>+</Text>}
-                                {COST_DIAMONDS > 0 && (
-                                    <>
-                                        <LayoutCurrencyIcon type={5} />
-                                        <Text bold>{COST_DIAMONDS * upgradeQty}</Text>
-                                    </>
-                                )}
-                            </Flex>
-                            {upgradeError && (
-                                <Text small className="volt-chest__upgrade-error">
-                                    {LocalizeText('wiredchests.upgrade.error', ['reason'], [localizeWithFallback(upgradeError, '')])}
-                                </Text>
-                            )}
-                            {upgradeResult && (
-                                <Text small className="volt-chest__upgrade-error">
-                                    {upgradeResult}
-                                </Text>
-                            )}
-                            <div className="volt-chest__actions">
-                                <ChestButton wide disabled={!!upgradeError} onClick={buyUpgrade}>
-                                    {LocalizeText('wiredchests.upgrade.buy')}
-                                </ChestButton>
-                                <ChestButton wide onClick={() => setShowUpgrade(false)}>
-                                    {LocalizeText('wiredchests.cancel')}
-                                </ChestButton>
-                            </div>
-                        </Column>
-                    </VoltCardContentView>
-                </VoltCardView>
+                <ChestUpgradeView
+                    chestTypeId={chestObject.typeId}
+                    costCredits={COST_CREDITS}
+                    costDiamonds={COST_DIAMONDS}
+                    currentCapacity={capacityMax}
+                    error={upgradeResult || (upgradeError ? LocalizeText('wiredchests.upgrade.error', ['reason'], [localizeWithFallback(upgradeError, '')]) : '')}
+                    options={upgradeOptions}
+                    quantity={upgradeQty}
+                    step={upgradeStep}
+                    onBuy={buyUpgrade}
+                    onClose={() => setShowUpgrade(false)}
+                    onQuantityChange={setUpgradeQty}
+                />
             )}
 
             {/* ===== LOG ===== */}
@@ -880,53 +823,10 @@ export const FurnitureChestView: FC = () => {
                 </VoltCardView>
             )}
 
-            {/* ===== WIRED UPGRADE CONFIRM (AIR WiredChestWiredUpdateConfirmationView) ===== */}
+            {/* ===== WIRED UPGRADE CONFIRM (chest_wired_upgrade) ===== */}
             {confirmWiredUpgrade && showSettings && (
-                <VoltCardView className="volt-widget-chest-confirm" theme="primary-slim" style={{ width: 360 }}>
-                    <VoltCardHeaderView
-                        headerText={localizeWithFallback('wiredchests.upgrade.title', 'Chest upgrade')}
-                        onCloseClick={() => setConfirmWiredUpgrade(false)}
-                    />
-                    <VoltCardContentView>
-                        <Column gap={2}>
-                            <Flex alignItems="center" gap={2}>
-                                <div className="volt-chest__upgrade-preview">
-                                    {chestObject.typeId > 0 && (
-                                        <LayoutFurniImageView
-                                            productType={FurnitureType.FLOOR}
-                                            productClassId={chestObject.typeId}
-                                            direction={2}
-                                        />
-                                    )}
-                                </div>
-                                <Column gap={1}>
-                                    <Text bold>{LocalizeText('wiredchests.upgrade.wired.info')}</Text>
-                                    <Text small dangerouslySetInnerHTML={{ __html: SanitizeHtml(LocalizeText('wiredchests.big_fat_warning')) }} />
-                                </Column>
-                            </Flex>
-                            <Text bold>{LocalizeText('wiredchests.upgrade.wired.cost')}</Text>
-                            {isStarter && (
-                                <Text small className="volt-chest__upgrade-error">
-                                    {LocalizeText(
-                                        'wiredchests.upgrade.wired.error',
-                                        ['reason'],
-                                        [LocalizeText('wiredchests.upgrade.wired.error.reason.rookie_chest')],
-                                    )}
-                                </Text>
-                            )}
-                            <div className="volt-chest__actions">
-                                <ChestButton wide onClick={() => setConfirmWiredUpgrade(false)}>
-                                    {LocalizeText('wiredchests.cancel')}
-                                </ChestButton>
-                                <ChestButton wide disabled={isStarter || wiredUpgradeBuying} onClick={buyWiredUpgrade}>
-                                    {LocalizeText('wiredchests.upgrade.buy')}
-                                </ChestButton>
-                            </div>
-                        </Column>
-                    </VoltCardContentView>
-                </VoltCardView>
+                <ChestWiredUpgradeView buying={wiredUpgradeBuying} chestTypeId={chestObject.typeId} starter={isStarter} onBuy={buyWiredUpgrade} onClose={() => setConfirmWiredUpgrade(false)} />
             )}
-
         </>
     );
 };
