@@ -1,6 +1,6 @@
 import { CreateLinkEvent } from '@volt/renderer';
 import { CSSProperties, FC, useEffect, useState } from 'react';
-import { GetActivityPointName, GetConfigurationValue, LocalizeFormattedNumber, localizeWithFallback } from '../../../api';
+import { ACTIVITY_POINT_ICON_LAYOUT_SIZES, ACTIVITY_POINT_ICON_REGIONS, GetActivityPointIconStyle, GetActivityPointName, GetConfigurationValue, LocalizeFormattedNumber, localizeWithFallback } from '../../../api';
 import { LayoutActivityPointIcon, UsesActivityPointIcon } from '../../../common';
 
 interface SeasonalViewProps {
@@ -58,6 +58,18 @@ const useBalanceChange = (type: number, amount: number): BalanceChange | null =>
     return change;
 };
 
+// seasonal_icon is a 23x23 icon window at (3,3) that fitToSize shrinks to its skin layout, keeping its centre (on_resize_align_center and _middle).
+const iconPosition = (type: number): CSSProperties => {
+    const style = GetActivityPointIconStyle(type, true);
+    const region = ACTIVITY_POINT_ICON_REGIONS[style];
+
+    if (!region) return {};
+
+    const [width, height] = ACTIVITY_POINT_ICON_LAYOUT_SIZES[style] ?? [region[2], region[3]];
+
+    return { left: 3 + Math.trunc((23 - width) / 2), top: Math.trunc(3 + (23 - height) / 2) };
+};
+
 const toCssColor = (value: string, fallback: string): string => {
     const hex = (value ?? '').trim().replace(/^(#|0x)/i, '');
 
@@ -102,7 +114,7 @@ export const SeasonalView: FC<SeasonalViewProps> = (props) => {
                 {amountText}
             </span>
             <span className="seasonal-badge">
-                {hasAirIcon && <LayoutActivityPointIcon big className="seasonal-icon" type={type} />}
+                {hasAirIcon && <LayoutActivityPointIcon big className="seasonal-icon" type={type} style={iconPosition(type)} />}
                 {iconUrl && <img src={iconUrl} alt="" className="seasonal-image" />}
             </span>
             {change && (
