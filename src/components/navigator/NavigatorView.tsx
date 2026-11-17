@@ -18,6 +18,11 @@ import promoteRoomImg from '../../assets/images/navigator/air/promote-room.png';
 import quicklinkAdd from '../../assets/images/navigator/air/quicklink-add.png';
 import randomRoomImg from '../../assets/images/navigator/air/random-room.png';
 import { DraggableWindow, WidgetErrorBoundary } from '../../common';
+import { NativeCenteredField } from '../../common/native-text/NativeCenteredField';
+import { loadNativeFont } from '../../common/native-text/NativeFont';
+import { NativeText } from '../../common/native-text/NativeText';
+import { NativeFont } from '../../common/native-text/NativeTextTypes';
+import { nativeTextStyles } from '../../common/native-text/NativeTextStyles';
 import {
     useMessageEvent,
     useNavigatorData,
@@ -40,6 +45,15 @@ import { NavigatorSearchView } from './views/search/NavigatorSearchView';
 
 const SEARCH_LINK_TABS = new Set(['official_view', 'hotel_view', 'roomads_view', 'myworld_view']);
 
+// A label autosizes to its unhinted text width (DefineFont3 advances) rounded up, plus the 2px field gutters.
+const labelFieldWidth = (font: NativeFont, text: string, size: number) => {
+    let units = 0;
+
+    for (const character of text) units += font.swfGlyphs.get(character.charCodeAt(0))?.advance ?? 0;
+
+    return Math.ceil((units * size) / font.swfFont.emSquare) + 4;
+};
+
 const persistNavigatorBounds = (element: HTMLElement | null) => {
     if (!element) return;
     const rect = element.getBoundingClientRect();
@@ -59,6 +73,7 @@ export const NavigatorView: FC<{}> = () => {
     const elementRef = useRef<HTMLDivElement>(null);
     const [resultsScrollable, setResultsScrollable] = useState(false);
     const frameRef = useRef<HTMLDivElement>(null);
+    const [tabFont, setTabFont] = useState<NativeFont | null>(null);
     const tabsRef = useRef<HTMLDivElement>(null);
     const resizeRef = useRef<{ y: number; height: number; scale: number } | null>(null);
     const onPositionChange = useCallback((position: { x: number; y: number }) => {
@@ -181,16 +196,32 @@ export const NavigatorView: FC<{}> = () => {
         if (!isVisible) useNavigatorRoomInfoPopupStore.getState().hide();
     }, [isVisible]);
 
+    useEffect(() => {
+        let disposed = false;
+
+        loadNativeFont(nativeTextStyles.button_shiny_regular).then((loaded) => {
+            if (!disposed) setTabFont(loaded.font);
+        });
+
+        return () => {
+            disposed = true;
+        };
+    }, []);
+
     useLayoutEffect(() => {
         const tabs = tabsRef.current;
         if (!tabs) return;
 
         const labels = tabs.querySelectorAll<HTMLElement>('.volt-navigator-air__tab-label');
 
+        // The tab button starts at the 88px layout width and resizes to its label (field + 10px margins) centred in it.
         const sizeTabs = () => {
             for (const label of labels) {
-                const labelWidth = Math.ceil(label.getBoundingClientRect().width);
-                label.parentElement.style.setProperty('--navigator-tab-width', `${Math.max(70, labelWidth + 24)}px`);
+                const fieldWidth = tabFont ? labelFieldWidth(tabFont, label.textContent ?? '', 12) : Math.ceil(label.getBoundingClientRect().width);
+                const labelWidth = fieldWidth + 20;
+                const tabWidth = Math.max(labelWidth, Math.ceil((88 - labelWidth) / 2) + labelWidth);
+                label.parentElement.style.setProperty('--navigator-tab-width', `${tabWidth}px`);
+                label.parentElement.style.setProperty('--navigator-tab-text-left', `${Math.floor((tabWidth - Math.ceil(label.getBoundingClientRect().width)) / 2) + 1}px`);
             }
         };
 
@@ -199,7 +230,7 @@ export const NavigatorView: FC<{}> = () => {
         sizeTabs();
 
         return () => observer.disconnect();
-    }, [isVisible, topLevelContexts]);
+    }, [isVisible, topLevelContexts, tabFont]);
 
     useLayoutEffect(() => {
         const results = elementRef.current;
@@ -288,7 +319,17 @@ export const NavigatorView: FC<{}> = () => {
                         <div className="volt-navigator-air__skin" aria-hidden="true" />
                         <div className="volt-navigator-air__tab-shelf" aria-hidden="true" />
                         <div className="volt-navigator-air__caption">
-                            <span className="volt-navigator-air__title">{headerText}</span>
+                            <span className="volt-navigator-air__title">
+                                <NativeCenteredField width={isOpenSavesSearches ? 566 : 413}>
+                                    <NativeText
+                                        text={headerText}
+                                        textStyle="u_frame_title"
+                                        background={0x377998}
+                                        overrides={{ color: 0xffffff }}
+                                        nativeResolution
+                                    />
+                                </NativeCenteredField>
+                            </span>
                             <button
                                 type="button"
                                 className="volt-navigator-air__close volt-navigator-air__help"
@@ -329,7 +370,14 @@ export const NavigatorView: FC<{}> = () => {
                                                 useNavigatorUiStore.getState().setTab(context.code);
                                             }}
                                         >
-                                            <span className="volt-navigator-air__tab-label">{LocalizeText('navigator.toplevelview.' + context.code)}</span>
+                                            <span className="volt-navigator-air__tab-label">
+                                                <NativeText
+                                                    text={LocalizeText('navigator.toplevelview.' + context.code)}
+                                                    textStyle="button_shiny_regular"
+                                                    background={active ? 0xeceae0 : 0xcbc9c1}
+                                                    nativeResolution
+                                                />
+                                            </span>
                                         </button>
                                     );
                                 })}
@@ -360,14 +408,20 @@ export const NavigatorView: FC<{}> = () => {
                                     </div>
                                     {isFetching && <div className="volt-navigator-air__busy-mask" aria-hidden="true" />}
                                     <div className="volt-navigator-air__actions">
-                                        <button
-                                            type="button"
-                                            className="volt-navigator-air__action volt-navigator-air__action--create"
-                                            onClick={onCreateRoom}
-                                        >
+                                        <button type="button" className="volt-navigator-air__action volt-navigator-air__action--create" onClick={onCreateRoom}>
                                             <div className="volt-navigator-air__action-content">
                                                 <img src={createRoomImg} alt="" />
-                                                <span>{localizeWithFallback('navigator.create.room', LocalizeText('navigator.createroom.create'))}</span>
+                                                <span>
+                                                    <NativeText
+                                                        text={localizeWithFallback('navigator.create.room', LocalizeText('navigator.createroom.create'))}
+                                                        textStyle="id_heading_2"
+                                                        background={0}
+                                                        transparent
+                                                        width={125}
+                                                        align="center"
+                                                        nativeResolution
+                                                    />
+                                                </span>
                                             </div>
                                             <i className="volt-navigator-air__action-border" aria-hidden="true" />
                                         </button>
@@ -379,7 +433,17 @@ export const NavigatorView: FC<{}> = () => {
                                             >
                                                 <div className="volt-navigator-air__action-content">
                                                     <img src={randomRoomImg} alt="" />
-                                                    <span>{LocalizeText('navigator.random.room')}</span>
+                                                    <span>
+                                                        <NativeText
+                                                            text={LocalizeText('navigator.random.room')}
+                                                            textStyle="id_heading_2"
+                                                            background={0}
+                                                            transparent
+                                                            width={125}
+                                                            align="center"
+                                                            nativeResolution
+                                                        />
+                                                    </span>
                                                 </div>
                                                 <i className="volt-navigator-air__action-border" aria-hidden="true" />
                                             </button>
@@ -392,7 +456,17 @@ export const NavigatorView: FC<{}> = () => {
                                             >
                                                 <div className="volt-navigator-air__action-content">
                                                     <img src={promoteRoomImg} alt="" />
-                                                    <span>{LocalizeText('navigator.promote.room')}</span>
+                                                    <span>
+                                                        <NativeText
+                                                            text={LocalizeText('navigator.promote.room')}
+                                                            textStyle="id_heading_2"
+                                                            background={0}
+                                                            transparent
+                                                            width={125}
+                                                            align="center"
+                                                            nativeResolution
+                                                        />
+                                                    </span>
                                                 </div>
                                                 <i className="volt-navigator-air__action-border" aria-hidden="true" />
                                             </button>
