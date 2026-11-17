@@ -26,6 +26,9 @@ import {
     RoomObjectCategory,
     RoomObjectVariable,
     RoomPreviewer,
+    WIRED_TRANSACTION_LIST_CHEST,
+    WiredTransactionGetChestLogsComposer,
+    WiredTransactionLogListEvent,
     Vector3d,
 } from '@volt/renderer';
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -55,13 +58,15 @@ import gearIcon from '../../../../assets/images/chest/wired_chests_gear_icon.png
 import checkmarkIcon from '../../../../assets/images/reward-track/air/checkmark.png';
 import wiredIcon from '../../../../assets/images/wiredtools/wired_menu.png';
 import { Column, Flex, LayoutCurrencyIcon, LayoutFurniImageView, VoltCardContentView, VoltCardHeaderView, VoltCardView, PIXEL_ART_RENDERING, Text } from '../../../../common';
-import { useMessageEvent, usePurse } from '../../../../hooks';
+import { useMessageEvent, useNotification, usePurse } from '../../../../hooks';
 import { useWiredToolsState } from '../../../../hooks/wired-tools/useWiredToolsState';
 import { ChestButton } from './ChestButton';
 import { ChestAppearanceFields, ChestSettingsSection } from './ChestSettingsFields';
 import { HabboDropMenuView } from '../../../../common/dropmenu/HabboDropMenuView';
 import { ChestFurniGroup, chestFurniDisplayName, groupStoredFurni } from './chestFurniGrouping';
+import { WIRED_TRANSACTION_LOGS_PAGE_SIZE, WiredTransactionLogsPage, WiredTransactionLogsWindow } from '../../../wired-tools/WiredTransactionLogsWindow';
 import { ChestCheckbox, ChestIconButton, ChestShinyButton, ChestText, ChestTitle } from './chest/ChestAirParts';
+import { ChestLockInfoBubble } from './chest/ChestLockInfoBubble';
 import { FurniChestContentsView } from './chest/FurniChestContentsView';
 
 interface ChestLogRow {
@@ -79,8 +84,6 @@ const MAX_UPGRADES_PER_PURCHASE = 10;
 /** Coin chests stop at 100000 capacity and furni chests at 10000. */
 const COIN_MAX_CAPACITY = 100_000;
 const FURNI_MAX_CAPACITY = 10_000;
-const LOCK_INFO_RULES = [1, 2, 3, 4, 5, 6, 7].map((n) => `wiredchests.lock_info.rule_${ n }`);
-const CAPACITY_INFO_RULES = [1, 2, 3, 4].map((n) => `wiredchests.capacity_info.rule_${ n }`);
 const FURNI_SEARCH_THRESHOLD = 31;
 const COST_CREDITS = 10;
 const COST_DIAMONDS = 10;
@@ -168,9 +171,9 @@ export const FurnitureChestView: FC = () => {
     const [showLog, setShowLog] = useState(false);
     const [logRows, setLogRows] = useState<ChestLogRow[]>([]);
     const [upgradeQty, setUpgradeQty] = useState(1);
-    const [confirmWithdrawAll, setConfirmWithdrawAll] = useState(false);
-    const [confirmLock, setConfirmLock] = useState<null | boolean>(null);
     const [showLockInfo, setShowLockInfo] = useState(false);
+    const [lockInfoAnchor, setLockInfoAnchor] = useState<HTMLButtonElement>(null);
+    const [logsPage, setLogsPage] = useState<WiredTransactionLogsPage>(null);
     const [upgradeResult, setUpgradeResult] = useState('');
     /** null shows the saved capacity; a string is what the owner is typing. */
     const [capacityDraft, setCapacityDraft] = useState<string | null>(null);
@@ -180,6 +183,10 @@ export const FurnitureChestView: FC = () => {
     /** The chest a ChestOpen (1595) was sent for; only its 988 / 44 answers open the window. */
     const openingIdRef = useRef(-1);
 
+    /** The chest a View logs request was sent for; its first log page opens the transaction logs window. */
+    const logsRequestRef = useRef(-1);
+
+    const { showConfirm = null } = useNotification();
     const { getCurrencyAmount } = usePurse();
     const creditsWallet = getCurrencyAmount(-1);
     const diamondsWallet = getCurrencyAmount(5);
@@ -289,8 +296,7 @@ export const FurnitureChestView: FC = () => {
         setShowNotifications(false);
         setConfirmWiredUpgrade(false);
         setShowUpgrade(false);
-        setConfirmWithdrawAll(false);
-        setConfirmLock(null);
+        setShowLockInfo(false);
     };
 
     // AIR WiredChestController.onOpenChest -> open(): ask for the contents.
@@ -394,6 +400,15 @@ export const FurnitureChestView: FC = () => {
         );
     });
 
+    useMessageEvent<WiredTransactionLogListEvent>(WiredTransactionLogListEvent, (event) => {
+        const parser = event.getParser();
+
+        if (!parser || parser.listType !== WIRED_TRANSACTION_LIST_CHEST || parser.listId !== logsRequestRef.current || parser.amount !== WIRED_TRANSACTION_LOGS_PAGE_SIZE) return;
+
+        logsRequestRef.current = -1;
+        setLogsPage({ listType: parser.listType, listId: parser.listId, totalLogs: parser.totalLogs, page: parser.page, logs: [...parser.logs] });
+    });
+
     useMessageEvent<ChestLogEvent>(ChestLogEvent, (event) => {
         const p = event.getParser();
         setLogRows(p.rows.map((r) => ({ ...r })));
@@ -461,10 +476,13 @@ export const FurnitureChestView: FC = () => {
         if (withdrawAmount <= 0) return;
         SendMessageComposer(new ChestWithdrawCoinsComposer(itemId, withdrawAmount));
     };
-    const withdrawAll = () => setConfirmWithdrawAll(true);
-    const doWithdrawAll = () => {
-        SendMessageComposer(new ChestWithdrawAllComposer(itemId));
-        setConfirmWithdrawAll(false);
+    /** AIR windowManager.confirm: the request goes out only after OK. */
+    const confirm = (titleKey: string, descKey: string, onOk: () => void) =>
+        showConfirm(LocalizeText(descKey).replace(/\\n/g, '\n'), onOk, () => {}, LocalizeText('generic.ok'), LocalizeText('generic.cancel'), LocalizeText(titleKey));
+    const withdrawAll = () => confirm('wiredchests.withdraw_all.confirm.title', 'wiredchests.withdraw_all.confirm.desc', () => SendMessageComposer(new ChestWithdrawAllComposer(itemId)));
+    const viewLogs = () => {
+        logsRequestRef.current = itemId;
+        SendMessageComposer(new WiredTransactionGetChestLogsComposer(itemId, WIRED_TRANSACTION_LOGS_PAGE_SIZE, 1));
     };
     const withdrawFurni = () => {
         if (!selectedGroup || furniWithdrawAmount <= 0 || selectedFurniQty <= 0) return;
@@ -533,6 +551,16 @@ export const FurnitureChestView: FC = () => {
           ? 'wiredchests.upgrade.error.reason.not_enough_currency'
           : '';
 
+    /** AIR onAttemptLockChest / onAttemptUnlockChest: locking asks only someone who is not the owner, unlocking always asks. */
+    const toggleLock = (locked: boolean) => {
+        if (locked && isOwner) {
+            saveOptions({ locked });
+            return;
+        }
+
+        const key = locked ? 'lock' : 'unlock';
+        confirm(`wiredchests.${key}.confirm.title`, `wiredchests.${key}.confirm.desc`, () => saveOptions({ locked }));
+    };
     const upgradeTooltip = isStarter
         ? LocalizeText('wiredchests.upgrade.result.error.10')
         : isOwner
@@ -629,17 +657,18 @@ export const FurnitureChestView: FC = () => {
                 <div className="volt-chest-air__footer">
                     {layout.showLockingOptions && (
                         <button
+                            ref={setLockInfoAnchor}
                             aria-label={LocalizeText('wiredchests.lock_info.title')}
                             className="volt-chest-air__info"
                             data-air-name="lock_info_button"
                             type="button"
-                            onClick={() => setShowLockInfo((v) => !v)}
+                            onClick={() => setShowLockInfo(true)}
                         />
                     )}
                     <div className="volt-chest-air__options">
                         {layout.showLockingOptions && (
                             <div className="volt-chest-air__locking">
-                                <ChestCheckbox airName="lock_chest_cbx" checked={stuff.locked} disabled={!rights.canToggleLock} label={LocalizeText('wiredchests.lock_chest')} onToggle={setConfirmLock} />
+                                <ChestCheckbox airName="lock_chest_cbx" checked={stuff.locked} disabled={!rights.canToggleLock} label={LocalizeText('wiredchests.lock_chest')} onToggle={toggleLock} />
                                 <ChestCheckbox airName="auto_lock_chest_cbx" checked={stuff.autoLock} disabled={!isOwner} label={LocalizeText('wiredchests.auto_lock_chest')} style={{ top: 20 }} onToggle={(autoLock) => saveOptions({ autoLock })} />
                                 <div className="volt-chest-air__splitter" style={{ top: 40 }} />
                             </div>
@@ -682,12 +711,19 @@ export const FurnitureChestView: FC = () => {
                             <ChestShinyButton airName="withdraw_all_btn" caption={LocalizeText('wiredchests.withdraw_all')} disabled={!rights.canWithdraw} rect={[17, 0, 89, 30]} onClick={withdrawAll} />
                         )}
                         <ChestShinyButton airName="start_deposit_btn" caption={LocalizeText(layout.depositKey)} disabled={!rights.canDeposit} rect={[layout.showWithdrawAll ? 119 : 17, 0, 92, 30]} onClick={startDeposit} />
+                        {layout.showLogs && (
+                            <span className="volt-chest-air__logs">
+                                <ChestShinyButton airName="view_logs_btn" caption={LocalizeText('wiredchests.view_logs')} disabled={!rights.canRead} rect={[0, 0, 73, 30]} onClick={viewLogs} />
+                            </span>
+                        )}
                         {!rights.canRead && (
                             <ChestText background={0xdadada} blend={0.6} className="volt-chest-air__item-count-bottom" text={LocalizeText('wiredchests.space_used', ['count', 'total'], [String(used), String(capacity)])} />
                         )}
                     </div>
                 </div>
             </VoltCardView>
+            {showLockInfo && lockInfoAnchor && <ChestLockInfoBubble anchor={lockInfoAnchor} onClose={() => setShowLockInfo(false)} />}
+            {logsPage && <WiredTransactionLogsWindow data={logsPage} onClose={() => setLogsPage(null)} />}
 
             {/* ===== SETTINGS ===== */}
             {showSettings && (
@@ -970,94 +1006,6 @@ export const FurnitureChestView: FC = () => {
                 </VoltCardView>
             )}
 
-            {confirmLock !== null && (
-                <VoltCardView className="volt-widget-chest-confirm" theme="primary-slim" style={{ width: 340 }}>
-                    <VoltCardHeaderView
-                        headerText={localizeWithFallback(
-                            confirmLock ? 'wiredchests.lock.confirm.title' : 'wiredchests.unlock.confirm.title',
-                            '',
-                        )}
-                        onCloseClick={() => setConfirmLock(null)}
-                    />
-                    <VoltCardContentView>
-                        <Column gap={2}>
-                            <Text>
-                                {localizeWithFallback(
-                                    confirmLock ? 'wiredchests.lock.confirm.desc' : 'wiredchests.unlock.confirm.desc',
-                                    '',
-                                )}
-                            </Text>
-                            <div className="volt-chest__actions">
-                                <ChestButton
-                                    wide
-                                    onClick={() => {
-                                        saveOptions({ locked: confirmLock });
-                                        setConfirmLock(null);
-                                    }}
-                                >
-                                    {LocalizeText('wiredchests.ready')}
-                                </ChestButton>
-                                <ChestButton wide onClick={() => setConfirmLock(null)}>
-                                    {LocalizeText('wiredchests.cancel')}
-                                </ChestButton>
-                            </div>
-                        </Column>
-                    </VoltCardContentView>
-                </VoltCardView>
-            )}
-
-            {showLockInfo && (
-                <VoltCardView className="volt-widget-chest-info" theme="primary-slim" style={{ width: 400 }}>
-                    <VoltCardHeaderView
-                        headerText={localizeWithFallback('wiredchests.lock_info.title', 'About locking')}
-                        onCloseClick={() => setShowLockInfo(false)}
-                    />
-                    <VoltCardContentView>
-                        <Column gap={2}>
-                            <Text small>{localizeWithFallback('wiredchests.lock_info.desc', '')}</Text>
-                            <ul className="volt-chest__rules">
-                                {LOCK_INFO_RULES.map((key) => (
-                                    <li key={key}>
-                                        <Text small>{localizeWithFallback(key, '')}</Text>
-                                    </li>
-                                ))}
-                            </ul>
-                            <Text bold>{localizeWithFallback('wiredchests.capacity_info.title', 'About capacity')}</Text>
-                            <Text small>{localizeWithFallback('wiredchests.capacity_info.desc', '')}</Text>
-                            <ul className="volt-chest__rules">
-                                {CAPACITY_INFO_RULES.map((key) => (
-                                    <li key={key}>
-                                        <Text small>{localizeWithFallback(key, '')}</Text>
-                                    </li>
-                                ))}
-                            </ul>
-                        </Column>
-                    </VoltCardContentView>
-                </VoltCardView>
-            )}
-
-            {confirmWithdrawAll && (
-                <VoltCardView className="volt-widget-chest-confirm" theme="primary-slim" style={{ width: 320 }}>
-                    <VoltCardHeaderView headerText={LocalizeText('wiredchests.withdraw_all.confirm.title')} onCloseClick={() => setConfirmWithdrawAll(false)} />
-                    <VoltCardContentView>
-                        <Column gap={2}>
-                            <Text>
-                                {LocalizeText(
-                                    isFurni ? 'wiredchests.withdraw_all.confirm.desc_furni' : 'wiredchests.withdraw_all.confirm.desc',
-                                )}
-                            </Text>
-                            <div className="volt-chest__actions">
-                                <ChestButton wide onClick={doWithdrawAll}>
-                                    {LocalizeText('wiredchests.withdraw_all.confirm.yes')}
-                                </ChestButton>
-                                <ChestButton wide onClick={() => setConfirmWithdrawAll(false)}>
-                                    {LocalizeText('wiredchests.cancel')}
-                                </ChestButton>
-                            </div>
-                        </Column>
-                    </VoltCardContentView>
-                </VoltCardView>
-            )}
         </>
     );
 };
