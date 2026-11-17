@@ -21,6 +21,13 @@ const STARS = [bronzeStar, silverStar, goldStar, diamondStar, rubyStar, pinkStar
 const PAGE_BACKGROUND = 0xe9e9e1;
 const LEVEL_BACKGROUND = 0xffffff;
 
+const compareProductCodes = (first: RecyclerPrizeProduct, second: RecyclerPrizeProduct) => {
+    const left = first.name.toLowerCase();
+    const right = second.name.toLowerCase();
+
+    return left < right ? -1 : left > right ? 1 : 0;
+};
+
 const isChatStyle = (product: RecyclerPrizeProduct) => product.productType === ProductTypeEnum.CHAT_STYLE;
 
 // PrizeContainer.title (as:58-71): a chat style takes its name from the product data of chat_bubble_<style id>.
@@ -69,7 +76,11 @@ export const CatalogLayoutRecyclerPrizesView: FC<CatalogLayoutProps> = ({ page }
     const [selected, setSelected] = useState<RecyclerPrizeProduct>(null);
 
     useMessageEvent<RecyclerPrizesMessageEvent>(RecyclerPrizesMessageEvent, (event) => {
-        const sorted = [...event.getParser().levels].sort((first, second) => first.levelId - second.levelId);
+        // PrizeLevelMessageData (as:28): the prizes of a level are sorted by product code, ignoring case.
+        const sorted = event
+            .getParser()
+            .levels.map((level) => ({ ...level, products: [...level.products].sort(compareProductCodes) }))
+            .sort((first, second) => first.levelId - second.levelId);
 
         setLevels(sorted);
         // onPrizesReceived: the first prize of the first level is selected.
