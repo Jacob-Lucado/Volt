@@ -86,3 +86,23 @@
     color: var(--los-text) !important;
     -webkit-text-fill-color: var(--los-text);
 }
+
+/* Messenger frame */
+
+.messenger-window {
+    border: 1px solid rgba(148, 176, 214, .2);
+    border-radius: 14px;
+    background: rgba(15, 23, 36, .94);
+    filter: none;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, .5);
+}
+
+.messenger-window::before {
+    border-image-source: none;
+    border-color: transparent;
+}
+
+.messenger-window .messenger-open-title,
+.messenger-window .messenger-thread-name {
+    color: #e8eef5;
+}
