@@ -12,7 +12,6 @@
     border-image-source: none !important;
     border-radius: 14px !important;
     background: var(--los-glass) !important;
-    color: var(--los-text);
     font-family: Inter, system-ui, sans-serif;
     box-shadow: 0 18px 44px rgba(0, 0, 0, .5);
     filter: none !important;
@@ -28,15 +27,13 @@
 
 .volt-card-shell:not(.volt-wired) .volt-card-content-shell {
     border-image-source: none !important;
-    background: transparent !important;
-    color: var(--los-text);
+    margin: 0 6px 6px;
+    border-radius: 10px;
+    background: #eef2f7 !important;
+    color: #1b2433;
 }
 
 .volt-card-shell:not(.volt-wired) .volt-card-header-shell * {
     color: var(--los-text);
     font-family: Inter, system-ui, sans-serif;
-}
-
-.volt-card-shell:not(.volt-wired) .volt-card-content-shell .text-\[\#24344c\] {
-    color: var(--los-text);
 }
