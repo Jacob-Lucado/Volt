@@ -1,10 +1,12 @@
 import {
     FurnitureListComposer,
+    GetRoomEngine,
     GetRecyclerStatusMessageComposer,
     RecycleItemsEntry,
     RecycleItemsMessageComposer,
     RecyclerFinishedMessageEvent,
-    RecyclerStatusMessageEvent
+    RecyclerStatusMessageEvent,
+    RoomObjectOperationType
 } from '@volt/renderer';
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { GetConfigurationValue, GetFurnitureData, LocalizeText, localizeWithFallback, ProductTypeEnum, SendMessageComposer } from '../../../../../../api';
@@ -12,14 +14,8 @@ import { NativeText } from '../../../../../../common/native-text/NativeText';
 import { useInventoryFurni, useInventoryTrade, useMessageEvent, useNotification, usePurse, useRoom } from '../../../../../../hooks';
 import { CatalogAirShinyButton } from '../CatalogAirShinyButton';
 import { CatalogLayoutProps } from '../CatalogLayout.types';
-import {
-    addRecyclerSlot,
-    getRecyclerEligibleItemIds,
-    getRecyclerInventoryChoices,
-    normalizeRecyclerSlotCount,
-    RecyclerInventoryChoice,
-    reconcileRecyclerSlots
-} from './recycler.helpers';
+import { useRecyclerStore } from '../../../../../../state/recyclerStore';
+import { getRecyclerEligibleItemIds, normalizeRecyclerSlotCount, RecyclerInventoryChoice } from './recycler.helpers';
 import { createFrankEmotion, FrankEmotion, FrankRecyclerEmotion } from './FrankRecyclerEmotion';
 import { useRecyclerEngineAnimator } from './useRecyclerEngineAnimator';
 import frankImage from '../../../../../../assets/images/collectibles/image-frank-dont-know.png';
@@ -43,9 +39,8 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
     const { isTrading = false } = useInventoryTrade();
     const { getCurrencyAmount = null } = usePurse();
     const { simpleAlert = null } = useNotification();
-    const [slots, setSlots] = useState<RecyclerInventoryChoice[]>([]);
+    const [slots, setSlots] = useState<(RecyclerInventoryChoice | null)[]>([]);
     const [status, setStatus] = useState<number>(null);
-    const [pickerOpen, setPickerOpen] = useState(false);
     const [secondsLeft, setSecondsLeft] = useState(0);
     const [processing, setProcessing] = useState(false);
     const [abortVisible, setAbortVisible] = useState(false);
@@ -57,9 +52,8 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
     const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     // RecyclerLogic: catalog.getInteger("recycler.number_of_slots", 5).
     const slotCount = normalizeRecyclerSlotCount(GetConfigurationValue<number>('recycler.number_of_slots', 5), 5);
-    const selectedIds = useMemo(() => new Set(slots.map((slot) => slot.itemId)), [slots]);
+    const filledSlots = useMemo(() => slots.filter((slot): slot is RecyclerInventoryChoice => !!slot), [slots]);
     const eligibleIds = useMemo(() => getRecyclerEligibleItemIds(groupItems), [groupItems]);
-    const choices = useMemo(() => getRecyclerInventoryChoices(groupItems, selectedIds), [groupItems, selectedIds]);
     const enabled = status !== null && status !== RecyclerStatusMessageEvent.SYSTEM_STATUS_DISABLED;
     const inPrivateRoom = !!roomSession?.isPrivateRoom;
     // RecyclerLogic.ducketCost: catalog.getInteger("recycler.ducket_cost", 0); a zero cost hides the cost row.
@@ -74,20 +68,21 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
 
     // RecyclerCatalogWidget.onAnimationComplete: send the slots, then wait recycler.timeout_seconds before the next recycle.
     const executeRecycler = () => {
-        const validSlots = reconcileRecyclerSlots(slots, eligibleIds);
+        const validSlots = slots.map((slot) => (slot && eligibleIds.has(slot.itemId) ? slot : null));
+        const ids = validSlots.filter((slot) => !!slot).map((slot) => slot.itemId);
 
         setAbortVisible(false);
         scheduleReset(animator.reset, 1000);
         setSecondsLeft(Math.max(0, Number(GetConfigurationValue<number>('recycler.timeout_seconds', 10)) || 0));
 
-        if (processing || !enabled || !inPrivateRoom || validSlots.length !== slotCount) {
+        if (processing || !enabled || !inPrivateRoom || ids.length !== slotCount) {
             setSlots(validSlots);
 
             return;
         }
 
         setProcessing(true);
-        SendMessageComposer(new RecycleItemsMessageComposer(...validSlots.map((slot) => new RecycleItemsEntry(slot.itemId))));
+        SendMessageComposer(new RecycleItemsMessageComposer(...ids.map((id) => new RecycleItemsEntry(id))));
     };
 
     const animator = useRecyclerEngineAnimator(arrowRef, machineRef, executeRecycler);
@@ -130,23 +125,79 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
     }, [secondsLeft > 0]);
 
     useEffect(() => {
-        setSlots((current) => reconcileRecyclerSlots(current, eligibleIds));
+        setSlots((current) => current.map((slot) => (slot && eligibleIds.has(slot.itemId) ? slot : null)));
     }, [eligibleIds]);
 
-    const addChoice = (choice: RecyclerInventoryChoice) => {
-        if (processing) return;
+    const setRecyclerActive = useRecyclerStore((state) => state.setActive);
+    const setSlotItemIds = useRecyclerStore((state) => state.setSlotItemIds);
 
-        setSlots((current) => addRecyclerSlot(current, choice, slotCount, eligibleIds));
-        setPickerOpen(false);
+    useEffect(() => {
+        setRecyclerActive(enabled);
+    }, [enabled, setRecyclerActive]);
+
+    useEffect(() => {
+        setSlotItemIds(filledSlots.map((slot) => slot.itemId));
+    }, [filledSlots, setSlotItemIds]);
+
+    useEffect(
+        () => () => {
+            setRecyclerActive(false);
+            setSlotItemIds([]);
+        },
+        [setRecyclerActive, setSlotItemIds]
+    );
+
+    // RecyclerLogic.placeObjectAtSlot: the dragged inventory group gives its first unlocked recyclable furni to this slot.
+    const placeAtSlot = (index: number, placedId: number) => {
+        const used = new Set(filledSlots.map((slot) => slot.itemId));
+        const group = groupItems.find((candidate) => candidate.items.some((item) => item.id === placedId));
+        const item = group?.items.find((candidate) => candidate.recyclable && !candidate.locked && !used.has(candidate.id));
+
+        if (!item) {
+            alert('recycler.alert.non.recyclable');
+
+            return;
+        }
+
+        setSlots((current) => {
+            const next = Array.from({ length: slotCount }, (_, slotIndex) => current[slotIndex] ?? null);
+
+            next[index] = { iconUrl: group.iconUrl, itemId: item.id, name: group.name };
+
+            return next;
+        });
+    };
+
+    // RecyclerCatalogWidget.onSlotMouseEvent: a release over a slot drops the furni being placed from the inventory into it,
+    // or empties the slot when nothing is being placed.
+    const onSlotMouseUp = (index: number) => {
+        if (!enabled || processing) return;
+
+        const roomEngine = GetRoomEngine();
+        const placing = roomEngine.getSelectedRoomObjectData(roomEngine.activeRoomId);
+
+        if (placing) {
+            if (placing.operation !== RoomObjectOperationType.OBJECT_PLACE) {
+                alert('catalog.alert.recycler.inventory');
+
+                return;
+            }
+
+            placeAtSlot(index, placing.id);
+        } else {
+            setSlots((current) => current.map((slot, slotIndex) => (slotIndex === index ? null : slot)));
+        }
+
+        roomEngine.cancelRoomObjectInsert();
     };
 
     // RecyclerLogic.isReadyToRecycle: a full pool in a private room, without an open trade.
-    const readyToRecycle = !processing && enabled && inPrivateRoom && slots.length === slotCount;
+    const readyToRecycle = !processing && enabled && inPrivateRoom && filledSlots.length === slotCount;
     const canRecycle = readyToRecycle && !animator.busy && secondsLeft <= 0;
 
     // A wf_act_reset_timers in a slot makes the pointer spin and the machine shake harder.
     const easterEgg = () =>
-        slots.some((slot) => {
+        filledSlots.some((slot) => {
             const group = groupItems.find((candidate) => candidate.items.some((item) => item.id === slot.itemId));
 
             return (
@@ -214,14 +265,11 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
                             key={index}
                             aria-label={slot?.name ?? `${index + 1}`}
                             className="volt-catalog-recycler-slot"
-                            disabled={processing}
                             role="listitem"
                             style={getSlotPosition(index)}
                             title={slot?.name}
                             type="button"
-                            onClick={() =>
-                                slot ? setSlots((current) => current.filter((_, slotIndex) => slotIndex !== index)) : setPickerOpen((open) => !open)
-                            }
+                            onMouseUp={() => onSlotMouseUp(index)}
                         >
                             {slot?.iconUrl && <img alt="" draggable={false} src={slot.iconUrl} />}
                         </button>
@@ -248,32 +296,6 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
                         transparent
                     />
                 </button>
-            )}
-            {/* Volt keeps its inventory list instead of AIR's drag from the room or inventory: an empty slot opens it. */}
-            {pickerOpen && !processing && (
-                <div className="volt-catalog-recycler-picker">
-                    {choices.length ? (
-                        choices.map((choice) => (
-                            <button
-                                key={choice.itemId}
-                                disabled={slots.length >= slotCount}
-                                title={choice.name}
-                                type="button"
-                                onClick={() => addChoice(choice)}
-                            >
-                                {choice.iconUrl && <img alt="" draggable={false} src={choice.iconUrl} />}
-                            </button>
-                        ))
-                    ) : (
-                        <NativeText
-                            background={0xffffff}
-                            className="volt-catalog-recycler-picker-empty"
-                            maxWidth={300}
-                            text={LocalizeText('inventory.furni.preview.not_recyclable')}
-                            textStyle="u_regular"
-                        />
-                    )}
-                </div>
             )}
             {status !== null && !enabled && (
                 <div className="volt-catalog-recycler-disabled">
