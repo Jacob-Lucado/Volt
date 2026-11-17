@@ -135,7 +135,7 @@ export const FurnitureChestView: FC = () => {
     const [coins, setCoins] = useState(0);
     const [storedFurniItems, setStoredFurniItems] = useState<IChestFurniStoredItem[]>([]);
     const [selectedFurniKey, setSelectedFurniKey] = useState('');
-    const [furniWithdrawAmount, setFurniWithdrawAmount] = useState(1);
+    const [furniWithdrawAmount, setFurniWithdrawAmount] = useState('1');
     const [roomPreviewer, setRoomPreviewer] = useState<RoomPreviewer>(null);
     const [withdrawAmount, setWithdrawAmount] = useState(1);
     /** Bumped to re-read the chest's room object after it updates (AIR viewingChestUpdated). */
@@ -194,7 +194,6 @@ export const FurnitureChestView: FC = () => {
     const isFurni = kind === WIRED_CHEST_KIND_FURNI;
     const isStarter = isStarterChest(chestObject.className);
     const capacityMax = getWiredChestMaxCapacity(kind, isStarter, stuff.capacityLevel, configNumber);
-    const capacity = stuff.capacity > 0 ? Math.min(stuff.capacity, capacityMax) : capacityMax;
     const used = isFurni ? storedFurniItems.length : coins;
     const isOwner = chestObject.ownerId > 0 && chestObject.ownerId === GetSessionDataManager().userId;
     const rights = getWiredChestRights({
@@ -227,10 +226,6 @@ export const FurnitureChestView: FC = () => {
     }, [furniEntries, furniSearchQuery]);
 
     const showFurniSearch = furniEntries.length >= FURNI_SEARCH_THRESHOLD;
-
-    useEffect(() => {
-        setFurniWithdrawAmount(1);
-    }, [selectedFurniKey]);
 
     const selectedGroup = furniEntries.find((f) => f.key === selectedFurniKey) ?? null;
 
@@ -421,6 +416,13 @@ export const FurnitureChestView: FC = () => {
         setWiredUpgradeBuying(false);
     });
 
+    // AIR viewingChestUpdated: someone without read rights keeps the window only while everyone may open the chest.
+    const lostAccess = itemId > 0 && !rights.canRead && !stuff.everyoneCanOpen;
+
+    useEffect(() => {
+        if (lostAccess) setItemId(-1);
+    }, [lostAccess]);
+
     if (itemId === -1) return null;
 
     // Scene image follows the official CoinChestSubController.CHEST_STATES thresholds:
@@ -431,7 +433,6 @@ export const FurnitureChestView: FC = () => {
         ? LocalizeText('wiredchests.furni_chest')
         : LocalizeText('wiredchests.coin_chest');
     const chestName = stuff.name || chestTypeLabel;
-    const selectedFurniQty = selectedGroup?.quantity ?? 0;
 
     const close = () => {
         closeFrames();
@@ -474,14 +475,16 @@ export const FurnitureChestView: FC = () => {
         SendMessageComposer(new WiredTransactionGetChestLogsComposer(itemId, WIRED_TRANSACTION_LOGS_PAGE_SIZE, 1));
     };
     const withdrawFurni = () => {
-        if (!selectedGroup || furniWithdrawAmount <= 0 || selectedFurniQty <= 0) return;
+        const amount = parseInt(furniWithdrawAmount, 10);
+
+        if (!selectedGroup || isNaN(amount)) return;
         SendMessageComposer(
             new ChestWithdrawFurniComposer(
                 itemId,
                 selectedGroup.wallItem,
                 selectedGroup.baseItemId,
                 selectedGroup.legacyPosterId,
-                furniWithdrawAmount,
+                amount,
             ),
         );
     };
@@ -550,6 +553,12 @@ export const FurnitureChestView: FC = () => {
         const key = locked ? 'lock' : 'unlock';
         confirm(`wiredchests.${key}.confirm.title`, `wiredchests.${key}.confirm.desc`, () => saveOptions({ locked }));
     };
+    /** AIR onCapacityChange: a value above the maximum is replaced by the maximum while typing. */
+    const changeCapacity = (value: string) => {
+        const digits = value.replace(NON_DIGITS, '');
+
+        setCapacityDraft(parseInt(digits, 10) > capacityMax ? String(capacityMax) : digits);
+    };
     const upgradeTooltip = isStarter
         ? LocalizeText('wiredchests.upgrade.result.error.10')
         : isOwner
@@ -557,10 +566,10 @@ export const FurnitureChestView: FC = () => {
           : LocalizeText('wiredchests.upgrade.error.reason.not_owner');
     const commitCapacity = () => {
         const parsed = parseInt(capacityDraft ?? '', 10);
-        const next = Math.min(Math.max(isNaN(parsed) ? capacity : parsed, 0), capacityMax);
+        const next = Math.min(Math.max(isNaN(parsed) ? stuff.capacity : parsed, 0), capacityMax);
 
         setCapacityDraft(null);
-        if (next !== capacity) saveOptions({ capacity: next });
+        if (next !== stuff.capacity) saveOptions({ capacity: next });
     };
     const saveNotifications = () => {
         SendMessageComposer(new ChestSaveNotificationsComposer(itemId, notifyMode, notifyFull, notifyDonation, notifyWithdraw, notifyEmpty, notifyWired));
@@ -604,7 +613,7 @@ export const FurnitureChestView: FC = () => {
                             selectedGroup={selectedGroup}
                             selectedKey={selectedFurniKey}
                             showSearch={showFurniSearch}
-                            withdrawAmount={String(furniWithdrawAmount)}
+                            withdrawAmount={furniWithdrawAmount}
                             onSearchApply={setFurniSearchQuery}
                             onSearchClear={() => {
                                 setFurniSearchDraft('');
@@ -613,7 +622,7 @@ export const FurnitureChestView: FC = () => {
                             onSearchDraftChange={setFurniSearchDraft}
                             onSelect={setSelectedFurniKey}
                             onWithdraw={withdrawFurni}
-                            onWithdrawAmountChange={(value) => setFurniWithdrawAmount(Math.max(0, parseInt(value, 10) || 0))}
+                            onWithdrawAmountChange={setFurniWithdrawAmount}
                         />
                     ) : (
                         <div className="volt-chest-air__coins volt-widget-chest">
@@ -673,9 +682,9 @@ export const FurnitureChestView: FC = () => {
                                                 disabled={!isOwner}
                                                 inputMode="numeric"
                                                 type="text"
-                                                value={capacityDraft ?? String(capacity)}
+                                                value={capacityDraft ?? String(stuff.capacity)}
                                                 onBlur={commitCapacity}
-                                                onChange={(e) => setCapacityDraft(e.target.value.replace(NON_DIGITS, ''))}
+                                                onChange={(e) => changeCapacity(e.target.value)}
                                                 onKeyDown={(e) => {
                                                     if (e.key === 'Enter') commitCapacity();
                                                 }}
@@ -683,7 +692,7 @@ export const FurnitureChestView: FC = () => {
                                         </span>
                                     </div>
                                 ) : (
-                                    <ChestText background={0xdadada} blend={0.6} className="volt-chest-air__item-count" text={LocalizeText('wiredchests.space_used2', ['count', 'total'], [String(used), String(capacity)])} />
+                                    <ChestText background={0xdadada} blend={0.6} className="volt-chest-air__item-count" text={LocalizeText('wiredchests.space_used2', ['count', 'total'], [String(used), String(stuff.capacity)])} />
                                 )}
                                 <div className="volt-chest-air__upgrade">
                                     <ChestText truncate background={0xdadada} blend={0.6} text={LocalizeText('wiredchests.max_capacity', ['max_capacity'], [String(capacityMax)])} />
@@ -706,7 +715,7 @@ export const FurnitureChestView: FC = () => {
                             </span>
                         )}
                         {!rights.canRead && (
-                            <ChestText background={0xdadada} blend={0.6} className="volt-chest-air__item-count-bottom" text={LocalizeText('wiredchests.space_used', ['count', 'total'], [String(used), String(capacity)])} />
+                            <ChestText background={0xdadada} blend={0.6} className="volt-chest-air__item-count-bottom" text={LocalizeText('wiredchests.space_used', ['count', 'total'], [String(used), String(stuff.capacity)])} />
                         )}
                     </div>
                 </div>
