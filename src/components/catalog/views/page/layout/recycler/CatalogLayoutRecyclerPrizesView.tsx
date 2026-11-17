@@ -55,15 +55,12 @@ const useChatStyleTileIcon = (product: RecyclerPrizeProduct) => {
 
 const RecyclerPrizeTile: FC<{ product: RecyclerPrizeProduct; active: boolean; onSelect: () => void }> = ({ product, active, onSelect }) => {
     const chatStyleIcon = useChatStyleTileIcon(product);
+    const icon = isChatStyle(product) ? chatStyleIcon : GetImageIconUrlForProduct(product.productType, product.productClassId);
 
     return (
-        <LayoutGridItem
-            className="volt-catalog-recycler-prize-tile"
-            itemActive={active}
-            itemImage={isChatStyle(product) ? chatStyleIcon : GetImageIconUrlForProduct(product.productType, product.productClassId)}
-            title={getPrizeName(product)}
-            onClick={onSelect}
-        />
+        <LayoutGridItem className="volt-catalog-recycler-prize-tile" itemActive={active} title={getPrizeName(product)} onClick={onSelect}>
+            {!!icon && <img alt="" className="volt-catalog-recycler-prize-icon" draggable={false} src={icon} />}
+        </LayoutGridItem>
     );
 };
 
