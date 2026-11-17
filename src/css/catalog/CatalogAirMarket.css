@@ -712,6 +712,7 @@
     top: 258px;
     left: 0;
     z-index: 4;
+    overflow: hidden;
     width: 360px;
     height: 208px;
 }
@@ -741,6 +742,19 @@
     width: 155px;
     height: 81px;
     background: url('../../assets/images/catalog/air/recycler/bubble-7-155x81.png') no-repeat;
+}
+
+/* emoji_1 (115, 5, 20x20) inside the bubble's 8px margins. */
+.volt-catalog-recycler-bubble > .volt-catalog-recycler-bubble-emoji {
+    position: absolute;
+    top: 13px;
+    left: 123px;
+}
+
+/* FrankRecyclerEmotion: emoji_2_template clones that rise inside disabled_border. */
+.volt-catalog-recycler-emotion {
+    position: absolute;
+    pointer-events: none;
 }
 
 .volt-catalog-recycler-bubble > span {
