@@ -1,4 +1,5 @@
 import { FC, useMemo } from 'react';
+import { AirButtonKindName, textCaption, useAirButton } from './air/AirSkinButton';
 import { Flex, FlexProps } from './Flex';
 import { ButtonSizeType, ColorVariantType } from './types';
 
@@ -9,12 +10,70 @@ export interface ButtonProps extends FlexProps {
     disabled?: boolean;
 }
 
+/** The AIR button each skinned variant stands for. */
+const AIR_KIND: Partial<Record<ColorVariantType, AirButtonKindName>> = {
+    primary: 'shiny-thick-green',
+    success: 'shiny-thick-green',
+    danger: 'red',
+    secondary: 'default',
+    warning: 'default',
+    gray: 'default'
+};
+
+const SKIN_CLASS = /^habbo-btn-[a-z]+$/;
+
+/** A call site with its own classes may restyle the button, so it keeps the CSS skin until its window is moved to AIR. */
+const airKind = ({ variant = 'primary', size = 'sm', className = '', classNames = [] }: ButtonProps): AirButtonKindName | null => {
+    const classes = [...classNames, ...className.split(/\s+/)].filter(Boolean);
+    if (classes.some((name) => !SKIN_CLASS.test(name))) return null;
+    if (classes.includes('habbo-btn-black')) return 'black';
+    return size === 'sm' ? (AIR_KIND[variant] ?? null) : null;
+};
+
 export const Button: FC<ButtonProps> = (props) => {
+    const caption = textCaption(props.children);
+    const kind = caption === null ? null : airKind(props);
+
+    return kind ? <AirCaptionButton {...props} caption={caption} kind={kind} /> : <SkinnedButton {...props} />;
+};
+
+/** A text-only button drawn like the AIR button it stands for: skin, label size and NativeText caption. */
+const AirCaptionButton: FC<ButtonProps & { caption: string; kind: AirButtonKindName }> = ({
+    caption,
+    kind,
+    variant,
+    size,
+    active = false,
+    disabled = false,
+    classNames = [],
+    className = '',
+    style,
+    children,
+    ...rest
+}) => {
+    const air = useAirButton<HTMLDivElement>({ kind, caption });
+    const ownClasses = [...classNames, ...className.split(/\s+/)].filter((name) => name && (!SKIN_CLASS.test(name) || name === 'habbo-btn-black'));
+
+    return (
+        <Flex
+            {...rest}
+            className={['air-skin-button pointer-events-auto select-none', active && 'active', disabled && 'is-disabled pointer-events-none', ...ownClasses]
+                .filter(Boolean)
+                .join(' ')}
+            data-air-kind={air.kind}
+            display="inline-block"
+            innerRef={air.ref}
+            style={{ ...air.style, ...style }}
+        >
+            {air.caption}
+        </Flex>
+    );
+};
+
+const SkinnedButton: FC<ButtonProps> = (props) => {
     const { variant = 'primary', size = 'sm', active = false, disabled = false, classNames = [], ...rest } = props;
 
     const getClassNames = useMemo(() => {
-        // fucked up method i know (i dont have a clue what im doing because im a ninja)
-
         // Skinned small buttons take size, padding and font from the .habbo-btn-* skin
         // metrics; unskinned variants keep their utility sizing.
         const skinned = size === 'sm' && ['primary', 'success', 'danger', 'warning', 'secondary', 'gray'].includes(variant);

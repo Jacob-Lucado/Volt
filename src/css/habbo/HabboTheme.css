@@ -211,7 +211,7 @@
 
 /* furni_view / pet_view: button style 1, habbo_skin_button_default_black, 3px slice.
    Doubled class keeps the bitmap skin ahead of variant utility rules. */
-.habbo-btn-black.habbo-btn-black {
+.habbo-btn-black.habbo-btn-black:not(.air-skin-button) {
     border: 3px solid transparent !important;
     border-radius: 0 !important;
     border-image-source: var(--habbo-skin-button-black) !important;
@@ -225,19 +225,19 @@
     image-rendering: var(--volt-pixel-art, pixelated);
 }
 
-.habbo-btn-black.habbo-btn-black:hover {
+.habbo-btn-black.habbo-btn-black:not(.air-skin-button):hover {
     border-image-source: var(--habbo-skin-button-black-hover) !important;
     background: transparent !important;
     color: #ffffff !important;
 }
 
-.habbo-btn-black.habbo-btn-black:active {
+.habbo-btn-black.habbo-btn-black:not(.air-skin-button):active {
     border-image-source: var(--habbo-skin-button-black-pressed) !important;
     background: transparent !important;
 }
 
-.habbo-btn-black.habbo-btn-black.pointer-events-none,
-.habbo-btn-black.habbo-btn-black:disabled {
+.habbo-btn-black.habbo-btn-black:not(.air-skin-button).pointer-events-none,
+.habbo-btn-black.habbo-btn-black:not(.air-skin-button):disabled {
     border-image-source: var(--habbo-skin-button-black-disabled) !important;
     background: transparent !important;
     opacity: 1 !important;
