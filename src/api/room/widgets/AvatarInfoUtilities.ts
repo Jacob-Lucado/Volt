@@ -194,6 +194,7 @@ export class AvatarInfoUtilities {
         userInfo.name = userData.name;
         userInfo.motto = userData.custom;
         userInfo.achievementScore = userData.activityPoints;
+        userInfo.badgesRank = userData.badgesRank;
         userInfo.webID = userData.webID;
         userInfo.roomIndex = userData.roomIndex;
         userInfo.userType = RoomObjectType.USER;

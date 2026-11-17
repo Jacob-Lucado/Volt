@@ -7,14 +7,14 @@
     font-family: Ubuntu, sans-serif;
     font-size: 12px;
     align-items: flex-end;
-    gap: 3px;
+    gap: 2px;
 }
 
 .volt-purse {
     position: relative;
     box-sizing: border-box;
     width: 230px;
-    height: 77px;
+    height: 76px;
     max-width: 230px;
     margin-left: auto;
     overflow: visible;
@@ -25,7 +25,7 @@
     image-rendering: var(--volt-pixel-art, pixelated);
 }
 
-/* Chrome is a sibling of the widgets so AIR x/y stay relative to the 230x77 box. */
+/* Chrome is a sibling of the widgets so AIR x/y stay relative to the 230x77 box. The extension grid stacks the next item 2px below the 76px border. */
 .volt-purse__chrome {
     position: absolute;
     left: 0;
@@ -280,6 +280,7 @@
 }
 
 .volt-purse__btn--help,
+.volt-purse__btn--logout,
 .volt-purse__btn--settings {
     display: inline-flex;
     width: 50px;
@@ -317,6 +318,18 @@
     border-image-source: var(--habbo-skin-button-help-pressed);
 }
 
+.volt-purse__btn--logout {
+    border-image-source: var(--habbo-skin-button-logout);
+}
+
+.volt-purse__btn--logout:hover {
+    border-image-source: var(--habbo-skin-button-logout-hover);
+}
+
+.volt-purse__btn--logout:active {
+    border-image-source: var(--habbo-skin-button-logout-pressed);
+}
+
 .volt-purse__btn--settings {
     border-image-source: var(--habbo-skin-button-settings);
 }
@@ -345,6 +358,14 @@
     image-rendering: var(--volt-pixel-art, pixelated);
 }
 
+/* static_bitmap 15x20 at (18,0) in the 50x19 button, centred on its pivot. */
+.volt-purse__btn--logout .volt-purse__btn-img {
+    position: relative;
+    top: 1px;
+    max-width: 15px;
+    max-height: 20px;
+}
+
 .volt-purse__btn--settings .volt-purse__btn-img {
     max-width: 50px;
     max-height: 19px;
@@ -357,7 +378,7 @@
     box-sizing: border-box;
     width: 192px;
     max-width: 192px;
-    margin-top: -1px;
+    margin-top: 1px;
     margin-left: auto;
     padding: 7px 0 7px 7px;
     display: flex;
@@ -421,10 +442,9 @@
     display: flex;
     width: 192px;
     max-width: 192px;
-    margin-top: 3px;
     margin-left: auto;
     flex-direction: column;
-    gap: 3px;
+    gap: 2px;
 }
 
 .volt-purse__other .volt-purse-seasonal-currency {
@@ -495,11 +515,26 @@
     left: 163px;
     width: 29px;
     height: 29px;
+    isolation: isolate;
     background: var(--seasonal-badge, #7adde9);
     -webkit-mask-box-image-source: url("../../assets/images/habbo-skin/slices/border-6-79756e.png");
     -webkit-mask-box-image-slice: 6 fill;
     -webkit-mask-box-image-width: 6px;
     -webkit-mask-box-image-repeat: stretch;
+}
+
+/* border style 6 is a grey skin multiplied by the colour: a light rim, a darker fill and a black outline. */
+.volt-purse-seasonal-currency .seasonal-badge::before,
+.volt-purse-seasonal-currency .seasonal-change::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    box-sizing: border-box;
+    border: 6px solid transparent;
+    border-image: url("../../assets/images/habbo-skin/slices/border-6.png") 6 fill / 6px stretch;
+    mix-blend-mode: multiply;
+    image-rendering: var(--volt-pixel-art, pixelated);
 }
 
 .volt-purse-seasonal-currency .seasonal-image {
@@ -534,6 +569,7 @@
     height: 29px;
     padding: 6px 6px 7px 4px;
     overflow: hidden;
+    isolation: isolate;
     background: var(--seasonal-badge, #7adde9);
     -webkit-mask-box-image-source: url("../../assets/images/habbo-skin/slices/border-6-79756e.png");
     -webkit-mask-box-image-slice: 6 fill;

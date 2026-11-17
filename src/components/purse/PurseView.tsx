@@ -1,8 +1,9 @@
-import { CreateLinkEvent } from '@volt/renderer';
+import { CreateLinkEvent, GetCommunication } from '@volt/renderer';
 import { FC, useCallback, useMemo, useState } from 'react';
 import { FriendlyTime, GetConfigurationValue, localizeWithFallback } from '../../api';
 import earningsIcon from '../../assets/images/purse-swf/icons/1747_icon_earnings_png$5e39e03f65fbbb9a85bedd0d577dc12d307477063.png';
 import hcIcon from '../../assets/images/purse-swf/icons/1801_hc_icon_png$2f8b554609e9c5cbbdc46bcbe5764be5-210881771.png';
+import logoutIcon from '../../assets/images/purse-swf/icons/2093_logout_icon_png.png';
 import settingsIcon from '../../assets/images/purse-swf/icons/2291_settings_icon_png$c9dcf215bb7a7e35a3f128c7c60151bc1008066621.png';
 import { Column } from '../../common';
 import { usePurse } from '../../hooks';
@@ -71,6 +72,7 @@ export const PurseView: FC<{}> = (props) => {
 
     const earningsLabel = useMemo(() => localizeWithFallback('earnings.title', 'Earnings'), []);
     const helpLabel = useMemo(() => localizeWithFallback('toolbar.help', 'Help'), []);
+    const logoutLabel = useMemo(() => localizeWithFallback('toolbar.logout', 'Log out'), []);
     const settingsLabel = useMemo(() => localizeWithFallback('widget.memenu.settings', 'Settings'), []);
     const clubTitle = useMemo(() => localizeWithFallback('catalog.club.hc', 'Habbo Club'), []);
     const hasClubTime = clubDaysLeft >= 1;
@@ -131,6 +133,17 @@ export const PurseView: FC<{}> = (props) => {
                             aria-label={helpLabel}
                         >
                             <span>{helpLabel}</span>
+                        </button>
+                        <button
+                            type="button"
+                            className="volt-purse__btn volt-purse__btn--icon volt-purse__btn--logout volt-purse-right-button logout"
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                GetCommunication().connection.serverDisconnected(0);
+                            }}
+                            aria-label={logoutLabel}
+                        >
+                            <img src={logoutIcon} alt="" className="volt-purse__btn-img" />
                         </button>
                         <button
                             type="button"

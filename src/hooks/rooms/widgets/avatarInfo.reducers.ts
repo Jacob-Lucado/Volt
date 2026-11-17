@@ -45,6 +45,7 @@ export const applyUserFigureUpdate = (state: IAvatarInfo | null, event: RoomSess
     next.figure = event.figure;
     next.motto = event.customInfo;
     next.achievementScore = event.activityPoints;
+    next.badgesRank = event.badgesRank;
 
     return next;
 };
