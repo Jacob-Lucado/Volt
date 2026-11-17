@@ -73,11 +73,11 @@ export const CatalogLayoutRecyclerPrizesView: FC<CatalogLayoutProps> = ({ page }
     const [selected, setSelected] = useState<RecyclerPrizeProduct>(null);
 
     useMessageEvent<RecyclerPrizesMessageEvent>(RecyclerPrizesMessageEvent, (event) => {
-        // PrizeLevelMessageData (as:28): the prizes of a level are sorted by product code, ignoring case.
+        // PrizeLevelMessageData (as:28): the prizes of a level are sorted by product code, ignoring case. The levels keep the
+        // server order (RecyclerPrizesCatalogWidget.populateItemGrid).
         const sorted = event
             .getParser()
-            .levels.map((level) => ({ ...level, products: [...level.products].sort(compareProductCodes) }))
-            .sort((first, second) => first.levelId - second.levelId);
+            .levels.map((level) => ({ ...level, products: [...level.products].sort(compareProductCodes) }));
 
         setLevels(sorted);
         // onPrizesReceived: the first prize of the first level is selected.
