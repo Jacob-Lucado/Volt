@@ -1,5 +1,4 @@
 import { FC, useMemo } from 'react';
-import { NativeText } from '../../../../common/native-text/NativeText';
 import { getPlainNotificationText } from './getPlainNotificationText';
 import { BUBBLE_FADE_IN_MS, useNativeBubbleLife } from './useNativeBubbleLife';
 
@@ -28,18 +27,13 @@ export const NativeNotificationBubbleView: FC<NativeNotificationBubbleViewProps>
                 }}
                 {...hoverProps}
             >
-                <div aria-hidden="true" className="volt-native-bubble-chrome" />
-                <div className="volt-native-bubble-icon">{!!iconUrl && <img alt="" draggable={false} src={iconUrl} />}</div>
-                {plainMessage !== null ? (
-                    <div className="volt-native-bubble-text uses-native-text">
-                        <NativeText
-                            text={plainMessage}
-                            textStyle="bold"
-                            background={0x3d3d3d}
-                            maxWidth={116}
-                            overrides={{ color: 0xffffff, antiAliasType: 'advanced', sharpness: 0, thickness: 0, kerning: false }}
-                        />
+                {!!iconUrl && (
+                    <div className="volt-native-bubble-icon">
+                        <img alt="" draggable={false} src={iconUrl} />
                     </div>
+                )}
+                {plainMessage !== null ? (
+                    <div className="volt-native-bubble-text">{plainMessage}</div>
                 ) : (
                     <div className="volt-native-bubble-text" dangerouslySetInnerHTML={{ __html: messageMarkup }} />
                 )}
