@@ -1992,15 +1992,6 @@
     line-height: 0;
 }
 
-.volt-catalog-grid-price-text-selected,
-.layout-grid-item.is-active .volt-catalog-grid-price-text-normal {
-    display: none !important;
-}
-
-.layout-grid-item.is-active .volt-catalog-grid-price-text-selected {
-    display: inline-block !important;
-}
-
 .volt-catalog-price-row {
     position: absolute;
     left: 0;
