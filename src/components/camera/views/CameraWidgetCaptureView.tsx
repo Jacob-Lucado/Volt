@@ -323,7 +323,8 @@ export const CameraWidgetCaptureView: FC<CameraWidgetCaptureViewProps> = (props)
                         ) : (
                             <button
                                 type="button"
-                                className="los-cam__shutter"
+                                className={`los-cam__shutter${isBusy ? ' is-busy' : ''}`}
+                                disabled={isBusy}
                                 aria-label={LocalizeText('camera.take.photo.button.tooltip')}
                                 title={LocalizeText('camera.take.photo.button.tooltip')}
                                 onClick={takePicture}
