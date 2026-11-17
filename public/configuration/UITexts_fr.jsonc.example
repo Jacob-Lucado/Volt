@@ -514,6 +514,8 @@
     "radio.live": "En direct",
     "radio.hide": "Masquer",
     "radio.show": "Afficher",
+    "recycler.broken": "La machine est cassée..\n\nReviens bientôt!",
+    "recycler.pat_frank": "Clique pour caresser Frank",
     "rarevalues.title": "Valeurs des rares",
     "rarevalues.loading": "Chargement des valeurs…",
     "rarevalues.empty": "Aucun rare trouvé",
