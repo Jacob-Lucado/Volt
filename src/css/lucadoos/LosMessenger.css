@@ -1,0 +1,170 @@
+/* The friends messenger, rebuilt as a LucadoOS window. */
+
+.los-window.los-msg {
+    display: flex;
+    flex-direction: column;
+    width: 380px;
+    height: 470px;
+    min-width: 300px;
+    min-height: 320px;
+    resize: both;
+    overflow: hidden;
+}
+
+.los-msg__inner {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.los-msg__tabs {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 8px 8px 4px;
+}
+
+.los-msg__bar {
+    display: flex;
+    flex: 1;
+    gap: 6px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.los-msg__scroll,
+.los-msg__icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--los-dim);
+    cursor: pointer;
+}
+
+.los-msg__scroll.is-next .los-icon { transform: scaleX(-1); }
+.los-msg__scroll:disabled { opacity: .3; cursor: default; }
+.los-msg__scroll:not(:disabled):hover,
+.los-msg__icon:hover { background: var(--los-soft-2); color: var(--los-text); }
+.los-msg__icon.is-danger:hover { color: #ff6b6b; }
+.los-msg__icon img { max-width: 20px; max-height: 20px; }
+
+.los-msg__tab {
+    position: relative;
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    overflow: hidden;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: var(--los-soft);
+    cursor: pointer;
+}
+
+.los-msg__tab:hover { background: var(--los-soft-2); }
+.los-msg__tab.is-active { border-color: #4da3ff; background: rgba(77, 163, 255, .16); }
+.los-msg__tab.is-unread::after {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ff6b8a;
+    content: '';
+}
+
+.los-msg__head {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px 6px 12px;
+    border-bottom: 1px solid var(--los-line);
+}
+
+.los-msg__head b { overflow: hidden; font-size: 13px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.los-msg__actions { display: flex; flex: none; gap: 2px; }
+
+.los-msg__list {
+    flex: 1;
+    min-height: 0;
+    padding: 10px 12px;
+    overflow-y: auto;
+}
+
+.los-msg__row {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    margin-bottom: 10px;
+}
+
+.los-msg__row.is-own { flex-direction: row-reverse; }
+
+.los-msg__avatar {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    border-radius: 50%;
+    background: var(--los-soft);
+}
+
+.los-msg__body { display: flex; flex-direction: column; gap: 2px; max-width: 76%; }
+.los-msg__row.is-own .los-msg__body { align-items: flex-end; }
+.los-msg__name { color: var(--los-dim); font-size: 11px; }
+
+.los-msg__bubble {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 7px 11px;
+    border-radius: 12px 12px 12px 4px;
+    background: var(--los-soft-2);
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.los-msg__row.is-own .los-msg__bubble {
+    border-radius: 12px 12px 4px 12px;
+    background: linear-gradient(135deg, #4da3ff, #7c6cff);
+    color: #fff;
+}
+
+.los-msg__text { color: inherit; }
+.los-msg__time, .los-msg__offline { color: var(--los-dim); font-size: 10.5px; }
+
+.los-msg__status,
+.los-msg__notice {
+    margin: 4px 0 10px;
+    padding: 6px 10px;
+    border: 1px solid var(--los-line);
+    border-radius: 10px;
+    background: var(--los-soft);
+    color: var(--los-dim);
+    font-size: 11.5px;
+    text-align: center;
+}
+
+.los-msg__notice.is-invite { border-color: rgba(77, 163, 255, .5); color: var(--los-text); }
+
+.los-msg__input {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    padding: 8px;
+    border-top: 1px solid var(--los-line);
+}
+
+.los-msg__input .los-input { flex: 1; min-width: 0; }
