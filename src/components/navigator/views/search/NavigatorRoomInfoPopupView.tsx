@@ -1,5 +1,5 @@
 import { GetSessionDataManager, RoomSettingsComposer, UpdateHomeRoomMessageComposer } from '@volt/renderer';
-import { CSSProperties, FC, useEffect, useId, useState } from 'react';
+import { CSSProperties, FC, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { FriendlyTime, GetConfigurationValue, GetGroupInformation, GetUserProfile, LocalizeText, ReportType, SendMessageComposer } from '../../../../api';
 import nativeAtlas from '../../../../assets/images/navigator/air/room-info-native-atlas.png';
 import { LayoutBadgeImageView, LayoutRoomThumbnailView } from '../../../../common';
@@ -121,6 +121,15 @@ export const NavigatorRoomInfoPopupView: FC<{}> = () => {
     const { isFavourite, toggle: toggleFavourite } = useNavigatorFavourite(room?.roomId ?? 0);
     const { report = null } = useHelp();
     const [homeOverride, setHomeOverride] = useState(0);
+    const bubbleRef = useRef<HTMLDivElement>(null);
+    const [oddHeight, setOddHeight] = useState(false);
+
+    // RoomInfoPopup.showAt places the window at y - height / 2 and the window position truncates to a whole pixel.
+    useLayoutEffect(() => {
+        const odd = bubbleRef.current ? bubbleRef.current.offsetHeight % 2 === 1 : false;
+
+        setOddHeight((previous) => (previous === odd ? previous : odd));
+    });
 
     useEffect(() => {
         setHomeOverride(0);
@@ -143,12 +152,13 @@ export const NavigatorRoomInfoPopupView: FC<{}> = () => {
         closePopup();
     };
 
-    const bubbleStyle = { left: x, top: y, width: 374, transform: 'translateY(-50%)' };
+    const bubbleStyle = { left: x, top: oddHeight ? y - 0.5 : y, width: 374, transform: 'translateY(-50%)' };
 
     return (
         <div
             role="dialog"
             aria-label={LocalizeText('navigator.room.info.popup.title')}
+            ref={bubbleRef}
             className="volt-navigator-air__room-bubble"
             style={bubbleStyle}
             onMouseEnter={() => useNavigatorRoomInfoPopupStore.getState().setHovered(true)}

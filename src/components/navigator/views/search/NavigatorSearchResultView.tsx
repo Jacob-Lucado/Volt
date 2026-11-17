@@ -113,7 +113,7 @@ export const NavigatorSearchResultView: FC<NavigatorSearchResultViewProps> = (pr
                         </button>
                     )}
                     {searchResult.action > 0 && searchResult.action === 1 && (
-                        <button type="button" className="volt-navigator-air__icon-button" title={LocalizeText('navigator.more.rooms')} onClick={showMore}>
+                        <button type="button" className="volt-navigator-air__icon-button volt-navigator-air__icon-button--more" title={LocalizeText('navigator.more.rooms')} onClick={showMore}>
                             <img src={categoryShowMore} alt="" />
                         </button>
                     )}

@@ -76,7 +76,7 @@
     content: "";
     position: absolute;
     inset: 0 -7px -6px;
-    background: linear-gradient(var(--navigator-air-surface), var(--navigator-air-surface)) top / 100% calc(100% - 23px) no-repeat, #e9e9e1;
+    background: linear-gradient(var(--navigator-air-surface), var(--navigator-air-surface)) top / 100% calc(100% - 13px) no-repeat, #e9e9e1;
     clip-path: polygon(
         0 0,
         100% 0,
@@ -174,7 +174,7 @@
     display: flex;
     box-sizing: border-box;
     height: 32px;
-    align-items: flex-end;
+    align-items: flex-start;
     overflow: visible;
     background: transparent;
     gap: 0;
@@ -249,7 +249,7 @@
 
 .volt-navigator-air__tab-label {
     position: absolute;
-    top: var(--navigator-tab-text-top, 9px);
+    top: 9px;
     left: var(--navigator-tab-text-left, 0);
     display: block;
     pointer-events: none;
@@ -528,7 +528,8 @@
     z-index: 6;
 }
 
-.volt-navigator-air__filter .habbo-dropmenu .habbo-dropmenu-caption {
+.volt-navigator-air__filter .habbo-dropmenu .habbo-dropmenu-caption,
+.volt-room-creator-air .habbo-dropmenu .habbo-dropmenu-caption {
     left: 11px;
 }
 
@@ -742,6 +743,10 @@
     overflow: hidden;
 }
 
+.volt-navigator-air__icon-button--more img {
+    transform: translateY(1px);
+}
+
 .volt-navigator-air__icon-button img {
     display: block;
     width: 11px;
@@ -766,7 +771,7 @@
 
 .volt-navigator-air__category-save img {
     position: absolute;
-    top: 0;
+    top: -1px;
     left: 0;
     width: 18px;
     height: 19px;
@@ -806,8 +811,7 @@
     max-width: 40px;
     height: 18px;
     align-items: flex-start;
-    justify-content: center;
-    padding: 1px 0;
+    padding: 1px 0 1px 6px;
     overflow: hidden;
     border: 0;
     border-radius: 0;
@@ -912,7 +916,7 @@
 
 .volt-navigator-air__row-name {
     position: absolute;
-    top: 1px;
+    top: 2px;
     left: 44px;
     width: 282px;
     height: 16px;
@@ -1114,7 +1118,7 @@
     isolation: isolate;
     box-sizing: border-box;
     width: 374px;
-    padding: 15px 15px 3px 14px;
+    padding: 15px 15px 4px 14px;
     border: 0;
     background: transparent;
     color: #000;
@@ -1205,7 +1209,11 @@
 .volt-navigator-air__room-popover-actions { position: absolute; top: 0; left: 178px; display: flex; width: 170px; flex-direction: column; }
 .volt-navigator-air__room-popover-actions button { position: relative; width: 170px; height: 20px; padding: 0; text-align: left; pointer-events: none; }
 .volt-navigator-air__room-popover-actions button > span { position: absolute; top: 0; left: 20px; height: 17px; padding: 0; white-space: nowrap; }
-.volt-navigator-air__room-popover-actions button > i { pointer-events: auto; position: absolute; top: 0; left: 0; width: 20px; height: 20px; background-position: center; background-repeat: no-repeat; image-rendering: pixelated; }
+.volt-navigator-air__room-popover-actions button > i { pointer-events: auto; position: absolute; top: 0; left: 0; width: 20px; height: 20px; background-position: left center; background-repeat: no-repeat; image-rendering: pixelated; }
+.volt-navigator-air__room-popover-actions .icon-navigator-favorite-room,
+.volt-navigator-air__room-popover-actions .icon-navigator-my-room,
+.volt-navigator-air__room-popover-actions .icon-navigator-room-settings { background-position: 3px center; }
+.volt-navigator-air__room-popover-actions .icon-navigator-room-report { background-position: 1px center; }
 .volt-navigator-air__room-popover-actions .icon-navigator-favorite-room { background-image: url("@/assets/images/navigator/air/icon-fav-no.png"); }
 .volt-navigator-air__room-popover-actions .icon-navigator-favorite-room.active { background-image: url("@/assets/images/navigator/air/icon-fav-yes.png"); }
 .volt-navigator-air__room-popover-actions .icon-navigator-my-room { background-image: url("@/assets/images/navigator/air/icon-home-no.png"); }
@@ -1300,7 +1308,7 @@
     position: absolute;
     top: 22px;
     left: 59px;
-    filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.247));
+    filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.24));
     z-index: 2;
     width: 125px;
     height: 17px;
@@ -1391,32 +1399,32 @@
 
 .volt-room-creator-air__label--name {
     top: 40px;
-    left: 16px;
+    left: 17px;
 }
 
 .volt-room-creator-air__label--desc {
     top: 90px;
-    left: 16px;
+    left: 17px;
 }
 
 .volt-room-creator-air__label--category {
     top: 180px;
-    left: 16px;
+    left: 17px;
 }
 
 .volt-room-creator-air__label--visitors {
     top: 230px;
-    left: 16px;
+    left: 17px;
 }
 
 .volt-room-creator-air__label--trade {
     top: 280px;
-    left: 16px;
+    left: 17px;
 }
 
 .volt-room-creator-air__label--layout {
     top: 40px;
-    left: 276px;
+    left: 277px;
 }
 
 .volt-room-creator-air.volt-card-shell.volt-card-frame-3 > * {
@@ -1432,6 +1440,7 @@
     position: absolute;
     z-index: 2;
     box-sizing: border-box;
+    background: #ffffff;
     left: 16px;
     width: 240px;
     overflow: hidden;
@@ -1447,8 +1456,8 @@
     height: 60px;
 }
 
-.volt-room-creator-air__field.is-invalid .volt-room-creator-air__input {
-    background: #f18f9b !important;
+.volt-room-creator-air__field.is-invalid {
+    background: #f18f9b;
 }
 
 .volt-room-creator-air__input {
@@ -1457,18 +1466,27 @@
     width: 100%;
     height: 100%;
     min-height: 0;
-    padding: 2px;
+    padding: 0 2px;
     border: 1px solid #000000 !important;
     border-radius: 0 !important;
-    background: #ffffff !important;
+    background: transparent !important;
     box-shadow: none !important;
     color: #000000;
     font-family: Volter, monospace;
     font-size: 9px;
-    line-height: 14px;
+    line-height: 12px;
+    will-change: transform;
     outline: 0;
     resize: none;
     -webkit-font-smoothing: none;
+}
+
+.volt-room-creator-air__field--name .volt-room-creator-air__input {
+    padding-bottom: 6px;
+}
+
+.volt-room-creator-air__title-field {
+    margin-top: 1px;
 }
 
 .volt-room-creator-air__input--multiline {
@@ -1798,7 +1816,7 @@
     left: 25px;
     z-index: 2;
     height: 13px;
-    padding: 0 2px;
+    padding: 0;
     background: #cbcbcb;
     color: #000000;
     font-family: Volter, monospace;

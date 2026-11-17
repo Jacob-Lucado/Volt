@@ -19,7 +19,10 @@ import quicklinkAdd from '../../assets/images/navigator/air/quicklink-add.png';
 import randomRoomImg from '../../assets/images/navigator/air/random-room.png';
 import { DraggableWindow, WidgetErrorBoundary } from '../../common';
 import { NativeCenteredField } from '../../common/native-text/NativeCenteredField';
+import { loadNativeFont } from '../../common/native-text/NativeFont';
 import { NativeText } from '../../common/native-text/NativeText';
+import { NativeFont } from '../../common/native-text/NativeTextTypes';
+import { nativeTextStyles } from '../../common/native-text/NativeTextStyles';
 import {
     useMessageEvent,
     useNavigatorData,
@@ -42,6 +45,15 @@ import { NavigatorSearchView } from './views/search/NavigatorSearchView';
 
 const SEARCH_LINK_TABS = new Set(['official_view', 'hotel_view', 'roomads_view', 'myworld_view']);
 
+// A label autosizes to its unhinted text width (DefineFont3 advances) rounded up, plus the 2px field gutters.
+const labelFieldWidth = (font: NativeFont, text: string, size: number) => {
+    let units = 0;
+
+    for (const character of text) units += font.swfGlyphs.get(character.charCodeAt(0))?.advance ?? 0;
+
+    return Math.ceil((units * size) / font.swfFont.emSquare) + 4;
+};
+
 const persistNavigatorBounds = (element: HTMLElement | null) => {
     if (!element) return;
     const rect = element.getBoundingClientRect();
@@ -61,6 +73,7 @@ export const NavigatorView: FC<{}> = () => {
     const elementRef = useRef<HTMLDivElement>(null);
     const [resultsScrollable, setResultsScrollable] = useState(false);
     const frameRef = useRef<HTMLDivElement>(null);
+    const [tabFont, setTabFont] = useState<NativeFont | null>(null);
     const tabsRef = useRef<HTMLDivElement>(null);
     const resizeRef = useRef<{ y: number; height: number; scale: number } | null>(null);
     const onPositionChange = useCallback((position: { x: number; y: number }) => {
@@ -183,6 +196,18 @@ export const NavigatorView: FC<{}> = () => {
         if (!isVisible) useNavigatorRoomInfoPopupStore.getState().hide();
     }, [isVisible]);
 
+    useEffect(() => {
+        let disposed = false;
+
+        loadNativeFont(nativeTextStyles.button_shiny_regular).then((loaded) => {
+            if (!disposed) setTabFont(loaded.font);
+        });
+
+        return () => {
+            disposed = true;
+        };
+    }, []);
+
     useLayoutEffect(() => {
         const tabs = tabsRef.current;
         if (!tabs) return;
@@ -192,10 +217,11 @@ export const NavigatorView: FC<{}> = () => {
         // The tab button starts at the 88px layout width and resizes to its label (field + 10px margins) centred in it.
         const sizeTabs = () => {
             for (const label of labels) {
-                const labelWidth = Math.ceil(label.getBoundingClientRect().width) + 20;
+                const fieldWidth = tabFont ? labelFieldWidth(tabFont, label.textContent ?? '', 12) : Math.ceil(label.getBoundingClientRect().width);
+                const labelWidth = fieldWidth + 20;
                 const tabWidth = Math.max(labelWidth, Math.ceil((88 - labelWidth) / 2) + labelWidth);
                 label.parentElement.style.setProperty('--navigator-tab-width', `${tabWidth}px`);
-                label.parentElement.style.setProperty('--navigator-tab-text-left', `${Math.floor((tabWidth - (labelWidth - 20)) / 2) + 1}px`);
+                label.parentElement.style.setProperty('--navigator-tab-text-left', `${Math.floor((tabWidth - Math.ceil(label.getBoundingClientRect().width)) / 2) + 1}px`);
             }
         };
 
@@ -204,7 +230,7 @@ export const NavigatorView: FC<{}> = () => {
         sizeTabs();
 
         return () => observer.disconnect();
-    }, [isVisible, topLevelContexts]);
+    }, [isVisible, topLevelContexts, tabFont]);
 
     useLayoutEffect(() => {
         const results = elementRef.current;
