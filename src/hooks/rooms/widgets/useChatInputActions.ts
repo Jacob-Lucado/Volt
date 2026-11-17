@@ -97,7 +97,7 @@ export const useChatInputActions = () => {
 
                         break;
                     case ':67':
-                        if (GetConfigurationValue('avatar.expression.67.enabled', false) && (GetClubMemberLevel() === HabboClubLevelEnum.VIP)) {
+                        if (GetConfigurationValue('avatar.expression.67.enabled', true) && (GetClubMemberLevel() === HabboClubLevelEnum.VIP)) {
                             roomSession?.sendExpressionMessage(AvatarExpressionEnum.EXPRESSION_67.ordinal);
 
                             return null;
