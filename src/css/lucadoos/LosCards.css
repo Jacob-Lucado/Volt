@@ -37,3 +37,22 @@
     color: var(--los-text);
     font-family: Inter, system-ui, sans-serif;
 }
+
+/* Cards now render the real LucadoOS bar, so let its own look through. */
+.volt-card-shell.los-window:not(.volt-wired) .volt-card-header-shell.los-window__bar {
+    min-height: 38px;
+    max-height: 38px;
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    padding: 0 6px 0 12px;
+    background: linear-gradient(90deg, rgba(77, 163, 255, .14), rgba(124, 108, 255, .1)) !important;
+}
+
+.volt-card-shell.los-window:not(.volt-wired) .los-window__title {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

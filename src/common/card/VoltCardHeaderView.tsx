@@ -1,6 +1,9 @@
 import { FC, MouseEvent } from 'react';
 import { FaFlag } from 'react-icons/fa';
+import { LocalizeText } from '../../api';
 import { Base, Column, ColumnProps, Flex } from '..';
+import { LosIcon } from '../lucadoos/LosIcon';
+import { useVoltCardContext } from './VoltCardContext';
 
 interface VoltCardHeaderViewProps extends ColumnProps {
     headerText: string;
@@ -29,10 +32,50 @@ export const VoltCardHeaderView: FC<VoltCardHeaderViewProps> = (props) => {
         ...rest
     } = props;
 
+    const { isWired } = useVoltCardContext();
+
     const onMouseDown = (event: MouseEvent<HTMLDivElement>) => {
         event.stopPropagation();
         event.nativeEvent.stopImmediatePropagation();
     };
+
+    if (!isWired) {
+        return (
+            <Column
+                classNames={['volt-card-header-shell', 'los-window__bar', 'drag-handler', ...classNames]}
+                className={className}
+                justifyContent="start"
+                alignItems="center"
+                {...rest}
+            >
+                <span className="los-window__title volt-card-title">{headerText}</span>
+                <span className="los-window__actions">
+                    {isGalleryPhoto && (
+                        <button type="button" className="los-window__button volt-card-header-report-camera" onClick={onReportPhoto} onMouseDownCapture={onMouseDown}>
+                            <FaFlag className="fa-icon" />
+                        </button>
+                    )}
+                    {isInfoToHabboPages && (
+                        <button type="button" className="los-window__button volt-card-header-info-habbopages" onClick={onClickInfoHabboPages} onMouseDownCapture={onMouseDown}>
+                            <LosIcon name="info" size={14} />
+                        </button>
+                    )}
+                    {children}
+                    {!noCloseButton && (
+                        <button
+                            type="button"
+                            className="los-window__button los-window__button--close"
+                            aria-label={LocalizeText('generic.close')}
+                            onClick={onCloseClick}
+                            onMouseDownCapture={onMouseDown}
+                        >
+                            <LosIcon name="close" size={14} />
+                        </button>
+                    )}
+                </span>
+            </Column>
+        );
+    }
 
     return (
         <Column

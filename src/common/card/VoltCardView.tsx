@@ -58,16 +58,18 @@ export const VoltCardView: FC<VoltCardViewProps> = (props) => {
     const getClassNames = useMemo(() => {
         const newClassNames: string[] = [isResizable ? 'resize' : 'resize-none', 'volt-card', 'volt-card-shell', `theme-${theme}`];
 
+        if (!isWired) newClassNames.push('los-window');
+
         // Frame 0 is the plain title bar, so it needs no class at all.
         if (resolvedFrameStyle) newClassNames.push(`volt-card-frame-${resolvedFrameStyle}`);
         newClassNames.push(classicScrollbar ? 'has-classic-scrollbar' : 'volt-scrollbar-native');
         if (classNames.length) newClassNames.push(...classNames);
 
         return newClassNames;
-    }, [classNames, classicScrollbar, isResizable, resolvedFrameStyle, theme]);
+    }, [classNames, classicScrollbar, isResizable, isWired, resolvedFrameStyle, theme]);
 
     return (
-        <VoltCardContextProvider value={{ theme }}>
+        <VoltCardContextProvider value={{ theme, isWired }}>
             {/* Native Canvas shadowBlur=4 maps to CSS sigma 2, with alpha 0.349. Chrome truncates fractional offsets;
                 3px is nearest to native 2.828px. This approximates the measured native shadow, rather than reproducing every edge pixel. */}
             <DraggableWindow
