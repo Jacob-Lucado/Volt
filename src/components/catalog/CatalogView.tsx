@@ -260,7 +260,7 @@ const CatalogViewInner: FC<{}> = () => {
                         {/* Redraws dark page text on a light fill as white text on nothing, for the dark pages. */}
                         <svg aria-hidden="true" className="los-cat__defs" width="0" height="0">
                             <filter id="los-cat-ink" colorInterpolationFilters="sRGB">
-                                <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -0.9 -0.9 -0.9 2 0" />
+                                <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -1.4 -1.4 -1.4 3.2 0" />
                             </filter>
                         </svg>
                         {(isBusy || catalogLoadError) && <CatalogLoadingStateView error={catalogLoadError} onRetry={retryCurrentPage} />}
