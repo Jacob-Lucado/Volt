@@ -4,6 +4,7 @@ import {
     FurnitureListEvent,
     FurnitureListInvalidateEvent,
     FurnitureListItemParser,
+    FurnitureListRemoveMultipleEvent,
     FurnitureListRemovedEvent
 } from '@volt/renderer';
 import { useEffect, useRef, useState } from 'react';
@@ -96,7 +97,14 @@ const useInventoryFurniState = () => {
     });
 
     useMessageEvent<FurnitureListRemovedEvent>(FurnitureListRemovedEvent, (event) => {
-        setGroupItems((prev) => applyFurnitureListRemoved(prev, event));
+        setGroupItems((prev) => applyFurnitureListRemoved(prev, event.getParser().itemId));
+    });
+
+    // HabboInventory.onFurniListRemoveMultiple: one packet drops every listed furni.
+    useMessageEvent<FurnitureListRemoveMultipleEvent>(FurnitureListRemoveMultipleEvent, (event) => {
+        const ids = event.getParser().stripIds;
+
+        setGroupItems((prev) => ids.reduce(applyFurnitureListRemoved, prev));
     });
 
     useEffect(() => {
