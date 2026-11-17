@@ -1,12 +1,12 @@
 import { GroupInformationEvent, GroupInformationParser } from '@volt/renderer';
 import { FC, useState } from 'react';
 import { LocalizeText } from '../../../api';
-import { VoltCardHeaderView, VoltCardView } from '../../../common';
+import { DraggableWindow } from '../../../common';
+import { LosWindow } from '../../../common/lucadoos';
 import { useMessageEvent } from '../../../hooks';
 import { GroupInformationView } from './GroupInformationView';
-import { GroupWindowTitle } from './GroupNativeLayout';
 
-export const GroupInformationStandaloneView: FC<{}> = (props) => {
+export const GroupInformationStandaloneView: FC<{}> = () => {
     const [groupInformation, setGroupInformation] = useState<GroupInformationParser>(null);
 
     useMessageEvent<GroupInformationEvent>(GroupInformationEvent, (event) => {
@@ -18,17 +18,10 @@ export const GroupInformationStandaloneView: FC<{}> = (props) => {
     if (!groupInformation) return null;
 
     return (
-        <VoltCardView
-            aria-label={LocalizeText('group.window.title')}
-            className="volt-group-info"
-            frameStyle={3}
-            isResizable={false}
-            role="dialog"
-            uniqueKey="group-information"
-        >
-            <VoltCardHeaderView headerText="" onCloseClick={() => setGroupInformation(null)} />
-            <GroupWindowTitle title={LocalizeText('group.window.title')} width={363} />
-            <GroupInformationView groupInformation={groupInformation} />
-        </VoltCardView>
+        <DraggableWindow uniqueKey="group-information" handleSelector=".los-window__bar">
+            <LosWindow className="los-grp-window" icon="group" title={LocalizeText('group.window.title')} onClose={() => setGroupInformation(null)}>
+                <GroupInformationView groupInformation={groupInformation} />
+            </LosWindow>
+        </DraggableWindow>
     );
 };

@@ -1,0 +1,54 @@
+/* Group windows, rebuilt as LucadoOS windows. */
+
+.los-window.los-grp-window { width: 400px; }
+
+.los-grp { display: flex; flex-direction: column; gap: 10px; padding: 12px; color: var(--los-text); }
+
+.los-grp__hero {
+    display: flex;
+    gap: 14px;
+    padding: 12px;
+    border: 1px solid var(--los-line);
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(77, 163, 255, .14), rgba(124, 108, 255, .1));
+}
+
+.los-grp__badge {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 84px;
+    height: 84px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, .25);
+}
+
+.los-grp__who { flex: 1; min-width: 0; }
+.los-grp__who h2 { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 0; font-size: 16px; font-weight: 600; }
+.los-grp__who h2 img { width: 18px; height: 18px; object-fit: contain; }
+.los-grp__who small { color: var(--los-dim); font-size: 11.5px; }
+.los-grp__who p { margin: 6px 0 0; font-size: 12.5px; overflow-wrap: anywhere; }
+
+.los-grp__links { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+.los-grp__links button {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    padding: 8px 10px;
+    border: 1px solid var(--los-line);
+    border-radius: 10px;
+    background: var(--los-soft);
+    color: var(--los-text);
+    font: inherit;
+    font-size: 12.5px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.los-grp__links button:hover { background: var(--los-soft-2); }
+.los-grp__links button .los-icon { flex: none; color: #4da3ff; }
+.los-grp__links button.is-danger .los-icon { color: #ff6b6b; }
+
+.los-grp__foot { display: flex; gap: 8px; align-items: center; justify-content: flex-end; }
+.los-grp__tag { padding: 4px 10px; border-radius: 9px; background: var(--los-soft-2); font-size: 12px; }

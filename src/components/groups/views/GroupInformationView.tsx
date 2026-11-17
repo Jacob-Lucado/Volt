@@ -1,4 +1,11 @@
-import { GroupConfirmMemberRemoveEvent, GroupDeleteComposer, GetSessionDataManager, GroupInformationParser, GroupRemoveMemberComposer, CreateLinkEvent } from '@volt/renderer';
+import {
+    CreateLinkEvent,
+    GetSessionDataManager,
+    GroupConfirmMemberRemoveEvent,
+    GroupDeleteComposer,
+    GroupInformationParser,
+    GroupRemoveMemberComposer
+} from '@volt/renderer';
 import { FC, useEffect, useLayoutEffect, useRef } from 'react';
 import {
     CatalogPageName,
@@ -12,22 +19,15 @@ import {
     TryVisitRoom
 } from '../../../api';
 import decorateIcon from '../../../assets/images/groups/native/group_decorate_icon.png';
-import adminIcon from '../../../assets/images/groups/native/group_icon_big_admin.png';
-import memberIcon from '../../../assets/images/groups/native/group_icon_big_member.png';
-import ownerIcon from '../../../assets/images/groups/native/group_icon_big_owner.png';
-import typeIconRegular from '../../../assets/images/groups/native/grouptype_icon_5.png';
 import typeIconExclusive from '../../../assets/images/groups/native/grouptype_icon_1.png';
 import typeIconPrivate from '../../../assets/images/groups/native/grouptype_icon_2.png';
+import typeIconRegular from '../../../assets/images/groups/native/grouptype_icon_5.png';
 import { LayoutBadgeImageView } from '../../../common';
+import { LosIcon } from '../../../common/lucadoos';
 import { useGroupMemberRemoval, useMessageEvent, useNotification } from '../../../hooks';
-import { flatText, GroupBox, GroupButton, GroupText } from './GroupNativeLayout';
 
 const TYPE_ICONS: string[] = [typeIconRegular, typeIconExclusive, typeIconPrivate];
 const TYPE_HELP: string[] = ['regular', 'exclusive', 'private'];
-
-// groups_info_window: group_cont is the style 0 border at (10,10) below the 33px frame margin, 343x214; every rectangle below is its layout rectangle.
-const BASE_X = 10;
-const BASE_Y = 43;
 
 interface GroupInformationViewProps {
     groupInformation: GroupInformationParser;
@@ -51,9 +51,12 @@ export const GroupInformationView: FC<GroupInformationViewProps> = (props) => {
         confirmOpenRef.current = false;
     }, [shownGroupId]);
 
-    useEffect(() => () => {
-        shownGroupIdRef.current = 0;
-    }, []);
+    useEffect(
+        () => () => {
+            shownGroupIdRef.current = 0;
+        },
+        []
+    );
 
     const { request: requestMemberRemoval, claimReply, isCurrentSession } = useGroupMemberRemoval();
 
@@ -68,7 +71,11 @@ export const GroupInformationView: FC<GroupInformationViewProps> = (props) => {
 
         confirmOpenRef.current = true;
         showConfirm(
-            LocalizeText(parser.furnitureCount > 0 ? 'group.leaveconfirm.desc' : 'group.leaveconfirm_nofurni.desc', ['amount'], [parser.furnitureCount.toString()]),
+            LocalizeText(
+                parser.furnitureCount > 0 ? 'group.leaveconfirm.desc' : 'group.leaveconfirm_nofurni.desc',
+                ['amount'],
+                [parser.furnitureCount.toString()]
+            ),
             () => {
                 confirmOpenRef.current = false;
 
@@ -93,7 +100,6 @@ export const GroupInformationView: FC<GroupInformationViewProps> = (props) => {
     const isMember = groupInformation.membershipType === GroupMembershipType.MEMBER;
     const isPending = groupInformation.membershipType === GroupMembershipType.REQUEST_PENDING;
     const isNotMember = groupInformation.membershipType === GroupMembershipType.NOT_MEMBER;
-    const nameX = BASE_X + 125 + (groupInformation.canMembersDecorate ? 15 : 0);
 
     const leaveGroup = () => {
         if (confirmOpenRef.current) return;
@@ -101,9 +107,7 @@ export const GroupInformationView: FC<GroupInformationViewProps> = (props) => {
         requestMemberRemoval(groupInformation.id, userId);
     };
 
-    // Below the Members line the owner's Manage and Delete links follow, one line lower while a Pending line is shown.
     const hasPendingLine = groupInformation.pendingRequestsCount > 0 && (groupInformation.isOwner || groupInformation.isAdmin);
-    const leftLinksY = hasPendingLine ? 137 : 121;
 
     const deleteGroup = () => {
         let isSent = false;
@@ -150,87 +154,81 @@ export const GroupInformationView: FC<GroupInformationViewProps> = (props) => {
         }
     };
 
+    const role = groupInformation.isAdmin ? 'admin' : 'member';
+
     return (
-        <>
-            <GroupBox height={214} kind="cc" width={343} x={BASE_X} y={BASE_Y} />
-            <div className="volt-group-info__badge" style={{ left: BASE_X + 11, top: BASE_Y + 14 }}>
-                <LayoutBadgeImageView badgeCode={groupInformation.badge} isGroup={true} scale={2} />
+        <div className="los-grp">
+            <section className="los-grp__hero">
+                <div className="los-grp__badge">
+                    <LayoutBadgeImageView badgeCode={groupInformation.badge} isGroup={true} scale={2} />
+                </div>
+                <div className="los-grp__who">
+                    <h2>
+                        {groupInformation.title}
+                        <img
+                            alt=""
+                            draggable={false}
+                            src={TYPE_ICONS[groupInformation.type]}
+                            title={LocalizeText(`group.edit.settings.type.${TYPE_HELP[groupInformation.type]}.help`)}
+                        />
+                        {groupInformation.canMembersDecorate && (
+                            <img alt="" draggable={false} src={decorateIcon} title={LocalizeText('group.memberscandecorate')} />
+                        )}
+                    </h2>
+                    <small>{LocalizeText('group.created', ['date', 'owner'], [groupInformation.createdAt, groupInformation.ownerName])}</small>
+                    {!!groupInformation.description && <p>{groupInformation.description}</p>}
+                </div>
+            </section>
+            <div className="los-grp__links">
+                <button type="button" onClick={() => handleAction('members')}>
+                    <LosIcon name="group" size={14} /> {LocalizeText('group.membercount', ['totalMembers'], [groupInformation.membersCount.toString()])}
+                </button>
+                {hasPendingLine && (
+                    <button type="button" onClick={() => handleAction('members_pending')}>
+                        <LosIcon name="bell" size={14} />{' '}
+                        {LocalizeText('group.pendingmembercount', ['amount'], [groupInformation.pendingRequestsCount.toString()])}
+                    </button>
+                )}
+                <button type="button" onClick={() => handleAction('homeroom')}>
+                    <LosIcon name="home" size={14} /> {LocalizeText('group.linktobase')}
+                </button>
+                <button type="button" onClick={() => handleAction('furniture')}>
+                    <LosIcon name="bag" size={14} /> {LocalizeText('group.buyfurni')}
+                </button>
+                <button type="button" onClick={() => handleAction('popular_groups')}>
+                    <LosIcon name="search" size={14} /> {LocalizeText('group.showgroups')}
+                </button>
+                {groupInformation.hasForum && (
+                    <button type="button" onClick={() => handleAction('forum')}>
+                        <LosIcon name="chat" size={14} /> {LocalizeText('group.showforum')}
+                    </button>
+                )}
+                {groupInformation.isOwner && (
+                    <>
+                        <button type="button" onClick={() => handleAction('manage')}>
+                            <LosIcon name="gear" size={14} /> {LocalizeText('group.manage')}
+                        </button>
+                        <button type="button" className="is-danger" onClick={deleteGroup}>
+                            <LosIcon name="trash" size={14} /> {LocalizeText('group.delete')}
+                        </button>
+                    </>
+                )}
             </div>
-            <img alt="" className="volt-group-info__icon" draggable={false} src={TYPE_ICONS[groupInformation.type]} style={{ left: BASE_X + 107, top: BASE_Y + 10 }} title={LocalizeText(`group.edit.settings.type.${TYPE_HELP[groupInformation.type]}.help`)} />
-            {groupInformation.canMembersDecorate && (
-                <img alt="" className="volt-group-info__icon" draggable={false} src={decorateIcon} style={{ left: BASE_X + 125, top: BASE_Y + 10 }} title={LocalizeText('group.memberscandecorate')} />
-            )}
-            <GroupText background={0xcccccc} height={17} overrides={flatText(12, { bold: true })} text={groupInformation.title} width={206} x={nameX} y={BASE_Y + 9} />
-            <GroupText
-                background={0xcccccc}
-                text={LocalizeText('group.created', ['date', 'owner'], [groupInformation.createdAt, groupInformation.ownerName])}
-                textStyle="u_small"
-                x={BASE_X + 103}
-                y={BASE_Y + 27}
-            />
-            <GroupText background={0xcccccc} height={55} overrides={flatText(12)} text={groupInformation.description} width={215} wrap x={BASE_X + 103} y={BASE_Y + 42} />
-            <GroupText
-                align="center"
-                background={0xcccccc}
-                className="is-link"
-                overrides={flatText(12, { bold: true, underline: true })}
-                text={LocalizeText('group.membercount', ['totalMembers'], [groupInformation.membersCount.toString()])}
-                width={97}
-                x={BASE_X + 4}
-                y={BASE_Y + 103}
-                onClick={() => handleAction('members')}
-            />
-            {hasPendingLine && (
-                <GroupText
-                    align="center"
-                    background={0xcccccc}
-                    className="is-link"
-                    overrides={{ underline: true }}
-                    text={LocalizeText('group.pendingmembercount', ['amount'], [groupInformation.pendingRequestsCount.toString()])}
-                    textStyle="u_bold"
-                    width={97}
-                    x={BASE_X + 4}
-                    y={BASE_Y + 121}
-                    onClick={() => handleAction('members_pending')}
-                />
-            )}
-            <GroupText background={0xcccccc} className="is-link" overrides={flatText(12, { underline: true })} text={LocalizeText('group.linktobase')} x={BASE_X + 103} y={BASE_Y + 103} onClick={() => handleAction('homeroom')} />
-            <GroupText background={0xcccccc} className="is-link" overrides={flatText(12, { underline: true })} text={LocalizeText('group.buyfurni')} x={BASE_X + 103} y={BASE_Y + 121} onClick={() => handleAction('furniture')} />
-            <GroupText background={0xcccccc} className="is-link" overrides={flatText(12, { underline: true })} text={LocalizeText('group.showgroups')} x={BASE_X + 103} y={BASE_Y + 139} onClick={() => handleAction('popular_groups')} />
-            {groupInformation.hasForum && (
-                <GroupText background={0xcccccc} className="is-link" overrides={flatText(12, { underline: true })} text={LocalizeText('group.showforum')} x={BASE_X + 103} y={BASE_Y + 157} onClick={() => handleAction('forum')} />
-            )}
-            {groupInformation.isOwner && (
-                <>
-                    <GroupText align="center" background={0xcccccc} className="is-link" overrides={flatText(12, { underline: true })} text={LocalizeText('group.manage')} width={97} x={BASE_X - 1} y={BASE_Y + leftLinksY} onClick={() => handleAction('manage')} />
-                    <GroupText align="center" background={0xcccccc} className="is-link" overrides={flatText(12, { underline: true })} text={LocalizeText('group.delete')} width={97} x={BASE_X - 1} y={BASE_Y + leftLinksY + 16} onClick={deleteGroup} />
-                </>
-            )}
-            {isMember && !isRealOwner && (
-                <>
-                    <img
-                        alt=""
-                        className="volt-group-info__icon"
-                        draggable={false}
-                        src={groupInformation.isAdmin ? adminIcon : memberIcon}
-                        style={{ left: BASE_X + 40, top: BASE_Y + 183 }}
-                        title={LocalizeText(groupInformation.isAdmin ? 'group.youareadmin' : 'group.youaremember')}
-                    />
-                    <GroupButton height={29} label={LocalizeText('group.leave')} width={160} x={BASE_X + 99} y={BASE_Y + 179} onClick={leaveGroup} />
-                </>
-            )}
-            {isRealOwner && (
-                <img alt="" className="volt-group-info__icon" draggable={false} src={ownerIcon} style={{ left: BASE_X + 40, top: BASE_Y + 183 }} title={LocalizeText('group.youareowner')} />
-            )}
-            {isNotMember && groupInformation.type === GroupType.REGULAR && (
-                <GroupButton height={29} label={LocalizeText('group.join')} width={160} x={BASE_X + 99} y={BASE_Y + 179} onClick={() => TryJoinGroup(groupInformation.id)} />
-            )}
-            {isNotMember && groupInformation.type === GroupType.EXCLUSIVE && (
-                <GroupButton height={29} label={LocalizeText('group.requestmembership')} width={260} x={BASE_X + 49} y={BASE_Y + 179} onClick={() => TryJoinGroup(groupInformation.id)} />
-            )}
-            {isPending && (
-                <GroupText align="center" background={0xcccccc} overrides={flatText(13, { bold: true })} text={LocalizeText('group.membershippending')} width={175} x={BASE_X + 84} y={BASE_Y + 184} />
-            )}
-        </>
+            <div className="los-grp__foot">
+                {isRealOwner && <span className="los-grp__tag">{LocalizeText('group.youareowner')}</span>}
+                {isMember && !isRealOwner && <span className="los-grp__tag">{LocalizeText(`group.youare${role}`)}</span>}
+                {isMember && !isRealOwner && (
+                    <button type="button" className="los-button" onClick={leaveGroup}>
+                        {LocalizeText('group.leave')}
+                    </button>
+                )}
+                {isNotMember && (groupInformation.type === GroupType.REGULAR || groupInformation.type === GroupType.EXCLUSIVE) && (
+                    <button type="button" className="los-button los-button--primary" onClick={() => TryJoinGroup(groupInformation.id)}>
+                        {LocalizeText(groupInformation.type === GroupType.EXCLUSIVE ? 'group.requestmembership' : 'group.join')}
+                    </button>
+                )}
+                {isPending && <span className="los-grp__tag">{LocalizeText('group.membershippending')}</span>}
+            </div>
+        </div>
     );
 };
