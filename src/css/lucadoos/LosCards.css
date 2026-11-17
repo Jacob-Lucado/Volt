@@ -1,0 +1,42 @@
+/* Shared window cards (VoltCardView) in the LucadoOS glass style. */
+
+.volt-card-shell:not(.volt-wired) {
+    --los-glass: rgba(15, 23, 36, .92);
+    --los-line: rgba(148, 176, 214, .2);
+    --los-soft: rgba(148, 176, 214, .09);
+    --los-soft-2: rgba(148, 176, 214, .16);
+    --los-text: #e8eef5;
+    --los-dim: #93a4ba;
+
+    border: 1px solid var(--los-line) !important;
+    border-image-source: none !important;
+    border-radius: 14px !important;
+    background: var(--los-glass) !important;
+    color: var(--los-text);
+    font-family: Inter, system-ui, sans-serif;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, .5);
+    filter: none !important;
+}
+
+.volt-card-shell:not(.volt-wired) .volt-card-header-shell {
+    border: 0 !important;
+    border-bottom: 1px solid var(--los-line) !important;
+    border-image-source: none !important;
+    background: transparent !important;
+    color: var(--los-text) !important;
+}
+
+.volt-card-shell:not(.volt-wired) .volt-card-content-shell {
+    border-image-source: none !important;
+    background: transparent !important;
+    color: var(--los-text);
+}
+
+.volt-card-shell:not(.volt-wired) .volt-card-header-shell * {
+    color: var(--los-text);
+    font-family: Inter, system-ui, sans-serif;
+}
+
+.volt-card-shell:not(.volt-wired) .volt-card-content-shell .text-\[\#24344c\] {
+    color: var(--los-text);
+}

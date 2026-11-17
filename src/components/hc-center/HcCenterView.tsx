@@ -266,9 +266,9 @@ export const HcCenterView: FC<{}> = (props) => {
                         <Text bold variant="primary">
                             {LocalizeText('hccenter.general.title')}
                         </Text>
-                        <Text small className="text-gray-700" dangerouslySetInnerHTML={{ __html: LocalizeText('hccenter.general.info') }} />
+                        <Text small className="text-gray-300" dangerouslySetInnerHTML={{ __html: LocalizeText('hccenter.general.info') }} />
                         <span
-                            className="text-primary text-sm cursor-pointer hover:underline mt-1"
+                            className="text-sm cursor-pointer text-[#7cb8ff] hover:underline mt-1"
                             onClick={() => CreateLinkEvent('habbopages/' + GetConfigurationValue('hc.center')['benefits.habbopage'])}
                         >
                             {LocalizeText('hccenter.general.infolink')}
