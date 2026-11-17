@@ -1,0 +1,192 @@
+/* Friends list in the LucadoOS glass style. */
+
+.habbo-friend-list {
+    --los-glass: rgba(15, 23, 36, .9);
+    --los-line: rgba(148, 176, 214, .2);
+    --los-soft: rgba(148, 176, 214, .09);
+    --los-soft-2: rgba(148, 176, 214, .16);
+    --los-text: #e8eef5;
+    --los-dim: #93a4ba;
+
+    border: 1px solid var(--los-line);
+    border-radius: 14px;
+    background: var(--los-glass);
+    color: var(--los-text);
+    font: 400 12px/1.2 Inter, system-ui, sans-serif;
+    filter: none;
+    image-rendering: auto;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, .5);
+    backdrop-filter: blur(18px);
+}
+
+.habbo-friend-list::before,
+.habbo-friend-list::after,
+.hfl-titlebar::before,
+.hfl-titlebar::after,
+.hfl-native-border-skin,
+.hfl-native-button-skin,
+.hfl-resize-handle {
+    display: none;
+}
+
+.habbo-friend-list button,
+.habbo-friend-list input {
+    color: var(--los-text);
+    font: inherit;
+}
+
+.hfl-titlebar {
+    height: 26px;
+    border-bottom: 1px solid var(--los-line);
+}
+
+.hfl-title {
+    top: 0;
+    left: 12px;
+    height: 26px;
+    padding: 0;
+    transform: none;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.hfl-close {
+    top: 3px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    background: var(--los-soft) !important;
+}
+
+.hfl-close::before,
+.hfl-close::after {
+    position: absolute;
+    top: 9px;
+    left: 4px;
+    width: 12px;
+    height: 1.5px;
+    content: "";
+    background: var(--los-dim);
+    transform: rotate(45deg);
+}
+
+.hfl-close::after { transform: rotate(-45deg); }
+.hfl-close:hover { background: var(--los-soft-2) !important; }
+
+.hfl-category,
+.hfl-category:hover,
+.hfl-search-strip,
+.hfl-request-strip,
+.hfl-search-strip:hover,
+.hfl-request-strip:hover {
+    height: 18px;
+    background: rgba(255, 255, 255, .06);
+}
+
+.hfl-category-current,
+.hfl-search-strip,
+.hfl-request-strip {
+    height: 18px;
+    padding: 1px 12px 0;
+    color: var(--los-text) !important;
+    font-size: 11px;
+    font-weight: 600 !important;
+    line-height: 16px !important;
+}
+
+.hfl-category-current::after,
+.hfl-search-strip::after,
+.hfl-request-strip::after {
+    filter: brightness(0) invert(1);
+    opacity: .7;
+}
+
+.hfl-search-strip,
+.hfl-request-strip {
+    box-shadow: none;
+    border-top: 1px solid var(--los-line);
+}
+
+.habbo-friend-list .hfl-content,
+.habbo-friend-list .hfl-footer,
+.habbo-friend-list .hfl-requests,
+.habbo-friend-list .hfl-request-footer,
+.habbo-friend-list .hfl-search-results {
+    background: transparent;
+}
+
+
+.habbo-friend-list .hfl-section-header,
+.habbo-friend-list .hfl-friend,
+.habbo-friend-list .hfl-request,
+.habbo-friend-list .hfl-search-heading,
+.habbo-friend-list .hfl-search-result {
+    background: transparent;
+}
+
+.habbo-friend-list .hfl-section-header.alternate,
+.habbo-friend-list .hfl-friend.alternate,
+.habbo-friend-list .hfl-request:nth-child(even),
+.habbo-friend-list .hfl-search-heading.alternate,
+.habbo-friend-list .hfl-search-result.alternate {
+    background: rgba(255, 255, 255, .03);
+}
+
+.habbo-friend-list .hfl-friend:hover { background: var(--los-soft); }
+.habbo-friend-list .hfl-friend.selected { background: rgba(77, 163, 255, .25); }
+
+.hfl-section-toggle,
+.hfl-section-toggle > span,
+.hfl-select-all,
+.hfl-pager button,
+.hfl-friend-name,
+.hfl-request-name {
+    color: var(--los-text);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 12px;
+}
+
+.hfl-section-toggle > span::after { filter: brightness(0) invert(1); opacity: .6; }
+
+.hfl-action,
+.hfl-footer-button::before,
+.hfl-request-actions button,
+.hfl-request-footer button > i,
+.hfl-search-form button > i {
+    filter: brightness(0) invert(1);
+    opacity: .85;
+}
+
+.hfl-footer-button,
+.hfl-request-footer button,
+.hfl-search-form button {
+    border-radius: 8px;
+    background: var(--los-soft) !important;
+}
+
+.hfl-footer-button:hover:not(:disabled),
+.hfl-request-footer button:hover:not(:disabled),
+.hfl-search-form button:hover:not(:disabled) { background: var(--los-soft-2) !important; }
+.hfl-footer-button:disabled { opacity: .4; }
+
+.habbo-friend-list input,
+.hfl-footer-search input,
+.hfl-search-form input {
+    border: 1px solid var(--los-line);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, .25);
+    color: var(--los-text);
+}
+
+.hfl-info-text { color: var(--los-dim); font-family: Inter, system-ui, sans-serif; font-size: 11px; }
+
+.hfl-native-scroll-viewport.has-scrollbar { right: 10px; }
+.hfl-native-scrollbar { width: 8px; right: 0; grid-template-rows: 0 minmax(0, 1fr) 0; }
+.hfl-native-scrollbar > button { display: none; }
+.hfl-native-scroll-track { width: 8px; background: transparent; }
+.hfl-native-scroll-thumb svg { display: none; }
+.hfl-native-scroll-thumb { width: 8px; border-radius: 4px; background: rgba(148, 176, 214, .35); }
+
+.habbo-friend-list.search-mode .hfl-content { background: transparent; }
