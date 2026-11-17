@@ -1,6 +1,4 @@
 import {
-    CatalogRuntimeConfigurationComposer,
-    CatalogRuntimeConfigurationEvent,
     FurnitureListComposer,
     GetRecyclerStatusMessageComposer,
     RecycleItemsEntry,
@@ -47,8 +45,8 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
     const [processing, setProcessing] = useState(false);
     const [finished, setFinished] = useState(false);
     const operationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const configurationRequestIdRef = useRef(`recycler-${Date.now()}-${Math.random().toString(36).slice(2)}`);
-    const [slotCount, setSlotCount] = useState(() => normalizeRecyclerSlotCount(8));
+    // RecyclerLogic: catalog.getInteger("recycler.number_of_slots", 5).
+    const slotCount = normalizeRecyclerSlotCount(GetConfigurationValue<number>('recycler.number_of_slots', 5), 5);
     const selectedIds = useMemo(() => new Set(slots.map((slot) => slot.itemId)), [slots]);
     const eligibleIds = useMemo(() => getRecyclerEligibleItemIds(groupItems), [groupItems]);
     const choices = useMemo(() => getRecyclerInventoryChoices(groupItems, selectedIds), [groupItems, selectedIds]);
@@ -70,14 +68,6 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
         setSecondsLeft(Math.max(0, parser.recyclerTimeoutSeconds));
     });
 
-    useMessageEvent<CatalogRuntimeConfigurationEvent>(CatalogRuntimeConfigurationEvent, (event) => {
-        const parser = event.getParser();
-
-        if (parser.protocolVersion !== 1 || parser.requestId !== configurationRequestIdRef.current) return;
-
-        setSlotCount(normalizeRecyclerSlotCount(parser.recyclerSlotCount));
-    });
-
     useMessageEvent<RecyclerFinishedMessageEvent>(RecyclerFinishedMessageEvent, (event) => {
         clearOperationTimeout();
         setProcessing(false);
@@ -93,7 +83,6 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
     useEffect(() => {
         SendMessageComposer(new FurnitureListComposer());
         SendMessageComposer(new GetRecyclerStatusMessageComposer());
-        SendMessageComposer(new CatalogRuntimeConfigurationComposer(configurationRequestIdRef.current));
 
         return clearOperationTimeout;
     }, [clearOperationTimeout]);
