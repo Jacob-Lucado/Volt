@@ -1,0 +1,88 @@
+/* Settings windows in the LucadoOS glass style. */
+
+.us-window {
+    --los-glass: rgba(15, 23, 36, .92);
+    --los-line: rgba(148, 176, 214, .2);
+    --los-soft: rgba(148, 176, 214, .09);
+    --los-soft-2: rgba(148, 176, 214, .16);
+    --los-text: #e8eef5;
+    --los-dim: #93a4ba;
+
+    color: var(--los-text);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 12px;
+    image-rendering: auto;
+}
+
+.us-window .us-chrome {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border: 1px solid var(--los-line);
+    border-image-source: none;
+    border-radius: 14px;
+    background: var(--los-glass);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, .5);
+}
+
+.us-window .us-title {
+    color: var(--los-text);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.us-window .us-line {
+    background: var(--los-line);
+}
+
+.us-window .us-text,
+.us-window .us-check-row > span,
+.us-window .air-settings-volume-row__label {
+    color: var(--los-text);
+    font-family: Inter, system-ui, sans-serif;
+}
+
+.us-window .us-button {
+    border: 1px solid var(--los-line);
+    border-image-source: none;
+    border-radius: 8px;
+    background: var(--los-soft);
+    color: var(--los-text);
+    font-family: Inter, system-ui, sans-serif;
+}
+
+.us-window .us-button:hover { background: var(--los-soft-2); }
+
+.us-window .us-drop.habbo-dropmenu {
+    border: 1px solid var(--los-line);
+    border-image-source: none;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, .28);
+    color: var(--los-text);
+}
+
+.us-window .us-drop .habbo-dropmenu-caption {
+    color: var(--los-text);
+}
+
+.us-window .us-drop .habbo-dropmenu-caption canvas {
+    filter: invert(1);
+}
+
+.us-window button.us-drop.habbo-dropmenu {
+    border-image-source: none !important;
+    border: 1px solid var(--los-line) !important;
+    background: rgba(0, 0, 0, .28) !important;
+}
+
+.us-window .us-drop .habbo-dropmenu-arrow {
+    opacity: .35;
+}
+
+.us-window .us-drop .habbo-dropmenu-caption,
+.us-window .us-drop .habbo-dropmenu-caption * {
+    color: var(--los-text) !important;
+    -webkit-text-fill-color: var(--los-text);
+}
