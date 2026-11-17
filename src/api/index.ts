@@ -32,3 +32,4 @@ export * from './ui-settings';
 export * from './user';
 export * from './utils';
 export * from './wired';
+export * from './hub';

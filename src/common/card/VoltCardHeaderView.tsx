@@ -34,7 +34,7 @@ export const VoltCardHeaderView: FC<VoltCardHeaderViewProps> = (props) => {
 
     const { isWired } = useVoltCardContext();
 
-    const onMouseDown = (event: MouseEvent<HTMLDivElement>) => {
+    const onMouseDown = (event: MouseEvent<HTMLElement>) => {
         event.stopPropagation();
         event.nativeEvent.stopImmediatePropagation();
     };

@@ -15,6 +15,7 @@ import { useVoltEventReducer } from '../hooks';
 import { AchievementsView } from './achievements/AchievementsView';
 import { AvatarEditorView } from './avatar-editor';
 import { BadgeLeaderboardView } from './badge-leaderboard/BadgeLeaderboardView';
+import { DailyHubView } from './daily-hub/DailyHubView';
 import { CameraWidgetView } from './camera/CameraWidgetView';
 import { CampaignView } from './campaign/CampaignView';
 import { CatalogView } from './catalog/CatalogView';
@@ -149,6 +150,7 @@ export const MainView: FC<{}> = (props) =>
             <WiredView />
             <AvatarEditorView />
             <BadgeLeaderboardView />
+            <DailyHubView />
             <AchievementsView />
             <HabbiconHubView />
             <NavigatorView />
