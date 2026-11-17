@@ -64,3 +64,60 @@
 .los-modstart__list .los-menu__item:disabled:hover {
     background: transparent;
 }
+
+/* Classic style 0 and 3 moderator windows */
+
+.native0-frame,
+.native3-frame {
+    border: 1px solid rgba(148, 176, 214, .25);
+    border-radius: 14px;
+    background: rgba(15, 23, 36, .95);
+    filter: none;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, .5);
+}
+
+.native0-frame > .native-skin,
+.native3-frame > .native-skin,
+.native0-header > .native-skin,
+.native0-header__caption-bg {
+    display: none;
+}
+
+.native0-header__caption .native0-text__line {
+    color: #e8eef5;
+    font: 600 13px/16px Inter, system-ui, sans-serif;
+    text-shadow: none;
+}
+
+.native0-frame .native0-text__line,
+.native0-frame .native0-tab__label {
+    font-family: Inter, system-ui, sans-serif;
+}
+
+.native0-close,
+.native3-close {
+    border-radius: 7px;
+    background: rgba(148, 176, 214, .16);
+}
+
+.native0-close > *,
+.native3-close > * {
+    display: none;
+}
+
+.native0-close::before,
+.native0-close::after,
+.native3-close::before,
+.native3-close::after {
+    position: absolute;
+    top: calc(50% - .75px);
+    left: calc(50% - 6px);
+    width: 12px;
+    height: 1.5px;
+    content: "";
+    background: #e8eef5;
+    transform: rotate(45deg);
+}
+
+.native0-close::after,
+.native3-close::after { transform: rotate(-45deg); }
