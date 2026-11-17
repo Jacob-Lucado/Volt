@@ -11,7 +11,7 @@ import {
     Vector3d
 } from '@volt/renderer';
 import { useMemo, useState } from 'react';
-import { IsOwnerOfFurniture, LocalizeText, ProductTypeEnum } from '../../../../api';
+import { GetChatStylePreviewUrl, IsOwnerOfFurniture, LocalizeText, ProductTypeEnum } from '../../../../api';
 import { useVoltEvent } from '../../../events';
 import { useFurniRemovedEvent } from '../../engine';
 import { useRoom } from '../../useRoom';
@@ -151,6 +151,11 @@ const useFurniturePresentWidgetState = () => {
 
                 break;
             }
+            case ProductTypeEnum.CHAT_STYLE:
+                // The class id is the chat style id and the product code is chat_bubble_<id> (PrizeContainer.title, as:58-71).
+                setText(GetSessionDataManager().getProductData(event.productCode)?.name ?? null);
+                setImageUrl(GetChatStylePreviewUrl(event.classId));
+                break;
             case ProductTypeEnum.HABBO_CLUB:
                 setText(LocalizeText('widget.furni.present.hc'));
                 //setImageUrl(getGiftImageUrl('packagecard_icon_hc'));
