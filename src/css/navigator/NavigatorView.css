@@ -533,6 +533,11 @@
     left: 11px;
 }
 
+.volt-navigator-air__dropmenu-popup .habbo-dropmenu-item span {
+    padding-left: 3px;
+    will-change: transform;
+}
+
 .volt-navigator-air__search-field {
     position: relative;
     box-sizing: border-box;

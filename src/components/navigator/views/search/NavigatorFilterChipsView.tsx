@@ -11,6 +11,7 @@ export const NavigatorFilterChipsView: FC<NavigatorFilterChipsViewProps> = ({ va
     <div className="volt-navigator-air__filter">
         <HabboDropMenuView
             label={LocalizeText('navigator.filter.anything')}
+            popupClassName="volt-navigator-air__dropmenu-popup"
             value={value}
             options={SearchFilterOptions.map((filter, index) => ({ value: index, label: LocalizeText('navigator.filter.' + filter.name) }))}
             onSelect={onChange}

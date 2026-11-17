@@ -344,6 +344,7 @@ export const NavigatorRoomCreatorView: FC = () => {
                 <NativeText text={LocalizeText('navigator.category')} textStyle="bold" background={0xe9e9e1} overrides={{ kerning: false }} nativeResolution />
             </span>
             <HabboDropMenuView
+                popupClassName="volt-navigator-air__dropmenu-popup"
                 className="volt-room-creator-air__dropmenu volt-room-creator-air__dropmenu--category"
                 label={LocalizeText('navigator.category')}
                 options={selectableCategories.map((category, index) => ({ value: index, label: LocalizeText(category.name) }))}
@@ -355,6 +356,7 @@ export const NavigatorRoomCreatorView: FC = () => {
                 <NativeText text={LocalizeText('navigator.maxvisitors')} textStyle="bold" background={0xe9e9e1} overrides={{ kerning: false }} nativeResolution />
             </span>
             <HabboDropMenuView
+                popupClassName="volt-navigator-air__dropmenu-popup"
                 className="volt-room-creator-air__dropmenu volt-room-creator-air__dropmenu--visitors"
                 label={LocalizeText('navigator.maxvisitors')}
                 options={visitorOptions.map((label, value) => ({ value, label }))}
@@ -366,6 +368,7 @@ export const NavigatorRoomCreatorView: FC = () => {
                 <NativeText text={LocalizeText('navigator.tradesettings')} textStyle="bold" background={0xe9e9e1} overrides={{ kerning: false }} nativeResolution />
             </span>
             <HabboDropMenuView
+                popupClassName="volt-navigator-air__dropmenu-popup"
                 className="volt-room-creator-air__dropmenu volt-room-creator-air__dropmenu--trade"
                 label={LocalizeText('navigator.tradesettings')}
                 options={AIR_TRADE_KEYS.map((key, value) => ({ value, label: LocalizeText(key) }))}
