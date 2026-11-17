@@ -44,3 +44,23 @@
 
 .native-frame__close::after { transform: rotate(-45deg); }
 .native-frame__close:hover { background: rgba(148, 176, 214, .3); }
+
+.los-window.los-modstart {
+    width: 230px;
+}
+
+.los-modstart__list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px;
+}
+
+.los-modstart__list .los-menu__item:disabled {
+    opacity: .4;
+    cursor: default;
+}
+
+.los-modstart__list .los-menu__item:disabled:hover {
+    background: transparent;
+}

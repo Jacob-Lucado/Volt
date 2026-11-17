@@ -1,19 +1,6 @@
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 import { DraggableWindow } from '../../../common/draggable-window';
-import { parseNativeLayout } from '../native/NativeLayout';
-import { NativeFrameView, NativeNodeHandlers, NativeNodeStates } from '../native/NativeLayoutView';
-import startPanelXml from '../../../assets/mod-tools/xml/start_panel.xml?raw';
-import roomToolIcon from '../../../assets/mod-tools/images/roomtools_history_open_icon.png';
-import chatlogIcon from '../../../assets/mod-tools/images/roomtools_chat_history.png';
-import userIcon from '../../../assets/mod-tools/images/placeholder_avatar_small_head_cropped_png.png';
-import ticketIcon from '../../../assets/mod-tools/images/tools_file_icon.png';
-
-const IMAGES: Record<string, string> = {
-    roomtools_history_open_icon: roomToolIcon,
-    roomtools_chat_history: chatlogIcon,
-    placeholder_avatar_small_head_cropped_png: userIcon,
-    tools_file_icon: ticketIcon
-};
+import { LosIcon, LosIconName, LosWindow } from '../../../common/lucadoos';
 
 export interface StartPanelProps {
     canUseRoomTool: boolean;
@@ -32,27 +19,26 @@ export interface StartPanelProps {
     onMove: (x: number, y: number) => void;
 }
 
-const DISABLED = 0x666666;
-
 export const StartPanelView: FC<StartPanelProps> = ({ canUseRoomTool, canUseChatlog, canUseUserInfo, canUseTicketQueue, userCaption, onRoomTool, onChatlog, onUserInfo, onTicketQueue, onClose, x, y, onMove }) => {
-    const node = useMemo(() => parseNativeLayout(startPanelXml), []);
-    // fme.show(): the four regions keep their offence_name label; a disabled button greys its label (0x666666), an enabled one is black
-    const labelColor = (enabled: boolean) => (enabled ? 0 : DISABLED);
-    const states: NativeNodeStates = {
-        room_tool_but: { enabled: canUseRoomTool },
-        chatlog_but: { enabled: canUseChatlog },
-        userinfo_but: { enabled: canUseUserInfo },
-        ticket_queue_but: { enabled: canUseTicketQueue },
-        'room_tool_but/offence_name': { textColor: labelColor(canUseRoomTool) },
-        'chatlog_but/offence_name': { textColor: labelColor(canUseChatlog) },
-        'userinfo_but/offence_name': { textColor: labelColor(canUseUserInfo), caption: userCaption },
-        'ticket_queue_but/offence_name': { textColor: labelColor(canUseTicketQueue) }
-    };
-    const handlers: NativeNodeHandlers = { room_tool_but: { onClick: onRoomTool }, chatlog_but: { onClick: onChatlog }, userinfo_but: { onClick: onUserInfo }, ticket_queue_but: { onClick: onTicketQueue } };
+    const items: { icon: LosIconName; label: string; enabled: boolean; onClick: () => void }[] = [
+        { icon: 'home', label: 'Room tool for this room', enabled: canUseRoomTool, onClick: onRoomTool },
+        { icon: 'chat', label: 'Chatlog for this room', enabled: canUseChatlog, onClick: onChatlog },
+        { icon: 'usersearch', label: userCaption || 'User info', enabled: canUseUserInfo, onClick: onUserInfo },
+        { icon: 'list', label: 'Ticket browser', enabled: canUseTicketQueue, onClick: onTicketQueue }
+    ];
 
     return (
-        <DraggableWindow handleSelector=".native-frame__titlebar" initialPosition={{ x, y }} onPositionChange={(position) => onMove(position.x, position.y)} unconstrainedPosition>
-            <NativeFrameView handlers={handlers} images={IMAGES} node={node} states={states} onClose={onClose} />
+        <DraggableWindow handleSelector=".los-window__bar" initialPosition={{ x, y }} onPositionChange={(position) => onMove(position.x, position.y)} unconstrainedPosition>
+            <LosWindow className="los-modstart" icon="shield" title="Mod Tools" onClose={onClose}>
+                <div className="los-modstart__list">
+                    {items.map((item) => (
+                        <button key={item.label} type="button" className="los-menu__item" disabled={!item.enabled} onClick={item.onClick}>
+                            <LosIcon name={item.icon} />
+                            <span>{item.label}</span>
+                        </button>
+                    ))}
+                </div>
+            </LosWindow>
         </DraggableWindow>
     );
 };
