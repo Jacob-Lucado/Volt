@@ -41,6 +41,8 @@ interface NativeTextProps {
     tinted?: boolean;
     /** Hide the text from assistive technology, for an extra copy drawn for another state of the same label. */
     ariaHidden?: boolean;
+    /** An auto-sized text window is int(textHeight + 4) high: the fraction is cut, so the box can end inside the last line's raster. */
+    truncateHeight?: boolean;
 }
 
 /** Recolours a black retained raster in place: the coverage stays, the premultiplied colour becomes the tint. */
@@ -122,11 +124,12 @@ export const NativeText: FC<NativeTextProps> = ({
     transparent = false,
     width: fixedWidth,
     tinted: tintedProp,
-    ariaHidden = false
+    ariaHidden = false,
+    truncateHeight = false
 }) =>
 {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [size, setSize] = useState<{ width: number; height: number }>(null);
+    const [size, setSize] = useState<{ width: number; height: number; trim?: number }>(null);
     const fontStyle = { ...nativeTextStyles[textStyle], ...overrides, background };
     const tinted = tintedProp ?? fontStyle.tinted ?? false;
     const styleKey = JSON.stringify(fontStyle);
@@ -252,7 +255,7 @@ export const NativeText: FC<NativeTextProps> = ({
                 ? unpremultiplyRetained(pixels)
                 : compositeAir32RetainedToOpaque(pixels, [(background >>> 16) & 255, (background >>> 8) & 255, background & 255, 255]);
             canvas.getContext('2d').putImageData(new ImageData(composited, pixelWidth, pixelHeight), 0, 0);
-            setSize({ width: pixelWidth / scale, height: fieldHeight });
+            setSize({ width: pixelWidth / scale, height: fieldHeight, trim: fieldHeight - Math.floor(lines.length * lineHeight + 4) });
             onRasterRef.current?.({ canvas, text, background });
         };
         render().catch((error) => {
@@ -273,7 +276,7 @@ export const NativeText: FC<NativeTextProps> = ({
             <canvas
                 ref={canvasRef}
                 aria-hidden="true"
-                style={{ display: size ? 'block' : 'none', width: size?.width, height: size?.height, imageRendering: nativeResolution ? sampling : scale > 1 ? 'auto' : 'pixelated' }}
+                style={{ display: size ? 'block' : 'none', width: size?.width, height: size?.height, marginBottom: truncateHeight && size?.trim ? -size.trim : undefined, imageRendering: nativeResolution ? sampling : scale > 1 ? 'auto' : 'pixelated' }}
             />
             <span
                 style={

@@ -10,6 +10,7 @@ import { CreateLinkEvent, GetOptionalConfigurationValue, LocalizeText, OpenUrl, 
 import borderNine from '../../assets/images/habbo-skin/slices/border-ubuntu-9-base.png';
 import cursedDragonAdoptionIcon from '../../assets/images/cursed-dragon-adoption/icon.png';
 import commonCloseX from '../../assets/images/new-feature/common_close_x.png';
+import rewardTrackSmallIcon from '../../assets/images/new-feature/reward_track_small_icon.png';
 import { useTintedSkin } from '../../common';
 import { useMessageEvent, useRoom } from '../../hooks';
 
@@ -19,7 +20,8 @@ const BG_COLOR_NORMAL = 0x686661;
 
 // The client's own bitmaps that notifications.new_feature.image.<key> can name; anything else is read as a url.
 const NEW_FEATURE_IMAGES: Record<string, string> = {
-    cursed_dragon_adoption_icon: cursedDragonAdoptionIcon
+    cursed_dragon_adoption_icon: cursedDragonAdoptionIcon,
+    reward_track_small_icon: rewardTrackSmallIcon
 };
 
 const getString = (key: string): string =>

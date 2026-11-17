@@ -47,6 +47,7 @@
     "wired.selfdonation.enabled": false,
     "wired.selfdonation.max.amount": 500,
     "game.center.enabled": false,
+    "games_icon_enabled": false,
     "games.highscores.enabled": true,
     "games.highscores.scrolling.enabled": true,
     "games.highscores.viewSize": 8,
