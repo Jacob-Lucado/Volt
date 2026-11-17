@@ -288,6 +288,9 @@
 .los-cat__page.is-dark .volt-catalog-total-price-label canvas,
 .los-cat__page.is-dark .volt-catalog-standard-price-text canvas,
 .los-cat__page.is-dark .volt-catalog-gift-caption canvas,
+.los-cat__page.is-dark .volt-catalog-pet-colour-label canvas,
+.los-cat__page.is-dark .volt-catalog-pet-breed-label canvas,
+.los-cat__page.is-dark .volt-catalog-pet-name-label canvas,
 .los-cat__page.is-dark .volt-catalog-purchase-selection-prompt canvas {
     /* Turns dark text on a light fill into white text on nothing. */
     filter: url(#los-cat-ink);
