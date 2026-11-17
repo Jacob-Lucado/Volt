@@ -18,12 +18,15 @@ interface GroupsContainerViewProps {
 export const GroupsContainerView: FC<GroupsContainerViewProps> = ({ itsMe, groups = [], onLeaveGroup }) => {
     const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
     const [groupInformation, setGroupInformation] = useState<GroupInformationParser | null>(null);
-    const currentGroupId = groups.some((group) => group.groupId === selectedGroupId) ? selectedGroupId : groups[0]?.groupId ?? null;
+    const currentGroupId = groups.some((group) => group.groupId === selectedGroupId) ? selectedGroupId : (groups[0]?.groupId ?? null);
 
-    const onGroupInformation = useCallback((event: GroupInformationEvent) => {
-        const parser = event.getParser();
-        if (parser.id === currentGroupId && !parser.flag) setGroupInformation(parser);
-    }, [currentGroupId]);
+    const onGroupInformation = useCallback(
+        (event: GroupInformationEvent) => {
+            const parser = event.getParser();
+            if (parser.id === currentGroupId && !parser.flag) setGroupInformation(parser);
+        },
+        [currentGroupId]
+    );
     useMessageEvent<GroupInformationEvent>(GroupInformationEvent, onGroupInformation);
 
     useEffect(() => {
@@ -37,20 +40,33 @@ export const GroupsContainerView: FC<GroupsContainerViewProps> = ({ itsMe, group
 
     return (
         <div className="volt-extended-profile-groups">
-            <div className="volt-extended-profile-groups__count"
-                dangerouslySetInnerHTML={{ __html: SanitizeHtml(LocalizeText('extendedprofile.groups.count', ['count'], [groups.length.toString()])) }} />
+            <div
+                className="volt-extended-profile-groups__count"
+                dangerouslySetInnerHTML={{ __html: SanitizeHtml(LocalizeText('extendedprofile.groups.count', ['count'], [groups.length.toString()])) }}
+            />
             {groups.length > 0 && (
                 <div className="volt-extended-profile-groups__list">
                     {groups.map((group) => (
                         <div key={group.groupId} className={`volt-extended-profile-groups__item${currentGroupId === group.groupId ? ' is-selected' : ''}`}>
-                            <button type="button" className="volt-extended-profile-groups__select" aria-label={group.groupName}
-                                aria-pressed={currentGroupId === group.groupId} onClick={() => setSelectedGroupId(group.groupId)}>
+                            <button
+                                type="button"
+                                className="volt-extended-profile-groups__select"
+                                aria-label={group.groupName}
+                                aria-pressed={currentGroupId === group.groupId}
+                                onClick={() => setSelectedGroupId(group.groupId)}
+                            >
                                 <LayoutBadgeImageView badgeCode={group.badgeCode} isGroup />
                             </button>
                             {itsMe && (
-                                <button type="button" className="volt-extended-profile-groups__favourite"
+                                <button
+                                    type="button"
+                                    className="volt-extended-profile-groups__favourite"
                                     aria-label={LocalizeText(group.favourite ? 'group.clearfavourite' : 'group.makefavourite')}
-                                    onClick={() => { setSelectedGroupId(group.groupId); ToggleFavoriteGroup(group); }}>
+                                    onClick={() => {
+                                        setSelectedGroupId(group.groupId);
+                                        ToggleFavoriteGroup(group);
+                                    }}
+                                >
                                     <img src={group.favourite ? clearFavourite : makeFavourite} alt="" />
                                 </button>
                             )}
@@ -62,16 +78,22 @@ export const GroupsContainerView: FC<GroupsContainerViewProps> = ({ itsMe, group
                 <div className="volt-extended-profile-groups__content">
                     {!groups.length ? (
                         <div className="volt-extended-profile-groups__empty">
-                            <p className="volt-extended-profile-groups__empty-caption">{LocalizeText(itsMe ? 'extendedprofile.nogroups.me' : 'extendedprofile.nogroups.user')}</p>
+                            <p className="volt-extended-profile-groups__empty-caption">
+                                {LocalizeText(itsMe ? 'extendedprofile.nogroups.me' : 'extendedprofile.nogroups.user')}
+                            </p>
                             <img className="volt-extended-profile-groups__empty-image" src={noGroupsImage} alt="" />
                             <p className="volt-extended-profile-groups__empty-info">{LocalizeText('extendedprofile.nogroups.info')}</p>
-                            <button type="button" className="volt-extended-profile-groups__browse" onClick={() => CreateLinkEvent('navigator/search/hotel_view/group:')}>
+                            <button
+                                type="button"
+                                className="volt-extended-profile-groups__browse"
+                                onClick={() => CreateLinkEvent('navigator/search/hotel_view/group:')}
+                            >
                                 <img src={groupBaseIcon} alt="" />
                                 <span>{LocalizeText('extendedprofile.nogroups.viewgroups')}</span>
                             </button>
                         </div>
-                    ) : groupInformation?.id === currentGroupId && (
-                        <ProfileGroupDetailsView groupInformation={groupInformation} onLeaveGroup={onLeaveGroup} />
+                    ) : (
+                        groupInformation?.id === currentGroupId && <ProfileGroupDetailsView groupInformation={groupInformation} onLeaveGroup={onLeaveGroup} />
                     )}
                 </div>
             </div>

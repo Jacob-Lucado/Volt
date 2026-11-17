@@ -1,0 +1,243 @@
+/* The user profile, rebuilt as a LucadoOS window. */
+
+.los-window.los-pf {
+    width: 440px;
+    max-height: calc(100vh - 80px);
+}
+
+.los-pf__body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    overflow-y: auto;
+}
+
+.los-pf__hero {
+    display: flex;
+    gap: 14px;
+    padding: 12px;
+    border: 1px solid var(--los-line);
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(77, 163, 255, .14), rgba(124, 108, 255, .1));
+}
+
+.los-pf__avatar {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 84px;
+    height: 110px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, .25);
+}
+
+.los-pf__who {
+    flex: 1;
+    min-width: 0;
+}
+
+.los-pf__who h2 {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.los-pf__presence {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #52617a;
+}
+
+.los-pf__presence.is-online { background: #4ade80; }
+.los-pf__presence.is-hidden { background: #f5b94a; }
+
+.los-pf__motto {
+    margin: 2px 0 6px;
+    color: var(--los-dim);
+    font-size: 12px;
+    font-style: italic;
+}
+
+.los-pf__meta {
+    margin: 0;
+    color: var(--los-dim);
+    font-size: 11.5px;
+}
+
+.los-pf__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.los-pf__tag {
+    padding: 3px 9px;
+    border-radius: 9px;
+    background: var(--los-soft-2);
+    font-size: 11.5px;
+}
+
+.los-pf__slots {
+    display: flex;
+    gap: 6px;
+}
+
+.los-pf__slot {
+    display: grid;
+    flex: 1;
+    place-items: center;
+    height: 48px;
+    border: 1px dashed var(--los-line);
+    border-radius: 10px;
+    background: var(--los-soft);
+}
+
+.los-pf__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+}
+
+.los-pf__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    align-items: center;
+    padding: 9px 4px;
+    border: 1px solid var(--los-line);
+    border-radius: 10px;
+    background: var(--los-soft);
+    color: var(--los-text);
+    font: inherit;
+    font-size: 11.5px;
+}
+
+button.los-pf__stat { cursor: pointer; }
+button.los-pf__stat:hover { background: var(--los-soft-2); }
+.los-pf__stat .los-icon { color: #4da3ff; }
+.los-pf__stat b { font-size: 15px; }
+
+.los-pf__card {
+    padding: 12px;
+    border: 1px solid var(--los-line);
+    border-radius: 12px;
+    background: var(--los-soft);
+}
+
+.los-pf__card h3 {
+    margin: 0 0 8px;
+    color: var(--los-dim);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.los-pf__rels {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.los-pf__rel {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 6px 8px;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--los-text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.los-pf__rel:hover { background: var(--los-soft-2); }
+
+.los-pf__rel-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: var(--los-soft-2);
+}
+
+.los-pf__rel-icon.is-heart { color: #ff6b8a; }
+.los-pf__rel-icon.is-smile { color: #ffd166; }
+.los-pf__rel-icon.is-bobba { color: #93a4ba; }
+
+.los-pf__rel-text { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+.los-pf__rel-text b { font-size: 13px; font-weight: 500; }
+.los-pf__rel-text small { color: var(--los-dim); font-size: 11px; }
+.los-pf__rel-head { width: 32px; height: 32px; overflow: hidden; }
+
+.los-pf__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.los-pf__gbadge {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, .22);
+}
+
+.los-pf__gbadge.is-active { border-color: #4da3ff; }
+.los-pf__gbadge > button:first-child { padding: 0; border: 0; background: transparent; cursor: pointer; }
+
+.los-pf__fav {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    display: grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    border: 1px solid var(--los-line);
+    border-radius: 50%;
+    background: var(--los-glass);
+    color: var(--los-dim);
+    cursor: pointer;
+}
+
+.los-pf__group { display: flex; flex-direction: column; gap: 8px; }
+.los-pf__group-head { display: flex; gap: 10px; align-items: center; }
+.los-pf__group-head b { display: block; font-size: 14px; }
+.los-pf__group-head small, .los-pf__note { color: var(--los-dim); font-size: 11.5px; }
+.los-pf__group-desc { margin: 0; font-size: 12.5px; }
+
+.los-pf__links { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.los-pf__links button {
+    padding: 4px 10px;
+    border: 1px solid var(--los-line);
+    border-radius: 8px;
+    background: var(--los-soft);
+    color: var(--los-text);
+    font: inherit;
+    font-size: 11.5px;
+    cursor: pointer;
+}
+
+.los-pf__links button:hover { background: var(--los-soft-2); }
+
+.los-pf__empty { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; margin: 0; color: var(--los-dim); font-size: 12.5px; }
+.los-pf__empty p { margin: 0; }

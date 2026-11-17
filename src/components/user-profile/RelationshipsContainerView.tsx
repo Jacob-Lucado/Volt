@@ -41,15 +41,18 @@ export const RelationshipsContainerView: FC<RelationshipsContainerViewProps> = (
 
         return (
             <div key={type} className="volt-extended-profile__relationship">
-                <img className="volt-extended-profile__relationship-icon" src={type === RelationshipStatusEnum.HEART ? heart : type === RelationshipStatusEnum.SMILE ? smile : bobba} alt="" />
+                <img
+                    className="volt-extended-profile__relationship-icon"
+                    src={type === RelationshipStatusEnum.HEART ? heart : type === RelationshipStatusEnum.SMILE ? smile : bobba}
+                    alt=""
+                />
                 <div className="volt-extended-profile__relationship-copy">
                     <div className="volt-extended-profile__relationship-box">
-                        <button type="button"
+                        <button
+                            type="button"
                             className="volt-extended-profile__relationship-name"
                             onClick={(event) =>
-                                relationshipInfo && relationshipInfo.randomFriendId >= 1
-                                    ? GetUserProfile(relationshipInfo.randomFriendId)
-                                    : findFriends()
+                                relationshipInfo && relationshipInfo.randomFriendId >= 1 ? GetUserProfile(relationshipInfo.randomFriendId) : findFriends()
                             }
                         >
                             {(!relationshipInfo || relationshipInfo.friendCount === 0) && LocalizeText('extendedprofile.add.friends')}
@@ -74,9 +77,5 @@ export const RelationshipsContainerView: FC<RelationshipsContainerViewProps> = (
         );
     };
 
-    return (
-        <>
-            {[RelationshipStatusEnum.HEART, RelationshipStatusEnum.SMILE, RelationshipStatusEnum.BOBBA].map(renderRelationship)}
-        </>
-    );
+    return <>{[RelationshipStatusEnum.HEART, RelationshipStatusEnum.SMILE, RelationshipStatusEnum.BOBBA].map(renderRelationship)}</>;
 };
