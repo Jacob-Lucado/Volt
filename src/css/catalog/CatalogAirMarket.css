@@ -866,11 +866,19 @@
     background: #eaeaea;
 }
 
-.volt-catalog-window .volt-catalog-recycler-prize-tile {
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px;
-    min-height: 36px;
-    background-position: center;
-    background-repeat: no-repeat;
+/* The catalog grid rules in `@layer utilities` (CatalogView.css) beat unlayered `!important` rules, so the tile size sits in the same layer. */
+@layer utilities {
+    .volt-catalog-window .volt-catalog-recycler-prize-grid .volt-catalog-recycler-prize-tile {
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        min-height: 36px !important;
+    }
+}
+
+.volt-catalog-recycler-prize-icon {
+    max-width: 36px;
+    max-height: 36px;
+    image-rendering: var(--volt-pixel-art, pixelated);
+    pointer-events: none;
 }

@@ -6,6 +6,7 @@ export * from './AvatarInfoUser';
 export * from './AvatarInfoUtilities';
 export * from './BotSkillsEnum';
 export * from './CanOpenUserChooser';
+export * from './ChatStylePreviews';
 export * from './ChatBubbleMessage';
 export * from './ChatBubbleUtilities';
 export * from './ChatMessageTypeEnum';

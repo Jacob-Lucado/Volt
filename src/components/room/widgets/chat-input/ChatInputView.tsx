@@ -20,14 +20,14 @@ export const ChatInputView: FC<{}> = (props) => {
         sendChat = null
     } = useChatInputWidget();
     const { roomSession = null } = useRoom();
-    const { chatStyleIds } = useClientAccessLists();
+    const { chatStyleIds, purchasableChatStyleIds } = useClientAccessLists();
     const { clubLevel = 0, isAmbassador = false, securityLevel = 0 } = useUserDataSnapshot();
     const selectableChatStyleIds = useMemo(() => getSelectableChatStyleIds(
         getChatStyleLibrary(GetConfigurationValue<ChatStyleDefinition[]>('chat.styles', [])),
         chatStyleIds,
         GetConfigurationValue<string>('disabled.custom.chat.styles', ''),
-        { hasClub: clubLevel > 0, isAmbassador, hasSecurity: securityLevel >= 4 }
-    ), [ chatStyleIds, clubLevel, isAmbassador, securityLevel ]);
+        { hasClub: clubLevel > 0, isAmbassador, hasSecurity: securityLevel >= 4, purchasableStyleIds: purchasableChatStyleIds }
+    ), [ chatStyleIds, purchasableChatStyleIds, clubLevel, isAmbassador, securityLevel ]);
     const inputRef = useRef<HTMLInputElement>(null);
     const { isHelpButtonVisible, hoverRegionProps, helpButtonProps } = useChatHelpButton();
 

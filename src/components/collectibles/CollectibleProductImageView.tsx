@@ -1,7 +1,7 @@
 import { GetAvatarRenderManager, GetRoomEngine, GetSessionDataManager, RoomPreviewer } from '@volt/renderer';
 import { Point } from 'pixi.js';
 import { FC, ReactNode, useCallback, useEffect, useState } from 'react';
-import { CollectibleProductType, ICollectibleProduct, IsPreviewableWallItem } from '../../api';
+import { CollectibleProductType, GetChatStylePreviewUrl, ICollectibleProduct, IsPreviewableWallItem } from '../../api';
 import placeholderImage from '../../assets/images/collectibles/collectables-collection-default.png';
 import stampLarge from '../../assets/images/collectibles/collectables-icon-curator-stamp-large.png';
 import stampSmall from '../../assets/images/collectibles/collectables-icon-curator-stamp-small.png';
@@ -13,10 +13,6 @@ import { at } from './CollectiblesSkinView';
 
 const EFFECT_ICONS = Object.fromEntries(Object.entries(import.meta.glob('../../assets/images/avatareditor/effects/*.png', { eager: true, import: 'default' }) as Record<string, string>)
     .map(([ path, url ]) => [ path.slice(path.lastIndexOf('_') + 1, -4), url ])) as Record<string, string>;
-
-// The chat style selector_preview bitmaps stand in for both the icon and the bubble AIR draws in createChatItemPreview.
-const CHAT_STYLE_PREVIEWS = Object.fromEntries(Object.entries(import.meta.glob('../../assets/images/chat-style-previews/*.png', { eager: true, import: 'default' }) as Record<string, string>)
-    .map(([ path, url ]) => [ path.slice(path.lastIndexOf('/') + 1, -4), url ])) as Record<string, string>;
 
 const floorItemId = (product: ICollectibleProduct) => GetSessionDataManager().getFloorItemData(parseInt(product.itemTypeId))?.id ?? null;
 
@@ -95,7 +91,7 @@ export const CollectibleProductPreviewView: FC<CollectibleProductPreviewViewProp
                 </div>
             ) : null;
         case CollectibleProductType.CHAT_STYLE:
-            return CHAT_STYLE_PREVIEWS[product.itemTypeId] ? centered(<img alt="" draggable={false} src={CHAT_STYLE_PREVIEWS[product.itemTypeId]} />) : null;
+            return GetChatStylePreviewUrl(Number(product.itemTypeId)) ? centered(<img alt="" draggable={false} src={GetChatStylePreviewUrl(Number(product.itemTypeId))} />) : null;
         case CollectibleProductType.PET:
             return fullPreviewer ? (
                 <div className="volt-collectibles-centered" style={at(53, 60, 180, 140)}>
@@ -154,7 +150,7 @@ export const CollectibleProductIconView: FC<CollectibleProductIconViewProps> = (
                 </div>
             );
         case CollectibleProductType.CHAT_STYLE:
-            return CHAT_STYLE_PREVIEWS[product.itemTypeId] ? bitmap(<img alt="" draggable={false} src={CHAT_STYLE_PREVIEWS[product.itemTypeId]} />) : null;
+            return GetChatStylePreviewUrl(Number(product.itemTypeId)) ? bitmap(<img alt="" draggable={false} src={GetChatStylePreviewUrl(Number(product.itemTypeId))} />) : null;
         case CollectibleProductType.PET:
             return variant !== 'reward' ? (
                 <div className="volt-collectibles-centered" style={rects.widget}>

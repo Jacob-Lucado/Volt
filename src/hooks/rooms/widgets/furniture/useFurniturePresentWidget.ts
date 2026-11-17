@@ -80,6 +80,9 @@ const useFurniturePresentWidgetState = () => {
     }, []);
 
     useVoltEvent<RoomSessionPresentEvent>(RoomSessionPresentEvent.RSPE_PRESENT_OPENED, (event) => {
+        // AIR opens no gift window for a chat style; the chat style notification tells the player.
+        if (event.itemType === ProductTypeEnum.CHAT_STYLE) return;
+
         let furniData: IFurnitureData = null;
 
         if (event.itemType === ProductTypeEnum.FLOOR) {

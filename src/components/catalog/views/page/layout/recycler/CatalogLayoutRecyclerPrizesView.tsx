@@ -1,6 +1,6 @@
-import { GetRecyclerPrizesMessageComposer, RecyclerPrizeLevel, RecyclerPrizeProduct, RecyclerPrizesMessageEvent } from '@volt/renderer';
+import { GetRecyclerPrizesMessageComposer, GetSessionDataManager, RecyclerPrizeLevel, RecyclerPrizeProduct, RecyclerPrizesMessageEvent } from '@volt/renderer';
 import { FC, useEffect, useState } from 'react';
-import { GetFurnitureData, GetImageIconUrlForProduct, LocalizeText, SendMessageComposer } from '../../../../../../api';
+import { GetChatStyleHalfPreviewUrl, GetChatStylePreviewUrl, GetFurnitureData, GetImageIconUrlForProduct, LocalizeText, ProductTypeEnum, SendMessageComposer } from '../../../../../../api';
 import { ClassicScrollAreaView, LayoutFurniImageView, LayoutGridItem } from '../../../../../../common';
 import { NativeText } from '../../../../../../common/native-text/NativeText';
 import { useMessageEvent } from '../../../../../../hooks';
@@ -21,7 +21,48 @@ const STARS = [bronzeStar, silverStar, goldStar, diamondStar, rubyStar, pinkStar
 const PAGE_BACKGROUND = 0xe9e9e1;
 const LEVEL_BACKGROUND = 0xffffff;
 
-const getPrizeName = (product: RecyclerPrizeProduct) => GetFurnitureData(product.productClassId, product.productType)?.name || product.name;
+const compareProductCodes = (first: RecyclerPrizeProduct, second: RecyclerPrizeProduct) => {
+    const left = first.name.toLowerCase();
+    const right = second.name.toLowerCase();
+
+    return left < right ? -1 : left > right ? 1 : 0;
+};
+
+const isChatStyle = (product: RecyclerPrizeProduct) => product.productType === ProductTypeEnum.CHAT_STYLE;
+
+// PrizeContainer.title (as:58-71): a chat style takes its name from the product data of chat_bubble_<style id>.
+const getPrizeName = (product: RecyclerPrizeProduct) =>
+    isChatStyle(product)
+        ? (GetSessionDataManager().getProductData(`chat_bubble_${product.productClassId}`)?.name ?? '')
+        : GetFurnitureData(product.productClassId, product.productType)?.name || product.name;
+
+// PrizeGridItem.initProductIcon (as:33-37): a chat style tile shows its selector preview at half size.
+const useChatStyleTileIcon = (product: RecyclerPrizeProduct) => {
+    const [icon, setIcon] = useState<string>(undefined);
+
+    useEffect(() => {
+        let current = true;
+
+        if (isChatStyle(product)) GetChatStyleHalfPreviewUrl(product.productClassId).then((url) => current && setIcon(url ?? undefined));
+
+        return () => {
+            current = false;
+        };
+    }, [product]);
+
+    return icon;
+};
+
+const RecyclerPrizeTile: FC<{ product: RecyclerPrizeProduct; active: boolean; onSelect: () => void }> = ({ product, active, onSelect }) => {
+    const chatStyleIcon = useChatStyleTileIcon(product);
+    const icon = isChatStyle(product) ? chatStyleIcon : GetImageIconUrlForProduct(product.productType, product.productClassId);
+
+    return (
+        <LayoutGridItem className="volt-catalog-recycler-prize-tile" itemActive={active} title={getPrizeName(product)} onClick={onSelect}>
+            {!!icon && <img alt="" className="volt-catalog-recycler-prize-icon" draggable={false} src={icon} />}
+        </LayoutGridItem>
+    );
+};
 
 /**
  * AIR layout_recycler_prizes (1685, 659px shrunk to 460): productView (0, 0, 360x240) shows the selected prize, and itemList
@@ -32,7 +73,11 @@ export const CatalogLayoutRecyclerPrizesView: FC<CatalogLayoutProps> = ({ page }
     const [selected, setSelected] = useState<RecyclerPrizeProduct>(null);
 
     useMessageEvent<RecyclerPrizesMessageEvent>(RecyclerPrizesMessageEvent, (event) => {
-        const sorted = [...event.getParser().levels].sort((first, second) => first.levelId - second.levelId);
+        // PrizeLevelMessageData (as:28): the prizes of a level are sorted by product code, ignoring case.
+        const sorted = event
+            .getParser()
+            .levels.map((level) => ({ ...level, products: [...level.products].sort(compareProductCodes) }))
+            .sort((first, second) => first.levelId - second.levelId);
 
         setLevels(sorted);
         // onPrizesReceived: the first prize of the first level is selected.
@@ -53,7 +98,12 @@ export const CatalogLayoutRecyclerPrizesView: FC<CatalogLayoutProps> = ({ page }
                 {selected && (
                     <>
                         <div className="volt-catalog-recycler-prizes-preview">
-                            <LayoutFurniImageView direction={2} productClassId={selected.productClassId} productType={selected.productType} scale={1} />
+                            {isChatStyle(selected) ? (
+                                // RecycleRewardDisplayWrapper.productTypeId 9 (as:23): AIR draws a bubble with the player's name; the selector preview stands in for it.
+                                <img alt="" draggable={false} src={GetChatStylePreviewUrl(selected.productClassId) ?? undefined} />
+                            ) : (
+                                <LayoutFurniImageView direction={2} productClassId={selected.productClassId} productType={selected.productType} scale={1} />
+                            )}
                         </div>
                         <NativeText background={PAGE_BACKGROUND} className="volt-catalog-recycler-prizes-name" text={getPrizeName(selected)} textStyle="u_bold" />
                     </>
@@ -78,13 +128,11 @@ export const CatalogLayoutRecyclerPrizesView: FC<CatalogLayoutProps> = ({ page }
                         </div>
                         <div className="volt-catalog-recycler-prize-grid">
                             {level.products.map((product, index) => (
-                                <LayoutGridItem
-                                    key={`${product.productClassId}-${index}`}
-                                    className="volt-catalog-recycler-prize-tile"
-                                    itemActive={selected === product}
-                                    itemImage={GetImageIconUrlForProduct(product.productType, product.productClassId)}
-                                    title={getPrizeName(product)}
-                                    onClick={() => setSelected(product)}
+                                <RecyclerPrizeTile
+                                    key={`${product.productType}-${product.productClassId}-${index}`}
+                                    active={selected === product}
+                                    product={product}
+                                    onSelect={() => setSelected(product)}
                                 />
                             ))}
                         </div>
