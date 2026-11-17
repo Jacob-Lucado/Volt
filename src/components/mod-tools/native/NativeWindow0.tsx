@@ -147,12 +147,14 @@ interface Native0BorderProps {
     y: number;
     width: number;
     height: number;
+    /** The border's own window colour (RGB), multiplied over the skin. */
+    color?: number;
     children?: ReactNode;
 }
 
-export const Native0Border: FC<Native0BorderProps> = ({ x, y, width, height, children }) => (
+export const Native0Border: FC<Native0BorderProps> = ({ x, y, width, height, color, children }) => (
     <div className="native0-box" style={rect(x, y, width, height)}>
-        <NativeSkinView atlas={blueAtlas} height={height} layout="border_white" skin={SKINS.border} width={width} />
+        <NativeSkinView atlas={blueAtlas} color={color} height={height} layout="border_white" skin={SKINS.border} width={width} />
         {children}
     </div>
 );
