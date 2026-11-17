@@ -807,15 +807,58 @@
     left: 10px;
 }
 
+.volt-catalog-recycler-prizes-bubble {
+    position: absolute;
+    display: block;
+}
+
+.volt-catalog-recycler-prizes-bubble > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* itemList: scrollable_itemlist_vertical style 100, so the 9px illumina scrollbar without arrows. */
 .volt-catalog-recycler-prizes-list {
     top: 237px;
     left: 0;
     width: 360px;
     height: 223px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
-.volt-catalog-recycler-prizes-list .volt-classic-scroll-area-viewport {
-    overflow-y: auto;
+.has-classic-scrollbar .volt-catalog-recycler-prizes-list::-webkit-scrollbar {
+    width: 9px !important;
+    height: 9px !important;
+    background: transparent !important;
+}
+
+.has-classic-scrollbar .volt-catalog-recycler-prizes-list::-webkit-scrollbar-button,
+.has-classic-scrollbar .volt-catalog-recycler-prizes-list::-webkit-scrollbar-button:single-button:vertical:decrement,
+.has-classic-scrollbar .volt-catalog-recycler-prizes-list::-webkit-scrollbar-button:single-button:vertical:increment {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.has-classic-scrollbar .volt-catalog-recycler-prizes-list::-webkit-scrollbar-track:vertical {
+    border: solid transparent !important;
+    border-width: 2px 0 !important;
+    border-image: url('../../assets/images/reward-track/air/scrollbar-track.png') 2 0 fill / 2px 0 stretch !important;
+    background: transparent !important;
+    image-rendering: pixelated !important;
+}
+
+.has-classic-scrollbar .volt-catalog-recycler-prizes-list::-webkit-scrollbar-thumb:vertical,
+.has-classic-scrollbar .volt-catalog-recycler-prizes-list::-webkit-scrollbar-thumb:vertical:hover,
+.has-classic-scrollbar .volt-catalog-recycler-prizes-list::-webkit-scrollbar-thumb:vertical:active {
+    min-height: 9px !important;
+    border: solid transparent !important;
+    border-width: 4px 0 !important;
+    border-image: url('../../assets/images/reward-track/air/scrollbar-lift.png') 4 0 fill / 4px 0 stretch !important;
+    background: transparent !important;
+    image-rendering: pixelated !important;
 }
 
 /*
@@ -828,6 +871,11 @@
     width: 348px;
     margin-bottom: 11px;
     padding: 5px;
+}
+
+/* itemList spacing 11 sits between levels only. */
+.volt-catalog-recycler-prize-level:last-child {
+    margin-bottom: 0;
 }
 
 .volt-catalog-recycler-prize-level::before {
@@ -845,6 +893,7 @@
     position: relative;
     display: flex;
     align-items: flex-start;
+    box-sizing: content-box;
     height: 20px;
     padding-top: 3px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.314);
@@ -866,17 +915,27 @@
     background: #eaeaea;
 }
 
-/* The catalog grid rules in `@layer utilities` (CatalogView.css) beat unlayered `!important` rules, so the tile size sits in the same layer. */
-@layer utilities {
-    .volt-catalog-window .volt-catalog-recycler-prize-grid .volt-catalog-recycler-prize-tile {
-        width: 36px !important;
-        height: 36px !important;
-        min-width: 36px !important;
-        min-height: 36px !important;
-    }
+/* gridItem (36x36): the icon centred; the ITEM_HILIGHT frame (2px 0x62c4e8, white inside) only on the selected prize. */
+.volt-catalog-window .volt-catalog-recycler-prize-tile {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    width: 36px;
+    height: 36px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    cursor: pointer;
+}
+
+.volt-catalog-window .volt-catalog-recycler-prize-tile.is-active {
+    background: url('../../assets/images/catalog/air/recycler/prize-selected.png') no-repeat;
 }
 
 .volt-catalog-recycler-prize-icon {
+    position: absolute;
     max-width: 36px;
     max-height: 36px;
     image-rendering: var(--volt-pixel-art, pixelated);
