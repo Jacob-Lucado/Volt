@@ -250,7 +250,7 @@ const CatalogViewInner: FC<{}> = () => {
                             )}
                             <div
                                 aria-busy={isBusy}
-                                className={`los-cat__page${DARK_RENDERERS.includes(getCatalogLayoutDefinition(currentPage?.layoutCode)?.renderer) ? ' is-dark' : ''}`}
+                                className={`los-cat__page${isBusy || !currentPage || DARK_RENDERERS.includes(getCatalogLayoutDefinition(currentPage?.layoutCode)?.renderer) ? ' is-dark' : ''}`}
                             >
                                 <div className="volt-catalog-layout-shell">
                                     <div className="volt-catalog-layout-container">{GetCatalogLayout(currentPage, hideCatalogNavigation)}</div>

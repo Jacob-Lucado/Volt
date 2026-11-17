@@ -863,3 +863,10 @@
 .los-cat__page.is-dark .volt-catalog-pets-info-text canvas {
     filter: brightness(1.25) contrast(1.4) drop-shadow(0 0 1px rgba(0, 0, 0, .7));
 }
+
+.los-window.los-cat .volt-catalog-loading-state {
+    inset: 0;
+    border-radius: 14px;
+    background: rgba(10, 16, 26, .72);
+    color: var(--los-text);
+}
