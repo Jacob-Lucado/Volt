@@ -11,7 +11,7 @@ import {
     Vector3d
 } from '@volt/renderer';
 import { useMemo, useState } from 'react';
-import { GetChatStylePreviewUrl, IsOwnerOfFurniture, LocalizeText, ProductTypeEnum } from '../../../../api';
+import { IsOwnerOfFurniture, LocalizeText, ProductTypeEnum } from '../../../../api';
 import { useVoltEvent } from '../../../events';
 import { useFurniRemovedEvent } from '../../engine';
 import { useRoom } from '../../useRoom';
@@ -80,6 +80,9 @@ const useFurniturePresentWidgetState = () => {
     }, []);
 
     useVoltEvent<RoomSessionPresentEvent>(RoomSessionPresentEvent.RSPE_PRESENT_OPENED, (event) => {
+        // AIR opens no gift window for a chat style; the chat style notification tells the player.
+        if (event.itemType === ProductTypeEnum.CHAT_STYLE) return;
+
         let furniData: IFurnitureData = null;
 
         if (event.itemType === ProductTypeEnum.FLOOR) {
@@ -151,11 +154,6 @@ const useFurniturePresentWidgetState = () => {
 
                 break;
             }
-            case ProductTypeEnum.CHAT_STYLE:
-                // The class id is the chat style id and the product code is chat_bubble_<id> (PrizeContainer.title, as:58-71).
-                setText(GetSessionDataManager().getProductData(event.productCode)?.name ?? null);
-                setImageUrl(GetChatStylePreviewUrl(event.classId));
-                break;
             case ProductTypeEnum.HABBO_CLUB:
                 setText(LocalizeText('widget.furni.present.hc'));
                 //setImageUrl(getGiftImageUrl('packagecard_icon_hc'));

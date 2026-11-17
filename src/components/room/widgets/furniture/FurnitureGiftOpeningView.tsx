@@ -43,7 +43,7 @@ export const FurnitureGiftOpeningView: FC<{}> = (props) => {
     const isClubItem = itemType === ProductTypeEnum.HABBO_CLUB;
     const spaceName = itemType === ProductTypeEnum.WALL ? GetSessionDataManager().getWallItemData(classId)?.className : null;
     const isSpacesItem = spaceName === 'floor' || spaceName === 'landscape' || spaceName === 'wallpaper';
-    const showPlacementButtons = !isSpacesItem && !isClubItem && itemType !== ProductTypeEnum.CHAT_STYLE;
+    const showPlacementButtons = !isSpacesItem && !isClubItem;
 
     const place = (itemId: number) => {
         const groupItem = groupItems.find((group) => group.getItemById(itemId)?.id === itemId);
