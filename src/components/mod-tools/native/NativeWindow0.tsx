@@ -4,6 +4,7 @@ import '../../../css/mod-tools/NativeWindow0.css';
 import blueAtlas from '../../../assets/mod-tools/skins/habbo-blue-skin.png';
 import borderWhiteXml from '../../../assets/mod-tools/skins/skin-border_white.xml?raw';
 import buttonXml from '../../../assets/mod-tools/skins/skin-button_default.xml?raw';
+import buttonThickXml from '../../../assets/mod-tools/skins/skin-button_thick.xml?raw';
 import checkboxXml from '../../../assets/mod-tools/skins/skin-button_checkbox.xml?raw';
 import closeXml from '../../../assets/mod-tools/skins/skin-button_close.xml?raw';
 import dropmenuXml from '../../../assets/mod-tools/skins/skin-dropmenu.xml?raw';
@@ -23,6 +24,7 @@ const SKINS = {
     header: parseNativeSkin(headerXml),
     border: parseNativeSkin(borderWhiteXml),
     button: parseNativeSkin(buttonXml),
+    buttonThick: parseNativeSkin(buttonThickXml),
     checkbox: parseNativeSkin(checkboxXml),
     close: parseNativeSkin(closeXml),
     dropmenu: parseNativeSkin(dropmenuXml),
@@ -168,9 +170,11 @@ interface Native0ButtonProps {
     color?: number;
     onClick?: () => void;
     name?: string;
+    /** `button_thick` of style 0: the thick skin with a Volter Bold label (text style button_bold). */
+    thick?: boolean;
 }
 
-export const Native0Button: FC<Native0ButtonProps> = ({ x, y, width, height, label, enabled = true, color, onClick, name }) => {
+export const Native0Button: FC<Native0ButtonProps> = ({ x, y, width, height, label, enabled = true, color, onClick, name, thick }) => {
     const [over, setOver] = useState(false);
     const [down, setDown] = useState(false);
     const state = !enabled ? 'disabled' : down ? 'pressed' : over ? 'hovering' : 'default';
@@ -213,9 +217,9 @@ export const Native0Button: FC<Native0ButtonProps> = ({ x, y, width, height, lab
             }}
             onPointerUp={() => setDown(false)}
         >
-            <NativeSkinView atlas={blueAtlas} color={color} height={height} layout="button" skin={SKINS.button} state={state} width={width} />
+            <NativeSkinView atlas={blueAtlas} color={color} height={height} layout={thick ? 'button_thick' : 'button'} skin={thick ? SKINS.buttonThick : SKINS.button} state={state} width={width} />
             <div className="native0-button__label" style={{ width, height, color: enabled ? '#000' : '#808080' }}>
-                <span ref={labelRef} className="native0-text__line" style={{ display: 'block', position: 'absolute', whiteSpace: 'nowrap', left: labelOffset.left + 1 + (LEADING_ONE_OR_FOUR.test(label) ? -1 : 0), top: labelOffset.top }}>
+                <span ref={labelRef} className={`native0-text__line${thick ? ' is-bold' : ''}`} style={{ display: 'block', position: 'absolute', whiteSpace: 'nowrap', left: labelOffset.left + 1 + (LEADING_ONE_OR_FOUR.test(label) ? -1 : 0), top: labelOffset.top }}>
                     {label}
                 </span>
             </div>
