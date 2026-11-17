@@ -219,7 +219,7 @@ export const Native0Button: FC<Native0ButtonProps> = ({ x, y, width, height, lab
         >
             <NativeSkinView atlas={blueAtlas} color={color} height={height} layout={thick ? 'button_thick' : 'button'} skin={thick ? SKINS.buttonThick : SKINS.button} state={state} width={width} />
             <div className="native0-button__label" style={{ width, height, color: enabled ? '#000' : '#808080' }}>
-                <span ref={labelRef} className={`native0-text__line${thick ? ' is-bold' : ''}`} style={{ display: 'block', position: 'absolute', whiteSpace: 'nowrap', left: labelOffset.left + 1 + (LEADING_ONE_OR_FOUR.test(label) ? -1 : 0), top: labelOffset.top }}>
+                <span ref={labelRef} className={`native0-text__line${thick ? ' is-bold' : ''}`} style={{ display: 'block', position: 'absolute', whiteSpace: 'nowrap', left: labelOffset.left + (thick ? 2 : 1) + (LEADING_ONE_OR_FOUR.test(label) ? -1 : 0), top: labelOffset.top }}>
                     {label}
                 </span>
             </div>
