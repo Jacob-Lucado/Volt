@@ -7,10 +7,10 @@ import {
     RoomUsersWithRightsComposer
 } from '@volt/renderer';
 import { FC, useEffect, useRef, useState } from 'react';
-import { GetConfigurationValue, IRoomData, LocalizeText, SendMessageComposer } from '../../../../api';
-import { ClassicScrollAreaView, UserProfileIconView } from '../../../../common';
+import { IRoomData, LocalizeText, SendMessageComposer } from '../../../../api';
+import { UserProfileIconView } from '../../../../common';
+import { LosField, LosIcon } from '../../../../common/lucadoos';
 import { useFriends, useMessageEvent } from '../../../../hooks';
-import { NavigatorRoomSettingsAtView } from './NavigatorRoomSettingsAtView';
 
 interface NavigatorRoomSettingsTabViewProps {
     roomData: IRoomData;
@@ -38,8 +38,6 @@ export const NavigatorRoomSettingsRightsTabView: FC<NavigatorRoomSettingsTabView
         setTimeout(() => pendingActionsRef.current.delete(key), 2000);
     };
 
-    // v75 loads arrow_move_left/right from ${image.library.url}Events/ (ros_flat_controller_xml / ros_friend_xml).
-    const imageLibraryUrl = GetConfigurationValue<string>('image.library.url', '');
     const allFriendsRaw = [...onlineFriends, ...offlineFriends];
 
     const allFriends = allFriendsRaw.filter((friend) => {
@@ -110,63 +108,59 @@ export const NavigatorRoomSettingsRightsTabView: FC<NavigatorRoomSettingsTabView
     }, [roomData]);
 
     return (
-        <div className="ros-tab ros-tab-wide" style={{ height: 364 }}>
-            <NavigatorRoomSettingsAtView className="ros-search" h={42} w={322} x={0} y={1} />
-            <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={138} x={6} y={13}>
-                {LocalizeText('navigator.flatctrls.filter')}
-            </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView h={23} w={216} x={97} y={9}>
-                <input className="ros-input ros-filter-input" value={filter} onChange={(event) => setFilter(event.target.value)} />
-            </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView className="ros-text ros-multi" h={34} w={150} x={0} y={44}>
-                {LocalizeText(
-                    'navigator.flatctrls.userswithrights',
-                    ['displayed', 'total'],
-                    [shownUsersWithRights.length.toString(), filteredUsersWithRights.size.toString()]
-                )}
-            </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView className="ros-text ros-multi" h={34} w={150} x={175} y={44}>
-                {LocalizeText('navigator.flatctrls.friends', ['displayed', 'total'], [shownFriends.length.toString(), friendsWithoutRights.length.toString()])}
-            </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView className="ros-list-border" h={289} w={150} x={0} y={74}>
-                <ClassicScrollAreaView className="ros-scroll" style={{ left: 4, top: 4, width: 142, height: 247 }} viewportClassName="ros-scroll-viewport">
-                    {shownUsersWithRights.map(([id, name], index) => (
-                        <div key={id} className={`ros-user-row${index % 2 !== 0 ? ' is-odd' : ''}`}>
-                            <button type="button" className="ros-user-bg" onClick={() => guardedSend(`take_${id}`, new RoomTakeRightsComposer(id))}>
-                                <span className="ros-user-name">{name}</span>
-                                <img alt="" className="ros-user-arrow is-rights" draggable={false} src={`${imageLibraryUrl}Events/arrow_move_right.png`} />
-                            </button>
-                            <UserProfileIconView className="ros-user-eye" userId={id} />
-                        </div>
-                    ))}
-                </ClassicScrollAreaView>
-                <button
-                    type="button"
-                    className="ros-button ros-button-thick"
-                    disabled={!filteredUsersWithRights.size}
-                    style={{ left: 4, top: 256, width: 142, height: 29 }}
-                    onClick={onRemoveAll}
-                >
-                    {LocalizeText('navigator.flatctrls.clear')}
-                </button>
-            </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView className="ros-list-border" h={289} w={150} x={173} y={74}>
-                <ClassicScrollAreaView className="ros-scroll" style={{ left: 4, top: 4, width: 142, height: 281 }} viewportClassName="ros-scroll-viewport">
-                    {shownFriends.map((friend, index) => (
-                        <div key={friend.id} className={`ros-user-row${index % 2 !== 0 ? ' is-odd' : ''}`}>
-                            <button
-                                type="button"
-                                className="ros-user-bg"
-                                onClick={() => guardedSend(`give_${friend.id}`, new RoomGiveRightsComposer(friend.id))}
-                            >
-                                <span className="ros-user-name">{friend.name}</span>
-                                <img alt="" className="ros-user-arrow is-friend" draggable={false} src={`${imageLibraryUrl}Events/arrow_move_left.png`} />
-                            </button>
-                            <UserProfileIconView className="ros-user-eye" userId={friend.id} />
-                        </div>
-                    ))}
-                </ClassicScrollAreaView>
-            </NavigatorRoomSettingsAtView>
+        <div className="los-ros__tab">
+            <LosField label={LocalizeText('navigator.flatctrls.filter')}>
+                <input className="los-input" value={filter} onChange={(event) => setFilter(event.target.value)} />
+            </LosField>
+            <div className="los-ros__cols">
+                <div className="los-ros__col">
+                    <b>
+                        {LocalizeText(
+                            'navigator.flatctrls.userswithrights',
+                            ['displayed', 'total'],
+                            [shownUsersWithRights.length.toString(), filteredUsersWithRights.size.toString()]
+                        )}
+                    </b>
+                    <div className="los-ros__users los-scroll">
+                        {shownUsersWithRights.map(([id, name]) => (
+                            <div key={id} className="los-ros__user">
+                                <button type="button" onClick={() => guardedSend(`take_${id}`, new RoomTakeRightsComposer(id))} title={name}>
+                                    <span>{name}</span>
+                                    <LosIcon name="chevron" size={14} />
+                                </button>
+                                <UserProfileIconView className="ros-user-eye" userId={id} />
+                            </div>
+                        ))}
+                    </div>
+                    <button type="button" className="los-button" disabled={!filteredUsersWithRights.size} onClick={onRemoveAll}>
+                        {LocalizeText('navigator.flatctrls.clear')}
+                    </button>
+                </div>
+                <div className="los-ros__col">
+                    <b>
+                        {LocalizeText(
+                            'navigator.flatctrls.friends',
+                            ['displayed', 'total'],
+                            [shownFriends.length.toString(), friendsWithoutRights.length.toString()]
+                        )}
+                    </b>
+                    <div className="los-ros__users los-scroll">
+                        {shownFriends.map((friend) => (
+                            <div key={friend.id} className="los-ros__user is-friend">
+                                <button
+                                    type="button"
+                                    onClick={() => guardedSend(`give_${friend.id}`, new RoomGiveRightsComposer(friend.id))}
+                                    title={friend.name}
+                                >
+                                    <LosIcon name="chevron" size={14} />
+                                    <span>{friend.name}</span>
+                                </button>
+                                <UserProfileIconView className="ros-user-eye" userId={friend.id} />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

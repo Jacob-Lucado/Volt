@@ -10,7 +10,8 @@ import {
 } from '@volt/renderer';
 import { FC, useRef, useState } from 'react';
 import { CreateLinkEvent, GetClubMemberLevel, GetMaxVisitorsList, GetSelectedMaxVisitors, IRoomData, LocalizeText, SendMessageComposer } from '../../../../api';
-import { VoltCardContentView, VoltCardHeaderView, VoltCardTabsItemView, VoltCardTabsView, VoltCardView } from '../../../../common';
+import { DraggableWindow } from '../../../../common';
+import { LosIcon, LosWindow } from '../../../../common/lucadoos';
 import { useMessageEvent, useNavigatorData, useNotificationActions } from '../../../../hooks';
 import { NavigatorRoomSettingsAccessTabView } from './NavigatorRoomSettingsAccessTabView';
 import { NavigatorRoomSettingsBasicTabView } from './NavigatorRoomSettingsBasicTabView';
@@ -30,7 +31,6 @@ const TABS: string[] = [
 
 // Access (2) and rights (3) only exist for the room the user is standing in.
 const OWN_ROOM_ONLY_TABS: string[] = [TABS[1], TABS[2]];
-const FRAME_WIDTH = 341;
 type IdleTimeoutField = 'idle_sleep_timeout_seconds' | 'idle_autokick_timeout_seconds';
 
 interface RoomSettingsForm {
@@ -47,7 +47,7 @@ export const NavigatorRoomSettingsView: FC<{}> = (props) => {
     const roomData = form?.roomData;
     const [selectedTab, setSelectedTab] = useState(TABS[0]);
     const [fieldError, setFieldError] = useState<RoomSettingsFieldError>(null);
-    const [overlayNode, setOverlayNode] = useState<HTMLDivElement>(null);
+    const [overlayNode] = useState<HTMLDivElement>(null);
     const [confirmKind, setConfirmKind] = useState<'delete' | 'removeAllRights'>(null);
     const pendingSaveRoomId = useRef(0);
     const { navigatorData } = useNavigatorData();
@@ -361,35 +361,31 @@ export const NavigatorRoomSettingsView: FC<{}> = (props) => {
     const enteredRoom = navigatorData?.enteredGuestRoom?.roomId === roomData.roomId ? navigatorData.enteredGuestRoom : null;
     const visibleTabs = isEnteredRoom ? TABS : TABS.filter((tab) => !OWN_ROOM_ONLY_TABS.includes(tab));
     const currentTab = visibleTabs.includes(selectedTab) ? selectedTab : TABS[0];
-    const tabWidth = Math.floor(FRAME_WIDTH / visibleTabs.length) - 1;
 
     return (
         <>
-            <VoltCardView className="volt-room-settings" frameStyle={3} isResizable={false} uniqueKey="volt-room-settings">
-                <VoltCardHeaderView
-                    headerText={LocalizeText('navigator.roomsettings')}
-                    isInfoToHabboPages={currentTab === TABS[3]}
-                    onClickInfoHabboPages={() => {
-                        if (currentTab === TABS[3]) CreateLinkEvent('habbopages/chat/options');
-                    }}
-                    onCloseClick={onClose}
-                />
-                <VoltCardTabsView classNames={['volt-room-settings-tabs']}>
-                    {visibleTabs.map((tab) => {
-                        return (
-                            <VoltCardTabsItemView
-                                key={tab}
-                                isActive={currentTab === tab}
-                                style={{ width: tabWidth, minWidth: tabWidth, maxWidth: tabWidth }}
-                                onClick={(event) => setSelectedTab(tab)}
-                            >
+            <DraggableWindow uniqueKey="volt-room-settings" handleSelector=".los-window__bar">
+                <LosWindow
+                    className="los-ros"
+                    icon="gear"
+                    title={LocalizeText('navigator.roomsettings')}
+                    onClose={onClose}
+                    actions={
+                        currentTab === TABS[3] && (
+                            <button type="button" className="los-window__button" onClick={() => CreateLinkEvent('habbopages/chat/options')}>
+                                <LosIcon name="help" size={14} />
+                            </button>
+                        )
+                    }
+                >
+                    <div className="los-tabs los-ros__tabs">
+                        {visibleTabs.map((tab) => (
+                            <button key={tab} type="button" className={`los-tab${currentTab === tab ? ' is-active' : ''}`} onClick={() => setSelectedTab(tab)}>
                                 {LocalizeText(tab)}
-                            </VoltCardTabsItemView>
-                        );
-                    })}
-                </VoltCardTabsView>
-                <VoltCardContentView className="volt-room-settings-content" gap={0}>
-                    <div className="ros-viewport">
+                            </button>
+                        ))}
+                    </div>
+                    <div className="los-ros__body los-scroll">
                         {currentTab === TABS[0] && (
                             <NavigatorRoomSettingsBasicTabView
                                 handleChange={handleChange}
@@ -430,9 +426,8 @@ export const NavigatorRoomSettingsView: FC<{}> = (props) => {
                         )}
                         {currentTab === TABS[4] && <NavigatorRoomSettingsModTabView handleChange={handleChange} roomData={roomData} />}
                     </div>
-                    <div ref={setOverlayNode} className="ros-overlay" />
-                </VoltCardContentView>
-            </VoltCardView>
+                </LosWindow>
+            </DraggableWindow>
             {confirmKind && (
                 <NavigatorRoomSettingsConfirmView
                     title={LocalizeText(confirmKind === 'delete' ? 'navigator.roomsettings' : 'navigator.flatctrls.removeconfirm.title')}

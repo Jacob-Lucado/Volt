@@ -1,11 +1,9 @@
 import { GetSessionDataManager } from '@volt/renderer';
 import { FC, useEffect, useState } from 'react';
 import { GetClubMemberLevel, GetMaxVisitorsList, GetSelectedMaxVisitors, IRoomData, LocalizeText } from '../../../../api';
-import removeIconSrc from '../../../../assets/images/navigator/room-settings/remove-icon-bb2200.png';
-import { HabboDropMenuView } from '../../../../common/dropmenu/HabboDropMenuView';
+import { LosCheck, LosField, LosIcon, LosSelect } from '../../../../common/lucadoos';
 import { useNavigatorData } from '../../../../hooks';
-import { NavigatorRoomSettingsAtView } from './NavigatorRoomSettingsAtView';
-import { RoomSettingsFieldError, RoomSettingsFieldErrorView } from './RoomSettingsFieldErrorView';
+import { RoomSettingsFieldError } from './RoomSettingsFieldErrorView';
 
 const ROOM_NAME_MIN_LENGTH = 3;
 const ROOM_NAME_MAX_LENGTH = 60;
@@ -80,124 +78,84 @@ export const NavigatorRoomSettingsBasicTabView: FC<NavigatorRoomSettingsTabViewP
     const tagHasError = (tag: string) => fieldError?.field === 'tags' && tag !== '' && tag.toLowerCase() === fieldError.tagText;
 
     return (
-        <>
-            <div className="ros-tab" style={{ height: 360 }}>
-                <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={119} x={0} y={-3}>
-                    {LocalizeText('navigator.roomname')}
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView h={20} w={300} x={0} y={14}>
-                    <input
-                        className={`ros-input${fieldError?.field === 'name' ? ' is-invalid' : ''}`}
-                        value={roomName}
-                        maxLength={ROOM_NAME_MAX_LENGTH}
-                        onChange={(event) => setRoomName(event.target.value)}
-                        onBlur={(event) => saveRoomName(event.currentTarget.value)}
-                        onKeyDown={(event) => {
-                            if (event.key === 'Enter') saveRoomName(event.currentTarget.value);
-                        }}
-                    />
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={163} x={0} y={35}>
-                    {LocalizeText('navigator.roomsettings.desc')}
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView h={39} w={300} x={0} y={51}>
-                    <textarea
-                        className={`ros-input ros-textarea${fieldError?.field === 'description' ? ' is-invalid' : ''}`}
-                        value={roomDescription}
-                        maxLength={DESC_MAX_LENGTH}
-                        onChange={(event) => setRoomDescription(event.target.value)}
-                        onBlur={(event) => saveRoomDescription(event.currentTarget.value)}
-                    />
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={112} x={0} y={100}>
-                    {LocalizeText('navigator.category')}
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-drop" h={24} w={300} x={0} y={116}>
-                    <HabboDropMenuView
-                        label={LocalizeText('navigator.category')}
+        <div className="los-ros__tab">
+            <LosField label={LocalizeText('navigator.roomname')} error={fieldError?.field === 'name' ? fieldError.message : undefined}>
+                <input
+                    className="los-input"
+                    value={roomName}
+                    maxLength={ROOM_NAME_MAX_LENGTH}
+                    onChange={(event) => setRoomName(event.target.value)}
+                    onBlur={(event) => saveRoomName(event.currentTarget.value)}
+                    onKeyDown={(event) => {
+                        if (event.key === 'Enter') saveRoomName(event.currentTarget.value);
+                    }}
+                />
+            </LosField>
+            <LosField label={LocalizeText('navigator.roomsettings.desc')} error={fieldError?.field === 'description' ? fieldError.message : undefined}>
+                <textarea
+                    className="los-input los-ros__area"
+                    value={roomDescription}
+                    maxLength={DESC_MAX_LENGTH}
+                    onChange={(event) => setRoomDescription(event.target.value)}
+                    onBlur={(event) => saveRoomDescription(event.currentTarget.value)}
+                />
+            </LosField>
+            <div className="los-ros__row">
+                <LosField label={LocalizeText('navigator.category')}>
+                    <LosSelect
                         value={roomData.categoryId}
                         options={(categories ?? []).map((category) => ({ value: category.id, label: LocalizeText(category.name) }))}
-                        onSelect={(value) => handleChange('category', value)}
+                        onChange={(value) => handleChange('category', value)}
                     />
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={125} x={0} y={145}>
-                    {LocalizeText('navigator.maxvisitors')}
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-drop" h={24} w={300} x={0} y={161}>
-                    <HabboDropMenuView
-                        label={LocalizeText('navigator.maxvisitors')}
+                </LosField>
+                <LosField label={LocalizeText('navigator.maxvisitors')}>
+                    <LosSelect
                         value={selectedVisitorIndex}
                         options={visitorOptions.map((value, index) => ({ value: index, label: String(value) }))}
-                        onSelect={(index) => handleChange('max_visitors', visitorOptions[index])}
+                        onChange={(index) => handleChange('max_visitors', visitorOptions[index])}
                     />
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={138} x={0} y={190}>
-                    {LocalizeText('navigator.tradesettings')}
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-drop" h={24} w={300} x={0} y={206}>
-                    <HabboDropMenuView
-                        label={LocalizeText('navigator.tradesettings')}
-                        value={roomData.tradeState}
-                        options={[
-                            { value: 0, label: LocalizeText('navigator.roomsettings.trade_not_allowed') },
-                            { value: 1, label: LocalizeText('navigator.roomsettings.trade_not_with_Controller') },
-                            { value: 2, label: LocalizeText('navigator.roomsettings.trade_allowed') }
-                        ]}
-                        onSelect={(value) => handleChange('trade_state', value)}
-                    />
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={86} x={0} y={238}>
-                    {LocalizeText('navigator.tags')}
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView h={15} w={145} x={0} y={254}>
+                </LosField>
+            </div>
+            <LosField label={LocalizeText('navigator.tradesettings')}>
+                <LosSelect
+                    value={roomData.tradeState}
+                    options={[
+                        { value: 0, label: LocalizeText('navigator.roomsettings.trade_not_allowed') },
+                        { value: 1, label: LocalizeText('navigator.roomsettings.trade_not_with_Controller') },
+                        { value: 2, label: LocalizeText('navigator.roomsettings.trade_allowed') }
+                    ]}
+                    onChange={(value) => handleChange('trade_state', value)}
+                />
+            </LosField>
+            <LosField
+                label={LocalizeText('navigator.tags')}
+                error={fieldError?.field === 'tags' && (tagHasError(roomTag1) || tagHasError(roomTag2)) ? fieldError.message : undefined}
+            >
+                <div className="los-ros__row">
                     <input
-                        className={`ros-input${tagHasError(roomTag1) ? ' is-invalid' : ''}`}
+                        className="los-input"
                         value={roomTag1 ? `#${roomTag1}` : ''}
                         onChange={(event) => setRoomTag1(event.target.value.replace(/^#/, ''))}
                         onBlur={() => saveTags(0)}
                     />
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView h={15} w={145} x={149} y={254}>
                     <input
-                        className={`ros-input${tagHasError(roomTag2) ? ' is-invalid' : ''}`}
+                        className="los-input"
                         value={roomTag2 ? `#${roomTag2}` : ''}
                         onChange={(event) => setRoomTag2(event.target.value.replace(/^#/, ''))}
                         onBlur={() => saveTags(1)}
                     />
-                </NavigatorRoomSettingsAtView>
-                {fieldError?.field === 'name' && (
-                    <RoomSettingsFieldErrorView h={20} message={fieldError.message} overlayNode={overlayNode} w={300} x={0} y={14} />
-                )}
-                {fieldError?.field === 'description' && (
-                    <RoomSettingsFieldErrorView h={39} message={fieldError.message} overlayNode={overlayNode} w={300} x={0} y={51} />
-                )}
-                {tagHasError(roomTag1) && <RoomSettingsFieldErrorView h={15} message={fieldError.message} overlayNode={overlayNode} w={145} x={0} y={254} />}
-                {tagHasError(roomTag2) && <RoomSettingsFieldErrorView h={15} message={fieldError.message} overlayNode={overlayNode} w={145} x={149} y={254} />}
-                <NavigatorRoomSettingsAtView h={20} w={20} x={2} y={312}>
-                    <input
-                        id="ros-allow-walk-through"
-                        className="ros-check"
-                        type="checkbox"
-                        checked={roomData.allowWalkthrough}
-                        onChange={(event) => handleChange('allow_walkthrough', event.target.checked)}
-                    />
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-text" h={17} w={249} x={18} y={311}>
-                    <label htmlFor="ros-allow-walk-through">{LocalizeText('navigator.roomsettings.allow_walk_through')}</label>
-                </NavigatorRoomSettingsAtView>
-                {isEnteredRoom && (
-                    <>
-                        <NavigatorRoomSettingsAtView className={isSafetyLocked ? 'ros-disabled' : ''} h={18} w={174} x={59} y={339}>
-                            <button type="button" className="ros-link ros-remove-link" disabled={isSafetyLocked} onClick={onDelete}>
-                                <span>
-                                    <img className="ros-remove-icon" src={removeIconSrc} alt="" />
-                                    {LocalizeText('navigator.roomsettings.delete')}
-                                </span>
-                            </button>
-                        </NavigatorRoomSettingsAtView>
-                    </>
-                )}
-            </div>
-        </>
+                </div>
+            </LosField>
+            <LosCheck
+                checked={roomData.allowWalkthrough}
+                label={LocalizeText('navigator.roomsettings.allow_walk_through')}
+                onChange={(checked) => handleChange('allow_walkthrough', checked)}
+            />
+            {isEnteredRoom && (
+                <button type="button" className="los-button los-button--danger" disabled={isSafetyLocked} onClick={onDelete}>
+                    <LosIcon name="trash" size={14} /> {LocalizeText('navigator.roomsettings.delete')}
+                </button>
+            )}
+        </div>
     );
 };
