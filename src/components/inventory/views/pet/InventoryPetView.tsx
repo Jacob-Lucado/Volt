@@ -1,10 +1,10 @@
 import { InventoryFilterSelect } from '../InventoryFilterSelect';
+import { AirSkinButton } from '../../../../common/air/AirSkinButton';
 import { IRoomSession, RoomPreviewer } from '@volt/renderer';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { attemptPetPlacement, LocalizeText, UnseenItemCategory } from '../../../../api';
 import { ClassicScrollAreaView } from '../../../../common/scroll-area/ClassicScrollAreaView';
 import { useInventoryPets, useInventoryUnseenTracker } from '../../../../hooks';
-import { VoltButton } from '../../../../layout';
 import { InventoryCategoryEmptyView } from '../InventoryCategoryEmptyView';
 import { InventoryPetImageView } from './InventoryPetImageView';
 import { InventoryPetItemView } from './InventoryPetItemView';
@@ -127,13 +127,15 @@ export const InventoryPetView: FC<{
                 <div className="volt-inventory-animal-image">{selectedPet && <InventoryPetImageView pet={selectedPet.petData} preview />}</div>
                 <div className="volt-inventory-animal-description">{selectedPet && LocalizeText(`pet.type.${selectedPet.petData.typeId}`)}</div>
                 <div className="volt-inventory-animal-actions">
-                    <VoltButton
+                    <AirSkinButton
                         className="volt-inventory-animal-place"
                         disabled={!selectedPet || !(roomSession?.isRoomOwner || roomSession?.allowPets)}
                         onClick={() => attemptPetPlacement(selectedPet)}
-                    >
-                        {LocalizeText('inventory.pets.placetoroom')}
-                    </VoltButton>
+                        height={28}
+                        widthMax={158}
+                        widthMin={158}
+                        caption={LocalizeText('inventory.pets.placetoroom')}
+                    />
                 </div>
             </div>
         </div>

@@ -1,8 +1,8 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { AirSkinButton } from '../../../../common/air/AirSkinButton';
 import { GetConfigurationValue, LocalizeBadgeDescription, LocalizeBadgeName, localizeWithFallback, UnseenItemCategory } from '../../../../api';
 import { LayoutBadgeImageView } from '../../../../common';
 import { useInventoryBadges, useInventoryUnseenTracker } from '../../../../hooks';
-import { VoltButton } from '../../../../layout';
 import { InventoryBadgeItemView } from './InventoryBadgeItemView';
 
 const ActiveBadgeSlot: FC<{
@@ -187,21 +187,26 @@ export const InventoryBadgeView: FC<{ filteredBadgeCodes?: string[] }> = (props)
                             </div>
                         </div>
                         <div className="volt-inventory-badges-footer-actions">
-                            <VoltButton
-                                className={`button-shiny volt-inventory-btn-wear ${isWearingBadge(selectedBadgeCode) ? 'is-clear' : ''}`}
+                            <AirSkinButton
+                                className={`volt-inventory-btn-wear ${isWearingBadge(selectedBadgeCode) ? 'is-clear' : ''}`}
                                 disabled={!isWearingBadge(selectedBadgeCode) && !canWearBadges()}
                                 onClick={() => toggleBadge(selectedBadgeCode)}
-                            >
-                                {isWearingBadge(selectedBadgeCode)
-                                    ? localizeWithFallback('inventory.badges.clearbadge', 'Clear badge')
-                                    : localizeWithFallback('inventory.badges.wearbadge', 'Wear badge')}
-                            </VoltButton>
+                                height={28}
+                                caption={
+                                    isWearingBadge(selectedBadgeCode)
+                                        ? localizeWithFallback('inventory.badges.clearbadge', 'Clear badge')
+                                        : localizeWithFallback('inventory.badges.wearbadge', 'Wear badge')
+                                }
+                            />
                         </div>
                     </>
                 ) : (
-                    <VoltButton className="button-shiny volt-inventory-btn-wear volt-inventory-badge-wear-empty" disabled>
-                        {localizeWithFallback('inventory.badges.wearbadge', 'Wear badge')}
-                    </VoltButton>
+                    <AirSkinButton
+                        className="volt-inventory-btn-wear volt-inventory-badge-wear-empty"
+                        disabled
+                        height={28}
+                        caption={localizeWithFallback('inventory.badges.wearbadge', 'Wear badge')}
+                    />
                 )}
             </div>
         </div>

@@ -111,26 +111,7 @@
 }
 
 .volt-inventory-window .volt-inventory-animal-place {
-    width: 158px;
-    height: 28px;
-    min-height: 28px;
     flex: none;
-    padding: 0 4px;
-    border: 5px solid transparent !important;
-    border-image: var(--habbo-skin-shiny) 5 fill / 5px !important;
-    background: transparent;
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 17px;
-    box-shadow: none;
-    image-rendering: var(--volt-pixel-art, pixelated);
-}
-
-.volt-inventory-window .volt-inventory-animal-place:hover { border-image-source: var(--habbo-skin-shiny-hover) !important; }
-.volt-inventory-window .volt-inventory-animal-place:active { border-image-source: var(--habbo-skin-shiny-pressed) !important; }
-.volt-inventory-window .volt-inventory-animal-place:disabled {
-    border-image-source: url('@/assets/images/habbo-skin/slices/button-shiny-disabled.png') !important;
-    opacity: 1;
 }
 
 @media (max-width: 489px) {
