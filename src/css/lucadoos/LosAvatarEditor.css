@@ -1,0 +1,209 @@
+/* The avatar editor, rebuilt as a LucadoOS window. */
+
+.los-ae-wrap {
+    --los-glass: rgba(15, 23, 36, .9);
+    --los-line: rgba(148, 176, 214, .2);
+    --los-soft: rgba(148, 176, 214, .09);
+    --los-soft-2: rgba(148, 176, 214, .16);
+    --los-text: #e8eef5;
+    --los-dim: #93a4ba;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+.los-ae-wrap .los-window.los-ae {
+    display: flex;
+    flex-direction: column;
+    width: 560px;
+    min-width: 560px;
+    max-width: 560px;
+    height: 500px;
+    min-height: 500px;
+    max-height: 500px;
+    resize: none;
+    overflow: hidden;
+}
+
+.los-ae__tabs {
+    display: flex;
+    gap: 4px;
+    padding: 8px 10px 0;
+    border-bottom: 1px solid var(--los-line);
+}
+
+.los-ae__tab {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: 8px 8px 0 0;
+    background: transparent;
+    cursor: pointer;
+    opacity: .6;
+}
+
+.los-ae__tab:hover { background: var(--los-soft); opacity: 1; }
+.los-ae__tab.is-active { border-bottom-color: #4da3ff; background: var(--los-soft-2); opacity: 1; }
+.los-ae__tab img { max-width: 30px; max-height: 28px; image-rendering: pixelated; }
+
+.los-ae__body { display: flex; flex: 1; gap: 12px; min-height: 0; padding: 12px; }
+
+.los-ae__side {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    width: 150px;
+}
+
+.los-ae__name { font-size: 13px; font-weight: 600; }
+
+.los-ae__main { display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; }
+
+.los-ae-wrap .volt-avatar-editor-preview-shell {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 130px;
+    height: 250px;
+    border: 1px solid var(--los-line);
+    border-radius: 12px;
+    background: radial-gradient(circle at 50% 30%, rgba(77, 163, 255, .22), rgba(0, 0, 0, .3));
+    overflow: hidden;
+}
+
+.los-ae-wrap .volt-avatar-editor-preview-shell .figure-preview-container { margin: 0 auto; }
+
+.los-ae-wrap .volt-avatar-editor-rotate {
+    left: 40px;
+    top: 214px;
+    filter: invert(1) brightness(1.4);
+    opacity: .8;
+}
+
+.los-ae__model { display: flex; flex: 1; flex-direction: column; gap: 8px; min-height: 0; }
+
+.los-ae__chips { display: flex; flex-wrap: wrap; gap: 4px; }
+
+.los-ae__chip {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    padding: 3px 8px;
+    border: 1px solid var(--los-line);
+    border-radius: 9px;
+    background: var(--los-soft);
+    color: var(--los-text);
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.los-ae__chip:hover { background: var(--los-soft-2); }
+.los-ae__chip.is-active { border-color: #4da3ff; background: rgba(77, 163, 255, .18); }
+.los-ae__chip .avatar-editor-icon,
+.los-ae__chip img { max-width: 26px; max-height: 26px; }
+
+.los-ae-wrap .volt-avatar-editor-parts-grid {
+    position: relative;
+    left: auto;
+    top: auto;
+    flex: 1;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    border: 1px solid var(--los-line);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, .22);
+}
+
+.los-ae-wrap .volt-avatar-editor-parts-grid [data-index] {
+    grid-template-columns: repeat(5, 50px) !important;
+    justify-content: space-around;
+}
+
+.los-ae-wrap .avatar-parts::before { border-radius: 10px; background: rgba(77, 163, 255, .28) !important; }
+.los-ae-wrap .avatar-parts.part-selected::before { outline: 2px solid #4da3ff; outline-offset: -2px; }
+
+.los-ae-wrap .volt-avatar-editor-palettes {
+    position: relative;
+    left: auto;
+    top: auto;
+    flex: none;
+    width: 100%;
+    height: 78px;
+    padding: 6px;
+    border: 1px solid var(--los-line);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, .22);
+}
+
+.los-ae-wrap .volt-avatar-editor-palettes .avatar-editor-palette-set-view { width: auto; flex: 1; height: 100%; }
+.los-ae-wrap .volt-avatar-editor-palettes.dual-palette .avatar-editor-palette-set-view { width: auto; flex: 1; }
+
+.los-ae__text { color: var(--los-text); font-size: 13px; }
+
+.los-ae-wrap .volt-avatar-editor-hotlooks,
+.los-ae-wrap .volt-avatar-editor-effects { position: relative; left: auto; top: auto; width: 100%; height: 100%; color: var(--los-text); }
+
+.los-ae-wrap .volt-avatar-editor-hotlooks-title,
+.los-ae-wrap .volt-avatar-editor-hotlooks-choose { position: static; display: block; margin-bottom: 6px; }
+.los-ae-wrap .volt-avatar-editor-hotlooks-title { font-size: 16px; font-weight: 600; }
+
+.los-ae-wrap .volt-avatar-editor-effects-shop {
+    border: 1px solid var(--los-line) !important;
+    border-radius: 9px !important;
+    background: var(--los-soft) !important;
+    color: var(--los-text);
+}
+
+.los-ae-wrap .volt-avatar-editor-wardrobe {
+    position: relative;
+    width: 200px;
+    height: 500px;
+    flex: none;
+    margin: 0;
+    padding: 0 8px;
+    overflow: hidden;
+    border: 1px solid var(--los-line);
+    border-radius: 16px;
+    background: var(--los-glass);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .45);
+    -webkit-backdrop-filter: blur(22px);
+    backdrop-filter: blur(22px);
+    color: var(--los-text);
+}
+
+.los-ae-wrap .volt-avatar-editor-wardrobe-header { padding: 12px 6px 4px; }
+.los-ae-wrap .volt-avatar-editor-wardrobe-title { color: var(--los-dim); font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+
+.los-ae-wrap .volt-avatar-editor-wardrobe-slots {
+    margin: 8px 0 0 9px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, .22);
+}
+
+.los-ae-wrap .volt-avatar-editor-wardrobe-slots::before { display: none; }
+.los-ae-wrap .volt-avatar-editor-wardrobe-slot { border-radius: 8px; background: var(--los-soft); }
+
+.los-ae-wrap .volt-avatar-editor-model.los-ae__model {
+    position: relative;
+    inset: auto;
+    width: auto;
+    height: auto;
+}
+
+.los-ae-wrap .los-ae__chip .avatar-editor-icon,
+.los-ae-wrap .los-ae__chip .avatar-editor-icon img {
+    position: static;
+    width: auto;
+    min-width: 0;
+    height: auto;
+    margin: 0;
+    transform: none;
+}

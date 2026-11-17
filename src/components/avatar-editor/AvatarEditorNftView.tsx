@@ -1,7 +1,6 @@
 import { INftWardrobeItem } from '@volt/renderer';
 import { CSSProperties, FC } from 'react';
 import { LocalizeText } from '../../api';
-import { NativeText } from '../../common/native-text/NativeText';
 import { ClassicScrollAreaView } from '../../common/scroll-area/ClassicScrollAreaView';
 import { useAvatarEditor } from '../../hooks';
 import { AvatarEditorHotLookThumbnailView } from './AvatarEditorHotLookThumbnailView';
@@ -23,15 +22,13 @@ const COLLECTION_INFO: Record<string, { name: string; color: number }> = {
 const toCss = (color: number) => `#${color.toString(16).padStart(6, '0')}`;
 
 /** The Avatar Collectibles tab (nft/NftAvatarsView.as, AvatarEditorContent nfts_content): the user's collectible avatars to choose from. */
-export const AvatarEditorNftView: FC = () =>
-{
+export const AvatarEditorNftView: FC = () => {
     const { nftAvatars, selectedNft, selectNftAvatar } = useAvatarEditor();
     const selected = selectedNft ? nftAvatars.find((avatar) => avatar.id === selectedNft.id) : null;
     const info = selected && selectedNft.infoVisible ? COLLECTION_INFO[selected.contractKey] : null;
     const infoText = selected && selectedNft.infoVisible ? `${info ? LocalizeText(info.name) : 'null'} #${selected.id}` : null;
 
-    const getButtonStyle = (avatar: INftWardrobeItem): CSSProperties =>
-    {
+    const getButtonStyle = (avatar: INftWardrobeItem): CSSProperties => {
         const colors = COLLECTION_BUTTON_COLORS[avatar.contractKey];
 
         if (!colors) return undefined;
@@ -39,26 +36,32 @@ export const AvatarEditorNftView: FC = () =>
         return { backgroundColor: toCss(selectedNft?.id === avatar.id ? colors[1] : colors[0]) };
     };
 
-    return <div className="volt-avatar-editor-hotlooks volt-avatar-editor-nfts">
-        <NativeText className="volt-avatar-editor-hotlooks-title" text={LocalizeText('avatareditor.nfts.title')} textStyle="u_bold" background={0xeef2f7} overrides={{ size: 20 }} />
-        <NativeText className="volt-avatar-editor-hotlooks-choose" text={LocalizeText('avatareditor.nfts.choose')} textStyle="u_regular" background={0xeef2f7} />
-        <div className="volt-avatar-editor-nfts-grid">
-            <ClassicScrollAreaView contentClassName="volt-avatar-editor-nfts-items" scrollStep={50}>
-                {nftAvatars.map((avatar, index) => <button
-                    type="button"
-                    key={`${avatar.id}:${index}`}
-                    className={`volt-avatar-editor-hotlook volt-avatar-editor-nft${avatar.contractKey in COLLECTION_BUTTON_COLORS ? ' is-tinted' : ''}`}
-                    style={getButtonStyle(avatar)}
-                    aria-pressed={selectedNft?.id === avatar.id}
-                    aria-label={LocalizeText('avatareditor.nfts.choose')}
-                    onClick={() => selectNftAvatar(avatar)}
-                >
-                    {avatar.figureString && <AvatarEditorHotLookThumbnailView figure={avatar.figureString} gender={avatar.gender.toUpperCase()} />}
-                </button>)}
-            </ClassicScrollAreaView>
+    return (
+        <div className="volt-avatar-editor-hotlooks volt-avatar-editor-nfts">
+            <span className="los-ae__text volt-avatar-editor-hotlooks-title">{LocalizeText('avatareditor.nfts.title')}</span>
+            <span className="los-ae__text volt-avatar-editor-hotlooks-choose">{LocalizeText('avatareditor.nfts.choose')}</span>
+            <div className="volt-avatar-editor-nfts-grid">
+                <ClassicScrollAreaView contentClassName="volt-avatar-editor-nfts-items" scrollStep={50}>
+                    {nftAvatars.map((avatar, index) => (
+                        <button
+                            type="button"
+                            key={`${avatar.id}:${index}`}
+                            className={`volt-avatar-editor-hotlook volt-avatar-editor-nft${avatar.contractKey in COLLECTION_BUTTON_COLORS ? ' is-tinted' : ''}`}
+                            style={getButtonStyle(avatar)}
+                            aria-pressed={selectedNft?.id === avatar.id}
+                            aria-label={LocalizeText('avatareditor.nfts.choose')}
+                            onClick={() => selectNftAvatar(avatar)}
+                        >
+                            {avatar.figureString && <AvatarEditorHotLookThumbnailView figure={avatar.figureString} gender={avatar.gender.toUpperCase()} />}
+                        </button>
+                    ))}
+                </ClassicScrollAreaView>
+            </div>
+            {infoText && (
+                <div className="volt-avatar-editor-nft-info">
+                    <span className="los-ae__text">{infoText}</span>
+                </div>
+            )}
         </div>
-        {infoText && <div className="volt-avatar-editor-nft-info">
-            <NativeText text={infoText} textStyle="u_bold" background={0x454545} overrides={{ size: 10, color: info?.color ?? 0xffffff }} maxWidth={122} />
-        </div>}
-    </div>;
+    );
 };

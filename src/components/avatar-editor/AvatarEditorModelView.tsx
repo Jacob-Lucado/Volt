@@ -1,12 +1,11 @@
 import { AvatarEditorFigureCategory, AvatarFigurePartType, FigureDataContainer } from '@volt/renderer';
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { IAvatarEditorCategory, LocalizeText } from '../../api';
-import { NativeText } from '../../common/native-text/NativeText';
 import { useAvatarEditor } from '../../hooks';
+import { useAvatarEditorGridWheel } from '../../hooks/avatar-editor/useAvatarEditorGridWheel';
 import { AvatarEditorIcon } from './AvatarEditorIcon';
 import { AvatarEditorFigureSetView } from './figure-set';
 import { AvatarEditorPaletteSetView } from './palette-set';
-import { useAvatarEditorGridWheel } from '../../hooks/avatar-editor/useAvatarEditorGridWheel';
 
 export const AvatarEditorModelView: FC<{
     name: string;
@@ -74,17 +73,25 @@ export const AvatarEditorModelView: FC<{
     if (!activeCategory) return null;
 
     return (
-        <div ref={container} className="volt-avatar-editor-model">
-            <div className={`volt-avatar-editor-subcategories${name === AvatarEditorFigureCategory.GENERIC ? ' is-gender' : ''}`}>
+        <div ref={container} className="volt-avatar-editor-model los-ae__model">
+            <div className="los-ae__chips">
                 {name === AvatarEditorFigureCategory.GENERIC && (
                     <>
-                        <button type="button" className="category-item gender-category-item" onClick={() => setGender(AvatarFigurePartType.MALE)}>
+                        <button
+                            type="button"
+                            className={`los-ae__chip${gender === FigureDataContainer.MALE ? ' is-active' : ''}`}
+                            onClick={() => setGender(AvatarFigurePartType.MALE)}
+                        >
                             <AvatarEditorIcon icon="male" selected={gender === FigureDataContainer.MALE} />
-                            <NativeText className="volt-avatar-editor-gender-text" text={LocalizeText('avatareditor.generic.boy')} textStyle="u_bold" background={0xeef2f7} />
+                            <span>{LocalizeText('avatareditor.generic.boy')}</span>
                         </button>
-                        <button type="button" className="category-item gender-category-item" onClick={() => setGender(AvatarFigurePartType.FEMALE)}>
+                        <button
+                            type="button"
+                            className={`los-ae__chip${gender === FigureDataContainer.FEMALE ? ' is-active' : ''}`}
+                            onClick={() => setGender(AvatarFigurePartType.FEMALE)}
+                        >
                             <AvatarEditorIcon icon="female" selected={gender === FigureDataContainer.FEMALE} />
-                            <NativeText className="volt-avatar-editor-gender-text" text={LocalizeText('avatareditor.generic.girl')} textStyle="u_bold" background={0xeef2f7} />
+                            <span>{LocalizeText('avatareditor.generic.girl')}</span>
                         </button>
                     </>
                 )}
@@ -93,7 +100,7 @@ export const AvatarEditorModelView: FC<{
                         <button
                             type="button"
                             key={category.setType}
-                            className="category-item"
+                            className={`los-ae__chip${resolvedSetType === category.setType ? ' is-active' : ''}`}
                             aria-pressed={resolvedSetType === category.setType}
                             onClick={() => selectSet(category.setType)}
                         >
@@ -102,14 +109,14 @@ export const AvatarEditorModelView: FC<{
                     ))}
             </div>
 
-            <div className="volt-avatar-editor-parts-grid">
-                <AvatarEditorFigureSetView category={activeCategory} columnCount={6} />
+            <div className="volt-avatar-editor-parts-grid los-ae__grid">
+                <AvatarEditorFigureSetView category={activeCategory} columnCount={5} />
             </div>
 
-            <div className={`volt-avatar-editor-palettes${paletteCount >= 2 ? ' dual-palette' : ''}`}>
+            <div className={`volt-avatar-editor-palettes los-ae__palettes${paletteCount >= 2 ? ' dual-palette' : ''}`}>
                 {paletteCount >= 1 && (
                     <div className="avatar-editor-palette-set-view">
-                        <AvatarEditorPaletteSetView category={activeCategory} columnCount={paletteCount >= 2 ? 9 : 20} paletteIndex={0} />
+                        <AvatarEditorPaletteSetView category={activeCategory} columnCount={paletteCount >= 2 ? 9 : 14} paletteIndex={0} />
                     </div>
                 )}
                 {paletteCount >= 2 && (

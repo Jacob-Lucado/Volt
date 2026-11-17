@@ -9,23 +9,22 @@ import {
 } from '@volt/renderer';
 import { FC, useEffect, useRef, useState } from 'react';
 import { LocalizeText, SendMessageComposer } from '../../api';
+import mainEffectsSrc from '../../assets/images/avatareditor/air/main-effects.png';
 import mainGenericSrc from '../../assets/images/avatareditor/air/main-generic.png';
 import mainHeadSrc from '../../assets/images/avatareditor/air/main-head.png';
 import mainHotLooksSrc from '../../assets/images/avatareditor/air/main-hotlooks.png';
-import mainEffectsSrc from '../../assets/images/avatareditor/air/main-effects.png';
 import mainLegsSrc from '../../assets/images/avatareditor/air/main-legs.png';
 import mainMiscSrc from '../../assets/images/avatareditor/air/main-misc.png';
 import mainTorsoSrc from '../../assets/images/avatareditor/air/main-torso.png';
-import wardrobeHangerSrc from '../../assets/images/avatareditor/wardrobe-hanger.png';
 import mainNftSrc from '../../assets/images/wardrobe/nft.png';
-import { VoltCardContentView, VoltCardHeaderView, VoltCardTabsItemView, VoltCardTabsView, VoltCardView } from '../../common';
-import { NativeText } from '../../common/native-text/NativeText';
+import { DraggableWindow } from '../../common';
+import { LosIcon, LosWindow } from '../../common/lucadoos';
 import { useAvatarEditor } from '../../hooks';
+import { AvatarEditorEffectsView } from './AvatarEditorEffectsView';
 import { AvatarEditorFigurePreviewView } from './AvatarEditorFigurePreviewView';
+import { AvatarEditorHotLooksView } from './AvatarEditorHotLooksView';
 import { AvatarEditorModelView } from './AvatarEditorModelView';
 import { AvatarEditorNftView } from './AvatarEditorNftView';
-import { AvatarEditorHotLooksView } from './AvatarEditorHotLooksView';
-import { AvatarEditorEffectsView } from './AvatarEditorEffectsView';
 import { AvatarEditorWardrobeView } from './AvatarEditorWardrobeView';
 
 const MAIN_TAB_ICONS: Record<string, string> = {
@@ -110,9 +109,12 @@ export const AvatarEditorView: FC<{}> = (props) => {
         setIsVisible(false);
     };
 
-    useEffect(() => () => {
-        if (saveTimer.current !== null) window.clearTimeout(saveTimer.current);
-    }, []);
+    useEffect(
+        () => () => {
+            if (saveTimer.current !== null) window.clearTimeout(saveTimer.current);
+        },
+        []
+    );
 
     useEffect(() => {
         const linkTracker: ILinkEventTracker = {
@@ -185,67 +187,60 @@ export const AvatarEditorView: FC<{}> = (props) => {
     if (!isVisible) return null;
 
     return (
-        <VoltCardView
-            className={`volt-avatar-editor${isWardrobeOpen ? ' is-wardrobe-open' : ''}`}
-            frameStyle={3}
-            initialPosition={editorPosition}
-            isResizable={false}
-            onPositionChange={setEditorPosition}
-            uniqueKey="avatar-editor"
-        >
-            <VoltCardHeaderView
-                headerText=""
-                onCloseClick={(event) => setIsVisible(false)}
-            >
-                <NativeText className="volt-avatar-editor-title" text={LocalizeText(clothingChangeData ? 'widget.furni.clothingchange.editor.title' : 'avatareditor.title')} textStyle="u_frame_title" background={0x377998} overrides={{ color: 0xffffff }} />
-            </VoltCardHeaderView>
-            <VoltCardContentView className="volt-avatar-editor-content" gap={0}>
-                <div className="volt-avatar-editor-stage">
-                    <div className="volt-avatar-editor-nameplate">
-                        <div className="volt-avatar-editor-name-text"><NativeText text={GetSessionDataManager().userName} textStyle="u_headline_big" background={0x131d2e} overrides={{ size: 12, color: 0xffffff }} /></div>
+        <DraggableWindow uniqueKey="avatar-editor" handleSelector=".los-window__bar" initialPosition={editorPosition} onPositionChange={setEditorPosition}>
+            <div className={`los-ae-wrap${isWardrobeOpen && canUseWardrobe ? ' has-wardrobe' : ''}`}>
+                <LosWindow
+                    className="los-ae volt-avatar-editor"
+                    icon="shirt"
+                    title={LocalizeText(clothingChangeData ? 'widget.furni.clothingchange.editor.title' : 'avatareditor.title')}
+                    onClose={() => setIsVisible(false)}
+                    actions={
+                        hasWardrobe && (
+                            <button
+                                type="button"
+                                disabled={!canUseWardrobe}
+                                className={`los-window__button${isWardrobeOpen ? ' is-on' : ''}`}
+                                aria-pressed={isWardrobeOpen}
+                                title={LocalizeText('avatareditor.wardrobe.title')}
+                                onClick={() => setIsWardrobeOpen((open) => !open)}
+                            >
+                                <LosIcon name="box" size={14} />
+                            </button>
+                        )
+                    }
+                >
+                    <div className="los-ae__tabs">
+                        {orderedModelKeys.map((modelKey) => (
+                            <button
+                                key={modelKey}
+                                type="button"
+                                className={`los-ae__tab${activeModelKey === modelKey ? ' is-active' : ''}`}
+                                onClick={() => setActiveModelKey(modelKey)}
+                            >
+                                <img src={MAIN_TAB_ICONS[modelKey]} alt="" draggable={false} />
+                            </button>
+                        ))}
                     </div>
-                    <div className="volt-avatar-editor-tab-row">
-                        <VoltCardTabsView classNames={['avatar-editor-tabs']}>
-                            {orderedModelKeys.map((modelKey) => (
-                                <VoltCardTabsItemView
-                                    key={modelKey}
-                                    classNames={['volt-avatar-editor-main-tab', `is-${modelKey}`]}
-                                    isActive={activeModelKey === modelKey}
-                                    onClick={() => setActiveModelKey(modelKey)}
-                                >
-                                    <img className="volt-avatar-editor-main-tab-icon" src={MAIN_TAB_ICONS[modelKey]} alt="" draggable={false} />
-                                </VoltCardTabsItemView>
-                            ))}
-                        </VoltCardTabsView>
+                    <div className="los-ae__body">
+                        <div className="los-ae__side">
+                            <AvatarEditorFigurePreviewView />
+                            <b className="los-ae__name">{GetSessionDataManager().userName}</b>
+                            <button type="button" className="los-button los-button--primary" disabled={isSaving} onClick={saveAvatar}>
+                                {LocalizeText('avatareditor.save')}
+                            </button>
+                        </div>
+                        <div className="los-ae__main">
+                            {activeModelKey.length > 0 && !isHotLooksOpen && !isEffectsOpen && !isNftOpen && (
+                                <AvatarEditorModelView categories={avatarModels[activeModelKey]} name={activeModelKey} />
+                            )}
+                            {isHotLooksOpen && <AvatarEditorHotLooksView />}
+                            {isEffectsOpen && <AvatarEditorEffectsView />}
+                            {isNftOpen && <AvatarEditorNftView />}
+                        </div>
                     </div>
-                    {hasWardrobe && (
-                        <button
-                            type="button"
-                            disabled={!canUseWardrobe}
-                            className={`volt-avatar-editor-wardrobe-toggle${isWardrobeOpen ? ' is-open' : ''}`}
-                            aria-pressed={isWardrobeOpen}
-                            aria-label={LocalizeText('avatareditor.wardrobe.title')}
-                            onClick={() => setIsWardrobeOpen((open) => !open)}
-                        >
-                            <img alt="" draggable={false} src={wardrobeHangerSrc} />
-                        </button>
-                    )}
-                    <div className="volt-avatar-editor-main">
-                        {activeModelKey.length > 0 && !isHotLooksOpen && !isEffectsOpen && !isNftOpen && (
-                            <AvatarEditorModelView categories={avatarModels[activeModelKey]} name={activeModelKey} />
-                        )}
-                        {isHotLooksOpen && <AvatarEditorHotLooksView />}
-                        {isEffectsOpen && <AvatarEditorEffectsView />}
-                        {isNftOpen && <AvatarEditorNftView />}
-                        <AvatarEditorFigurePreviewView />
-                        <button type="button" className="volt-avatar-editor-save" disabled={isSaving} onClick={saveAvatar}>
-                            <NativeText className="volt-avatar-editor-save-label" text={LocalizeText('avatareditor.save')} textStyle="button_shiny_bold" background={0xffffff} />
-                            <NativeText className="volt-avatar-editor-save-label-disabled" text={LocalizeText('avatareditor.save')} textStyle="button_shiny_bold" background={0xc3c3c1} />
-                        </button>
-                    </div>
-                </div>
+                </LosWindow>
                 {isWardrobeOpen && canUseWardrobe && <AvatarEditorWardrobeView />}
-            </VoltCardContentView>
-        </VoltCardView>
+            </div>
+        </DraggableWindow>
     );
 };

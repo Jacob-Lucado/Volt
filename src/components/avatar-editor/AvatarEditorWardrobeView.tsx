@@ -4,7 +4,6 @@ import { GetClubMemberLevel, GetConfigurationValue, LocalizeText, SendMessageCom
 import hcIconSrc from '../../assets/images/avatareditor/air/wardrobe-hc.png';
 import emptySlotSrc from '../../assets/images/avatareditor/wardrobe-empty-slot.png';
 import { LayoutAvatarImageView } from '../../common';
-import { NativeText } from '../../common/native-text/NativeText';
 import { useAvatarEditor } from '../../hooks';
 
 const SLOTS_PER_COL = 7;
@@ -74,7 +73,7 @@ export const AvatarEditorWardrobeView: FC<{}> = () => {
     return (
         <aside className="volt-avatar-editor-wardrobe" aria-label={LocalizeText('avatareditor.wardrobe.title')}>
             <div className="volt-avatar-editor-wardrobe-header">
-                <NativeText className="volt-avatar-editor-wardrobe-title" text={LocalizeText('avatareditor.wardrobe.title')} textStyle="u_bold" background={0xeef2f7} overrides={{ color: 0x83827e }} />
+                <span className="los-ae__text volt-avatar-editor-wardrobe-title">{LocalizeText('avatareditor.wardrobe.title')}</span>
                 <img src={hcIconSrc} alt="" draggable={false} className="volt-avatar-editor-wardrobe-hc" />
             </div>
             <div className="volt-avatar-editor-wardrobe-slots">

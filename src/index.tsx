@@ -112,6 +112,7 @@ import './css/lucadoos/LosFriends.css';
 import './css/lucadoos/LosFriendList.css';
 import './css/lucadoos/LosProfile.css';
 import './css/lucadoos/LosMessenger.css';
+import './css/lucadoos/LosAvatarEditor.css';
 import './css/lucadoos/LosSettings.css';
 import './css/lucadoos/LosCards.css';
 import './css/lucadoos/LosModTools.css';
