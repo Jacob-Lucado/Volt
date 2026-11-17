@@ -1,5 +1,5 @@
 import { CreateLinkEvent, GetRenderer, GetRoomSessionManager, RequestCameraConfigurationComposer, VoltLogger, VoltTexture } from '@volt/renderer';
-import { FC, useEffect, useRef } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import {
     blitRoomCanvasToViewfinder,
     CameraPicture,
@@ -46,6 +46,7 @@ export const CameraWidgetCaptureView: FC<CameraWidgetCaptureViewProps> = (props)
     const videoRef = useRef<HTMLVideoElement>(null);
     const flashRef = useRef<HTMLDivElement>(null);
     const isTakingPictureRef = useRef(false);
+    const [isBusy, setIsBusy] = useState(false);
     const hasRequestedPreparationRef = useRef(false);
     const isMountedRef = useRef(true);
     const pendingCapturedSlotRef = useRef(-1);
@@ -192,6 +193,7 @@ export const CameraWidgetCaptureView: FC<CameraWidgetCaptureViewProps> = (props)
         }
 
         isTakingPictureRef.current = true;
+        setIsBusy(true);
 
         const targetSlot = activePictureSlotIndex >= 0 && activePictureSlotIndex < CAMERA_ROLL_LIMIT ? activePictureSlotIndex : 0;
         const captureSession = GetRoomSessionManager().getSession(-1);
@@ -249,6 +251,7 @@ export const CameraWidgetCaptureView: FC<CameraWidgetCaptureViewProps> = (props)
             capturedDraftId = null;
 
             fillSlot(picture);
+            setSelectedPictureIndex(targetSlot);
         } catch (error) {
             VoltLogger.error('Failed to capture camera photo', error);
             if (capturedDraftId) deleteTrustedCamera(capturedDraftId);
@@ -259,6 +262,7 @@ export const CameraWidgetCaptureView: FC<CameraWidgetCaptureViewProps> = (props)
             }
         } finally {
             isTakingPictureRef.current = false;
+            if (isMountedRef.current) setIsBusy(false);
         }
     };
 
@@ -309,6 +313,9 @@ export const CameraWidgetCaptureView: FC<CameraWidgetCaptureViewProps> = (props)
                                 >
                                     {LocalizeText('camera.editor.button.text')}
                                 </button>
+                                <button type="button" className="los-button" onClick={() => setSelectedPictureIndex(-1)}>
+                                    <LosIcon name="camera" size={14} /> {LocalizeText('camera.take.photo.button.tooltip')}
+                                </button>
                                 <button type="button" className="los-button" title={LocalizeText('camera.delete.button.text')} onClick={onDelete}>
                                     <LosIcon name="trash" size={14} /> {LocalizeText('camera.delete.button.text')}
                                 </button>
@@ -321,7 +328,7 @@ export const CameraWidgetCaptureView: FC<CameraWidgetCaptureViewProps> = (props)
                                 title={LocalizeText('camera.take.photo.button.tooltip')}
                                 onClick={takePicture}
                             >
-                                <LosIcon name="camera" size={22} />
+                                {isBusy ? <span className="los-cam__spin" /> : <LosIcon name="camera" size={22} />}
                             </button>
                         )}
                     </div>
