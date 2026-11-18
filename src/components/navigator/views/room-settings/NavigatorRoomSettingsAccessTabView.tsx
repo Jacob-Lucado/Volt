@@ -1,8 +1,9 @@
 import { GetSessionDataManager, RoomDataParser } from '@volt/renderer';
-import { FC, useEffect, useState } from 'react';
+import { FC, Fragment, useEffect, useState } from 'react';
 import { CreateLinkEvent, IRoomData, LocalizeText, localizeWithFallback } from '../../../../api';
 import { NavigatorRoomSettingsAtView } from './NavigatorRoomSettingsAtView';
 import { RoomSettingsFieldError, RoomSettingsFieldErrorView } from './RoomSettingsFieldErrorView';
+import { RoomSettingsTextView } from './RoomSettingsTextView';
 
 const PASSWORD_MAX_LENGTH = 30;
 
@@ -49,55 +50,48 @@ export const NavigatorRoomSettingsAccessTabView: FC<NavigatorRoomSettingsTabView
     // Builders Club furni overrides its door mode; staff (security 4) see the normal settings.
     const lockedByBuildersClub = !!roomData.hiddenByBc && !GetSessionDataManager().hasSecurity(4);
 
+    const doorModes = [
+        { id: 'ros-door-open', state: RoomDataParser.OPEN_STATE, key: 'navigator.roomsettings.doormode.open', label: { y: 104, w: 230 } },
+        { id: 'ros-door-bell', state: RoomDataParser.DOORBELL_STATE, key: 'navigator.roomsettings.doormode.doorbell', label: { y: 123, w: 249 } },
+        { id: 'ros-door-invisible', state: RoomDataParser.INVISIBLE_STATE, key: 'navigator.roomsettings.doormode.invisible', label: { y: 143, w: 245 } },
+        { id: 'ros-door-password', state: RoomDataParser.PASSWORD_STATE, key: 'navigator.roomsettings.doormode.password', label: { y: 163, w: 253 } }
+    ];
+    const pets = [
+        { id: 'ros-allow-pets', field: 'allow_pets', checked: roomData.allowPets, text: LocalizeText('navigator.roomsettings.allowpets'), w: 191 },
+        { id: 'ros-allow-food', field: 'allow_pets_eat', checked: roomData.allowPetsEat, text: LocalizeText('navigator.roomsettings.allowfoodconsume'), w: 245 },
+        { id: 'ros-mute-pets', field: 'mute_all_pets', checked: roomData.muteAllPets, text: localizeWithFallback('navigator.roomsettings.mute_all_pets', 'Mute all pets'), w: 215 }
+    ];
+
+    // tab_container_2: doormode selector (5,105) with 20px radio rows and labels at x 20; flexible_content (0,260) stacks
+    // the 30px guild disclaimer (only in a group room) over advanced_container.
     return (
         <div className="ros-tab" style={{ height: petsY + 82 }}>
-            <NavigatorRoomSettingsAtView className="ros-text ros-head" h={19} w={295} x={0} y={3}>
-                {LocalizeText('navigator.roomsettings.roomaccess.caption')}
-            </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView className="ros-text ros-multi" h={69} w={310} x={0} y={19}>
-                {LocalizeText('navigator.roomsettings.roomaccess.info')}
-            </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={193} x={0} y={87}>
-                {LocalizeText('navigator.roomsettings.doormode')}
-            </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView h={80} w={274} x={5} y={105}>
-                <label className="ros-radio-row" style={{ top: 0 }}>
-                    <input
-                        type="radio"
-                        name="lockState"
-                        checked={roomData.lockState === RoomDataParser.OPEN_STATE && !isTryingPassword}
-                        onChange={(event) => handleChange('lock_state', RoomDataParser.OPEN_STATE)}
-                    />
-                    <span>{LocalizeText('navigator.roomsettings.doormode.open')}</span>
-                </label>
-                <label className="ros-radio-row" style={{ top: 20 }}>
-                    <input
-                        type="radio"
-                        name="lockState"
-                        checked={roomData.lockState === RoomDataParser.DOORBELL_STATE && !isTryingPassword}
-                        onChange={(event) => handleChange('lock_state', RoomDataParser.DOORBELL_STATE)}
-                    />
-                    <span>{LocalizeText('navigator.roomsettings.doormode.doorbell')}</span>
-                </label>
-                <label className="ros-radio-row" style={{ top: 40 }}>
-                    <input
-                        type="radio"
-                        name="lockState"
-                        checked={roomData.lockState === RoomDataParser.INVISIBLE_STATE && !isTryingPassword}
-                        onChange={(event) => handleChange('lock_state', RoomDataParser.INVISIBLE_STATE)}
-                    />
-                    <span>{LocalizeText('navigator.roomsettings.doormode.invisible')}</span>
-                </label>
-                <label className="ros-radio-row" style={{ top: 60 }}>
-                    <input type="radio" name="lockState" checked={showPassword} onChange={(event) => setIsTryingPassword(event.target.checked)} />
-                    <span>{LocalizeText('navigator.roomsettings.doormode.password')}</span>
-                </label>
-            </NavigatorRoomSettingsAtView>
+            <RoomSettingsTextView h={19} text={LocalizeText('navigator.roomsettings.roomaccess.caption')} textStyle="u_headline_small" w={295} x={0} y={3} />
+            <RoomSettingsTextView wrap h={69} text={LocalizeText('navigator.roomsettings.roomaccess.info')} w={310} x={0} y={19} />
+            <RoomSettingsTextView h={17} text={LocalizeText('navigator.roomsettings.doormode')} textStyle="u_bold" w={193} x={0} y={87} />
+            {doorModes.map((mode, index) => {
+                const isPassword = mode.state === RoomDataParser.PASSWORD_STATE;
+                const checked = isPassword ? showPassword : roomData.lockState === mode.state && !isTryingPassword;
+
+                return (
+                    <Fragment key={mode.id}>
+                        <NavigatorRoomSettingsAtView h={20} w={270} x={5} y={105 + index * 20}>
+                            <input
+                                id={mode.id}
+                                className="ros-radio"
+                                type="radio"
+                                name="lockState"
+                                checked={checked}
+                                onChange={(event) => (isPassword ? setIsTryingPassword(event.target.checked) : handleChange('lock_state', mode.state))}
+                            />
+                        </NavigatorRoomSettingsAtView>
+                        <RoomSettingsTextView h={17} htmlFor={mode.id} text={LocalizeText(mode.key)} w={mode.label.w} x={20} y={mode.label.y} />
+                    </Fragment>
+                );
+            })}
             {showPassword && (
                 <>
-                    <NavigatorRoomSettingsAtView className="ros-text" h={17} w={189} x={41} y={188}>
-                        {LocalizeText('navigator.roomsettings.password')}
-                    </NavigatorRoomSettingsAtView>
+                    <RoomSettingsTextView h={17} text={LocalizeText('navigator.roomsettings.password')} w={189} x={41} y={188} />
                     <NavigatorRoomSettingsAtView h={15} w={193} x={42} y={203}>
                         <input
                             type="password"
@@ -108,9 +102,7 @@ export const NavigatorRoomSettingsAccessTabView: FC<NavigatorRoomSettingsTabView
                             onFocus={(event) => setIsTryingPassword(true)}
                         />
                     </NavigatorRoomSettingsAtView>
-                    <NavigatorRoomSettingsAtView className="ros-text" h={17} w={234} x={41} y={220}>
-                        {LocalizeText('navigator.roomsettings.passwordconfirm')}
-                    </NavigatorRoomSettingsAtView>
+                    <RoomSettingsTextView h={17} text={LocalizeText('navigator.roomsettings.passwordconfirm')} w={234} x={41} y={220} />
                     <NavigatorRoomSettingsAtView h={15} w={193} x={42} y={236}>
                         <input
                             type="password"
@@ -140,50 +132,22 @@ export const NavigatorRoomSettingsAccessTabView: FC<NavigatorRoomSettingsTabView
                     </NavigatorRoomSettingsAtView>
                 </NavigatorRoomSettingsAtView>
             )}
-            {hasGroup && (
-                <NavigatorRoomSettingsAtView className="ros-text ros-multi" h={30} w={277} x={0} y={260}>
-                    {LocalizeText('navigator.roomsettings.roomaccess.guild.disclaimer')}
-                </NavigatorRoomSettingsAtView>
-            )}
-            <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={162} x={0} y={petsY}>
-                {LocalizeText('navigator.roomsettings.pets')}
-            </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView h={20} w={20} x={3} y={petsY + 19}>
-                <input
-                    id="ros-allow-pets"
-                    className="ros-check"
-                    type="checkbox"
-                    checked={roomData.allowPets}
-                    onChange={(event) => handleChange('allow_pets', event.target.checked)}
-                />
-            </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView className="ros-text" h={17} w={191} x={18} y={petsY + 18}>
-                <label htmlFor="ros-allow-pets">{LocalizeText('navigator.roomsettings.allowpets')}</label>
-            </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView h={20} w={20} x={3} y={petsY + 39}>
-                <input
-                    id="ros-allow-food"
-                    className="ros-check"
-                    type="checkbox"
-                    checked={roomData.allowPetsEat}
-                    onChange={(event) => handleChange('allow_pets_eat', event.target.checked)}
-                />
-            </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView className="ros-text" h={17} w={245} x={18} y={petsY + 38}>
-                <label htmlFor="ros-allow-food">{LocalizeText('navigator.roomsettings.allowfoodconsume')}</label>
-            </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView h={20} w={20} x={3} y={petsY + 59}>
-                <input
-                    id="ros-mute-pets"
-                    className="ros-check"
-                    type="checkbox"
-                    checked={roomData.muteAllPets}
-                    onChange={(event) => handleChange('mute_all_pets', event.target.checked)}
-                />
-            </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView className="ros-text" h={17} w={215} x={18} y={petsY + 58}>
-                <label htmlFor="ros-mute-pets">{localizeWithFallback('navigator.roomsettings.mute_all_pets', 'Mute all pets')}</label>
-            </NavigatorRoomSettingsAtView>
+            {hasGroup && <RoomSettingsTextView wrap h={30} text={LocalizeText('navigator.roomsettings.roomaccess.guild.disclaimer')} w={277} x={0} y={260} />}
+            <RoomSettingsTextView h={17} text={LocalizeText('navigator.roomsettings.pets')} textStyle="u_bold" w={162} x={0} y={petsY} />
+            {pets.map((pet, index) => (
+                <Fragment key={pet.id}>
+                    <NavigatorRoomSettingsAtView h={20} w={20} x={3} y={petsY + 19 + index * 20}>
+                        <input
+                            id={pet.id}
+                            className="ros-check"
+                            type="checkbox"
+                            checked={pet.checked}
+                            onChange={(event) => handleChange(pet.field, event.target.checked)}
+                        />
+                    </NavigatorRoomSettingsAtView>
+                    <RoomSettingsTextView h={17} htmlFor={pet.id} text={pet.text} w={pet.w} x={18} y={petsY + 18 + index * 20} />
+                </Fragment>
+            ))}
         </div>
     );
 };
