@@ -1,0 +1,58 @@
+/* AIR button skins: the stretched skin is drawn by ::before so the caption keeps the button's own coordinates. */
+.air-skin-button {
+    position: relative;
+    display: inline-block;
+    flex: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    height: var(--air-button-height);
+    vertical-align: top;
+    cursor: pointer;
+    isolation: isolate;
+}
+
+.air-skin-button::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    box-sizing: border-box;
+    border: var(--air-skin-cap) solid transparent;
+    border-image: var(--air-skin) var(--air-skin-slice) fill / var(--air-skin-cap) stretch;
+    content: '';
+    image-rendering: pixelated;
+    pointer-events: none;
+}
+
+.air-skin-button:hover::before {
+    border-image-source: var(--air-skin-hover);
+}
+
+.air-skin-button:active::before,
+.air-skin-button.active::before {
+    border-image-source: var(--air-skin-pressed);
+}
+
+.air-skin-button:disabled,
+.air-skin-button.is-disabled {
+    cursor: default;
+}
+
+.air-skin-button:disabled::before,
+.air-skin-button.is-disabled::before {
+    border-image-source: var(--air-skin-disabled);
+}
+
+.air-skin-button__caption {
+    position: absolute !important;
+    pointer-events: none;
+}
+
+.air-skin-button:disabled .air-skin-button__caption,
+.air-skin-button.is-disabled .air-skin-button__caption {
+    opacity: 0.5;
+}

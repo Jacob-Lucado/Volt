@@ -1,4 +1,5 @@
-import { ButtonHTMLAttributes, DetailedHTMLProps, PropsWithChildren, Ref } from 'react';
+import { ButtonHTMLAttributes, DetailedHTMLProps, PropsWithChildren, Ref, useImperativeHandle } from 'react';
+import { AirButtonKindName, textCaption, useAirButton } from '../common/air/AirSkinButton';
 import { classNames } from './classNames';
 
 const classes = {
@@ -26,7 +27,56 @@ type VoltButtonProps = PropsWithChildren<{
 }> &
     DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>;
 
-export const VoltButton = ({
+/** The AIR button each skinned colour stands for. */
+const AIR_KIND: Partial<Record<VoltButtonProps['color'], AirButtonKindName>> = {
+    default: 'default',
+    primary: 'shiny-thick-green',
+    buy: 'shiny-thick-green',
+    success: 'shiny-thick-green',
+    danger: 'red'
+};
+
+export const VoltButton = (props: VoltButtonProps) => {
+    const caption = textCaption(props.children);
+    // A call site with its own classes may restyle the button, so it keeps the CSS skin until its window is moved to AIR.
+    const kind =
+        caption !== null && !props.className && !props.outline && (props.size ?? 'default') === 'default' ? AIR_KIND[props.color ?? 'default'] : undefined;
+
+    return kind ? <AirCaptionVoltButton {...props} caption={caption} kind={kind} /> : <SkinnedVoltButton {...props} />;
+};
+
+/** A text-only button drawn like the AIR button it stands for: skin, label size and NativeText caption. */
+const AirCaptionVoltButton = ({
+    ref,
+    caption,
+    kind,
+    color,
+    size,
+    outline,
+    type = 'button',
+    className = null,
+    style,
+    children,
+    ...rest
+}: VoltButtonProps & { caption: string; kind: AirButtonKindName }) => {
+    const air = useAirButton<HTMLButtonElement>({ kind, caption });
+    useImperativeHandle(ref, () => air.ref.current, [air.ref]);
+
+    return (
+        <button
+            {...rest}
+            ref={air.ref}
+            className={classNames('air-skin-button select-none', className)}
+            data-air-kind={air.kind}
+            style={{ ...air.style, ...style }}
+            type={type}
+        >
+            {air.caption}
+        </button>
+    );
+};
+
+const SkinnedVoltButton = ({
     ref,
     color = 'default',
     size = 'default',
@@ -36,11 +86,12 @@ export const VoltButton = ({
     className = null,
     ...rest
 }: VoltButtonProps) => {
-    const variantClass = color === 'dark'
-        ? 'btn-dark'
-        : color === 'ghost'
-          ? 'habbo-btn-secondary !bg-transparent'
-          : classes.variant[color in classes.variant ? color : 'default'];
+    const variantClass =
+        color === 'dark'
+            ? 'btn-dark'
+            : color === 'ghost'
+              ? 'habbo-btn-secondary !bg-transparent'
+              : classes.variant[color in classes.variant ? color : 'default'];
 
     return (
         <button
