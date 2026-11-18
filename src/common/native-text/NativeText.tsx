@@ -183,7 +183,20 @@ export const NativeText: FC<NativeTextProps> = ({
 
                     canvas.width = spaced.canvas.width;
                     canvas.height = spaced.canvas.height;
-                    canvas.getContext('2d').drawImage(spaced.canvas as CanvasImageSource, 0, 0);
+                    const context = canvas.getContext('2d');
+
+                    context.drawImage(spaced.canvas as CanvasImageSource, 0, 0);
+                    // White text on black is the coverage itself: for a transparent field it becomes the alpha of white.
+                    if (transparent) {
+                        const image = context.getImageData(0, 0, canvas.width, canvas.height);
+
+                        for (let offset = 0; offset < image.data.length; offset += 4) {
+                            image.data[offset + 3] = image.data[offset];
+                            image.data[offset] = image.data[offset + 1] = image.data[offset + 2] = 255;
+                        }
+
+                        context.putImageData(image, 0, 0);
+                    }
                     setSize({ width: spaced.width, height: spaced.height });
                     onRasterRef.current?.({ canvas, text, background });
 
