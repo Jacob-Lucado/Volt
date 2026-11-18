@@ -21,7 +21,7 @@ interface RoomPromoteTextProps {
     onClick?: () => void;
 }
 
-/** One white v75 TextField of iro_event_info: glyphs drawn onto the translucent panel (screen blend over a black raster), at the field's layout rectangle. */
+/** One white v75 TextField of iro_event_info: transparent glyphs drawn onto the translucent panel, at the field's layout rectangle. */
 export const RoomPromoteText: FC<RoomPromoteTextProps> = ({ text, x, y, width, height, bold = false, underline = false, size = 12, spacing = 0, wrap = false, alignRight = false, alignCenter = false, className = '', onClick }) => {
     const textRef = useRef<HTMLDivElement>(null);
     const [centerShift, setCenterShift] = useState(0);
@@ -64,13 +64,14 @@ export const RoomPromoteText: FC<RoomPromoteTextProps> = ({ text, x, y, width, h
         <div
             ref={textRef}
             className={`volt-event-info__text${height === undefined ? '' : ' is-clipped'} ${className}`}
-            style={{ left: x + (alignCenter ? centerShift : 0), top: y, width: wrap || alignRight ? width : undefined, textAlign: alignRight ? 'right' : undefined, height: height === undefined ? undefined : height - 2, mixBlendMode: 'screen' }}
+            style={{ left: x + (alignCenter ? centerShift : 0), top: y, width: wrap || alignRight ? width : undefined, textAlign: alignRight ? 'right' : undefined, height: height === undefined ? undefined : height - 2 }}
             onClick={onClick}
         >
             <NativeText
                 background={0x000000}
                 maxWidth={wrap ? width : undefined}
                 nativeResolution
+                transparent
                 overrides={{ size, bold, underline, color: 0xffffff, sharpness: 0, thickness: 0, letterSpacing: spacing }}
                 text={text}
                 textStyle="u_regular"

@@ -1,6 +1,14 @@
 import { InfiniteGrid } from '@layout/InfiniteGrid';
 import { AirSkinButton } from '../../../../common/air/AirSkinButton';
-import { GetSessionDataManager, IRoomSession, RoomPreviewer, Vector3d } from '@volt/renderer';
+import {
+    GetEventDispatcher,
+    GetSessionDataManager,
+    IRoomSession,
+    RoomEngineUseProductEvent,
+    RoomObjectCategory,
+    RoomPreviewer,
+    Vector3d
+} from '@volt/renderer';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { FaTrashAlt } from 'react-icons/fa';
 import {
@@ -16,7 +24,9 @@ import {
 import { LayoutLimitedEditionCompactPlateView, LayoutRarityLevelView, LayoutRoomPreviewerView } from '../../../../common';
 import { CatalogPostMarketplaceOfferEvent, DeleteItemConfirmEvent } from '../../../../events';
 import { useInventoryFurni, useInventoryTrade, useInventoryUnseenTracker, useNotification } from '../../../../hooks';
+import { VoltButton } from '../../../../layout';
 import { InventoryCategoryEmptyView } from '../InventoryCategoryEmptyView';
+import { InventoryInfoTextView } from '../InventoryInfoTextView';
 import { InventoryFurnitureItemView } from './InventoryFurnitureItemView';
 import { offerGroupItemsToTrade } from './inventoryTradeOffer';
 
@@ -37,6 +47,14 @@ const attemptDeleteItem = (groupItem: GroupItem) => {
     if (!item) return;
     DispatchUiEvent(new DeleteItemConfirmEvent(item, groupItem.getTotalCount()));
 };
+
+const PET_PRODUCT_CATEGORIES = [
+    FurniCategory.PET_SHAMPOO,
+    FurniCategory.PET_CUSTOM_PART,
+    FurniCategory.PET_CUSTOM_PART_SHAMPOO,
+    FurniCategory.PET_SADDLE,
+    FurniCategory.MONSTERPLANT_REVIVAL
+];
 
 export const InventoryFurnitureView: FC<{
     roomSession: IRoomSession;
@@ -63,6 +81,22 @@ export const InventoryFurnitureView: FC<{
         if (!selectedItem) return 0;
         return selectedItem.items.filter((item) => item.isTradable && !item.locked).length;
     }, [selectedItem]);
+
+    const productItem = selectedItem?.getLastItem() ?? null;
+    const canUseProduct = !!roomSession?.isPrivateRoom && !!productItem && PET_PRODUCT_CATEGORIES.includes(productItem.category);
+
+    const useProduct = () => {
+        GetEventDispatcher().dispatchEvent(
+            new RoomEngineUseProductEvent(
+                RoomEngineUseProductEvent.USE_PRODUCT_FROM_INVENTORY,
+                roomSession.roomId,
+                -1,
+                RoomObjectCategory.FLOOR,
+                productItem.ref,
+                productItem.type
+            )
+        );
+    };
 
     const recyclableCount = useMemo(() => {
         if (!selectedItem) return 0;
@@ -233,8 +267,8 @@ export const InventoryFurnitureView: FC<{
                 </div>
                 {selectedItem && (
                     <div className="volt-inventory-furni-details">
-                        <div className="volt-inventory-furni-name">{selectedItem.name}</div>
-                        {selectedItem.description && <div className="volt-inventory-furni-desc">{selectedItem.description}</div>}
+                        <InventoryInfoTextView className="volt-inventory-furni-name" textStyle="u_bold" text={selectedItem.name} width={190} />
+                        <InventoryInfoTextView className="volt-inventory-furni-desc" maxHeight={45} text={selectedItem.description} width={190} />
                         <div className="volt-inventory-furni-actions">
                             <AirSkinButton
                                 disabled={!roomSession || isTrading || !selectedItem.getUnlockedCount()}
@@ -277,6 +311,11 @@ export const InventoryFurnitureView: FC<{
                                     height={22}
                                     caption={LocalizeText('inventory.marketplace.sell')}
                                 />
+                            )}
+                            {canUseProduct && (
+                                <VoltButton className="volt-inventory-btn-use" onClick={useProduct}>
+                                    {LocalizeText('inventory.furni.use')}
+                                </VoltButton>
                             )}
                         </div>
                     </div>

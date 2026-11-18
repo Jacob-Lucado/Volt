@@ -56,12 +56,6 @@
     top: 0;
     left: 0;
     max-width: 190px;
-    height: 19px;
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 19px;
-    overflow: hidden;
-    white-space: nowrap;
 }
 
 .volt-inventory-animal-image {
@@ -80,12 +74,6 @@
     position: absolute;
     top: 174px;
     left: 0;
-    width: 190px;
-    height: 45px;
-    font-size: 12px;
-    line-height: 17px;
-    overflow: hidden;
-    overflow-wrap: break-word;
 }
 
 .volt-inventory-animal-actions {
@@ -100,7 +88,7 @@
 
 .volt-inventory-animals.is-pets .volt-inventory-animal-name { top: 32px; }
 .volt-inventory-animals.is-pets .volt-inventory-animal-image { top: 53px; left: 5px; width: 150px; height: 152px; }
-.volt-inventory-animals.is-pets .volt-inventory-animal-description { top: 205px; left: 4px; width: 180px; height: 17px; }
+.volt-inventory-animals.is-pets .volt-inventory-animal-description { top: 205px; left: 4px; }
 .volt-inventory-animals.is-pets .volt-inventory-animal-actions { top: 229px; left: 0; }
 
 /* Polaris delete follows the official Place button. Allow scrolling when the
@@ -135,8 +123,4 @@
     z-index: 2;
     pointer-events: none;
     image-rendering: pixelated;
-}
-
-.volt-inventory-animal-name {
-    padding-left: 3px;
 }

@@ -3,6 +3,7 @@ import { AirSkinButton } from '../../../../common/air/AirSkinButton';
 import { GetConfigurationValue, LocalizeBadgeDescription, LocalizeBadgeName, localizeWithFallback, UnseenItemCategory } from '../../../../api';
 import { LayoutBadgeImageView } from '../../../../common';
 import { useInventoryBadges, useInventoryUnseenTracker } from '../../../../hooks';
+import { InventoryInfoTextView } from '../InventoryInfoTextView';
 import { InventoryBadgeItemView } from './InventoryBadgeItemView';
 
 const ActiveBadgeSlot: FC<{
@@ -178,9 +179,23 @@ export const InventoryBadgeView: FC<{ filteredBadgeCodes?: string[] }> = (props)
                             <LayoutBadgeImageView badgeCode={selectedBadgeCode} />
                         </div>
                         <div className="volt-inventory-badges-footer-details">
-                            <div className="volt-inventory-badges-footer-name">{LocalizeBadgeName(selectedBadgeCode)}</div>
+                            <InventoryInfoTextView
+                                className="volt-inventory-badges-footer-name"
+                                overrides={{ size: 12 }}
+                                text={LocalizeBadgeName(selectedBadgeCode)}
+                                textStyle="u_headline_small"
+                                width={271}
+                            />
                             {description && description !== selectedBadgeCode && description !== `badge_desc_${selectedBadgeCode}` && (
-                                <div className="volt-inventory-badges-footer-desc">{description}</div>
+                                <InventoryInfoTextView
+                                    className="volt-inventory-badges-footer-desc"
+                                    maxHeight={28}
+                                    maxLines={2}
+                                    overflowReplace="..."
+                                    overrides={{ size: 11 }}
+                                    text={description}
+                                    width={271}
+                                />
                             )}
                             <div className="volt-inventory-badges-footer-meta">
                                 <span className="volt-inventory-badge-rarity">{rarityText}</span>

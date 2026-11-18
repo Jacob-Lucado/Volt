@@ -278,19 +278,6 @@
     min-height: 0;
 }
 
-.volt-inventory-furni-name {
-    font-size: 12px;
-    font-weight: 700;
-    color: #111;
-    word-break: break-word;
-}
-
-.volt-inventory-furni-desc {
-    font-size: 11px;
-    color: #333;
-    word-break: break-word;
-}
-
 .volt-inventory-furni-actions {
     display: flex;
     flex-direction: column;
@@ -298,6 +285,31 @@
     gap: 1px;
     margin-top: 12px;
     width: 180px;
+}
+
+.volt-inventory-window .volt-inventory-btn-use {
+    box-sizing: border-box !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 180px !important;
+    max-width: 100% !important;
+    height: 22px !important;
+    min-height: 22px !important;
+    padding: 0 8px 1px !important;
+    border: 5px solid transparent !important;
+    border-radius: 0 !important;
+    border-image-source: var(--habbo-skin-shiny) !important;
+    border-image-slice: 5 fill !important;
+    border-image-width: 5px !important;
+    border-image-repeat: stretch !important;
+    background: transparent !important;
+    color: #111 !important;
+    font-weight: 700 !important;
+    line-height: 11px !important;
+    text-align: center !important;
+    box-shadow: none !important;
+    image-rendering: var(--volt-pixel-art, pixelated);
 }
 
 .volt-inventory-window .volt-inventory-btn-delete {
@@ -396,6 +408,7 @@
     flex-shrink: 0;
 }
 
+.volt-inventory-window .volt-inventory-btn-use,
 .volt-inventory-window .volt-inventory-btn-delete {
     width: fit-content !important;
     font-family: HabboAirUbuntu, sans-serif;
@@ -483,6 +496,11 @@
     border: 0 !important;
     box-shadow: none !important;
     background: transparent !important;
+}
+
+.volt-inventory-window .volt-inventory-btn-use {
+    padding: 0 5px 1px !important;
+    line-height: 17px !important;
 }
 
 .volt-inventory-preview-delete {
@@ -736,20 +754,18 @@
     position: absolute;
 }
 
-/* v75 furni preview column: Flash text fields keep a 2px gutter, the description is 12px black and the whole
-   button stack sits 2px lower; fit buttons measure 97/125px for the English captions. */
+/* The name and description are NativeText windows 190px wide (the layout's width_min/width_max, 10px wider than the column);
+   the description is cut at height_max 45. The button stack sits 2px lower; fit buttons measure 97/125px for the English captions. */
+.volt-inventory-furni-preview { overflow: visible; }
 .volt-inventory-furni-name,
-.volt-inventory-furni-desc {
-    padding-left: 2px;
-    color: #000;
-}
-
-.volt-inventory-furni-desc {
-    font-size: 12px;
-}
+.volt-inventory-furni-desc { flex: none; }
 
 .volt-inventory-furni-actions {
-    margin-top: 14px;
+    margin-top: 13px;
+}
+
+.volt-inventory-window .volt-inventory-btn-use {
+    width: 39px !important;
 }
 
 /* inventory_thumb number_container: 15px tall plate with a #2f6982 frame on three sides, anchored 2px from the
