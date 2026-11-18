@@ -1,5 +1,5 @@
 import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
-import { FC, useCallback, useEffect, useMemo } from 'react';
+import { FC, useCallback, useEffect, useRef } from 'react';
 import { CatalogType, GetConfigurationValue, LocalizeShortNumber, LocalizeText } from '../../api';
 import { LayoutCurrencyIcon, VoltCardContentView, VoltCardHeaderView, VoltCardTabsItemView, VoltCardTabsView, VoltCardView } from '../../common';
 import { NativeCenteredField } from '../../common/native-text/NativeCenteredField';
@@ -111,8 +111,12 @@ const CatalogViewInner: FC<{}> = () => {
     const stripSwfTabSuffix = (label: string) => (label || '').replace(/\s*\(\D[^)]*\)\s*$/g, '').trim();
     const getSwfTabLabel = (label: string) => stripSwfTabSuffix(parseCatalogTabLabel(label).name);
 
-    // Read the remembered spot each time the window opens, not while it is dragged.
-    const initialPosition = useMemo(() => ({ ...catalogWindowPosition }), [isVisible]);
+    const initialPosition = useRef({ ...catalogWindowPosition });
+
+    useEffect(() => {
+        if (!isVisible) initialPosition.current = { ...catalogWindowPosition };
+    }, [isVisible]);
+
     const onPositionChange = useCallback((position: { x: number; y: number }) => {
         catalogWindowPosition.x = position.x;
         catalogWindowPosition.y = position.y;
@@ -214,7 +218,7 @@ const CatalogViewInner: FC<{}> = () => {
                 <VoltCardView
                     classNames={['volt-catalog-window', ...(isBuilder ? ['is-builder'] : [])]}
                     frameStyle={3}
-                    initialPosition={initialPosition}
+                    initialPosition={initialPosition.current}
                     isResizable
                     resizeAxis="vertical"
                     uniqueKey="catalog"
