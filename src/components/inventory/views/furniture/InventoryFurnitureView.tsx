@@ -1,4 +1,5 @@
 import { InfiniteGrid } from '@layout/InfiniteGrid';
+import { AirSkinButton } from '../../../../common/air/AirSkinButton';
 import {
     GetEventDispatcher,
     GetSessionDataManager,
@@ -105,14 +106,12 @@ export const InventoryFurnitureView: FC<{
     // v75 offertotrade_cnt: the amount stays within 1..tradable count of the selection.
     const [clampedFor, setClampedFor] = useState(tradeableCount);
 
-    if (clampedFor !== tradeableCount)
-    {
+    if (clampedFor !== tradeableCount) {
         setClampedFor(tradeableCount);
         setOfferCount((prevValue) => String(Math.min(Math.max(1, Number.parseInt(prevValue, 10) || 1), Math.max(1, tradeableCount))));
     }
 
-    const attemptOffer = () =>
-    {
+    const attemptOffer = () => {
         if (!selectedItem) return;
 
         const count = Math.max(1, Number.parseInt(offerCount, 10) || 1);
@@ -271,13 +270,13 @@ export const InventoryFurnitureView: FC<{
                         <InventoryInfoTextView className="volt-inventory-furni-name" textStyle="u_bold" text={selectedItem.name} width={190} />
                         <InventoryInfoTextView className="volt-inventory-furni-desc" maxHeight={45} text={selectedItem.description} width={190} />
                         <div className="volt-inventory-furni-actions">
-                            <VoltButton
+                            <AirSkinButton
                                 disabled={!roomSession || isTrading || !selectedItem.getUnlockedCount()}
                                 className="volt-inventory-btn-place"
                                 onClick={() => attemptItemPlacement(selectedItem)}
-                            >
-                                {LocalizeText('inventory.furni.placetoroom')}
-                            </VoltButton>
+                                height={22}
+                                caption={LocalizeText('inventory.furni.placetoroom')}
+                            />
                             <div className="volt-inventory-preview-controls">
                                 <button type="button" onClick={() => roomPreviewer?.changeRoomObjectDirection()}>
                                     {localizeWithFallback('widget.furniture.button.rotate', 'Rotate')}
@@ -295,19 +294,23 @@ export const InventoryFurnitureView: FC<{
                                         value={offerCount}
                                         onChange={(event) => setOfferCount(event.target.value)}
                                     />
-                                    <VoltButton
+                                    <AirSkinButton
                                         disabled={!tradeableCount || !ownUser || ownUser.accepts}
                                         className="volt-inventory-btn-offer"
                                         onClick={attemptOffer}
-                                    >
-                                        {LocalizeText('inventory.trading.offer')}
-                                    </VoltButton>
+                                        height={22}
+                                        widthMin={60}
+                                        caption={LocalizeText('inventory.trading.offer')}
+                                    />
                                 </div>
                             )}
                             {selectedItem.isSellable && !isTrading && (
-                                <VoltButton className="volt-inventory-btn-sell" onClick={() => attemptPlaceMarketplaceOffer(selectedItem)}>
-                                    {LocalizeText('inventory.marketplace.sell')}
-                                </VoltButton>
+                                <AirSkinButton
+                                    className="volt-inventory-btn-sell"
+                                    onClick={() => attemptPlaceMarketplaceOffer(selectedItem)}
+                                    height={22}
+                                    caption={LocalizeText('inventory.marketplace.sell')}
+                                />
                             )}
                             {canUseProduct && (
                                 <VoltButton className="volt-inventory-btn-use" onClick={useProduct}>

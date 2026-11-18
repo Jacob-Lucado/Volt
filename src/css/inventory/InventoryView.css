@@ -188,38 +188,6 @@
     left: 241px;
     /* params 918545 moves this control with the bottom of the container. */
     bottom: 2px;
-    box-sizing: border-box !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 81px !important;
-    height: 51px !important;
-    min-height: 51px !important;
-    /* v75 button style 3: shiny skin and regular caption, even at 51px high. */
-    padding: 0 3px 1px !important;
-    border: 5px solid transparent !important;
-    border-radius: 0 !important;
-    border-image-source: var(--habbo-skin-shiny) !important;
-    border-image-slice: 5 fill !important;
-    border-image-width: 5px !important;
-    border-image-repeat: stretch !important;
-    background: transparent !important;
-    color: #111 !important;
-    font-family: HabboAirUbuntu, UbuntuRegular, sans-serif !important;
-    font-size: 12px !important;
-    font-weight: 400 !important;
-    line-height: 14px !important;
-    text-align: center !important;
-    box-shadow: none !important;
-    image-rendering: var(--volt-pixel-art, pixelated);
-}
-
-.volt-inventory-window .volt-inventory-empty-shop:hover {
-    border-image-source: var(--habbo-skin-shiny-hover) !important;
-}
-
-.volt-inventory-window .volt-inventory-empty-shop:active {
-    border-image-source: var(--habbo-skin-shiny-pressed) !important;
 }
 
 .volt-inventory-furni {
@@ -319,50 +287,6 @@
     width: 180px;
 }
 
-.volt-inventory-window .volt-inventory-btn-place {
-    box-sizing: border-box !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 180px !important;
-    max-width: 100% !important;
-    height: 22px !important;
-    min-height: 22px !important;
-    max-height: 22px !important;
-    /* 1px bottom bias — Ubuntu glyph box sits low inside 12px content. */
-    padding: 0 8px 1px !important;
-    border: 5px solid transparent !important;
-    border-radius: 0 !important;
-    border-image-source: var(--habbo-skin-shiny) !important;
-    border-image-slice: 5 fill !important;
-    border-image-width: 5px !important;
-    border-image-repeat: stretch !important;
-    background: transparent !important;
-    color: #111 !important;
-    font-family: HabboAirUbuntu, Ubuntu, sans-serif !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    line-height: 11px !important;
-    text-align: center !important;
-    text-shadow: none !important;
-    box-shadow: none !important;
-    filter: none !important;
-    image-rendering: var(--volt-pixel-art, pixelated);
-}
-
-.volt-inventory-window .volt-inventory-btn-place:hover {
-    border-image-source: var(--habbo-skin-shiny-hover) !important;
-    background: transparent !important;
-    filter: none !important;
-}
-
-.volt-inventory-window .volt-inventory-btn-place:active {
-    border-image-source: var(--habbo-skin-shiny-pressed) !important;
-    background: transparent !important;
-    box-shadow: none !important;
-}
-
-.volt-inventory-window .volt-inventory-btn-sell,
 .volt-inventory-window .volt-inventory-btn-use {
     box-sizing: border-box !important;
     display: inline-flex !important;
@@ -495,8 +419,6 @@
     flex-shrink: 0;
 }
 
-.volt-inventory-window .volt-inventory-btn-place,
-.volt-inventory-window .volt-inventory-btn-sell,
 .volt-inventory-window .volt-inventory-btn-use,
 .volt-inventory-window .volt-inventory-btn-delete {
     width: fit-content !important;
@@ -587,16 +509,9 @@
     background: transparent !important;
 }
 
-.volt-inventory-window .volt-inventory-btn-place,
-.volt-inventory-window .volt-inventory-btn-sell,
 .volt-inventory-window .volt-inventory-btn-use {
     padding: 0 5px 1px !important;
     line-height: 17px !important;
-}
-
-.volt-inventory-window .volt-inventory-btn-place:disabled {
-    border-image-source: url('@/assets/images/habbo-skin/slices/button-shiny-disabled.png') !important;
-    opacity: 1;
 }
 
 .volt-inventory-preview-delete {
@@ -858,14 +773,6 @@
 
 .volt-inventory-furni-actions {
     margin-top: 13px;
-}
-
-.volt-inventory-window .volt-inventory-btn-place {
-    width: 97px !important;
-}
-
-.volt-inventory-window .volt-inventory-btn-sell {
-    width: 125px !important;
 }
 
 .volt-inventory-window .volt-inventory-btn-use {
