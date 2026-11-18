@@ -89,7 +89,10 @@ const useFurniturePresentWidgetState = () => {
 
     useVoltEvent<RoomSessionPresentEvent>(RoomSessionPresentEvent.RSPE_PRESENT_OPENED, (event) => {
         // AIR opens no gift window for a chat style; the chat style notification tells the player.
-        if (!openingRef.current || event.itemType === ProductTypeEnum.CHAT_STYLE) return;
+        if (!openingRef.current) return;
+
+        openingRef.current = false;
+        if (event.itemType === ProductTypeEnum.CHAT_STYLE) return;
 
         let furniData: IFurnitureData = null;
 
@@ -228,7 +231,7 @@ const useFurniturePresentWidgetState = () => {
         setSenderFigure(roomObject.model.getValue<string>(RoomObjectVariable.FURNITURE_PURCHASER_FIGURE) || null);
     });
 
-    useVoltEvent<RoomEngineTriggerWidgetEvent>(RoomEngineTriggerWidgetEvent.REQUEST_ECOTRONBOX, () => hide());
+    useVoltEvent<RoomEngineTriggerWidgetEvent>(RoomEngineTriggerWidgetEvent.REQUEST_ECOTRONBOX, onClose);
 
     useFurniRemovedEvent(objectId !== -1, (event) => {
         if (event.id === objectId) hide();

@@ -65,10 +65,12 @@ const useFurnitureEcotronBoxWidgetState = () => {
         setIsVisible(true);
     });
 
-    useVoltEvent<RoomEngineTriggerWidgetEvent>(RoomEngineTriggerWidgetEvent.REQUEST_PRESENT, () => hide());
+    useVoltEvent<RoomEngineTriggerWidgetEvent>(RoomEngineTriggerWidgetEvent.REQUEST_PRESENT, onClose);
 
     useVoltEvent<RoomSessionPresentEvent>(RoomSessionPresentEvent.RSPE_PRESENT_OPENED, (event) => {
         if (!openingRef.current) return;
+
+        openingRef.current = false;
 
         let furniData: IFurnitureData = null;
         let iconUrl: string = null;
