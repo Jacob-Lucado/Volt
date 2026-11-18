@@ -9,8 +9,10 @@ import {
 import { FC, useEffect, useRef, useState } from 'react';
 import { GetConfigurationValue, IRoomData, LocalizeText, SendMessageComposer } from '../../../../api';
 import { ClassicScrollAreaView, UserProfileIconView } from '../../../../common';
+import { NativeText } from '../../../../common/native-text/NativeText';
 import { useFriends, useMessageEvent } from '../../../../hooks';
 import { NavigatorRoomSettingsAtView } from './NavigatorRoomSettingsAtView';
+import { RoomSettingsTextView } from './RoomSettingsTextView';
 
 interface NavigatorRoomSettingsTabViewProps {
     roomData: IRoomData;
@@ -112,22 +114,30 @@ export const NavigatorRoomSettingsRightsTabView: FC<NavigatorRoomSettingsTabView
     return (
         <div className="ros-tab ros-tab-wide" style={{ height: 364 }}>
             <NavigatorRoomSettingsAtView className="ros-search" h={42} w={322} x={0} y={1} />
-            <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={138} x={6} y={13}>
-                {LocalizeText('navigator.flatctrls.filter')}
-            </NavigatorRoomSettingsAtView>
+            <RoomSettingsTextView h={17} text={LocalizeText('navigator.flatctrls.filter')} textStyle="u_bold" w={138} x={6} y={13} />
             <NavigatorRoomSettingsAtView h={23} w={216} x={97} y={9}>
                 <input className="ros-input ros-filter-input" value={filter} onChange={(event) => setFilter(event.target.value)} />
             </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView className="ros-text ros-multi" h={34} w={150} x={0} y={44}>
-                {LocalizeText(
+            <RoomSettingsTextView
+                wrap
+                h={34}
+                text={LocalizeText(
                     'navigator.flatctrls.userswithrights',
                     ['displayed', 'total'],
                     [shownUsersWithRights.length.toString(), filteredUsersWithRights.size.toString()]
                 )}
-            </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView className="ros-text ros-multi" h={34} w={150} x={175} y={44}>
-                {LocalizeText('navigator.flatctrls.friends', ['displayed', 'total'], [shownFriends.length.toString(), friendsWithoutRights.length.toString()])}
-            </NavigatorRoomSettingsAtView>
+                w={150}
+                x={0}
+                y={44}
+            />
+            <RoomSettingsTextView
+                wrap
+                h={34}
+                text={LocalizeText('navigator.flatctrls.friends', ['displayed', 'total'], [shownFriends.length.toString(), friendsWithoutRights.length.toString()])}
+                w={150}
+                x={175}
+                y={44}
+            />
             <NavigatorRoomSettingsAtView className="ros-list-border" h={289} w={150} x={0} y={74}>
                 <ClassicScrollAreaView className="ros-scroll" style={{ left: 4, top: 4, width: 142, height: 247 }} viewportClassName="ros-scroll-viewport">
                     {shownUsersWithRights.map(([id, name], index) => (
@@ -147,7 +157,9 @@ export const NavigatorRoomSettingsRightsTabView: FC<NavigatorRoomSettingsTabView
                     style={{ left: 4, top: 256, width: 142, height: 29 }}
                     onClick={onRemoveAll}
                 >
-                    {LocalizeText('navigator.flatctrls.clear')}
+                    <span className="ros-button-label">
+                        <NativeText tinted transparent background={0xffffff} text={LocalizeText('navigator.flatctrls.clear')} textStyle="button_shiny_bold" />
+                    </span>
                 </button>
             </NavigatorRoomSettingsAtView>
             <NavigatorRoomSettingsAtView className="ros-list-border" h={289} w={150} x={173} y={74}>

@@ -2,6 +2,7 @@ import { RemoveAllRightsMessageComposer, RoomBannedUsersComposer, RoomDataParser
 import { FC, useRef, useState } from 'react';
 import { CreateLinkEvent, GetClubMemberLevel, GetMaxVisitorsList, GetSelectedMaxVisitors, IRoomData, LocalizeText, SendMessageComposer } from '../../../../api';
 import { VoltCardContentView, VoltCardHeaderView, VoltCardTabsItemView, VoltCardTabsView, VoltCardView } from '../../../../common';
+import { NativeText } from '../../../../common/native-text/NativeText';
 import { useMessageEvent, useNavigatorData, useNotificationActions } from '../../../../hooks';
 import { NavigatorRoomSettingsAccessTabView } from './NavigatorRoomSettingsAccessTabView';
 import { NavigatorRoomSettingsBasicTabView } from './NavigatorRoomSettingsBasicTabView';
@@ -10,6 +11,7 @@ import { NavigatorRoomSettingsModTabView } from './NavigatorRoomSettingsModTabVi
 import { NavigatorRoomSettingsRightsTabView } from './NavigatorRoomSettingsRightsTabView';
 import { NavigatorRoomSettingsVipChatTabView } from './NavigatorRoomSettingsVipChatTabView';
 import { RoomSettingsFieldError } from './RoomSettingsFieldErrorView';
+import { ROOM_SETTINGS_BACKGROUND } from './RoomSettingsTextView';
 
 const TABS: string[] = [
     'navigator.roomsettings.tab.1',
@@ -301,6 +303,7 @@ export const NavigatorRoomSettingsView: FC<{}> = (props) => {
 
             if (error) {
                 setForm(newForm);
+
                 setInputError(error);
                 setSelectedTab(TABS[3]);
                 return;
@@ -373,7 +376,7 @@ export const NavigatorRoomSettingsView: FC<{}> = (props) => {
                                 style={{ width: tabWidth, minWidth: tabWidth, maxWidth: tabWidth }}
                                 onClick={(event) => setSelectedTab(tab)}
                             >
-                                {LocalizeText(tab)}
+                                <NativeText transparent tinted background={ROOM_SETTINGS_BACKGROUND} text={LocalizeText(tab)} textStyle="button_shiny_regular" />
                             </VoltCardTabsItemView>
                         );
                     })}
