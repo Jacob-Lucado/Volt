@@ -1,54 +1,17 @@
 import { AddLinkEventTracker, CreateLinkEvent, DailyTaskData, GetSessionDataManager, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
 import { CSSProperties, FC, useEffect, useMemo, useRef, useState } from 'react';
-import { ACTIVITY_POINT_ICON_LAYOUT_SIZES, ACTIVITY_POINT_ICON_REGIONS, GetActivityPointIconStyle, getDailyTaskImageUrl, getDailyTasksWindowCaption, localizeWithFallback, ProductTypeEnum } from '../../api';
-import { ClassicScrollAreaView, LayoutActivityPointIcon, LayoutBadgeImageView, LayoutFurniIconImageView, VoltCardHeaderView, VoltCardView } from '../../common';
+import { getDailyTaskImageUrl, getDailyTasksWindowCaption, localizeWithFallback } from '../../api';
+import { ClassicScrollAreaView, VoltCardHeaderView, VoltCardView } from '../../common';
 import { NativeText } from '../../common/native-text/NativeText';
 import { useDailyTasks } from '../../hooks';
 import { AchievementText, useAirFieldWidth } from '../achievements/AchievementText';
 import { AirAchievementProgressBar } from '../achievements/AirAchievementProgressBar';
 import { useAirScrollInput } from '../achievements/useAirScrollInput';
 import { GetHcButton } from './GetHcButton';
+import { ProductIconView } from './ProductIconView';
 import { QuestButton } from './QuestButton';
 import taskCompletedUrl from '../../assets/images/quests/task-completed.png';
 import '../../css/quests/DailyTasks.css';
-
-/**
- * The reward's product type as the official product icon widget reads it (ProductIconWidget.as:91-160, AIR
- * WIN63-202610151745-318700621): the item type id is a wall or floor class id, a badge code or a currency type.
- */
-const REWARD_WALL_ITEM = 0;
-const REWARD_FLOOR_ITEMS = [1, 11];
-const REWARD_BADGE = 4;
-const REWARD_CURRENCY = 8;
-
-/** A currency is product_icon.xml's icon window: big icon style, sized to its skin layout and kept centred in the 40x40 widget (half the size change, truncated). */
-const DailyTaskCurrencyIcon: FC<{ type: number }> = ({ type }) => {
-    const style = GetActivityPointIconStyle(type, true);
-    const region = ACTIVITY_POINT_ICON_REGIONS[style];
-
-    if (!region) return null;
-
-    const [width, height] = ACTIVITY_POINT_ICON_LAYOUT_SIZES[style] ?? [region[2], region[3]];
-
-    return <LayoutActivityPointIcon big type={type} style={{ position: 'absolute', left: Math.trunc((40 - width) / 2), top: Math.trunc((40 - height) / 2) }} />;
-};
-
-const DailyTaskRewardIcon: FC<{ reward: DailyTaskData['rewards'][number] }> = ({ reward }) => {
-    const itemTypeId = reward.rewardTypeId;
-    const classId = Number.parseInt(itemTypeId, 10);
-
-    if (reward.productItemTypeId === REWARD_BADGE) return <LayoutBadgeImageView badgeCode={itemTypeId} />;
-
-    if (Number.isNaN(classId)) return null;
-
-    if (reward.productItemTypeId === REWARD_CURRENCY) return <DailyTaskCurrencyIcon type={classId} />;
-
-    if (reward.productItemTypeId === REWARD_WALL_ITEM) return <LayoutFurniIconImageView productClassId={classId} productType={ProductTypeEnum.WALL} />;
-
-    if (REWARD_FLOOR_ITEMS.includes(reward.productItemTypeId)) return <LayoutFurniIconImageView productClassId={classId} productType={ProductTypeEnum.FLOOR} />;
-
-    return null;
-};
 
 const WINDOW_WIDTH = 428;
 const SCROLLING_WIDTH = 452;
@@ -121,7 +84,7 @@ const DailyTaskRewardView: FC<{ reward: DailyTaskData['rewards'][number]; card: 
         <div className="air-dt-reward">
             {/* Without an amount badge the widget is centred in the 50 high template. */}
             <div className="air-dt-reward-icon" style={reward.amount > 1 ? undefined : { top: 5 }}>
-                <DailyTaskRewardIcon reward={reward} />
+                <ProductIconView productTypeId={reward.productItemTypeId} itemTypeId={reward.rewardTypeId} extraParams={reward.extraParams} />
             </div>
             {reward.amount > 1 && (
                 <div className="air-dt-reward-amount" style={{ width: badgeWidth, left: 8 - Math.trunc((badgeWidth - 28) / 2), background: `#${blend(card, 0x7c7c7c, 231 / 255).toString(16).padStart(6, '0')}` }}>
