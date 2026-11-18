@@ -111,7 +111,7 @@ export const DailyHubView: FC<{}> = () => {
                     </Column>
                 )}
                 {state && (
-                    <Column gap={2}>
+                    <Column gap={2} className="max-h-[max(200px,min(520px,calc(100vh-480px)))] overflow-y-auto pr-1">
                         <Column gap={1} className="p-2 rounded bg-card-grid-item/30">
                             <Text bold>{text('dailyhub.reward', 'Daily reward')}</Text>
                             <Text small>
@@ -188,6 +188,16 @@ export const DailyHubView: FC<{}> = () => {
                                 <Text small className="text-gray-700">
                                     {formatStart(state.event.starts_at)}
                                     {state.event.location ? ` · ${state.event.location}` : ''}
+                                </Text>
+                            </Column>
+                        )}
+
+                        {state.news && (
+                            <Column gap={0} className="p-2 rounded bg-card-grid-item/30">
+                                <Text bold>{text('dailyhub.news', "What's new")}</Text>
+                                <Text>{state.news.title}</Text>
+                                <Text small className="text-gray-700">
+                                    {state.news.body}
                                 </Text>
                             </Column>
                         )}
