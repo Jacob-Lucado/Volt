@@ -11,7 +11,7 @@ import { GetUserProfile, LocalizeText, localizeWithFallback, SendMessageComposer
 import { useMessageEvent, useNotification, useRoom } from '../../hooks';
 import { summarizeTransactionCounts } from './WiredChestTransactionCounts';
 import { WiredMenuButton, WiredMenuPanel, WiredMenuTable, WiredMenuText, WiredMenuTitle } from './WiredMenuParts';
-import { WIRED_TRANSACTION_LOGS_PAGE_SIZE, WiredTransactionLogsPage, WiredTransactionLogsWindow } from './WiredTransactionLogsWindow';
+import { WIRED_TRANSACTION_LOGS_PAGE_SIZE } from './WiredTransactionLogsWindow';
 
 /** The preview asks for the 10 most recent transactions and refreshes on its own while the tab is open. */
 const PREVIEW_AMOUNT = 10;
@@ -39,7 +39,6 @@ export const WiredChestsTabView: FC<{}> = () => {
     const { showConfirm = null } = useNotification();
 
     const [preview, setPreview] = useState<IWiredTransactionInfo[] | null>(null);
-    const [detail, setDetail] = useState<WiredTransactionLogsPage | null>(null);
     const [lockBusy, setLockBusy] = useState(false);
 
     const canManageOwn = !!roomSession && (roomSession.isRoomOwner || roomSession.controllerLevel >= RoomControllerLevel.GUEST);
@@ -61,13 +60,7 @@ export const WiredChestsTabView: FC<{}> = () => {
 
         if (parser.amount === PREVIEW_AMOUNT && parser.page === FIRST_PAGE && parser.listType === WIRED_TRANSACTION_LIST_ROOM) {
             setPreview([...parser.logs]);
-
-            return;
         }
-
-        if (parser.amount !== WIRED_TRANSACTION_LOGS_PAGE_SIZE) return;
-
-        setDetail({ listType: parser.listType, listId: parser.listId, totalLogs: parser.totalLogs, page: parser.page, logs: [...parser.logs] });
     });
 
     const sendLock = useCallback(
@@ -148,8 +141,6 @@ export const WiredChestsTabView: FC<{}> = () => {
             <WiredMenuButton h={30} w={114} x={14} y={336} onClick={() => SendMessageComposer(new WiredTransactionGetRoomLogsComposer(WIRED_TRANSACTION_LOGS_PAGE_SIZE, FIRST_PAGE))}>
                 View detailed list
             </WiredMenuButton>
-
-            {detail && <WiredTransactionLogsWindow data={detail} onClose={() => setDetail(null)} />}
         </>
     );
 };
