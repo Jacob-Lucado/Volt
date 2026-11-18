@@ -13,7 +13,7 @@ import { CatalogPetPriceDisplayView } from './pets/CatalogPetPriceDisplayView';
 /** The catalog page colour behind the AIR text rasters. */
 const PAGE_BACKGROUND = 0xe9e9e1;
 
-/** PetPreviewCatalogWidget.init draws a white horse (type 15) on palette 2 before a product is picked. */
+/** PetPreviewCatalogWidget.init draws a white horse (type 15) on palette 2 over the page teaser before a product is picked. */
 const DEFAULT_PREVIEW: PetCustomizationPreview = { typeId: 15, paletteId: 2, parts: [] };
 
 /** A shampoo shows the palette of its colour tag that has breed 1. */
@@ -37,15 +37,13 @@ export const CatalogLayoutPetCustomizationView: FC<CatalogLayoutProps> = ({ page
     const [assetRefreshKey, setAssetRefreshKey] = useState(0);
     const selectedOffer = currentOffer && page.offers.includes(currentOffer) ? currentOffer : null;
     const furnitureData = selectedOffer?.product?.furnitureData ?? null;
-    const pageImage = page.localization.getImage(1);
-
     const preview = useMemo(() => {
         void assetRefreshKey;
 
-        if (!selectedOffer) return pageImage ? null : DEFAULT_PREVIEW;
+        if (!selectedOffer) return DEFAULT_PREVIEW;
 
         return buildPetCustomizationPreview(furnitureData, getShampooPaletteId);
-    }, [assetRefreshKey, furnitureData, pageImage, selectedOffer]);
+    }, [assetRefreshKey, furnitureData, selectedOffer]);
 
     const petTypeName = preview ? (GetRoomContentLoader().getPetNameForType(preview.typeId) ?? null) : null;
 
@@ -73,10 +71,8 @@ export const CatalogLayoutPetCustomizationView: FC<CatalogLayoutProps> = ({ page
                 <CatalogItemGridWidgetView className={`volt-catalog-grid volt-catalog-grid-density-${density}`} {...gridMetrics} />
             </div>
             <div className="volt-catalog-pet-customization-preview">
-                {preview ? (
+                {preview && (
                     <LayoutPetImageView customParts={customParts} direction={2} paletteId={preview.paletteId} petColor={0xffffff} typeId={preview.typeId} />
-                ) : (
-                    !selectedOffer && !!pageImage && <img alt="" src={pageImage} />
                 )}
             </div>
             {selectedOffer && (

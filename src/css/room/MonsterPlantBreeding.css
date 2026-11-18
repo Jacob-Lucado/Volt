@@ -1,0 +1,185 @@
+/*
+ * Monster plant breeding windows (breed_pets_confirmation_xml, breed_pets_result_xml): frame_3 with content margins 3/36/3/0 that fits
+ * its element_list. element_list is a vertical item list with 10px spacing; hidden items take no space.
+ */
+.volt-card-shell.volt-breed-pets {
+    box-sizing: border-box;
+    width: 274px !important;
+    min-width: 274px !important;
+    max-width: 274px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    padding: 36px 3px 0 !important;
+    color: #000;
+}
+
+.draggable-window:has(> .volt-breed-pets-confirm) {
+    width: 274px;
+}
+
+/* The result frame has no width limits, so it grows to its 274 wide element_list. */
+.volt-card-shell.volt-breed-pets.volt-breed-pets-result {
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 280px !important;
+}
+
+.draggable-window:has(> .volt-breed-pets-result) {
+    width: 280px;
+}
+
+.volt-breed-pets .volt-breed-pets-title {
+    position: absolute !important;
+    top: 3px;
+    left: calc(50% - 0.01px);
+    transform: translateX(-50%);
+}
+
+.volt-breed-pets-list {
+    display: flex;
+    width: 268px;
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 10px;
+    overflow: hidden;
+}
+
+.volt-breed-pets-result .volt-breed-pets-list {
+    width: 274px;
+}
+
+.volt-breed-pets-separator {
+    flex: 0 0 1px;
+    height: 1px;
+}
+
+.volt-breed-pets-body-text {
+    line-height: 0;
+}
+
+/* preview_list: a horizontal list that only grows from its 122px layout height. */
+.volt-breed-pets-preview-list {
+    display: flex;
+    min-height: 122px;
+    margin-left: 10px;
+    align-items: flex-start;
+    column-gap: 10px;
+}
+
+/* plantN_itemlist / seedN_itemlist: 122 wide, 1px spacing, clips its wider rarity text. */
+.volt-breed-pets-column {
+    display: flex;
+    width: 122px;
+    flex-direction: column;
+    row-gap: 1px;
+    overflow: hidden;
+}
+
+.volt-breed-pets-line {
+    position: relative;
+    flex: 0 0 17px;
+    height: 17px;
+    line-height: 0;
+}
+
+.volt-breed-pets-preview {
+    position: relative;
+    flex: 0 0 130px;
+    width: 122px;
+    height: 130px;
+    background-repeat: no-repeat;
+    image-rendering: var(--volt-pixel-art, pixelated);
+}
+
+.volt-breed-pets-preview.is-clickable {
+    cursor: pointer;
+}
+
+.volt-breed-pets-preview-image {
+    position: absolute;
+    width: max-content;
+    height: max-content;
+    line-height: 0;
+}
+
+.volt-breed-pets-button-list {
+    display: flex;
+    height: 30px;
+    margin-left: 10px;
+    column-gap: 10px;
+}
+
+.volt-breed-pets-seed-buttons {
+    width: 122px;
+}
+
+.volt-breed-pets-button {
+    position: relative;
+    box-sizing: border-box;
+    height: 30px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.volt-breed-pets-button::before {
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    border: 5px solid transparent;
+    border-image: var(--breed-button) 5 fill / 5px stretch;
+    content: '';
+    image-rendering: var(--volt-pixel-art, pixelated);
+}
+
+/* button style 3 (button_shiny) drawn at 30px. */
+.volt-breed-pets-button.is-shiny {
+    --breed-button: url('../../assets/images/habbo-skin/slices/button-shiny-default-h30.png');
+    --breed-button-hover: url('../../assets/images/habbo-skin/slices/button-shiny-hover-h30.png');
+    --breed-button-pressed: url('../../assets/images/habbo-skin/slices/button-shiny-pressed-h30.png');
+}
+
+/* button_thick style 5 (button_shiny_thick) tinted 0x00aa00. */
+.volt-breed-pets-button.is-thick {
+    --breed-button: var(--habbo-skin-shiny-thick-green);
+    --breed-button-hover: var(--habbo-skin-shiny-thick-green-hover);
+    --breed-button-pressed: var(--habbo-skin-shiny-thick-green-pressed);
+}
+
+.volt-breed-pets-button:hover::before {
+    border-image-source: var(--breed-button-hover);
+}
+
+.volt-breed-pets-button:active::before {
+    border-image-source: var(--breed-button-pressed);
+}
+
+.volt-breed-pets-button-caption {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 100%;
+    height: 0;
+    pointer-events: none;
+}
+
+/* breed_pet_menu: the use product bubble with the own pet menu's list, 103 wide at x=2, 101x26 rows on 107x35 buttons. */
+.volt-avatar-action-menu--breed-pet .air-avatar-menu-buttons {
+    width: 103px;
+    margin-left: 6px;
+}
+
+.volt-avatar-action-menu--breed-pet .air-avatar-menu-buttons > .volt-context-menu-item {
+    width: 101px;
+    min-width: 101px;
+    max-width: 101px;
+}
+
+.volt-avatar-action-menu--breed-pet .air-avatar-menu-buttons > .volt-context-menu-item::before {
+    width: 107px;
+}

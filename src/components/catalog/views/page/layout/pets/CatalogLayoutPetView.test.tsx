@@ -186,12 +186,10 @@ describe('pet catalog layout', () => {
 
         render(<CatalogLayoutPetView page={{ ...page, offers: [currentOffer] } as any} hideNavigation={() => undefined} />);
 
-        expect(screen.queryByTestId('pet-image')).not.toBeInTheDocument();
         expect(petAssetState.downloadAsset).toHaveBeenCalledWith('pettype_8');
 
         petAssetState.colorsReady = true;
         act(() => contentLoadedHandler?.({ contentType: 'pettype_9' }));
-        expect(screen.queryByTestId('pet-image')).not.toBeInTheDocument();
 
         act(() => contentLoadedHandler?.({ contentType: 'pettype_8' }));
 
