@@ -8,7 +8,8 @@ import { WiredMenuLabel } from '../../common/native-text/WiredMenuLabel';
 import { useWiredPageRequests } from '../../hooks/wired-tools/useWiredPageRequests';
 import { summarizeTransactionCounts } from './WiredChestTransactionCounts';
 import { WiredMenuButton, WiredMenuTable, WiredMenuTableColumn, WiredMenuTableRow } from './WiredMenuParts';
-import { resizeCentred, startCentred, useTextWindowWidths } from './nativeTextWindow';
+import { useTextWindowWidths } from '../../common/native-text/useTextWindowWidths';
+import { resizeCentred, startCentred } from './nativeTextWindow';
 import { calculateLastPage, clampInputPage, NO_PAGE, parseInputPage, restrictPageInput } from './WiredPaging.helpers';
 
 /** Rows per page of the detailed list. */
