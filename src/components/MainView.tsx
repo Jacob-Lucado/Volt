@@ -10,6 +10,7 @@ import {
 } from '@volt/renderer';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FC, useEffect, useState } from 'react';
+import { TryVisitRoom, takeLaunchRoom } from '../api';
 import { NativeTextHaloFilter } from '../common';
 import { useVoltEventReducer } from '../hooks';
 import { AchievementsView } from './achievements/AchievementsView';
@@ -85,6 +86,10 @@ export const MainView: FC<{}> = (props) =>
 
         GetCommunication().connection.ready();
         performance.mark('volt:hotel-ready');
+
+        const launchRoomId = takeLaunchRoom();
+
+        if (launchRoomId > 0) TryVisitRoom(launchRoomId);
     }, []);
 
     useEffect(() =>
