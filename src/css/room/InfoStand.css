@@ -819,6 +819,52 @@
     overflow-wrap: anywhere;
 }
 
+/* furni_view_branding_element: a 65px row with the key in Volter Bold and a 160x40 wrapping input with a 1px white border. */
+.volt-furni-infostand__branding {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.volt-furni-infostand__branding-field {
+    position: relative;
+    flex: 0 0 65px;
+    height: 65px;
+}
+
+.volt-furni-infostand__branding-name {
+    display: block;
+    box-sizing: border-box;
+    width: 160px;
+    padding: 1px 0 0 2px;
+    color: #ffffff;
+    font-weight: bold;
+    overflow-wrap: anywhere;
+    filter: var(--volt-native-text-halo);
+}
+
+.volt-furni-infostand__branding-value {
+    position: absolute;
+    top: 13px;
+    left: 0;
+    box-sizing: border-box;
+    width: 160px;
+    height: 40px;
+    margin: 0;
+    padding: 1px 3px 0 2px;
+    border: 1px solid #ffffff;
+    border-radius: 0;
+    background: transparent;
+    color: #ffffff;
+    font: inherit;
+    line-height: 10px;
+    overflow-wrap: anywhere;
+    resize: none;
+    overflow: hidden;
+    outline: none;
+    -webkit-font-smoothing: none;
+}
+
 .volt-furni-infostand__link {
     cursor: pointer;
     text-decoration: underline;
