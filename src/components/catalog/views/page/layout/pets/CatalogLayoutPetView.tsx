@@ -75,32 +75,16 @@ export const CatalogLayoutPetView: FC<CatalogLayoutProps> = ({ page = null }) =>
         !!petTypeName
     );
 
+    // NewPetsCatalogWidget: every sellable palette can be bought, but only palettes with a colour in the pet asset get a swatch.
     const newPetChoices = useMemo(() => {
         if (legacyPet) return [];
 
         void petAssetRefreshKey;
 
-        let palettes: PetPaletteLike[] = sellablePalettes as unknown as PetPaletteLike[];
-
-        if (!palettes.length) {
-            const derived: PetPaletteLike[] = [];
-
-            for (let paletteId = 0; paletteId <= 128; paletteId++) {
-                if (GetRoomEngine().getPetColorResult(petIndex, paletteId)) {
-                    derived.push({ breedId: paletteId, paletteId, rare: false, sellable: true, type: petIndex, clubOnly: false });
-                }
-            }
-
-            palettes = derived;
-        }
-
-        return buildNewPetPaletteChoices(petIndex, palettes, (type, paletteId) => GetRoomEngine().getPetColorResult(type, paletteId));
+        return buildNewPetPaletteChoices(petIndex, sellablePalettes as PetPaletteLike[], (type, paletteId) => GetRoomEngine().getPetColorResult(type, paletteId));
     }, [legacyPet, petAssetRefreshKey, petIndex, sellablePalettes]);
 
-    const selectablePalettes = useMemo(
-        () => (legacyPet ? legacyBreeds : newPetChoices.map((choice) => choice.palette)),
-        [legacyPet, legacyBreeds, newPetChoices]
-    );
+    const selectablePalettes: PetPaletteLike[] = legacyPet ? legacyBreeds : sellablePalettes;
 
     const legacyColors = useMemo(
         () => (legacyPet ? GetPetAvailableColors(petIndex, sellablePalettes as SellablePetPaletteData[]) : []),
