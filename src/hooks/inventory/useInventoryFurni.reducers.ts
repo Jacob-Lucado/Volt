@@ -1,13 +1,11 @@
 import {
     CreateLinkEvent,
     FurnitureListAddOrUpdateEvent,
-    FurnitureListItemParser,
-    FurnitureListRemovedEvent
+    FurnitureListItemParser
 } from '@volt/renderer';
 import {
     addFurnitureItem,
     attemptItemPlacement,
-    CloneObject,
     cancelRoomObjectPlacement,
     FurnitureItem,
     GroupItem,
@@ -146,49 +144,27 @@ export const applyMergedFurnitureList = (state: GroupItem[], fragment: Map<numbe
     return newValue;
 };
 
-export const applyFurnitureListRemoved = (state: GroupItem[], event: FurnitureListRemovedEvent): GroupItem[] => {
-    const parser = event.getParser();
-    const newValue = [...state];
+export const applyFurnitureListRemoved = (state: GroupItem[], itemIds: readonly number[]): GroupItem[] => {
+    const removedIds = new Set(itemIds);
+    const placingId = getPlacingItemId();
 
-    let index = 0;
+    return state.flatMap((original) => {
+        if (!original.items.some((item) => removedIds.has(item.id))) return [original];
 
-    while (index < newValue.length) {
-        const originalGroup = newValue[index];
+        const group = original.clone();
+        group.items = original.items.filter((item) => !removedIds.has(item.id));
 
-        // Pure existence check first - must NOT mutate the input state. React can invoke
-        // this state updater twice (StrictMode / React Compiler purity checks). GroupItem.remove
-        // reassigns the group's internal items, so mutating the input directly makes the second
-        // pass a no-op (item already gone), React keeps that result, and the furni lingers.
-        if (!originalGroup.getItemById(parser.itemId)) {
-            index++;
-
-            continue;
-        }
-
-        // Clone before removing so the incoming state's GroupItem is left untouched. remove()
-        // reassigns the clone's own _items array (CloneObject shares the reference, but remove
-        // copies-then-reassigns), so the original group keeps its items across a re-invocation.
-        const group = CloneObject(originalGroup);
-        const item = group.remove(parser.itemId);
-
-        if (item && getPlacingItemId() === item.ref) {
+        if (placingId !== -1 && original.items.some((item) => item.ref === placingId && removedIds.has(item.id))) {
             queueMicrotask(() => {
-                cancelRoomObjectPlacement();
+                if (getPlacingItemId() !== placingId) return;
 
+                cancelRoomObjectPlacement();
                 if (!attemptItemPlacement(group)) CreateLinkEvent('inventory/show');
             });
         }
 
-        if (group.getTotalCount() <= 0) {
-            newValue.splice(index, 1);
-        } else {
-            newValue[index] = group;
-        }
-
-        break;
-    }
-
-    return newValue;
+        return group.getTotalCount() > 0 ? [group] : [];
+    });
 };
 
 export const clearUnseenFlags = (state: GroupItem[]): GroupItem[] => {
