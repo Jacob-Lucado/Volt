@@ -1,6 +1,7 @@
 import {
     GetRoomEngine,
     GetSessionDataManager,
+    IFurnitureData,
     RoomEngineObjectEvent,
     RoomEngineUseProductEvent,
     RoomObjectCategory,
@@ -246,18 +247,9 @@ const useAvatarInfoWidgetState = () => {
             this._container.events.dispatchEvent(_local_7); */
     });
 
-    useVoltEvent<RoomEngineUseProductEvent>(RoomEngineUseProductEvent.USE_PRODUCT_FROM_INVENTORY, (event) => {
-        // this._Str_23199((k as RoomEngineUseProductEvent).inventoryStripId, (k as RoomEngineUseProductEvent).furnitureTypeId);
-    });
+    const showUseProductMenu = (furniData: IFurnitureData, ownerId: number, requestObjectId: number, inventoryStripId: number) => {
+        if (!furniData) return;
 
-    useVoltEvent<RoomEngineUseProductEvent>(RoomEngineUseProductEvent.USE_PRODUCT_FROM_ROOM, (event) => {
-        const roomObject = GetRoomEngine().getRoomObject(roomSession.roomId, event.objectId, RoomObjectCategory.FLOOR);
-
-        if (!roomObject || !IsOwnerOfFurniture(roomObject)) return;
-
-        const ownerId = roomObject.model.getValue<number>(RoomObjectVariable.FURNITURE_OWNER_ID);
-        const typeId = roomObject.model.getValue<number>(RoomObjectVariable.FURNITURE_TYPE_ID);
-        const furniData = GetSessionDataManager().getFloorItemData(typeId);
         const parts = furniData.customParams.split(' ');
         const part = parts.length ? parseInt(parts[0]) : -1;
 
@@ -269,40 +261,45 @@ const useAvatarInfoWidgetState = () => {
         for (const roomObject of roomObjects) {
             const userData = roomSession.userDataManager.getUserDataByIndex(roomObject.id);
 
-            let replace = false;
+            if (!userData || userData.type !== RoomObjectType.PET || userData.ownerId !== ownerId) continue;
 
-            if (!userData || userData.type !== RoomObjectType.PET) {
-            } else {
-                if (userData.ownerId === ownerId) {
-                    if (userData.hasSaddle && furniData.specialType === FurniCategory.PET_SADDLE) replace = true;
+            const replace = userData.hasSaddle && furniData.specialType === FurniCategory.PET_SADDLE;
+            const figureParts = userData.figure.split(' ');
+            const figurePart = figureParts.length ? parseInt(figureParts[0]) : -1;
 
-                    const figureParts = userData.figure.split(' ');
-                    const figurePart = figureParts.length ? parseInt(figureParts[0]) : -1;
+            if (figurePart !== part) continue;
 
-                    if (figurePart === part) {
-                        if (furniData.specialType === FurniCategory.MONSTERPLANT_REVIVAL) {
-                            if (!userData.canRevive) continue;
-                        }
+            if (furniData.specialType === FurniCategory.MONSTERPLANT_REVIVAL && !userData.canRevive) continue;
 
-                        if (furniData.specialType === FurniCategory.MONSTERPLANT_REBREED) {
-                            if (userData.petLevel < 7 || userData.canRevive || userData.canBreed) continue;
-                        }
+            if (furniData.specialType === FurniCategory.MONSTERPLANT_REBREED && (userData.petLevel < 7 || userData.canRevive || userData.canBreed)) continue;
 
-                        if (furniData.specialType === FurniCategory.MONSTERPLANT_FERTILIZE) {
-                            if (userData.petLevel >= 7 || userData.canRevive) continue;
-                        }
+            if (furniData.specialType === FurniCategory.MONSTERPLANT_FERTILIZE && (userData.petLevel >= 7 || userData.canRevive)) continue;
 
-                        useProductBubbles.push(
-                            new UseProductItem(userData.roomIndex, RoomObjectCategory.UNIT, userData.name, event.objectId, roomObject.id, -1, replace)
-                        );
-                    }
-                }
-            }
+            useProductBubbles.push(
+                new UseProductItem(userData.roomIndex, RoomObjectCategory.UNIT, userData.name, requestObjectId, roomObject.id, inventoryStripId, replace)
+            );
         }
 
         setConfirmingProduct(null);
 
         if (useProductBubbles.length) setProductBubbles(useProductBubbles);
+    };
+
+    useVoltEvent<RoomEngineUseProductEvent>(RoomEngineUseProductEvent.USE_PRODUCT_FROM_INVENTORY, (event) => {
+        if (!roomSession) return;
+
+        showUseProductMenu(GetSessionDataManager().getFloorItemData(event.furnitureTypeId), GetSessionDataManager().userId, event.furnitureTypeId, event.inventoryStripId);
+    });
+
+    useVoltEvent<RoomEngineUseProductEvent>(RoomEngineUseProductEvent.USE_PRODUCT_FROM_ROOM, (event) => {
+        const roomObject = GetRoomEngine().getRoomObject(roomSession.roomId, event.objectId, RoomObjectCategory.FLOOR);
+
+        if (!roomObject || !IsOwnerOfFurniture(roomObject)) return;
+
+        const ownerId = roomObject.model.getValue<number>(RoomObjectVariable.FURNITURE_OWNER_ID);
+        const typeId = roomObject.model.getValue<number>(RoomObjectVariable.FURNITURE_TYPE_ID);
+
+        showUseProductMenu(GetSessionDataManager().getFloorItemData(typeId), ownerId, event.objectId, -1);
     });
 
     useVoltEvent<RoomEngineObjectEvent>(RoomEngineObjectEvent.REQUEST_MANIPULATION, (event) => {

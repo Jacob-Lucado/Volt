@@ -1,7 +1,17 @@
 import { CreateLinkEvent } from '@volt/renderer';
 import { CSSProperties, FC, useEffect, useState } from 'react';
-import { GetActivityPointName, GetConfigurationValue, LocalizeFormattedNumber, localizeWithFallback } from '../../../api';
+import {
+    ACTIVITY_POINT_ICON_LAYOUT_SIZES,
+    ACTIVITY_POINT_ICON_REGIONS,
+    GetActivityPointIconStyle,
+    GetActivityPointName,
+    GetConfigurationValue,
+    LocalizeFormattedNumber,
+    localizeWithFallback
+} from '../../../api';
 import { LayoutActivityPointIcon, UsesActivityPointIcon } from '../../../common';
+import { NativeText } from '../../../common/native-text/NativeText';
+import { SubpixelText } from '../../../common/native-text/SubpixelText';
 
 interface SeasonalViewProps {
     type: number;
@@ -9,8 +19,10 @@ interface SeasonalViewProps {
 }
 
 // purse_indicator_seasonal_xml defaults: badge border 0x7adde9, name colour 0xbb7dc3.
-const DEFAULT_BADGE_COLOR = '#7adde9';
-const DEFAULT_NAME_COLOR = '#bb7dc3';
+const DEFAULT_BADGE_COLOR = 0x7adde9;
+const DEFAULT_NAME_COLOR = 0xbb7dc3;
+// The BGCOLOR border colour the text is drawn over.
+const ROW_COLOR = 0x686661;
 
 // Currency indicator base (Vg): a 40ms timer advances the change progress by 0.025, so a balance change runs for 40 ticks (1.6s).
 const CHANGE_TICK_MS = 40;
@@ -58,11 +70,25 @@ const useBalanceChange = (type: number, amount: number): BalanceChange | null =>
     return change;
 };
 
-const toCssColor = (value: string, fallback: string): string => {
+// seasonal_icon is a 23x23 icon window at (3,3) that fitToSize shrinks to its skin layout, keeping its centre (on_resize_align_center and _middle).
+const iconPosition = (type: number): CSSProperties => {
+    const style = GetActivityPointIconStyle(type, true);
+    const region = ACTIVITY_POINT_ICON_REGIONS[style];
+
+    if (!region) return {};
+
+    const [width, height] = ACTIVITY_POINT_ICON_LAYOUT_SIZES[style] ?? [region[2], region[3]];
+
+    return { left: 3 + Math.trunc((23 - width) / 2), top: Math.trunc(3 + (23 - height) / 2) };
+};
+
+const toColor = (value: string, fallback: number): number => {
     const hex = (value ?? '').trim().replace(/^(#|0x)/i, '');
 
-    return /^[0-9a-f]{6}$/i.test(hex) ? `#${hex}` : fallback;
+    return /^[0-9a-f]{6}$/i.test(hex) ? parseInt(hex, 16) : fallback;
 };
+
+const toCssColor = (color: number): string => `#${color.toString(16).padStart(6, '0')}`;
 
 export const SeasonalView: FC<SeasonalViewProps> = (props) => {
     const { type = -1, amount = -1 } = props;
@@ -75,8 +101,8 @@ export const SeasonalView: FC<SeasonalViewProps> = (props) => {
         ? GetConfigurationValue<string>(`seasonalcurrency.${currencyId}.color`, GetConfigurationValue<string>('currency.seasonal.color', ''))
         : GetConfigurationValue<string>('currency.seasonal.color', '');
     // Without a preset there are no border/font keys to read, so the XML defaults stay.
-    const badgeColor = toCssColor(preset ? GetConfigurationValue<string>(`seasonalcurrency.preset.${preset}.border`, '') : '', DEFAULT_BADGE_COLOR);
-    const nameColor = toCssColor(preset ? GetConfigurationValue<string>(`seasonalcurrency.preset.${preset}.font`, '') : '', DEFAULT_NAME_COLOR);
+    const badgeColor = toColor(preset ? GetConfigurationValue<string>(`seasonalcurrency.preset.${preset}.border`, '') : '', DEFAULT_BADGE_COLOR);
+    const nameColor = toColor(preset ? GetConfigurationValue<string>(`seasonalcurrency.preset.${preset}.font`, '') : '', DEFAULT_NAME_COLOR);
     const page = GetConfigurationValue<string>('seasonalcurrencyindicator.page', '');
     // v75 looks the name up as activitypoint.name.<type> and localizes that key; the old purse.seasonal.currency.<type> only covers a missing config.
     const name = GetActivityPointName(type) || localizeWithFallback(`purse.seasonal.currency.${type}`, '');
@@ -92,17 +118,37 @@ export const SeasonalView: FC<SeasonalViewProps> = (props) => {
         <button
             type="button"
             className="volt-purse-seasonal-currency"
-            style={{ '--seasonal-badge': badgeColor, '--seasonal-name': nameColor } as CSSProperties}
+            style={{ '--seasonal-badge': toCssColor(badgeColor) } as CSSProperties}
             onClick={() => {
                 if (page) CreateLinkEvent('catalog/open/' + page);
             }}
         >
-            <span className="seasonal-text">{name}</span>
-            <span className={`seasonal-amount${shownAmount === 0 ? ' is-info' : ''}`} title={formattedAmount}>
-                {amountText}
+            <span className="seasonal-text">
+                <NativeText
+                    nativeResolution
+                    transparent
+                    background={ROW_COLOR}
+                    overrides={{ bold: true, thickness: 200, color: nameColor }}
+                    text={name}
+                    textStyle="il_regular_white"
+                    width={105}
+                />
+            </span>
+            {/* amount is an auto_size right field, which AIR draws in sub-pixel mode */}
+            <span className="seasonal-amount" title={formattedAmount}>
+                <SubpixelText
+                    transparent
+                    align="right"
+                    background={ROW_COLOR}
+                    color={0xffffff}
+                    text={amountText}
+                    textStyle="il_bold_white"
+                    underline={shownAmount === 0}
+                    width={60}
+                />
             </span>
             <span className="seasonal-badge">
-                {hasAirIcon && <LayoutActivityPointIcon big className="seasonal-icon" type={type} />}
+                {hasAirIcon && <LayoutActivityPointIcon big className="seasonal-icon" type={type} style={iconPosition(type)} />}
                 {iconUrl && <img src={iconUrl} alt="" className="seasonal-image" />}
             </span>
             {change && (
