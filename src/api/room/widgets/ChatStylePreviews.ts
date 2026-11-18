@@ -15,8 +15,6 @@ const loadImage = (url: string) => new Promise<HTMLImageElement>((resolve, rejec
     image.src = url;
 });
 
-// PrizeGridItem.initProductIcon: the preview drawn at half size with smoothing, which averages each 2x2 block of pixels
-// (colour weighted by alpha). The new bitmap is floor(size / 2), so an odd last row or column is dropped.
 const halve = (image: HTMLImageElement): string =>
 {
     const width = Math.floor(image.naturalWidth / 2);
@@ -39,6 +37,8 @@ const halve = (image: HTMLImageElement): string =>
     const targetContext = target.getContext('2d');
     const output = targetContext.createImageData(width, height);
 
+    const hasOddDimension = source.width % 2 !== 0 || source.height % 2 !== 0;
+
     for(let y = 0; y < height; y++)
     {
         for(let x = 0; x < width; x++)
@@ -48,15 +48,25 @@ const halve = (image: HTMLImageElement): string =>
             let blue = 0;
             let alpha = 0;
 
-            for(let offset = 0; offset < 4; offset++)
-            {
-                const index = ((y * 2 + (offset >> 1)) * source.width + x * 2 + (offset & 1)) * 4;
-                const weight = input[index + 3];
+            // For an odd source dimension, AIR smooths the first row and column with a 1:2:1 filter.
+            const smoothEdge = hasOddDimension && (x === 0 || y === 0);
+            const size = smoothEdge ? 3 : 2;
+            let totalWeight = 0;
 
-                red += input[index] * weight;
-                green += input[index + 1] * weight;
-                blue += input[index + 2] * weight;
-                alpha += weight;
+            for(let dy = 0; dy < size && y * 2 + dy < source.height; dy++)
+            {
+                for(let dx = 0; dx < size && x * 2 + dx < source.width; dx++)
+                {
+                    const index = ((y * 2 + dy) * source.width + x * 2 + dx) * 4;
+                    const weight = (smoothEdge && dy === 1 ? 2 : 1) * (smoothEdge && dx === 1 ? 2 : 1);
+                    const coverage = input[index + 3] * weight;
+
+                    red += input[index] * coverage;
+                    green += input[index + 1] * coverage;
+                    blue += input[index + 2] * coverage;
+                    alpha += coverage;
+                    totalWeight += weight;
+                }
             }
 
             const out = (y * width + x) * 4;
@@ -68,7 +78,7 @@ const halve = (image: HTMLImageElement): string =>
                 output.data[out + 2] = Math.round(blue / alpha);
             }
 
-            output.data[out + 3] = Math.round(alpha / 4);
+            output.data[out + 3] = Math.round(alpha / totalWeight);
         }
     }
 
