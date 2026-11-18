@@ -52,7 +52,6 @@ export const RoomWidgetsView: FC<{}> = (props) => {
     useVoltEvent<RoomEngineObjectEvent>(
         [
             RoomEngineTriggerWidgetEvent.REQUEST_TEASER,
-            RoomEngineTriggerWidgetEvent.REQUEST_ECOTRONBOX,
             RoomEngineTriggerWidgetEvent.REQUEST_CLOTHING_CHANGE,
             RoomEngineTriggerWidgetEvent.REQUEST_PLAYLIST_EDITOR,
             RoomEngineTriggerWidgetEvent.OPEN_WIDGET,
@@ -73,9 +72,6 @@ export const RoomWidgetsView: FC<{}> = (props) => {
             switch (event.type) {
                 case RoomEngineTriggerWidgetEvent.REQUEST_TEASER:
                     //widgetHandler.processWidgetMessage(new RoomWidgetFurniToWidgetMessage(RoomWidgetFurniToWidgetMessage.REQUEST_TEASER, objectId, category, event.roomId));
-                    break;
-                case RoomEngineTriggerWidgetEvent.REQUEST_ECOTRONBOX:
-                    //widgetHandler.processWidgetMessage(new RoomWidgetFurniToWidgetMessage(RoomWidgetFurniToWidgetMessage.REQUEST_ECOTRONBOX, objectId, category, event.roomId));
                     break;
                 case RoomEngineTriggerWidgetEvent.REQUEST_PLACEHOLDER:
                     //widgetHandler.processWidgetMessage(new RoomWidgetFurniToWidgetMessage(RoomWidgetFurniToWidgetMessage.REQUEST_PLACEHOLDER, objectId, category, event.roomId));

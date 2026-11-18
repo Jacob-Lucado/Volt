@@ -365,6 +365,17 @@
     pointer-events: none;
 }
 
+/* recyclable_container (2, 3, 16x16) inside the thumb border at (1, 1). */
+.volt-inventory-thumb-recyclable {
+    position: absolute;
+    top: 4px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    background: url('../../assets/images/inventory/air/thumb-icon-recycle.png') no-repeat;
+    pointer-events: none;
+}
+
 .volt-inventory-thumb.is-unseen::before {
     background-image: url('../../assets/images/inventory/air/inventory-item-unseen-background.png');
 }
