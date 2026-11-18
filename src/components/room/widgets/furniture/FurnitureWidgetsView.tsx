@@ -9,6 +9,7 @@ import { FurnitureChestView } from './FurnitureChestView';
 import { FurnitureWiredChestRewardView } from './FurnitureWiredChestRewardView';
 import { FurnitureCraftingView } from './FurnitureCraftingView';
 import { FurnitureDimmerView } from './FurnitureDimmerView';
+import { FurnitureEcotronBoxView } from './FurnitureEcotronBoxView';
 import { FurnitureExchangeCreditView } from './FurnitureExchangeCreditView';
 import { FurnitureExternalImageView } from './FurnitureExternalImageView';
 import { FurnitureFootballGateView } from './FurnitureFootballGateView';
@@ -50,6 +51,9 @@ export const FurnitureWidgetsView: FC<{}> = (props) => {
             </WidgetErrorBoundary>
             <WidgetErrorBoundary name="FurnitureDimmer">
                 <FurnitureDimmerView />
+            </WidgetErrorBoundary>
+            <WidgetErrorBoundary name="FurnitureEcotronBox">
+                <FurnitureEcotronBoxView />
             </WidgetErrorBoundary>
             <WidgetErrorBoundary name="FurnitureExchangeCredit">
                 <FurnitureExchangeCreditView />
