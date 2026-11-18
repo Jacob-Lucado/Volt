@@ -16,10 +16,15 @@ import {
     AvatarInfoRentableBot,
     AvatarInfoUser,
     GetConfigurationValue,
+    LocalizeText,
     RoomWidgetUpdateRentableBotChatEvent
 } from '../../../../api';
 import { Column, LayoutFurniIconImageView } from '../../../../common';
-import { useAvatarInfoWidget, useFurniPickupGuard, useVoltEvent, useRoom, useUiEvent } from '../../../../hooks';
+import { useAvatarInfoWidget, useFurniPickupGuard, useMonsterPlantBreedingWidget, useVoltEvent, useRoom, useUiEvent } from '../../../../hooks';
+import { NativeConfirmView } from '../../../notification-center/views/native/NativeConfirmView';
+import { AvatarInfoBreedMonsterPlantsConfirmView } from './AvatarInfoBreedMonsterPlantsConfirmView';
+import { AvatarInfoBreedPetView } from './AvatarInfoBreedPetView';
+import { AvatarInfoBreedPetsResultView } from './AvatarInfoBreedPetsResultView';
 import { AvatarInfoPetTrainingPanelView } from './AvatarInfoPetTrainingPanelView';
 import { AvatarInfoRentableBotChatView } from './AvatarInfoRentableBotChatView';
 import { AvatarInfoUseProductConfirmView } from './AvatarInfoUseProductConfirmView';
@@ -61,7 +66,14 @@ export const AvatarInfoWidgetView: FC<{}> = (props) => {
         isDecorating = false,
         setIsDecorating = null
     } = useAvatarInfoWidget();
+    const breeding = useMonsterPlantBreedingWidget();
     const { roomSession = null } = useRoom();
+
+    // showBreedPetMenuForItems also drops an open use product confirmation.
+    const requestBreedMenu = (petWebId: number) => {
+        updateConfirmingProduct(null);
+        breeding.requestBreedMenu(petWebId);
+    };
 
     const updateAvatarClickControl = (updates: { suppressMenuUntil?: number; suppressRotateUntil?: number }) => {
         const globalScope = globalThis as any;
@@ -191,7 +203,7 @@ export const AvatarInfoWidgetView: FC<{}> = (props) => {
                 case AvatarInfoPet.PET_INFO: {
                     const info = avatarInfo as AvatarInfoPet;
 
-                    if (info.isOwner) return <AvatarInfoWidgetOwnPetView avatarInfo={info} onClose={() => setAvatarInfo(null)} />;
+                    if (info.isOwner) return <AvatarInfoWidgetOwnPetView avatarInfo={info} onClose={() => setAvatarInfo(null)} onRequestBreed={requestBreedMenu} />;
 
                     return <AvatarInfoWidgetPetView avatarInfo={info} onClose={() => setAvatarInfo(null)} />;
                 }
@@ -263,6 +275,28 @@ export const AvatarInfoWidgetView: FC<{}> = (props) => {
                         />
                     );
                 })}
+            {breeding.breedBubbles.map((item) => (
+                <AvatarInfoBreedPetView key={item.id} item={item} onBreed={breeding.chooseBreedTarget} onClose={() => breeding.removeBreedBubble(item)} />
+            ))}
+            {breeding.confirmation && (
+                <AvatarInfoBreedMonsterPlantsConfirmView
+                    confirmation={breeding.confirmation}
+                    onAccept={breeding.acceptConfirmation}
+                    onBreed={breeding.breed}
+                    onCancel={breeding.cancelConfirmation}
+                />
+            )}
+            {breeding.waiting && (
+                <NativeConfirmView
+                    cancelText={LocalizeText('generic.cancel')}
+                    confirmText={LocalizeText('generic.ok')}
+                    message={LocalizeText('breedpets.confirmation.notification.text')}
+                    title={LocalizeText('breedpets.confirmation.notification.title')}
+                    onCancel={breeding.cancelWaiting}
+                    onConfirm={breeding.closeWaiting}
+                />
+            )}
+            {breeding.result && <AvatarInfoBreedPetsResultView result={breeding.result} onClose={breeding.closeResult} />}
             {rentableBotChatEvent && <AvatarInfoRentableBotChatView chatEvent={rentableBotChatEvent} onClose={() => setRentableBotChatEvent(null)} />}
             {confirmingProduct && <AvatarInfoUseProductConfirmView item={confirmingProduct} onClose={() => updateConfirmingProduct(null)} />}
             <AvatarInfoPetTrainingPanelView />

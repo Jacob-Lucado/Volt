@@ -10,6 +10,7 @@ interface CatalogGridOfferViewProps extends LayoutGridItemProps {
     bundleCounter?: number;
     tintColor?: string;
     showPrices?: boolean;
+    standardDensity?: boolean;
 }
 
 export const CatalogGridOfferView: FC<CatalogGridOfferViewProps> = (props) => {

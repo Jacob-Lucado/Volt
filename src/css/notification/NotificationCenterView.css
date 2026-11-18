@@ -1523,8 +1523,8 @@
 
 /* HabboNotificationItemView.setNotificationText: with a view height the text grows to textHeight + 8 and the border to fit it, never below 66. */
 .volt-native-bubble-text.uses-native-text {
-    margin: 8px 0 0 66px;
-    padding: 0 0 4px;
+    margin: 0 0 0 66px;
+    padding: 8px 0 4px;
     line-height: 0;
 }
 

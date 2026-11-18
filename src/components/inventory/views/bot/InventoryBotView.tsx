@@ -1,10 +1,11 @@
 import { IRoomSession, RoomPreviewer } from '@volt/renderer';
+import { AirSkinButton } from '../../../../common/air/AirSkinButton';
 import { FC, useEffect, useState } from 'react';
 import { attemptBotPlacement, LocalizeText, UnseenItemCategory } from '../../../../api';
 import { ClassicScrollAreaView } from '../../../../common/scroll-area/ClassicScrollAreaView';
 import { useInventoryBots, useInventoryUnseenTracker } from '../../../../hooks';
-import { VoltButton } from '../../../../layout';
 import { InventoryCategoryEmptyView } from '../InventoryCategoryEmptyView';
+import { InventoryInfoTextView } from '../InventoryInfoTextView';
 import { InventoryBotImageView } from './InventoryBotImageView';
 import { InventoryBotItemView } from './InventoryBotItemView';
 
@@ -49,19 +50,21 @@ export const InventoryBotView: FC<{
                 </ClassicScrollAreaView>
             </div>
             <div className="volt-inventory-animal-preview">
-                <div className="volt-inventory-animal-name">{selectedBot?.botData.name}</div>
+                <InventoryInfoTextView className="volt-inventory-animal-name" text={selectedBot?.botData.name ?? ''} textStyle="u_headline_small" />
                 <div className="volt-inventory-animal-image">
                     {selectedBot && <InventoryBotImageView figure={selectedBot.botData.figure} gender={selectedBot.botData.gender} preview />}
                 </div>
-                <div className="volt-inventory-animal-description">{selectedBot?.botData.motto}</div>
+                <InventoryInfoTextView className="volt-inventory-animal-description" height={45} text={selectedBot?.botData.motto ?? ''} width={190} />
                 <div className="volt-inventory-animal-actions">
-                    <VoltButton
+                    <AirSkinButton
                         className="volt-inventory-animal-place"
                         disabled={!selectedBot || !roomSession?.isRoomOwner}
                         onClick={() => attemptBotPlacement(selectedBot)}
-                    >
-                        {LocalizeText('inventory.bot.placetoroom')}
-                    </VoltButton>
+                        height={28}
+                        widthMax={158}
+                        widthMin={158}
+                        caption={LocalizeText('inventory.bot.placetoroom')}
+                    />
                 </div>
             </div>
         </div>

@@ -110,7 +110,7 @@ export const CatalogPurchaseConfirmView: FC<CatalogPurchaseConfirmViewProps> = (
                             productClassId={offer.product.productClassId}
                             productType={offer.product.productType}
                             role="img"
-                            scale={0.5}
+                            scale={1}
                         />
                     ) : (
                         !!iconUrl && <img alt={offer.localizationName} src={iconUrl} />

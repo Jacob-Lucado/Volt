@@ -623,11 +623,15 @@
     box-sizing: border-box;
 }
 
+.volt-card-shell.volt-card-frame-3.volt-catalog-purchase-confirm > .volt-card-header-shell .volt-card-close-button {
+    right: 3px !important;
+}
+
 .volt-card-shell.volt-catalog-purchase-confirm .volt-catalog-purchase-confirm-content.container-fluid {
     position: absolute !important;
-    /* The 1px frame box resolves this to AIR outer-local x=1/y=33. */
-    top: 32px !important;
-    left: 0 !important;
+    /* The 1px frame box resolves this to outer-local x=2/y=34. */
+    top: 33px !important;
+    left: 1px !important;
     z-index: 1;
     display: block !important;
     width: 323px !important;
@@ -699,6 +703,8 @@
 .volt-catalog-purchase-confirm-preview img,
 .volt-catalog-purchase-confirm-preview .furni-image {
     position: relative;
+    top: 1px;
+    left: 1px;
     z-index: 1;
     flex: 0 0 auto;
     width: auto;
@@ -710,13 +716,15 @@
 
 .volt-catalog-purchase-confirm-properties {
     position: absolute;
-    top: 8px;
+    top: 7px;
     left: 143px;
     display: flex;
     flex-direction: column;
+    justify-content: center; /* properties_itemlist aligns its rows to the centre (3145744) */
     gap: 7px;
     width: 176px;
-    min-height: 116px;
+    height: 116px;
+    padding-left: 4px; /* includes the 2px text gutter of the Habbo text fields */
 }
 
 .volt-catalog-purchase-confirm-product,
@@ -730,7 +738,6 @@
 }
 
 .volt-catalog-purchase-confirm-product {
-    min-height: 35px;
     overflow: hidden;
     overflow-wrap: anywhere;
 }
@@ -808,6 +815,7 @@
 
 .volt-catalog-purchase-confirm-cost {
     gap: 1px;
+    margin-left: 5px;
 }
 
 .volt-catalog-purchase-confirm-price {

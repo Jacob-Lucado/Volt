@@ -139,8 +139,8 @@ export const AvatarInfoWidgetPetView: FC<AvatarInfoWidgetPetViewProps> = (props)
                         )}
                     </>
                 )}
-                {mode === MODE_MONSTER_PLANT && !avatarInfo.dead && avatarInfo.energy / avatarInfo.maximumEnergy < 0.98 && (
-                    <ContextMenuListItemView onClick={(event) => processAction('treat')}>{LocalizeText('infostand.button.pettreat')}</ContextMenuListItemView>
+                {mode === MODE_MONSTER_PLANT && !avatarInfo.dead && (
+                    <ContextMenuListItemView disabled={avatarInfo.energy / avatarInfo.maximumEnergy >= 0.98} onClick={(event) => processAction('treat')}>{LocalizeText('infostand.button.pettreat')}</ContextMenuListItemView>
                 )}
                 {canPickUp && (
                     <ContextMenuListItemView onClick={(event) => processAction('pick_up')}>{LocalizeText('infostand.button.pickup')}</ContextMenuListItemView>

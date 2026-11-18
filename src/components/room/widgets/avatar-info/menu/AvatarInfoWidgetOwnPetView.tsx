@@ -8,7 +8,7 @@ import {
     RoomUnitGiveHandItemPetComposer
 } from '@volt/renderer';
 import { FC, useEffect, useMemo, useState } from 'react';
-import { AvatarInfoPet, GetConfigurationValue, GetOwnRoomObject, LocalizeText, SendMessageComposer } from '../../../../../api';
+import { AvatarInfoPet, FurniCategory, GetConfigurationValue, GetOwnRoomObject, GetSessionDataManager, LocalizeText, SendMessageComposer } from '../../../../../api';
 import { useRoom, useSessionInfo } from '../../../../../hooks';
 import { ContextMenuHeaderView } from '../../context-menu/ContextMenuHeaderView';
 import { ContextMenuListItemView } from '../../context-menu/ContextMenuListItemView';
@@ -17,6 +17,7 @@ import { ContextMenuView } from '../../context-menu/ContextMenuView';
 interface AvatarInfoWidgetOwnPetViewProps {
     avatarInfo: AvatarInfoPet;
     onClose: () => void;
+    onRequestBreed?: (petWebId: number) => void;
 }
 
 const MODE_NORMAL: number = 0;
@@ -33,7 +34,7 @@ const BREEDING_CONFIG: Record<number, string> = {
 };
 
 export const AvatarInfoWidgetOwnPetView: FC<AvatarInfoWidgetOwnPetViewProps> = (props) => {
-    const { avatarInfo = null, onClose = null } = props;
+    const { avatarInfo = null, onClose = null, onRequestBreed = null } = props;
     const [mode, setMode] = useState(MODE_NORMAL);
     const { roomSession = null } = useRoom();
     const { petRespectRemaining = 0, respectPet = null, chatStyleId = 0 } = useSessionInfo();
@@ -93,13 +94,18 @@ export const AvatarInfoWidgetOwnPetView: FC<AvatarInfoWidgetOwnPetViewProps> = (
                     break;
                 case 'breed':
                     if (mode === MODE_NORMAL) roomSession.sendChatMessage(`${avatarInfo.name} ${LocalizeText('pet.command.46')}`, chatStyleId);
+                    else if (mode === MODE_MONSTER_PLANT) onRequestBreed?.(avatarInfo.id);
                     break;
                 case 'harvest':
                     roomSession.harvestPet(avatarInfo.id);
                     break;
-                case 'revive':
-                    //
+                case 'revive': {
+                    const revival = GetSessionDataManager().getAllFurnitureData().find(furni =>
+                        furni.specialType === FurniCategory.MONSTERPLANT_REVIVAL && parseInt(furni.customParams?.split(' ')[0]) === avatarInfo.petType);
+
+                    if (revival && revival.purchaseOfferId >= 0) CreateLinkEvent(`catalog/open/offerId/${ revival.purchaseOfferId }`);
                     break;
+                }
                 case 'compost':
                     roomSession.compostPlant(avatarInfo.id);
                     break;
@@ -200,8 +206,8 @@ export const AvatarInfoWidgetOwnPetView: FC<AvatarInfoWidgetOwnPetViewProps> = (
                                 {LocalizeText('infostand.button.compost')}
                             </ContextMenuListItemView>
                         )}
-                        {!avatarInfo.dead && avatarInfo.energy / avatarInfo.maximumEnergy < 0.98 && (
-                            <ContextMenuListItemView onClick={(event) => processAction('treat')}>
+                        {!avatarInfo.dead && (
+                            <ContextMenuListItemView disabled={avatarInfo.energy / avatarInfo.maximumEnergy >= 0.98} onClick={(event) => processAction('treat')}>
                                 {LocalizeText('infostand.button.pettreat')}
                             </ContextMenuListItemView>
                         )}

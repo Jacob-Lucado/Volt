@@ -1,8 +1,9 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { AirSkinButton } from '../../../../common/air/AirSkinButton';
 import { GetConfigurationValue, LocalizeBadgeDescription, LocalizeBadgeName, localizeWithFallback, UnseenItemCategory } from '../../../../api';
 import { LayoutBadgeImageView } from '../../../../common';
 import { useInventoryBadges, useInventoryUnseenTracker } from '../../../../hooks';
-import { VoltButton } from '../../../../layout';
+import { InventoryInfoTextView } from '../InventoryInfoTextView';
 import { InventoryBadgeItemView } from './InventoryBadgeItemView';
 
 const ActiveBadgeSlot: FC<{
@@ -178,30 +179,49 @@ export const InventoryBadgeView: FC<{ filteredBadgeCodes?: string[] }> = (props)
                             <LayoutBadgeImageView badgeCode={selectedBadgeCode} />
                         </div>
                         <div className="volt-inventory-badges-footer-details">
-                            <div className="volt-inventory-badges-footer-name">{LocalizeBadgeName(selectedBadgeCode)}</div>
+                            <InventoryInfoTextView
+                                className="volt-inventory-badges-footer-name"
+                                overrides={{ size: 12 }}
+                                text={LocalizeBadgeName(selectedBadgeCode)}
+                                textStyle="u_headline_small"
+                                width={271}
+                            />
                             {description && description !== selectedBadgeCode && description !== `badge_desc_${selectedBadgeCode}` && (
-                                <div className="volt-inventory-badges-footer-desc">{description}</div>
+                                <InventoryInfoTextView
+                                    className="volt-inventory-badges-footer-desc"
+                                    maxHeight={28}
+                                    maxLines={2}
+                                    overflowReplace="..."
+                                    overrides={{ size: 11 }}
+                                    text={description}
+                                    width={271}
+                                />
                             )}
                             <div className="volt-inventory-badges-footer-meta">
                                 <span className="volt-inventory-badge-rarity">{rarityText}</span>
                             </div>
                         </div>
                         <div className="volt-inventory-badges-footer-actions">
-                            <VoltButton
-                                className={`button-shiny volt-inventory-btn-wear ${isWearingBadge(selectedBadgeCode) ? 'is-clear' : ''}`}
+                            <AirSkinButton
+                                className={`volt-inventory-btn-wear ${isWearingBadge(selectedBadgeCode) ? 'is-clear' : ''}`}
                                 disabled={!isWearingBadge(selectedBadgeCode) && !canWearBadges()}
                                 onClick={() => toggleBadge(selectedBadgeCode)}
-                            >
-                                {isWearingBadge(selectedBadgeCode)
-                                    ? localizeWithFallback('inventory.badges.clearbadge', 'Clear badge')
-                                    : localizeWithFallback('inventory.badges.wearbadge', 'Wear badge')}
-                            </VoltButton>
+                                height={28}
+                                caption={
+                                    isWearingBadge(selectedBadgeCode)
+                                        ? localizeWithFallback('inventory.badges.clearbadge', 'Clear badge')
+                                        : localizeWithFallback('inventory.badges.wearbadge', 'Wear badge')
+                                }
+                            />
                         </div>
                     </>
                 ) : (
-                    <VoltButton className="button-shiny volt-inventory-btn-wear volt-inventory-badge-wear-empty" disabled>
-                        {localizeWithFallback('inventory.badges.wearbadge', 'Wear badge')}
-                    </VoltButton>
+                    <AirSkinButton
+                        className="volt-inventory-btn-wear volt-inventory-badge-wear-empty"
+                        disabled
+                        height={28}
+                        caption={localizeWithFallback('inventory.badges.wearbadge', 'Wear badge')}
+                    />
                 )}
             </div>
         </div>

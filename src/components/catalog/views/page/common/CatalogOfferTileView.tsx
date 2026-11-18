@@ -17,15 +17,13 @@ import {
     LayoutGridItemProps,
     LayoutHabbiconImageView
 } from '../../../../../common';
+import { NativeText } from '../../../../../common/native-text/NativeText';
 import { SubpixelText } from '../../../../../common/native-text/SubpixelText';
 import { isAirBaseCatalogOffer } from './catalogAirGrid.helpers';
 
-/** gridItem_with_price amount and plus: bold u_regular in black on sub-pixel pens, drawn for the grid surface and for the selected item's white tile. */
+/** gridItem_with_price amount and plus: bold u_regular in black on sub-pixel pens, blended onto whatever surface the tile sits on. */
 const CatalogPriceText: FC<{ text: string }> = ({ text }) => (
-    <>
-        <SubpixelText background={0xd2d1cb} className="volt-catalog-grid-price-text-normal" text={text} textStyle="u_bold" />
-        <SubpixelText ariaHidden background={0xffffff} className="volt-catalog-grid-price-text-selected" text={text} textStyle="u_bold" />
-    </>
+    <SubpixelText transparent background={0xd2d1cb} text={text} textStyle="u_bold" />
 );
 
 const HasActivityPointIconStyle = (type: number) => !!ACTIVITY_POINT_ICON_REGIONS[GetActivityPointIconStyle(type, false)];
@@ -38,6 +36,7 @@ export interface CatalogOfferTileViewProps extends LayoutGridItemProps {
     readOnly?: boolean;
     tintColor?: string;
     showPrices?: boolean;
+    standardDensity?: boolean;
 }
 
 export const CatalogOfferTileView: FC<CatalogOfferTileViewProps> = (props) => {
@@ -50,6 +49,7 @@ export const CatalogOfferTileView: FC<CatalogOfferTileViewProps> = (props) => {
         itemActive = false,
         tintColor = null,
         showPrices = true,
+        standardDensity = false,
         ...rest
     } = props;
     const [isMouseDown, setMouseDown] = useState(false);
@@ -125,6 +125,8 @@ export const CatalogOfferTileView: FC<CatalogOfferTileViewProps> = (props) => {
     if (!offer?.product) return null;
     const product = offer.product;
     const iconUrl = iconVisible ? resolvedIconUrl : null;
+    const count = offer.pricingModel === Offer.PRICING_MODEL_MULTI ? product.productCount : 1;
+    const showMultiCount = standardDensity && priceTemplateClassName !== 'uses-base-grid-template' && !(product.uniqueLimitedItemSeriesSize > 0) && count > 1;
     const isBundleOffer = offer.pricingModel === Offer.PRICING_MODEL_BUNDLE;
 
     return (
@@ -140,7 +142,7 @@ export const CatalogOfferTileView: FC<CatalogOfferTileViewProps> = (props) => {
             <LayoutGridItem
                 className={`group/tile relative ${itemActive ? 'is-active' : ''} ${priceTemplateClassName}`.trim()}
                 gap={1}
-                itemCount={offer.pricingModel === Offer.PRICING_MODEL_MULTI ? product.productCount : 1}
+                itemCount={showMultiCount ? 1 : count}
                 itemUniqueNumber={product.uniqueLimitedItemSeriesSize}
                 itemUniqueSoldout={!!product.uniqueLimitedItemSeriesSize && !product.uniqueLimitedItemsLeft}
                 onMouseDown={onMouseEvent}
@@ -148,6 +150,17 @@ export const CatalogOfferTileView: FC<CatalogOfferTileViewProps> = (props) => {
                 onMouseUp={onMouseEvent}
                 {...rest}
             >
+                {showMultiCount && (
+                    <span className="volt-catalog-multi-count">
+                        <NativeText
+                            nativeResolution
+                            background={0xff3300}
+                            overrides={{ antiAliasType: 'advanced', kerning: false, color: 0xcccc66 }}
+                            text={`x${count}`}
+                            textStyle="regular"
+                        />
+                    </span>
+                )}
                 {iconVisible && offer.pricingModel === Offer.PRICING_MODEL_BUNDLE && bundleCounter > 0 && (
                     <span className="volt-catalog-grid-bundle-counter">{bundleCounter}</span>
                 )}
