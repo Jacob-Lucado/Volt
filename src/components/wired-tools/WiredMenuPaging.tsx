@@ -3,7 +3,8 @@ import arrowLeft from '../../assets/images/wired/native/menu_page_arrow_left.png
 import arrowRight from '../../assets/images/wired/native/menu_page_arrow_right.png';
 import { WiredMenuLabel } from '../../common/native-text/WiredMenuLabel';
 import { WiredPageRequests } from '../../hooks/wired-tools/useWiredPageRequests';
-import { resizeCentred, startCentred, useTextWindowWidths } from './nativeTextWindow';
+import { useTextWindowWidths } from '../../common/native-text/useTextWindowWidths';
+import { resizeCentred, startCentred } from './nativeTextWindow';
 import { clampInputPage, NO_PAGE, parseInputPage, restrictPageInput } from './WiredPaging.helpers';
 
 const BUTTON_BORDER = 5;
