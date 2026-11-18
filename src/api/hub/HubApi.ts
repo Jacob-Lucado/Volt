@@ -28,7 +28,15 @@ export interface HubPoll {
     voted: number | null;
 }
 
+export interface HubNews {
+    title: string;
+    category: string;
+    body: string;
+    published_at: string | null;
+}
+
 export interface HubState {
+    news?: HubNews | null;
     daily: HubDaily;
     poll?: HubPoll | null;
     riddle: HubRiddle | null;
