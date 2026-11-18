@@ -184,8 +184,11 @@ export const CatalogLayoutPetView: FC<CatalogLayoutProps> = ({ page = null }) =>
 
     // Page texts 1, 2 and 3 fill ctlg_text_1, ctlg_text_2 and ctlg_text_3. petsWidget: name, colour and breed labels.
     // newPetsWidget: the name label is ctlg_text_2 and ctlg_text_3 sits under the colour grid.
+    // LocalizationCatalogWidget.initLocalizables: a text the page sends replaces the caption, even when it is empty.
     const pageText = (index: number, fallbackKey: string) =>
-        (page?.localization?.getText(index) ?? '').replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '') || LocalizeText(fallbackKey);
+        index < (page?.localization?.textCount ?? 0)
+            ? page.localization.getText(index).replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '')
+            : LocalizeText(fallbackKey);
     const colorLabel = pageText(legacyPet ? 2 : 3, 'catalog.pets.choose.color');
     const breedLabel = pageText(3, 'catalog.pets.choose.breed');
     const nameLabel = pageText(legacyPet ? 1 : 2, 'widgets.petpackage.name.title');
