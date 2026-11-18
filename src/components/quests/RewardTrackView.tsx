@@ -45,15 +45,15 @@ import prizesStars from '../../assets/images/reward-track/air/prizes-background-
 import rewardGift from '../../assets/images/reward-track/air/reward-gift.png';
 import rewardGiftPremium from '../../assets/images/reward-track/air/reward-gift-premium.png';
 import taskListIcon from '../../assets/images/reward-track/air/task-list.png';
-import { DraggableWindowPosition, LayoutAvatarImageView, LayoutBadgeImageView, LayoutCurrencyIcon, LayoutFurniIconImageView } from '../../common';
+import { DraggableWindowPosition, LayoutAvatarImageView } from '../../common';
 import { nativeTextStyles } from '../../common/native-text/NativeTextStyles';
 import { useHasPermission, useNotification, useRewardTracks } from '../../hooks';
 import { VoltCard } from '../../layout';
 import { useAirFieldWidth } from '../achievements/AchievementText';
+import { ProductIconView } from './ProductIconView';
 import { RewardTrackAdminView } from './RewardTrackAdminView';
 import { RewardTrackScrollList } from './RewardTrackScrollList';
 
-const CURRENCY_TYPES: Record<string, number> = { credits: -1, duckets: 0, diamonds: 5 };
 const FILTERS: RewardTrackTaskFilter[] = ['all', 'in_progress', 'completed'];
 const MAIN_BAR_WIDTH = 602;
 const TASK_BAR_WIDTH = 200;
@@ -117,25 +117,6 @@ const trackFallback = (trackId: string, suffix: 'name' | 'desc' | 'info'): strin
     if (suffix === 'desc') return 'Learn all about Habbo!';
 
     return 'Complete tasks to earn points and unlock rewards';
-};
-
-const RewardIcon: FC<{ rewardTypeId: string; extraParams: string; productItemTypeId: number }> = ({ rewardTypeId, extraParams, productItemTypeId }) => {
-    const type = (rewardTypeId || '').toLowerCase();
-
-    if (type in CURRENCY_TYPES) return <LayoutCurrencyIcon type={CURRENCY_TYPES[type]} className="volt-reward-track-prize-currency" />;
-
-    if (type === 'badge') return <LayoutBadgeImageView badgeCode={extraParams} />;
-
-    if (type === 'furni')
-        return (
-            <LayoutFurniIconImageView
-                productType={extraParams.startsWith('i:') ? 'i' : 's'}
-                productClassId={productItemTypeId}
-                className="volt-reward-track-prize-furni"
-            />
-        );
-
-    return <div className="volt-reward-track-prize-generic">{rewardTypeId}</div>;
 };
 
 /** RewardTrackTaskProgressBarView: the fill is round(width * ratio) wide and turns green once complete. */
@@ -210,7 +191,7 @@ const RewardTrackPrizeView: FC<{
                 <span className="volt-reward-track-prize-shadow" />
                 <span className="volt-reward-track-prize-plate">
                     <span className="volt-reward-track-prize-product" data-shifted={prize.rewardAmount > 1}>
-                        <RewardIcon rewardTypeId={prize.rewardTypeId} extraParams={prize.extraParams} productItemTypeId={prize.productItemTypeId} />
+                        <ProductIconView productTypeId={prize.productItemTypeId} itemTypeId={prize.rewardTypeId} extraParams={prize.extraParams} />
                     </span>
                     {prize.rewardAmount > 1 && (
                         <span className="volt-reward-track-prize-amount">
