@@ -97,14 +97,16 @@ const useInventoryFurniState = () => {
     });
 
     useMessageEvent<FurnitureListRemovedEvent>(FurnitureListRemovedEvent, (event) => {
-        setGroupItems((prev) => applyFurnitureListRemoved(prev, event.getParser().itemId));
+        const id = event.getParser().itemId;
+
+        setGroupItems((prev) => applyFurnitureListRemoved(prev, [id]));
     });
 
     // HabboInventory.onFurniListRemoveMultiple: one packet drops every listed furni.
     useMessageEvent<FurnitureListRemoveMultipleEvent>(FurnitureListRemoveMultipleEvent, (event) => {
         const ids = event.getParser().stripIds;
 
-        setGroupItems((prev) => ids.reduce(applyFurnitureListRemoved, prev));
+        setGroupItems((prev) => applyFurnitureListRemoved(prev, ids));
     });
 
     useEffect(() => {
