@@ -1,6 +1,6 @@
 import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
 import { FC, useCallback, useEffect, useState } from 'react';
-import { answerHubRiddle, claimHubDaily, fetchHubState, HubActionResult, HubState, localizeWithFallback } from '../../api';
+import { answerHubRiddle, claimHubDaily, fetchHubState, HubActionResult, HubState, localizeWithFallback, voteHubPoll } from '../../api';
 import { Button, Column, Flex, Text, VoltCardContentView, VoltCardHeaderView, VoltCardView } from '../../common';
 
 const text = (key: string, fallback: string) => localizeWithFallback(key, fallback);
@@ -11,7 +11,7 @@ const formatStart = (iso: string): string => {
     return Number.isNaN(date.getTime()) ? '' : date.toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit' });
 };
 
-/** The Daily Hub: the daily reward, the riddle of the day and the next event, without leaving the room. */
+/** The Daily Hub: the daily reward, the riddle of the day, the open poll and the next event, without leaving the room. */
 export const DailyHubView: FC<{}> = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [state, setState] = useState<HubState>(null);
@@ -65,7 +65,7 @@ export const DailyHubView: FC<{}> = () => {
 
     const apply = (result: HubActionResult) => {
         setMessage({ ok: result.ok, text: result.message });
-        setState((previous) => (previous ? { ...previous, ...(result.daily ? { daily: result.daily } : {}), ...(result.riddle !== undefined ? { riddle: result.riddle } : {}) } : previous));
+        setState((previous) => (previous ? { ...previous, ...(result.daily ? { daily: result.daily } : {}), ...(result.riddle !== undefined ? { riddle: result.riddle } : {}), ...(result.poll !== undefined ? { poll: result.poll } : {}) } : previous));
     };
 
     const claim = async () => {
@@ -73,6 +73,14 @@ export const DailyHubView: FC<{}> = () => {
 
         setBusy(true);
         apply(await claimHubDaily());
+        setBusy(false);
+    };
+
+    const vote = async (option: number) => {
+        if (busy) return;
+
+        setBusy(true);
+        apply(await voteHubPoll(option));
         setBusy(false);
     };
 
@@ -151,6 +159,27 @@ export const DailyHubView: FC<{}> = () => {
                                 </>
                             )}
                         </Column>
+
+                        {state.poll && (
+                            <Column gap={1} className="p-2 rounded bg-card-grid-item/30">
+                                <Text bold>{text('dailyhub.poll', 'Poll')}</Text>
+                                <Text>{state.poll.question}</Text>
+                                {state.poll.choices.map((choice, index) => {
+                                    const total = state.poll.choices.reduce((sum, item) => sum + item.votes, 0);
+                                    const percent = total > 0 ? Math.round((choice.votes / total) * 100) : 0;
+
+                                    return state.poll.voted === null ? (
+                                        <Button key={index} disabled={busy} onClick={() => vote(index)}>
+                                            {choice.label}
+                                        </Button>
+                                    ) : (
+                                        <Text key={index} small bold={state.poll.voted === index}>
+                                            {choice.label} · {percent}% ({choice.votes})
+                                        </Text>
+                                    );
+                                })}
+                            </Column>
+                        )}
 
                         {state.event && (
                             <Column gap={0} className="p-2 rounded bg-card-grid-item/30">

@@ -22,8 +22,15 @@ export interface HubEvent {
     starts_at: string;
 }
 
+export interface HubPoll {
+    question: string;
+    choices: { label: string; votes: number }[];
+    voted: number | null;
+}
+
 export interface HubState {
     daily: HubDaily;
+    poll?: HubPoll | null;
     riddle: HubRiddle | null;
     event: HubEvent | null;
 }
@@ -33,6 +40,7 @@ export interface HubActionResult {
     message: string;
     daily?: HubDaily;
     riddle?: HubRiddle | null;
+    poll?: HubPoll | null;
 }
 
 const getBase = (): string => {
@@ -98,3 +106,5 @@ const action = async (path: string, payload?: object): Promise<HubActionResult> 
 export const claimHubDaily = (): Promise<HubActionResult> => action('/daily');
 
 export const answerHubRiddle = (answer: string): Promise<HubActionResult> => action('/riddle', { answer });
+
+export const voteHubPoll = (option: number): Promise<HubActionResult> => action('/poll', { option });
