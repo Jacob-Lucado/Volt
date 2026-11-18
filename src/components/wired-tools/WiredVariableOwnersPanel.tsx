@@ -9,7 +9,7 @@ import { VariablesElementType } from './WiredCreatorTools.types';
 import { WiredMenuButton, WiredMenuItem, WiredMenuTable, WiredMenuTableColumn, WiredMenuText, WiredMenuTitle } from './WiredMenuParts';
 import { WiredMenuHtmlText } from './WiredMenuHtmlText';
 import { WiredMenuPagingFooter } from './WiredMenuPaging';
-import { useTextWindowWidths } from './nativeTextWindow';
+import { useTextWindowWidths } from '../../common/native-text/useTextWindowWidths';
 
 /** The server's holder kinds (`entityType`). */
 export const HOLDER_TYPE_ROOM = 0;
