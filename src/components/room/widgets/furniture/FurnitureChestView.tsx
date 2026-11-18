@@ -53,18 +53,15 @@ import sceneMedium from '../../../../assets/images/chest/light_coins_chest_balan
 import sceneZero from '../../../../assets/images/chest/light_coins_chest_balance_zero.png';
 import bellIcon from '../../../../assets/images/chest/wired_chests_bell_icon.png';
 import gearIcon from '../../../../assets/images/chest/wired_chests_gear_icon.png';
-import checkmarkIcon from '../../../../assets/images/reward-track/air/checkmark.png';
-import wiredIcon from '../../../../assets/images/wiredtools/wired_menu.png';
 import { Column, Flex, LayoutCurrencyIcon, LayoutFurniImageView, VoltCardContentView, VoltCardHeaderView, VoltCardView, PIXEL_ART_RENDERING, Text } from '../../../../common';
 import { useMessageEvent, useNotification, usePurse } from '../../../../hooks';
 import { useWiredToolsState } from '../../../../hooks/wired-tools/useWiredToolsState';
 import { ChestButton } from './ChestButton';
-import { ChestAppearanceFields, ChestSettingsSection } from './ChestSettingsFields';
-import { HabboDropMenuView } from '../../../../common/dropmenu/HabboDropMenuView';
 import { ChestFurniGroup, chestFurniDisplayName, groupStoredFurni } from './chestFurniGrouping';
 import { WIRED_TRANSACTION_LOGS_PAGE_SIZE } from '../../../wired-tools/WiredTransactionLogsWindow';
 import { ChestCheckbox, ChestIconButton, ChestShinyButton, ChestText, ChestTitle } from './chest/ChestAirParts';
 import { ChestLockInfoBubble } from './chest/ChestLockInfoBubble';
+import { ChestNotificationsWindow, ChestSettingsWindow } from './chest/ChestPresetWindows';
 import { FurniChestContentsView } from './chest/FurniChestContentsView';
 
 interface ChestLogRow {
@@ -212,14 +209,6 @@ export const FurnitureChestView: FC = () => {
         );
     }, []);
 
-
-    const notifyModes = useMemo(
-        () => [
-            { value: 0, label: LocalizeText('wiredchests.notification_settings.notification_mode.when.0') },
-            { value: 1, label: LocalizeText('wiredchests.notification_settings.notification_mode.when.1') },
-        ],
-        [],
-    );
 
     const visibleFurniEntries = useMemo(() => {
         const q = furniSearchQuery.trim().toLowerCase();
@@ -708,113 +697,45 @@ export const FurnitureChestView: FC = () => {
             </VoltCardView>
             {showLockInfo && lockInfoAnchor && <ChestLockInfoBubble anchor={lockInfoAnchor} onClose={() => setShowLockInfo(false)} />}
 
-            {/* ===== SETTINGS ===== */}
+            {/* ===== SETTINGS (ChestSettingsUI) ===== */}
             {showSettings && (
-                <VoltCardView className="volt-widget-chest-settings volt-chest-settings" theme="primary-slim" frameStyle={3} isResizable={false} style={{ width: 300 }}>
-                    <VoltCardHeaderView
-                        headerText={LocalizeText('wiredchests.settings.title', ['chest_type'], [chestTypeLabel])}
-                        onCloseClick={() => setShowSettings(false)}
-                    />
-                    <VoltCardContentView>
-                        <Column gap={2}>
-                            <ChestSettingsSection title={LocalizeText('wiredchests.settings.access')}>
-                            <label className="flex items-center gap-2">
-                                <input type="checkbox" className="form-check-input" checked={accessOpen} onChange={(e) => setAccessOpen(e.target.checked)} />
-                                <Text small>{LocalizeText('wiredchests.settings.access.open')}</Text>
-                            </label>
-                            <label className="flex items-center gap-2">
-                                <input type="checkbox" className="form-check-input" checked={accessDonate} onChange={(e) => setAccessDonate(e.target.checked)} />
-                                <Text small>{LocalizeText('wiredchests.settings.access.donate')}</Text>
-                            </label>
-                            </ChestSettingsSection>
-                            <ChestSettingsSection title={LocalizeText('wiredchests.settings.info')}>
-                            <Text small>{LocalizeText('wiredchests.settings.info.name')}</Text>
-                            <input className="form-control form-control-sm" maxLength={30} value={name} onChange={(e) => setName(e.target.value)} />
-                            <Text small>{LocalizeText('wiredchests.settings.info.desc')}</Text>
-                            <textarea className="form-control form-control-sm" rows={4} maxLength={200} style={{ height: 64 }} value={description} onChange={(e) => setDescription(e.target.value)} />
-                            </ChestSettingsSection>
-                            <ChestSettingsSection title={LocalizeText('wiredchests.settings.appearance')}>
-                                <ChestAppearanceFields isFurni={isFurni} state={appearanceState} previewMode={previewMode} previewAmount={previewAmount}
-                                    onStateChange={setAppearanceState} onPreviewModeChange={setPreviewMode} onPreviewAmountChange={setPreviewAmount} />
-                            </ChestSettingsSection>
-                            <ChestSettingsSection title={localizeWithFallback('wiredchests.settings.wired', 'Wired transactions')}>
-                                <Flex alignItems="center" gap={2}>
-                                    <ChestButton wide disabled={wiredUpgradeDisabled} onClick={() => setConfirmWiredUpgrade(true)}>
-                                        <span className="inline-flex items-center gap-1">
-                                            <img src={wiredIcon} width={16} height={16} alt="" draggable={false} style={{ imageRendering: PIXEL_ART_RENDERING }} />
-                                            {localizeWithFallback('wiredchests.settings.wired.upgrade', 'Upgrade to Wired Chest')}
-                                        </span>
-                                    </ChestButton>
-                                    {wiredUpgradeDisabled && (
-                                        <img src={checkmarkIcon} alt="" draggable={false} style={{ imageRendering: PIXEL_ART_RENDERING }} />
-                                    )}
-                                </Flex>
-                            </ChestSettingsSection>
-                            <div className="volt-chest__actions">
-                                <ChestButton wide onClick={saveSettings}>
-                                    {LocalizeText('wiredchests.ready')}
-                                </ChestButton>
-                                <ChestButton wide onClick={() => setShowSettings(false)}>
-                                    {LocalizeText('wiredchests.cancel')}
-                                </ChestButton>
-                            </div>
-                        </Column>
-                    </VoltCardContentView>
-                </VoltCardView>
+                <ChestSettingsWindow
+                    chestTypeLabel={chestTypeLabel}
+                    draft={{ name, description, open: accessOpen, donate: accessDonate, state: appearanceState, previewMode, previewAmount }}
+                    isFurni={isFurni}
+                    wiredDone={wiredUpgradeDisabled}
+                    onCancel={() => setShowSettings(false)}
+                    onChange={(draft) => {
+                        setName(draft.name);
+                        setDescription(draft.description);
+                        setAccessOpen(draft.open);
+                        setAccessDonate(draft.donate);
+                        setAppearanceState(draft.state);
+                        setPreviewMode(draft.previewMode);
+                        setPreviewAmount(draft.previewAmount);
+                    }}
+                    onReady={saveSettings}
+                    onUpgrade={() => setConfirmWiredUpgrade(true)}
+                />
             )}
 
-            {/* ===== NOTIFICATIONS ===== */}
+            {/* ===== NOTIFICATIONS (ChestNotificationSettingsUI) ===== */}
             {showNotifications && (
-                <VoltCardView className="volt-widget-chest-notifications volt-chest-settings" theme="primary-slim" frameStyle={3} isResizable={false} style={{ width: 350 }}>
-                    <VoltCardHeaderView
-                        headerText={LocalizeText('wiredchests.notification_settings.title', ['chest_type'], [chestTypeLabel])}
-                        onCloseClick={() => setShowNotifications(false)}
-                    />
-                    <VoltCardContentView>
-                        <Column gap={2}>
-                            <Text bold>{LocalizeText('wiredchests.notification_settings.notification_info')}</Text>
-                            <Text small>{LocalizeText('wiredchests.notification_settings.notification_info.desc')}</Text>
-                            <ChestSettingsSection title={LocalizeText('wiredchests.notification_settings.enable_notifications')}>
-                            <Text bold>{LocalizeText('wiredchests.notification_settings.enable_notifications.generic')}</Text>
-                            <label className="flex items-center gap-2">
-                                <input type="checkbox" className="form-check-input" checked={notifyFull} onChange={(e) => setNotifyFull(e.target.checked)} />
-                                <Text small>{LocalizeText('wiredchests.notification_settings.enable_notifications.generic.0')}</Text>
-                            </label>
-                            <label className="flex items-center gap-2">
-                                <input type="checkbox" className="form-check-input" checked={notifyDonation} onChange={(e) => setNotifyDonation(e.target.checked)} />
-                                <Text small>{LocalizeText('wiredchests.notification_settings.enable_notifications.generic.1')}</Text>
-                            </label>
-                            <fieldset disabled={!stuff.wiredEnabled} className="volt-chest-settings__wired-notifications">
-                            <Text bold>{LocalizeText('wiredchests.notification_settings.enable_notifications.wired')}</Text>
-                            <label className="flex items-center gap-2">
-                                <input type="checkbox" className="form-check-input" checked={notifyWithdraw} onChange={(e) => setNotifyWithdraw(e.target.checked)} />
-                                <Text small>{LocalizeText('wiredchests.notification_settings.enable_notifications.wired.0')}</Text>
-                            </label>
-                            <label className="flex items-center gap-2">
-                                <input type="checkbox" className="form-check-input" checked={notifyEmpty} onChange={(e) => setNotifyEmpty(e.target.checked)} />
-                                <Text small>{LocalizeText('wiredchests.notification_settings.enable_notifications.wired.1')}</Text>
-                            </label>
-                            <label className="flex items-center gap-2">
-                                <input type="checkbox" className="form-check-input" checked={notifyWired} onChange={(e) => setNotifyWired(e.target.checked)} />
-                                <Text small>{LocalizeText('wiredchests.notification_settings.enable_notifications.wired.2')}</Text>
-                            </label>
-                            </fieldset>
-                            </ChestSettingsSection>
-                            <ChestSettingsSection title={LocalizeText('wiredchests.notification_settings.notification_mode')}>
-                                <Text bold>{LocalizeText('wiredchests.notification_settings.notification_mode.when')}</Text>
-                                <HabboDropMenuView<number> skinStyle={3} label={LocalizeText('wiredchests.notification_settings.notification_mode.when')} value={notifyMode} options={notifyModes} onSelect={setNotifyMode} />
-                            </ChestSettingsSection>
-                            <div className="volt-chest__actions">
-                                <ChestButton wide onClick={saveNotifications}>
-                                    {LocalizeText('wiredchests.ready')}
-                                </ChestButton>
-                                <ChestButton wide onClick={() => setShowNotifications(false)}>
-                                    {LocalizeText('wiredchests.cancel')}
-                                </ChestButton>
-                            </div>
-                        </Column>
-                    </VoltCardContentView>
-                </VoltCardView>
+                <ChestNotificationsWindow
+                    chestTypeLabel={chestTypeLabel}
+                    draft={{ full: notifyFull, donation: notifyDonation, withdraw: notifyWithdraw, empty: notifyEmpty, wired: notifyWired, mode: notifyMode }}
+                    wiredEnabled={stuff.wiredEnabled}
+                    onCancel={() => setShowNotifications(false)}
+                    onChange={(draft) => {
+                        setNotifyFull(draft.full);
+                        setNotifyDonation(draft.donation);
+                        setNotifyWithdraw(draft.withdraw);
+                        setNotifyEmpty(draft.empty);
+                        setNotifyWired(draft.wired);
+                        setNotifyMode(draft.mode);
+                    }}
+                    onReady={saveNotifications}
+                />
             )}
 
             {/* ===== UPGRADE ===== */}
