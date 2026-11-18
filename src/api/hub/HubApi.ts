@@ -35,7 +35,16 @@ export interface HubNews {
     published_at: string | null;
 }
 
+export interface HubRoom {
+    id: number;
+    name: string;
+    owner: string | null;
+    users: number;
+    weekly: boolean;
+}
+
 export interface HubState {
+    rooms?: HubRoom[];
     news?: HubNews | null;
     daily: HubDaily;
     poll?: HubPoll | null;

@@ -1,6 +1,6 @@
 import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
 import { FC, useCallback, useEffect, useState } from 'react';
-import { answerHubRiddle, claimHubDaily, fetchHubState, HubActionResult, HubState, localizeWithFallback, voteHubPoll } from '../../api';
+import { answerHubRiddle, TryVisitRoom, claimHubDaily, fetchHubState, HubActionResult, HubState, localizeWithFallback, voteHubPoll } from '../../api';
 import { Button, Column, Flex, Text, VoltCardContentView, VoltCardHeaderView, VoltCardView } from '../../common';
 
 const text = (key: string, fallback: string) => localizeWithFallback(key, fallback);
@@ -178,6 +178,27 @@ export const DailyHubView: FC<{}> = () => {
                                         </Text>
                                     );
                                 })}
+                            </Column>
+                        )}
+
+                        {state.rooms && state.rooms.length > 0 && (
+                            <Column gap={1} className="p-2 rounded bg-card-grid-item/30">
+                                <Text bold>{text('dailyhub.rooms', 'Featured rooms')}</Text>
+                                {state.rooms.map((room) => (
+                                    <Flex key={room.id} alignItems="center" gap={1}>
+                                        <Column gap={0} className="flex-1 min-w-0">
+                                            <Text truncate bold={room.weekly}>
+                                                {room.weekly ? `${text('dailyhub.weekly', 'Room of the week')}: ` : ''}
+                                                {room.name}
+                                            </Text>
+                                            <Text small className="text-gray-700">
+                                                {room.owner ?? ''}
+                                                {room.users > 0 ? ` · ${room.users} ${text('dailyhub.inside', 'inside')}` : ''}
+                                            </Text>
+                                        </Column>
+                                        <Button onClick={() => TryVisitRoom(room.id)}>{text('dailyhub.visit', 'Visit')}</Button>
+                                    </Flex>
+                                ))}
                             </Column>
                         )}
 
