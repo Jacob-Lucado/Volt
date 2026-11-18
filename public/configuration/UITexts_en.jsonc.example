@@ -764,6 +764,8 @@
     "radio.live": "Live",
     "radio.hide": "Hide",
     "radio.show": "Show",
+    "recycler.broken": "The machine is broken..\n\nCheck back soon!",
+    "recycler.pat_frank": "Click to pat Frank",
     "rarevalues.title": "Rare Values",
     "rarevalues.loading": "Loading values…",
     "rarevalues.empty": "No rares found",
