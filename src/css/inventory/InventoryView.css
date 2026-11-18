@@ -362,7 +362,8 @@
     box-shadow: none !important;
 }
 
-.volt-inventory-window .volt-inventory-btn-sell {
+.volt-inventory-window .volt-inventory-btn-sell,
+.volt-inventory-window .volt-inventory-btn-use {
     box-sizing: border-box !important;
     display: inline-flex !important;
     align-items: center !important;
@@ -485,6 +486,7 @@
 
 .volt-inventory-window .volt-inventory-btn-place,
 .volt-inventory-window .volt-inventory-btn-sell,
+.volt-inventory-window .volt-inventory-btn-use,
 .volt-inventory-window .volt-inventory-btn-delete {
     width: fit-content !important;
     font-family: HabboAirUbuntu, sans-serif;
@@ -575,7 +577,8 @@
 }
 
 .volt-inventory-window .volt-inventory-btn-place,
-.volt-inventory-window .volt-inventory-btn-sell {
+.volt-inventory-window .volt-inventory-btn-sell,
+.volt-inventory-window .volt-inventory-btn-use {
     padding: 0 5px 1px !important;
     line-height: 17px !important;
 }
@@ -852,6 +855,10 @@
 
 .volt-inventory-window .volt-inventory-btn-sell {
     width: 125px !important;
+}
+
+.volt-inventory-window .volt-inventory-btn-use {
+    width: 39px !important;
 }
 
 /* inventory_thumb number_container: 15px tall plate with a #2f6982 frame on three sides, anchored 2px from the
