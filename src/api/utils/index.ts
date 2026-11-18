@@ -8,6 +8,7 @@ export * from './FurniIdBand';
 export * from './GetLocalStorage';
 export * from './IsTouchDevice';
 export * from './isSafeExternalUrl';
+export * from './takeLaunchRoom';
 export * from './LocalizeBadgeDescription';
 export * from './LocalizeBageName';
 export * from './LocalizeFormattedNumber';
