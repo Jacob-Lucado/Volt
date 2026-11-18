@@ -647,7 +647,8 @@
 
 /* disableSection(0.75) blends the template window; AIR multiplies that into each child's own blend. */
 .volt-reward-track .volt-reward-track-prize[data-dimmed="true"] .volt-reward-track-prize-hit,
-.volt-reward-track .volt-reward-track-prize[data-dimmed="true"] .volt-reward-track-prize-stem {
+.volt-reward-track .volt-reward-track-prize[data-dimmed="true"] .volt-reward-track-prize-stem,
+.volt-reward-track .volt-reward-track-prize[data-dimmed="true"] .volt-reward-track-prize-check {
     opacity: 0.75;
 }
 
