@@ -54,7 +54,9 @@ export const CurrencyView: FC<CurrencyViewProps> = (props) => {
     return (
         <div className={`volt-purse-currency group relative volt-purse-currency--${type}`}>
             <button type="button" aria-label={tooltip} className={`volt-purse-button allcurrencypurse currency-info currency-${type}`} onClick={onClick}>
-                <span className="volt-purse-button__amount currency-text">{displayAmount}</span>
+                <span className="volt-purse-button__clip">
+                    <span className="volt-purse-button__amount currency-text">{displayAmount}</span>
+                </span>
                 {airIcon ? <img src={airIcon} alt="" className="volt-purse-air-currency" /> : <LayoutCurrencyIcon type={type} />}
             </button>
             {short && (
