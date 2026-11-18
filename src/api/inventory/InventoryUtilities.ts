@@ -7,6 +7,7 @@ import {
     RoomObjectPlacementSource,
     RoomObjectType
 } from '@volt/renderer';
+import { useRecyclerStore } from '../../state/recyclerStore';
 import { SendMessageComposer } from '../volt';
 import { FurniCategory } from './FurniCategory';
 import { GroupItem } from './GroupItem';
@@ -76,8 +77,6 @@ export const attemptItemPlacement = (groupItem: GroupItem, flag: boolean = false
 
         return false;
     } else {
-        CreateLinkEvent('inventory/hide');
-
         let category = 0;
         let isMoving = false;
 
@@ -105,6 +104,9 @@ export const attemptItemPlacement = (groupItem: GroupItem, flag: boolean = false
         }
 
         if (isMoving) {
+            // FurniModel.requestSelectedFurniToMover: the inventory stays open while the Furni-Matic waits for furni.
+            if (!useRecyclerStore.getState().active) CreateLinkEvent('inventory/hide');
+
             setPlacingItemId(item.ref);
             setObjectMoverRequested(true);
         }

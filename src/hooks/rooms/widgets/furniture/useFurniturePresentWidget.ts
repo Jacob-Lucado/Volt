@@ -10,7 +10,7 @@ import {
     RoomSessionPresentEvent,
     Vector3d
 } from '@volt/renderer';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { IsOwnerOfFurniture, LocalizeText, ProductTypeEnum } from '../../../../api';
 import { useVoltEvent } from '../../../events';
 import { useFurniRemovedEvent } from '../../engine';
@@ -33,9 +33,11 @@ const useFurniturePresentWidgetState = () => {
     const [placedItemType, setPlacedItemType] = useState<string>(null);
     const [placedInRoom, setPlacedInRoom] = useState(false);
     const [imageUrl, setImageUrl] = useState<string>(null);
+    const openingRef = useRef(false);
     const { roomSession = null } = useRoom();
 
-    const onClose = () => {
+    // PresentFurniWidget.hideInterface keeps the present while it is being opened, so its contents still show.
+    const hide = () => {
         setObjectId(-1);
         setClassId(-1);
         setItemType(null);
@@ -49,9 +51,15 @@ const useFurniturePresentWidgetState = () => {
         setImageUrl(null);
     };
 
+    const onClose = () => {
+        openingRef.current = false;
+        hide();
+    };
+
     const openPresent = () => {
         if (objectId === -1) return;
 
+        openingRef.current = true;
         roomSession.openGift(objectId);
 
         GetRoomEngine().changeObjectModelData(
@@ -81,6 +89,9 @@ const useFurniturePresentWidgetState = () => {
 
     useVoltEvent<RoomSessionPresentEvent>(RoomSessionPresentEvent.RSPE_PRESENT_OPENED, (event) => {
         // AIR opens no gift window for a chat style; the chat style notification tells the player.
+        if (!openingRef.current) return;
+
+        openingRef.current = false;
         if (event.itemType === ProductTypeEnum.CHAT_STYLE) return;
 
         let furniData: IFurnitureData = null;
@@ -220,8 +231,10 @@ const useFurniturePresentWidgetState = () => {
         setSenderFigure(roomObject.model.getValue<string>(RoomObjectVariable.FURNITURE_PURCHASER_FIGURE) || null);
     });
 
+    useVoltEvent<RoomEngineTriggerWidgetEvent>(RoomEngineTriggerWidgetEvent.REQUEST_ECOTRONBOX, onClose);
+
     useFurniRemovedEvent(objectId !== -1, (event) => {
-        if (event.id === objectId) onClose();
+        if (event.id === objectId) hide();
 
         if (event.id === placedItemId) {
             if (placedInRoom) setPlacedInRoom(false);
