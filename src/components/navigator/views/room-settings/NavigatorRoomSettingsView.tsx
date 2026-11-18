@@ -2,6 +2,7 @@ import { RemoveAllRightsMessageComposer, RoomBannedUsersComposer, RoomDataParser
 import { FC, useRef, useState } from 'react';
 import { CreateLinkEvent, GetClubMemberLevel, GetMaxVisitorsList, GetSelectedMaxVisitors, IRoomData, LocalizeText, SendMessageComposer } from '../../../../api';
 import { VoltCardContentView, VoltCardHeaderView, VoltCardTabsItemView, VoltCardTabsView, VoltCardView } from '../../../../common';
+import { NativeText } from '../../../../common/native-text/NativeText';
 import { useMessageEvent, useNavigatorData, useNotificationActions } from '../../../../hooks';
 import { NavigatorRoomSettingsAccessTabView } from './NavigatorRoomSettingsAccessTabView';
 import { NavigatorRoomSettingsBasicTabView } from './NavigatorRoomSettingsBasicTabView';
@@ -10,6 +11,7 @@ import { NavigatorRoomSettingsModTabView } from './NavigatorRoomSettingsModTabVi
 import { NavigatorRoomSettingsRightsTabView } from './NavigatorRoomSettingsRightsTabView';
 import { NavigatorRoomSettingsVipChatTabView } from './NavigatorRoomSettingsVipChatTabView';
 import { RoomSettingsFieldError } from './RoomSettingsFieldErrorView';
+import { ROOM_SETTINGS_BACKGROUND } from './RoomSettingsTextView';
 
 const TABS: string[] = [
     'navigator.roomsettings.tab.1',
@@ -23,6 +25,7 @@ const TABS: string[] = [
 const OWN_ROOM_ONLY_TABS: string[] = [TABS[1], TABS[2]];
 const FRAME_WIDTH = 341;
 type IdleTimeoutField = 'idle_sleep_timeout_seconds' | 'idle_autokick_timeout_seconds';
+const ROOM_BEHAVIOR_FIELDS = ['leave_on_door_tile_enabled', 'idle_sleep_enabled', 'idle_autokick_enabled'];
 
 interface RoomSettingsForm {
     roomData: IRoomData;
@@ -301,6 +304,10 @@ export const NavigatorRoomSettingsView: FC<{}> = (props) => {
 
             if (error) {
                 setForm(newForm);
+
+                // onRoomBehaviorSettingsChanged: a room behaviour checkbox only saves once the timeouts are valid and shows no error.
+                if (ROOM_BEHAVIOR_FIELDS.includes(field)) return;
+
                 setInputError(error);
                 setSelectedTab(TABS[3]);
                 return;
@@ -373,7 +380,7 @@ export const NavigatorRoomSettingsView: FC<{}> = (props) => {
                                 style={{ width: tabWidth, minWidth: tabWidth, maxWidth: tabWidth }}
                                 onClick={(event) => setSelectedTab(tab)}
                             >
-                                {LocalizeText(tab)}
+                                <NativeText transparent tinted background={ROOM_SETTINGS_BACKGROUND} text={LocalizeText(tab)} textStyle="button_shiny_regular" />
                             </VoltCardTabsItemView>
                         );
                     })}
