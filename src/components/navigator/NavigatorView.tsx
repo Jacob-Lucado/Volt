@@ -217,7 +217,7 @@ export const NavigatorView: FC<{}> = () => {
         // The tab button starts at the 88px layout width and resizes to its label (field + 10px margins) centred in it.
         const sizeTabs = () => {
             for (const label of labels) {
-                const fieldWidth = tabFont ? labelFieldWidth(tabFont, label.textContent ?? '', 12) : Math.ceil(label.getBoundingClientRect().width);
+                const fieldWidth = tabFont ? labelFieldWidth(tabFont, label.firstElementChild?.textContent ?? '', 12) : Math.ceil(label.getBoundingClientRect().width);
                 const labelWidth = fieldWidth + 20;
                 const tabWidth = Math.max(labelWidth, Math.ceil((88 - labelWidth) / 2) + labelWidth);
                 label.parentElement.style.setProperty('--navigator-tab-width', `${tabWidth}px`);
@@ -371,12 +371,16 @@ export const NavigatorView: FC<{}> = () => {
                                             }}
                                         >
                                             <span className="volt-navigator-air__tab-label">
-                                                <NativeText
-                                                    text={LocalizeText('navigator.toplevelview.' + context.code)}
-                                                    textStyle="button_shiny_regular"
-                                                    background={active ? 0xeceae0 : 0xcbc9c1}
-                                                    nativeResolution
-                                                />
+                                                {(active ? ([['selected', 0xeceae0]] as const) : ([['default', 0xcbc9c1], ['hover', 0xf6f5f0]] as const)).map(([state, background]) => (
+                                                    <NativeText
+                                                        key={state}
+                                                        className={`volt-navigator-air__tab-label-${state}`}
+                                                        text={LocalizeText('navigator.toplevelview.' + context.code)}
+                                                        textStyle="button_shiny_regular"
+                                                        background={background}
+                                                        nativeResolution
+                                                    />
+                                                ))}
                                             </span>
                                         </button>
                                     );
