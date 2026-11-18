@@ -1,10 +1,11 @@
-import { GetRoomEngine, RoomEngineTriggerWidgetEvent, RoomObjectVariable } from '@volt/renderer';
+import { GetRoomEngine, RoomEngineTriggerWidgetEvent, RoomObjectVariable, RoomSessionEvent } from '@volt/renderer';
 import { useState } from 'react';
 import { useVoltEvent } from '../../../events';
 import { useFurniRemovedEvent } from '../../engine';
 
 const useFurnitureTrophyWidgetState = () => {
     const [objectId, setObjectId] = useState(-1);
+    const [requestId, setRequestId] = useState(0);
     const [category, setCategory] = useState(-1);
     const [color, setColor] = useState('1');
     const [senderName, setSenderName] = useState('');
@@ -31,6 +32,7 @@ const useFurnitureTrophyWidgetState = () => {
         if (!extra) extra = '0';
 
         setObjectId(event.objectId);
+        setRequestId((value) => value + 1);
         setCategory(event.category);
         setColor(roomObject.model.getValue<string>(RoomObjectVariable.FURNITURE_COLOR) || '1');
 
@@ -46,13 +48,15 @@ const useFurnitureTrophyWidgetState = () => {
         setMessage(trophyText);
     });
 
+    useVoltEvent<RoomSessionEvent>(RoomSessionEvent.ENDED, onClose);
+
     useFurniRemovedEvent(objectId !== -1 && category !== -1, (event) => {
         if (event.id !== objectId || event.category !== category) return;
 
         onClose();
     });
 
-    return { objectId, color, senderName, date, message, onClose };
+    return { objectId, requestId, color, senderName, date, message, onClose };
 };
 
 export const useFurnitureTrophyWidget = useFurnitureTrophyWidgetState;
