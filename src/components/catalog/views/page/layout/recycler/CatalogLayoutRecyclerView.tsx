@@ -168,6 +168,7 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
             return;
         }
 
+        if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
         animator.start(easterEgg());
         setAbortVisible(true);
     };
