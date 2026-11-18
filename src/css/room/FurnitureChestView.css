@@ -513,6 +513,14 @@
     height: 30px;
 }
 
+.volt-chest-air__logs {
+    position: absolute;
+    top: 0;
+    right: 17px;
+    width: 73px;
+    height: 30px;
+}
+
 .volt-chest-air__item-count-bottom {
     position: absolute !important;
     top: 7px;
@@ -522,5 +530,65 @@
 .volt-chest-air__coins {
     position: absolute;
     inset: 0;
+}
+
+/* lock_info_bubble: bubble style 7 with the left pointer. The skin box starts 9px right of the info button; the 353px item
+   list (spacing 1) sits 11px in from its left edge and 8px down. */
+.volt-chest-air__bubble {
+    position: fixed;
+    z-index: 1100;
+    padding: 8px 9px 9px 11px;
+    font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
+    image-rendering: var(--volt-pixel-art, pixelated);
+}
+
+.volt-chest-air__bubble::before {
+    position: absolute;
+    inset: 0;
+    border: solid transparent;
+    border-width: 7px 7px 8px;
+    border-image: url('../../assets/images/chest/air-bubble.png') 7 7 8 fill / 7px 7px 8px stretch;
+    content: '';
+}
+
+.volt-chest-air__bubble-pointer {
+    position: absolute;
+    z-index: 1;
+    top: calc(50% - 10px);
+    left: -7px;
+    width: 11px;
+    height: 18px;
+    background: url('../../assets/images/chest/air-bubble-pointer-left.png') no-repeat;
+}
+
+.volt-chest-air__bubble-texts {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    width: 353px;
+}
+
+.volt-chest-air__bubble-title {
+    margin-bottom: 8px;
+}
+
+.volt-chest-air__bubble-title.is-capacity {
+    margin-top: 15px;
+}
+
+.volt-chest-air__bubble-rule {
+    padding: 2px;
+    white-space: pre-wrap;
+    font-size: 12px;
+    line-height: 13px;
+    color: #000;
+    -webkit-font-smoothing: antialiased;
+}
+
+.volt-chest-air__bubble-rule a {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
 }
 
