@@ -20,12 +20,9 @@ import {
 import { SubpixelText } from '../../../../../common/native-text/SubpixelText';
 import { isAirBaseCatalogOffer } from './catalogAirGrid.helpers';
 
-/** gridItem_with_price amount and plus: bold u_regular in black on sub-pixel pens, drawn for the grid surface and for the selected item's white tile. */
+/** gridItem_with_price amount and plus: bold u_regular in black on sub-pixel pens, blended onto whatever surface the tile sits on. */
 const CatalogPriceText: FC<{ text: string }> = ({ text }) => (
-    <>
-        <SubpixelText background={0xd2d1cb} className="volt-catalog-grid-price-text-normal" text={text} textStyle="u_bold" />
-        <SubpixelText ariaHidden background={0xffffff} className="volt-catalog-grid-price-text-selected" text={text} textStyle="u_bold" />
-    </>
+    <SubpixelText transparent background={0xd2d1cb} text={text} textStyle="u_bold" />
 );
 
 const HasActivityPointIconStyle = (type: number) => !!ACTIVITY_POINT_ICON_REGIONS[GetActivityPointIconStyle(type, false)];
