@@ -33,8 +33,8 @@ interface NavigatorRoomSettingsTabViewProps {
 export const NavigatorRoomSettingsVipChatTabView: FC<NavigatorRoomSettingsTabViewProps> = (props) => {
     const { roomData = null, handleChange = null, handleDraftChange, idleSleepTimeoutSeconds, idleAutokickTimeoutSeconds, inputError } = props;
     const isHC = GetClubMemberLevel() > 0;
-    const sleepError = inputError?.field === 'idle_sleep_timeout_seconds' && roomData.idleSleepEnabled;
-    const autokickError = inputError?.field === 'idle_autokick_timeout_seconds' && roomData.idleAutokickEnabled;
+    const sleepError = inputError?.field === 'idle_sleep_timeout_seconds' && isHC && roomData.idleSleepEnabled;
+    const autokickError = inputError?.field === 'idle_autokick_timeout_seconds' && isHC && roomData.idleAutokickEnabled;
 
     // RoomSettingsCtrl.refreshRoomBehaviorSettingsState: without VIP the walls, thickness, door tile and idle controls are
     // disabled and blended to 0.5; a timeout field also needs its checkbox. The flood filter stays enabled.
