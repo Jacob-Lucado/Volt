@@ -6,7 +6,7 @@ import { NativeText } from './NativeText';
  * glyphs sit on 1/20 px pens and each pen phase has its own raster. These styles carry AIR's own rasters per phase
  * (WIN63-202610201032, rendered by the AIR runtime); characters without one are drawn by NativeText.
  */
-export type SubpixelTextStyle = 'u_regular' | 'u_bold' | 'u_bold_default' | 'u_headline_small' | 'u_headline_medium';
+export type SubpixelTextStyle = 'u_regular' | 'u_bold' | 'u_bold_default' | 'u_headline_small' | 'u_headline_medium' | 'il_bold_white';
 
 type FontAsset = { metrics: string; atlas: string };
 
@@ -50,6 +50,12 @@ const fontAssets: Record<SubpixelTextStyle, { dark?: FontAsset; light?: FontAsse
             metrics: new URL('../../assets/native-fonts/subpixel/u_headline_medium_light.json', import.meta.url).href,
             atlas: new URL('../../assets/native-fonts/subpixel/u_headline_medium_light.png', import.meta.url).href
         }
+    },
+    il_bold_white: {
+        light: {
+            metrics: new URL('../../assets/native-fonts/subpixel/il_bold_white_light.json', import.meta.url).href,
+            atlas: new URL('../../assets/native-fonts/subpixel/il_bold_white_light.png', import.meta.url).href
+        }
     }
 };
 
@@ -64,6 +70,8 @@ interface SubpixelFont {
     advance: Record<string, number>;
     /** Per character code, the tile of each pen phase: [atlasX, atlasY, width, height, x from the pen's pixel, y from the field top]. */
     glyphs: Record<string, number[][]>;
+    /** The field row AIR draws the underline on; styles without it have no underline. */
+    underlineY?: number;
     coverage: Uint8ClampedArray;
     atlasWidth: number;
 }
@@ -114,6 +122,8 @@ const lineOrigin = (align: SubpixelTextProps['align'], fieldWidth: number, exact
             return Math.floor((fieldWidth - Math.round(exact / 20)) / 2) * 20;
         case 'paragraph':
             return Math.floor((fieldWidth * 20 - flooredWidth) / 2);
+        case 'right':
+            return Math.floor(fieldWidth - flooredWidth / 20 - 4) * 20 + 40;
         default:
             return 40;
     }
@@ -130,8 +140,10 @@ interface SubpixelTextProps {
      * `field`: a TextField that centres itself (auto size "center"); it centres the text width rounded to whole pixels, not floored.
      * `cell`: a table cell's centred TextField; the field lands on a whole pixel, so a half pixel goes left.
      * `paragraph`: one line of a centred multiline field; it centres the sum of the advances floored to twips.
+     * `right`: an auto size "right" window of `width`: TextSkinRenderer draws the text-sized field at floor(width - field width).
      */
-    align?: 'left' | 'center' | 'field' | 'cell' | 'paragraph';
+    align?: 'left' | 'center' | 'field' | 'cell' | 'paragraph' | 'right';
+    underline?: boolean;
     /** A fixed text field width (gutters included); by default the field fits the text. */
     width?: number;
     className?: string;
@@ -149,7 +161,20 @@ export const measureSubpixelText = async (textStyle: SubpixelTextStyle, text: st
     return [...text].reduce((sum, character) => sum + ((font.advance[character.charCodeAt(0)] ?? 0) * font.size) / font.emSquare, 0);
 };
 
-export const SubpixelText: FC<SubpixelTextProps> = ({ text, textStyle, color = 0, background, transparent = false, align = 'left', width, className, style, ariaHidden = false, penX }) => {
+export const SubpixelText: FC<SubpixelTextProps> = ({
+    text,
+    textStyle,
+    color = 0,
+    background,
+    transparent = false,
+    align = 'left',
+    underline = false,
+    width,
+    className,
+    style,
+    ariaHidden = false,
+    penX
+}) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [size, setSize] = useState<{ width: number; height: number }>(null);
     const [fallback, setFallback] = useState(false);
@@ -195,6 +220,12 @@ export const SubpixelText: FC<SubpixelTextProps> = ({ text, textStyle, color = 0
                     }
                     cumulative += twips(character);
                 }
+                // A window's underline covers the whole pixels of the field's textWidth (advances floored to twips), without a partial last pixel.
+                if (underline && font.underlineY !== undefined && font.underlineY < fieldHeight) {
+                    const row = font.underlineY * fieldWidth;
+                    const end = Math.min(Math.floor((origin + flooredWidth) / 20), fieldWidth);
+                    for (let x = Math.max(0, Math.floor(origin / 20)); x < end; x++) coverage[row + x] = 255;
+                }
                 const pixels = new Uint8ClampedArray(fieldWidth * fieldHeight * 4);
                 const foreground = [(color >>> 16) & 255, (color >>> 8) & 255, color & 255];
                 const surface = [(background >>> 16) & 255, (background >>> 8) & 255, background & 255];
@@ -218,17 +249,17 @@ export const SubpixelText: FC<SubpixelTextProps> = ({ text, textStyle, color = 0
         return () => {
             disposed = true;
         };
-    }, [text, textStyle, color, background, transparent, align, width, penX]);
+    }, [text, textStyle, color, background, transparent, align, underline, width, penX]);
 
     if (fallback)
         return (
             <NativeText
                 nativeResolution
-                align={align === 'left' ? 'left' : 'center'}
+                align={align === 'left' ? 'left' : align === 'right' ? 'right' : 'center'}
                 ariaHidden={ariaHidden}
                 background={background}
                 className={className}
-                overrides={textStyle === 'u_bold_default' ? { color, sharpness: 0, thickness: 0 } : { color }}
+                overrides={textStyle === 'u_bold_default' ? { color, underline, sharpness: 0, thickness: 0 } : { color, underline }}
                 style={style}
                 text={text}
                 textStyle={textStyle === 'u_bold_default' ? 'u_bold' : textStyle}
