@@ -37,7 +37,7 @@ export const NavigatorRoomSettingsVipChatTabView: FC<NavigatorRoomSettingsTabVie
     const autokickError = inputError?.field === 'idle_autokick_timeout_seconds' && roomData.idleAutokickEnabled;
 
     // RoomSettingsCtrl.refreshRoomBehaviorSettingsState: without VIP the walls, thickness, door tile and idle controls are
-    // disabled and blended to 0.5; a timeout field also needs its checkbox.
+    // disabled and blended to 0.5; a timeout field also needs its checkbox. The flood filter stays enabled.
     const sleepFieldEnabled = isHC && roomData.idleSleepEnabled;
     const kickFieldEnabled = isHC && roomData.idleAutokickEnabled;
     const thickness = (prefix: string) => [
@@ -114,7 +114,6 @@ export const NavigatorRoomSettingsVipChatTabView: FC<NavigatorRoomSettingsTabVie
                         { value: RoomChatSettings.FLOOD_FILTER_NORMAL, label: LocalizeText('navigator.roomsettings.chat.flood.normal') },
                         { value: RoomChatSettings.FLOOD_FILTER_LOOSE, label: LocalizeText('navigator.roomsettings.chat.flood.loose') }
                     ]}
-                    disabled={!isHC}
                     onSelect={(value) => handleChange('flood_protection', value)}
                 />
             </NavigatorRoomSettingsAtView>
