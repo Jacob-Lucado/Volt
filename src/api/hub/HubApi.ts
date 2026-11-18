@@ -125,3 +125,18 @@ export const claimHubDaily = (): Promise<HubActionResult> => action('/daily');
 export const answerHubRiddle = (answer: string): Promise<HubActionResult> => action('/riddle', { answer });
 
 export const voteHubPoll = (option: number): Promise<HubActionResult> => action('/poll', { option });
+
+export interface HubRareValue {
+    name: string;
+    credits: string | null;
+    other: string | null;
+    other_label: string | null;
+}
+
+export const searchHubValues = async (term: string): Promise<HubRareValue[]> => {
+    const { status, body } = await request<{ results: HubRareValue[] }>(`/values?q=${encodeURIComponent(term)}`);
+
+    if (status < 200 || status >= 300 || !body) throw new Error(`hub_${status}`);
+
+    return body.results ?? [];
+};
