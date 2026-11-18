@@ -1766,15 +1766,6 @@
     image-rendering: var(--volt-pixel-art, pixelated);
 }
 
-.volt-pet-package-preview {
-    align-self: stretch;
-    min-height: 110px;
-    border: 1px solid #6f6f6f;
-    border-radius: 6px;
-    background: linear-gradient(180deg, #aee0f2 0%, #cfeef8 48%, #eaf8fc 100%);
-    box-shadow: inset 0 0 0 2px #ffffff, inset 0 3px 5px rgba(0, 0, 0, 0.12);
-}
-
 /* iro_event_info_xml: 195px wide, placed at x=0 of the 192px extension grid (desktop width - 195). Every child is addressed in the layout's own coordinates. */
 .volt-event-info {
     position: relative;
