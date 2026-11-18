@@ -1,6 +1,7 @@
 import { PetFigureData } from '@volt/renderer';
 import { CSSProperties, FC, ReactNode, useLayoutEffect, useRef, useState } from 'react';
 import { GetConfigurationValue, LocalizeText } from '../../../../api';
+import boxImage from '../../../../assets/images/room-widgets/pet-package/box.png';
 import penImage from '../../../../assets/images/catalog/air/skin/common-small-pen.png';
 import { DraggableWindow, LayoutPetImageView } from '../../../../common';
 import { NativeCenteredField } from '../../../../common/native-text/NativeCenteredField';
@@ -121,6 +122,9 @@ const PetPackageBoxView: FC<PetPackageLayoutProps> = ({ petName, onChangePetName
                     alt=""
                     className="volt-pet-package__box"
                     draggable={false}
+                    onError={({ currentTarget }) => {
+                        if (currentTarget.getAttribute('src') !== boxImage) currentTarget.src = boxImage;
+                    }}
                     src={`${GetConfigurationValue<string>('image.library.url')}client_static/petpackage_box.png`}
                 />
             </CentredBox>
