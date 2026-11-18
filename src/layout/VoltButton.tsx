@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, DetailedHTMLProps, PropsWithChildren, Ref } from 'react';
+import { ButtonHTMLAttributes, DetailedHTMLProps, PropsWithChildren, Ref, useImperativeHandle } from 'react';
 import { AirButtonKindName, textCaption, useAirButton } from '../common/air/AirSkinButton';
 import { classNames } from './classNames';
 
@@ -60,16 +60,12 @@ const AirCaptionVoltButton = ({
     ...rest
 }: VoltButtonProps & { caption: string; kind: AirButtonKindName }) => {
     const air = useAirButton<HTMLButtonElement>({ kind, caption });
-    const setRef = (element: HTMLButtonElement) => {
-        air.ref.current = element;
-        if (typeof ref === 'function') ref(element);
-        else if (ref) ref.current = element;
-    };
+    useImperativeHandle(ref, () => air.ref.current, [air.ref]);
 
     return (
         <button
             {...rest}
-            ref={setRef}
+            ref={air.ref}
             className={classNames('air-skin-button select-none', className)}
             data-air-kind={air.kind}
             style={{ ...air.style, ...style }}
