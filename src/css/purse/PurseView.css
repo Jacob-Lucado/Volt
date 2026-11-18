@@ -290,6 +290,7 @@
 .volt-purse__btn--help,
 .volt-purse__btn--logout,
 .volt-purse__btn--settings {
+    position: relative;
     display: inline-flex;
     width: 50px;
     height: 19px;
@@ -350,33 +351,21 @@
     border-image-source: var(--habbo-skin-button-settings-pressed);
 }
 
-.volt-purse__btn--help span {
-    position: relative;
-    top: 0;
-    left: 1px;
+/* label x=0 y=1 with relative center scale: y stays 1, x = floor(50 / 2) - floor(width / 2). The 3px skin border is outside the padding box. */
+.volt-purse__btn--help .volt-purse__help-label {
+    position: absolute;
+    top: -2px;
 }
 
-.volt-purse__btn-img {
+/* 15x15 bitmaps with pivot_point center: x = 18 and y = 2 in both buttons (logout window 15x20 at 18,0; settings 61x18 at -5,1). */
+.volt-purse__btn--icon .volt-purse__btn-img {
+    position: absolute;
+    top: -1px;
+    left: 15px;
     display: block;
-    width: auto;
-    height: auto;
-    max-width: 15px;
-    max-height: 18px;
-    object-fit: contain;
+    width: 15px;
+    height: 15px;
     image-rendering: var(--volt-pixel-art, pixelated);
-}
-
-/* static_bitmap 15x20 at (18,0) in the 50x19 button, centred on its pivot. */
-.volt-purse__btn--logout .volt-purse__btn-img {
-    position: relative;
-    top: 1px;
-    max-width: 15px;
-    max-height: 20px;
-}
-
-.volt-purse__btn--settings .volt-purse__btn-img {
-    max-width: 50px;
-    max-height: 19px;
 }
 
 /* settings_xml dropdown: 192 wide, style-6 border 0x55534e (border_6 x 0x55534e) with a style-3 panel 0x201e19 (border_slot x 0x201e19) at (3,3) 186 wide; entries are
