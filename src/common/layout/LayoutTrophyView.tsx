@@ -1,10 +1,10 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { LocalizeText } from '../../api';
-import { Base } from '../Base';
-import { Column } from '../Column';
 import { DraggableWindow } from '../draggable-window';
-import { Flex } from '../Flex';
-import { Text } from '../Text';
+import { loadNativeFont, measureNativeText } from '../native-text/NativeFont';
+import { NativeText } from '../native-text/NativeText';
+import { SubpixelText } from '../native-text/SubpixelText';
+import { nativeTextStyles } from '../native-text/NativeTextStyles';
 
 interface LayoutTrophyViewProps {
     color: string;
@@ -15,25 +15,60 @@ interface LayoutTrophyViewProps {
     onCloseClick: () => void;
 }
 
+// AIR TrophyTheme header colours: gold, silver, bronze. Text is drawn on the same colour.
+const THEME_COLORS = [0xecc547, 0xc9bdcc, 0xb87834];
+
+// Width of the greeting text field in the AIR trophy layout (gutters included).
+const GREETING_WIDTH = 297;
+
+// The name field keeps its right edge at x 320 as it grows.
+const TITLE_FIELD_WIDTH = 120;
+const NAME_RIGHT = 320;
+
+const useAutoFieldWidth = (text: string): number | null => {
+    const [width, setWidth] = useState<number | null>(null);
+
+    useEffect(() => {
+        let disposed = false;
+        const style = nativeTextStyles.u_bold;
+
+        loadNativeFont(style)
+            .then(({ font }) => !disposed && setWidth(Math.floor(measureNativeText(font, text, style)) + 4))
+            .catch(() => !disposed && setWidth(null));
+
+        return () => {
+            disposed = true;
+        };
+    }, [text]);
+
+    return width;
+};
+
 export const LayoutTrophyView: FC<LayoutTrophyViewProps> = (props) => {
     const { color = '', message = '', date = '', senderName = '', customTitle = null, onCloseClick = null } = props;
+    const theme = Math.min(Math.max((parseInt(color, 10) || 1) - 1, 0), 2);
+    const background = THEME_COLORS[theme];
+    const title = LocalizeText('widget.furni.trophy.title');
+    const nameWidth = useAutoFieldWidth(senderName);
 
     return (
-        <DraggableWindow handleSelector=".drag-handler">
-            <Column alignItems="center" className={`volt-layout-trophy trophy-${color}`} gap={0}>
-                <Flex center fullWidth className="trophy-header drag-handler" position="relative">
-                    <Base pointer className="trophy-close" position="absolute" onClick={onCloseClick} />
-                    <Text bold>{LocalizeText('widget.furni.trophy.title')}</Text>
-                </Flex>
-                <Column className="trophy-content py-1" gap={1}>
-                    {customTitle && <Text bold>{customTitle}</Text>}
-                    {message}
-                </Column>
-                <Flex alignItems="center" className="trophy-footer mt-1" justifyContent="between">
-                    <Text bold>{date}</Text>
-                    <Text bold>{senderName}</Text>
-                </Flex>
-            </Column>
+        <DraggableWindow handleSelector=".volt-layout-trophy">
+            <div className={`volt-layout-trophy trophy-${theme + 1}`}>
+                <div className="trophy-header" style={{ backgroundColor: `#${background.toString(16)}` }}>
+                    <SubpixelText text={title} textStyle="u_bold_default" background={background} width={TITLE_FIELD_WIDTH} align="cell" />
+                </div>
+                <div className="trophy-content">
+                    {customTitle && <NativeText text={customTitle} textStyle="u_bold" background={background} width={GREETING_WIDTH} maxWidth={GREETING_WIDTH} nativeResolution />}
+                    <NativeText text={message.replace(/\\r/g, '\n')} textStyle="u_regular" background={background} width={GREETING_WIDTH} maxWidth={GREETING_WIDTH} nativeResolution />
+                </div>
+                <div className="trophy-date">
+                    <NativeText text={date} textStyle="u_bold" overrides={{ sharpness: 0, thickness: 0 }} background={background} nativeResolution />
+                </div>
+                <div className="trophy-name" style={nameWidth ? { left: NAME_RIGHT - nameWidth } : { right: 340 - NAME_RIGHT }}>
+                    <NativeText text={senderName} textStyle="u_bold" background={background} width={nameWidth ?? undefined} nativeResolution />
+                </div>
+                <button type="button" className="trophy-close" aria-label={LocalizeText('generic.close')} onClick={onCloseClick} />
+            </div>
         </DraggableWindow>
     );
 };

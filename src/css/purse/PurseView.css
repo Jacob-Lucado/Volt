@@ -91,6 +91,14 @@
     box-shadow: none !important;
 }
 
+/* The count field grows to the left and the 52px list row clips it, so a long balance loses its leading digits. */
+.volt-purse .volt-purse-button .volt-purse-button__clip {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
 .volt-purse .volt-purse-button .currency-text {
     position: absolute;
     top: 2px;

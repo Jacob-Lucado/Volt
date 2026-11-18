@@ -6,7 +6,7 @@ import { NativeText } from './NativeText';
  * glyphs sit on 1/20 px pens and each pen phase has its own raster. These styles carry AIR's own rasters per phase
  * (WIN63-202610201032, rendered by the AIR runtime); characters without one are drawn by NativeText.
  */
-export type SubpixelTextStyle = 'u_regular' | 'u_bold' | 'u_headline_small' | 'u_headline_medium' | 'il_bold_white';
+export type SubpixelTextStyle = 'u_regular' | 'u_bold' | 'u_bold_default' | 'u_headline_small' | 'u_headline_medium' | 'il_bold_white';
 
 type FontAsset = { metrics: string; atlas: string };
 
@@ -20,6 +20,12 @@ const fontAssets: Record<SubpixelTextStyle, { dark?: FontAsset; light?: FontAsse
         light: {
             metrics: new URL('../../assets/native-fonts/subpixel/u_regular_light.json', import.meta.url).href,
             atlas: new URL('../../assets/native-fonts/subpixel/u_regular_light.png', import.meta.url).href
+        }
+    },
+    u_bold_default: {
+        dark: {
+            metrics: new URL('../../assets/native-fonts/subpixel/u_bold_default.json', import.meta.url).href,
+            atlas: new URL('../../assets/native-fonts/subpixel/u_bold_default.png', import.meta.url).href
         }
     },
     u_bold: {
@@ -228,7 +234,9 @@ export const SubpixelText: FC<SubpixelTextProps> = ({
                     for (let channel = 0; channel < 3; channel++)
                         pixels[index * 4 + channel] = transparent
                             ? foreground[channel]
-                            : Math.round(surface[channel] + (alpha * (foreground[channel] - surface[channel])) / 255);
+                            : textStyle === 'u_bold_default'
+                              ? ((surface[channel] * (256 - alpha) + foreground[channel] * alpha) >> 8)
+                              : Math.round(surface[channel] + (alpha * (foreground[channel] - surface[channel])) / 255);
                     pixels[index * 4 + 3] = transparent ? alpha : 255;
                 }
                 const canvas = canvasRef.current;
@@ -251,10 +259,10 @@ export const SubpixelText: FC<SubpixelTextProps> = ({
                 ariaHidden={ariaHidden}
                 background={background}
                 className={className}
-                overrides={{ color, underline }}
+                overrides={textStyle === 'u_bold_default' ? { color, underline, sharpness: 0, thickness: 0 } : { color, underline }}
                 style={style}
                 text={text}
-                textStyle={textStyle}
+                textStyle={textStyle === 'u_bold_default' ? 'u_bold' : textStyle}
                 transparent={transparent}
                 width={width}
             />
