@@ -6,6 +6,7 @@ import { ClassicScrollAreaView } from '../../../../common/scroll-area/ClassicScr
 import { useInventoryPets, useInventoryUnseenTracker } from '../../../../hooks';
 import { VoltButton } from '../../../../layout';
 import { InventoryCategoryEmptyView } from '../InventoryCategoryEmptyView';
+import { InventoryInfoTextView } from '../InventoryInfoTextView';
 import { InventoryPetImageView } from './InventoryPetImageView';
 import { InventoryPetItemView } from './InventoryPetItemView';
 
@@ -123,9 +124,13 @@ export const InventoryPetView: FC<{
                 </ClassicScrollAreaView>
             </div>
             <div className="volt-inventory-animal-preview">
-                <div className="volt-inventory-animal-name">{selectedPet?.petData.name}</div>
+                <InventoryInfoTextView className="volt-inventory-animal-name" text={selectedPet?.petData.name ?? ''} textStyle="u_headline_small" />
                 <div className="volt-inventory-animal-image">{selectedPet && <InventoryPetImageView pet={selectedPet.petData} preview />}</div>
-                <div className="volt-inventory-animal-description">{selectedPet && LocalizeText(`pet.type.${selectedPet.petData.typeId}`)}</div>
+                <InventoryInfoTextView
+                    className="volt-inventory-animal-description"
+                    text={selectedPet ? LocalizeText(`pet.type.${selectedPet.petData.typeId}`) : ''}
+                    width={180}
+                />
                 <div className="volt-inventory-animal-actions">
                     <VoltButton
                         className="volt-inventory-animal-place"

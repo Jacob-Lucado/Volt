@@ -168,6 +168,8 @@ export const LayoutRoomPreviewerView: FC<{
             if (roomCanvasInitialized) roomPreviewer.modifyRoomCanvas(width, targetHeight);
             else {
                 roomPreviewer.getRoomCanvas(width, targetHeight);
+                // A masked canvas draws into its own transparent layer first, so glows would not blend with the backdrop.
+                roomPreviewer.getRenderingCanvas()?.setMask(false);
                 roomCanvasInitialized = true;
             }
 
