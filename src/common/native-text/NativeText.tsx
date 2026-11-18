@@ -43,6 +43,11 @@ interface NativeTextProps {
     ariaHidden?: boolean;
     /** An auto-sized text window is int(textHeight + 4) high: the fraction is cut, so the box can end inside the last line's raster. */
     truncateHeight?: boolean;
+    /** A text window's max_lines with overflow_replace: the text is cut after the longest prefix that, followed by the replacement, fits. */
+    maxLines?: number;
+    overflowReplace?: string;
+    /** Size the box like an auto sized text window, int(textHeight + 4) high, and cut the raster there (truncateHeight only trims the layout margin). */
+    clipToWindow?: boolean;
 }
 
 /** Recolours a black retained raster in place: the coverage stays, the premultiplied colour becomes the tint. */
@@ -125,7 +130,10 @@ export const NativeText: FC<NativeTextProps> = ({
     width: fixedWidth,
     tinted: tintedProp,
     ariaHidden = false,
-    truncateHeight = false
+    truncateHeight = false,
+    maxLines,
+    overflowReplace = '',
+    clipToWindow = false
 }) =>
 {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -208,7 +216,22 @@ export const NativeText: FC<NativeTextProps> = ({
             if (disposed || !supportsNativeText(loaded.font, text.replace(/[\r\n]/g, ''))) return;
             const measure = (value: string) => measureNativeText(loaded.font, value, fontStyle);
             const width = maxWidth === undefined ? Infinity : Math.max(1, maxWidth - 4);
-            const lines = text.split(/\r\n|\r|\n/).flatMap((paragraph) => wrapNativeParagraph(paragraph, width, measure));
+            const wrapText = (value: string) => value.split(/\r\n|\r|\n/).flatMap((paragraph) => wrapNativeParagraph(paragraph, width, measure));
+            let lines = wrapText(text);
+
+            if (maxLines && lines.length > maxLines) {
+                let low = 0;
+                let high = text.length;
+
+                while (low < high) {
+                    const middle = Math.floor((low + high + 1) / 2);
+
+                    if (wrapText(text.slice(0, middle) + overflowReplace).length <= maxLines) low = middle;
+                    else high = middle - 1;
+                }
+
+                lines = wrapText(text.slice(0, low) + overflowReplace);
+            }
             const metrics = resolveLineMetrics(loaded.font.swfFont, fontStyle.size, fontStyle.antiAliasType === 'normal');
             const lineHeight = metrics.textHeight + leading;
             // TextField puts every line's baseline on a whole pixel: round(2 + ascent + index * lineHeight) (AIR WIN63-202610201032).
@@ -277,14 +300,14 @@ export const NativeText: FC<NativeTextProps> = ({
         return () => {
             disposed = true;
         };
-    }, [text, textStyle, styleKey, maxWidth, leading, align, scale, transparent, fixedWidth, tinted]);
+    }, [text, textStyle, styleKey, maxWidth, leading, align, scale, transparent, fixedWidth, tinted, maxLines, overflowReplace]);
 
     return (
         <span
             aria-hidden={ariaHidden || undefined}
             className={className}
             data-native-text={size ? textStyle : 'fallback'}
-            style={{ display: 'inline-block', verticalAlign: 'top', position: 'relative', ...size, ...(align ? { textAlign: align } : {}), ...style }}
+            style={{ display: 'inline-block', verticalAlign: 'top', position: 'relative', ...size, ...(clipToWindow && size ? { height: size.height - (size.trim ?? 0), overflow: 'hidden' } : {}), ...(align ? { textAlign: align } : {}), ...style }}
         >
             <canvas
                 ref={canvasRef}
