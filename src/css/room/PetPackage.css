@@ -1,0 +1,36 @@
+/* AIR petpackage / petpackage_new input windows: no border of their own (the border window around them draws it), a white background, Ubuntu text. */
+.volt-pet-package input.volt-pet-package__input {
+    margin: 0;
+    padding: 0 2px;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+    outline: none;
+    color: #000;
+    font: 700 12px/17px Ubuntu, sans-serif;
+}
+
+/* Flash sets the first line at the 2px gutter plus the font ascent; a 22px line box puts the 16px baseline there. */
+.volt-pet-package input.volt-pet-package__input.is-big {
+    padding-left: 3px;
+    color: #888;
+    font-size: 16px;
+    line-height: 22px;
+}
+
+.volt-pet-package input.volt-pet-package__input:focus {
+    border: 0;
+    box-shadow: none;
+    outline: none;
+}
+
+.volt-pet-package__cancel {
+    cursor: pointer;
+}
+
+.volt-pet-package__box {
+    display: block;
+    max-width: none;
+    image-rendering: pixelated;
+}
