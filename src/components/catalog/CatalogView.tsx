@@ -112,7 +112,6 @@ const CatalogViewInner: FC<{}> = () => {
     const getSwfTabLabel = (label: string) => stripSwfTabSuffix(parseCatalogTabLabel(label).name);
 
     // Read the remembered spot each time the window opens, not while it is dragged.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const initialPosition = useMemo(() => ({ ...catalogWindowPosition }), [isVisible]);
     const onPositionChange = useCallback((position: { x: number; y: number }) => {
         catalogWindowPosition.x = position.x;
