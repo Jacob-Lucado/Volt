@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useImperativeHandle, useMemo } from 'react';
 import { AirButtonKindName, textCaption, useAirButton } from './air/AirSkinButton';
 import { Flex, FlexProps } from './Flex';
 import { ButtonSizeType, ColorVariantType } from './types';
@@ -48,10 +48,12 @@ const AirCaptionButton: FC<ButtonProps & { caption: string; kind: AirButtonKindN
     classNames = [],
     className = '',
     style,
+    innerRef,
     children,
     ...rest
 }) => {
     const air = useAirButton<HTMLDivElement>({ kind, caption });
+    useImperativeHandle(innerRef, () => air.ref.current, [air.ref]);
     const ownClasses = [...classNames, ...className.split(/\s+/)].filter((name) => name && (!SKIN_CLASS.test(name) || name === 'habbo-btn-black'));
 
     return (
