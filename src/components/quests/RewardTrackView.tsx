@@ -46,7 +46,9 @@ import rewardGift from '../../assets/images/reward-track/air/reward-gift.png';
 import rewardGiftPremium from '../../assets/images/reward-track/air/reward-gift-premium.png';
 import taskListIcon from '../../assets/images/reward-track/air/task-list.png';
 import { DraggableWindowPosition, LayoutAvatarImageView } from '../../common';
+import { NativeText } from '../../common/native-text/NativeText';
 import { nativeTextStyles } from '../../common/native-text/NativeTextStyles';
+import { useTextWindowWidths } from '../../common/native-text/useTextWindowWidths';
 import { useHasPermission, useNotification, useRewardTracks } from '../../hooks';
 import { VoltCard } from '../../layout';
 import { useAirFieldWidth } from '../achievements/AchievementText';
@@ -156,6 +158,35 @@ const TaskGlyph: FC<{ actionType: string; boxWidth: number; boxHeight: number; z
     );
 };
 
+const AMOUNT_TEXT_OVERRIDES = { size: 11, bold: true };
+const AMOUNT_TEXT_POSITION: CSSProperties = { position: 'absolute', left: 4, top: -1 };
+
+// quantity_container (18,37 20x14) takes on every width change of its auto sized text (x 4, 10 wide in the layout)
+// and grows from its centre; AIR's int() halving keeps an odd extra pixel on the right.
+const RewardTrackPrizeAmount: FC<{ amount: number; background: number }> = ({ amount, background }) => {
+    const text = String(amount);
+    const fieldWidth = useTextWindowWidths([{ text, textStyle: 'il_small', overrides: AMOUNT_TEXT_OVERRIDES }])?.[0];
+
+    if (fieldWidth === undefined) return null;
+
+    const growth = fieldWidth - 10;
+
+    return (
+        <span className="volt-reward-track-prize-amount" style={{ left: 18 + Math.trunc(-growth / 2), width: 20 + growth }}>
+            <NativeText
+                transparent
+                nativeResolution
+                className="volt-reward-track-prize-amount-text"
+                style={AMOUNT_TEXT_POSITION}
+                background={background}
+                text={text}
+                textStyle="il_small"
+                overrides={AMOUNT_TEXT_OVERRIDES}
+            />
+        </span>
+    );
+};
+
 const RewardTrackPrizeView: FC<{
     track: RewardTrackData;
     prize: RewardTrackPrizeData;
@@ -184,23 +215,19 @@ const RewardTrackPrizeView: FC<{
             data-tier={prize.premium ? 'premium' : 'free'}
             data-state={state}
             data-dimmed={dimmed}
-            style={{ left, opacity: dimmed ? 0.75 : 1 }}
+            style={{ left }}
             title={getRewardTrackPrizeTooltip(state)}
         >
+            <span className="volt-reward-track-prize-stem" />
             <button type="button" className="volt-reward-track-prize-hit" disabled={dimmed} onClick={onClick}>
                 <span className="volt-reward-track-prize-shadow" />
                 <span className="volt-reward-track-prize-plate">
                     <span className="volt-reward-track-prize-product" data-shifted={prize.rewardAmount > 1}>
                         <ProductIconView productTypeId={prize.productItemTypeId} itemTypeId={prize.rewardTypeId} extraParams={prize.extraParams} />
                     </span>
-                    {prize.rewardAmount > 1 && (
-                        <span className="volt-reward-track-prize-amount">
-                            <span>{prize.rewardAmount}</span>
-                        </span>
-                    )}
+                    {prize.rewardAmount > 1 && <RewardTrackPrizeAmount amount={prize.rewardAmount} background={prize.premium ? 0xf1def7 : 0xf9efe0} />}
                 </span>
             </button>
-            <span className="volt-reward-track-prize-stem" />
             {state === 'premium_locked' && (
                 <img src={lockedReward} alt="" width={18} height={22} draggable={false} className="volt-reward-track-prize-lock" />
             )}
