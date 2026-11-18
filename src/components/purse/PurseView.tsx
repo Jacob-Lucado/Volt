@@ -1,6 +1,6 @@
-import { CreateLinkEvent, GetCommunication } from '@volt/renderer';
+import { CreateLinkEvent } from '@volt/renderer';
 import { FC, useCallback, useMemo, useState } from 'react';
-import { FriendlyTime, GetConfigurationValue, localizeWithFallback } from '../../api';
+import { FriendlyTime, GetConfigurationValue, LogOut, localizeWithFallback } from '../../api';
 import earningsIcon from '../../assets/images/purse-swf/icons/1747_icon_earnings_png$5e39e03f65fbbb9a85bedd0d577dc12d307477063.png';
 import hcIcon from '../../assets/images/purse-swf/icons/1801_hc_icon_png$2f8b554609e9c5cbbdc46bcbe5764be5-210881771.png';
 import logoutIcon from '../../assets/images/purse-swf/icons/2093_logout_icon_png.png';
@@ -139,7 +139,7 @@ export const PurseView: FC<{}> = (props) => {
                             className="volt-purse__btn volt-purse__btn--icon volt-purse__btn--logout volt-purse-right-button logout"
                             onClick={(event) => {
                                 event.stopPropagation();
-                                GetCommunication().connection.serverDisconnected(0);
+                                LogOut();
                             }}
                             aria-label={logoutLabel}
                         >
