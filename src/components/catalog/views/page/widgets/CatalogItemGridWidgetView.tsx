@@ -133,6 +133,7 @@ export const CatalogItemGridWidgetView: FC<CatalogItemGridWidgetViewProps> = (pr
                     offer={offer}
                     selectOffer={selectOffer}
                     tintColor={tintColor}
+                    standardDensity={isAirStandardDensity}
                     showPrices={showPrices}
                 />
             </div>
