@@ -1610,7 +1610,6 @@ body {
 
 /* Wired chest (Scrigno) — Putyhef buttons + inputs from chest_generic / coins_chest_contents XML */
 .volt-widget-chest,
-.volt-widget-chest-upgrade,
 .volt-widget-chest-log,
 .volt-widget-chest-confirm {
     .volt-chest__btn {

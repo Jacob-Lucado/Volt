@@ -135,3 +135,14 @@ export const ChestTitle: FC<{ text: string }> = ({ text }) => {
         </span>
     );
 };
+
+/** button_thick style 5 with the 0x00aa00 colour: the thick green skin and a white bold caption. */
+export const ChestBuyButton: FC<{ caption: string; rect: [number, number, number, number]; disabled?: boolean; onClick: () => void }> = ({ caption, rect, disabled = false, onClick }) => (
+    <button className="volt-chest-air__buy" data-air-name="buy_button" disabled={disabled} style={{ left: rect[0], top: rect[1], width: rect[2], height: rect[3] }} type="button" onClick={onClick}>
+        <span className="volt-chest-air__buy-caption">
+            <NativeCenteredField width={rect[2]}>
+                <NativeText nativeResolution transparent background={0x00aa00} overrides={{ color: 0xffffff }} text={caption} textStyle="button_shiny_bold" />
+            </NativeCenteredField>
+        </span>
+    </button>
+);

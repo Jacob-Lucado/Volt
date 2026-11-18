@@ -592,6 +592,131 @@
     cursor: pointer;
 }
 
+/* button_thick style 5, 0x00aa00. */
+.volt-chest-air__buy {
+    position: absolute;
+    box-sizing: border-box;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+}
+
+.volt-chest-air__buy::before {
+    position: absolute;
+    inset: 0;
+    border: 5px solid transparent;
+    border-image: var(--habbo-skin-shiny-thick-green) 5 fill / 5px stretch;
+    content: '';
+    image-rendering: var(--volt-pixel-art, pixelated);
+}
+
+.volt-chest-air__buy:hover::before {
+    border-image-source: var(--habbo-skin-shiny-thick-green-hover);
+}
+
+.volt-chest-air__buy:active::before {
+    border-image-source: var(--habbo-skin-shiny-thick-green-pressed);
+}
+
+.volt-chest-air__buy:disabled {
+    cursor: default;
+}
+
+.volt-chest-air__buy:disabled::before {
+    border-image-source: var(--habbo-skin-shiny-thick-green-disabled);
+}
+
+.volt-chest-air__buy-caption {
+    position: absolute;
+    top: 4px;
+    left: 0;
+    width: 100%;
+}
+
+.volt-chest-air__buy:disabled .volt-chest-air__buy-caption {
+    opacity: 0.5;
+}
+
+/* chest_upgrade: layout child (x, y) is drawn at (x + 1, y + 33). */
+.volt-chest-upgrade-air {
+    font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
+}
+
+.volt-chest-upgrade-air .volt-catalog-air-shiny {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.volt-chest-upgrade-air__image {
+    position: absolute;
+    top: 45px;
+    left: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 126px;
+    height: 152px;
+    border: 1px solid #a6a6a6;
+    border-radius: 3px;
+    background: #f1f1f1;
+}
+
+.volt-chest-upgrade-air__properties {
+    position: absolute;
+    top: 48px;
+    left: 144px;
+    width: 197px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.volt-chest-upgrade-air__amount {
+    display: flex;
+    gap: 5px;
+}
+
+.volt-chest-upgrade-air__amount > :first-child {
+    margin-top: 3px;
+}
+
+.volt-chest-upgrade-air__price {
+    position: absolute;
+    top: 170px;
+    left: 143px;
+    display: flex;
+    align-items: flex-start;
+}
+
+/* purchase_cost_box: texts 1px down, the 22px credit and 19px diamond icons on the row, 2px apart. */
+.volt-chest-upgrade-air__price > :first-child,
+.volt-chest-upgrade-air__cost > :not(img) {
+    margin-top: 1px;
+}
+
+.volt-chest-upgrade-air__cost {
+    display: flex;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.volt-chest-upgrade-air__cost > img {
+    image-rendering: var(--volt-pixel-art, pixelated);
+}
+
+.volt-chest-upgrade-air__error {
+    position: absolute !important;
+    top: 207px;
+    left: 13px;
+}
+
 /* Ubuntu wired UI builder windows (chest settings and notification settings). */
 .volt-chest-preset {
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
@@ -801,5 +926,26 @@
 
 .volt-chest-preset__container-button:disabled .volt-chest-preset__button-content {
     opacity: 0.5;
+}
+
+/* chest_wired_upgrade: the Wired icon at the top right of the picture box and the html warning under the title. */
+.volt-chest-upgrade-air__wired-icon {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+}
+
+.volt-chest-upgrade-air__warning {
+    width: 197px;
+    white-space: pre-wrap;
+    padding: 2px;
+    box-sizing: border-box;
+    font-size: 12px;
+    line-height: 13px;
+    -webkit-font-smoothing: antialiased;
+}
+
+.volt-chest-upgrade-air__warning a {
+    color: inherit;
 }
 
