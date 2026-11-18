@@ -1,14 +1,37 @@
 import { CreateLinkEvent } from '@volt/renderer';
-import { FC, useCallback, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { FriendlyTime, GetConfigurationValue, LogOut, localizeWithFallback } from '../../api';
 import earningsIcon from '../../assets/images/purse-swf/icons/1747_icon_earnings_png$5e39e03f65fbbb9a85bedd0d577dc12d307477063.png';
 import hcIcon from '../../assets/images/purse-swf/icons/1801_hc_icon_png$2f8b554609e9c5cbbdc46bcbe5764be5-210881771.png';
 import logoutIcon from '../../assets/images/purse-swf/icons/2093_logout_icon_png.png';
 import settingsIcon from '../../assets/images/purse-swf/icons/2291_settings_icon_png$c9dcf215bb7a7e35a3f128c7c60151bc1008066621.png';
 import { Column } from '../../common';
+import { loadNativeFont, measureNativeText } from '../../common/native-text/NativeFont';
+import { NativeText } from '../../common/native-text/NativeText';
+import { nativeTextStyles } from '../../common/native-text/NativeTextStyles';
 import { usePurse } from '../../hooks';
 import { CurrencyView } from './views/CurrencyView';
 import { SeasonalView } from './views/SeasonalView';
+
+/** The help label is floor(textWidth + 4) wide, measured on the shared normal-mode text field. */
+const useHelpLabelWidth = (text: string) => {
+    const [width, setWidth] = useState<number>(null);
+
+    useEffect(() => {
+        let disposed = false;
+        const style = nativeTextStyles.u_regular;
+
+        loadNativeFont(style)
+            .then(({ font }) => !disposed && setWidth(Math.floor(measureNativeText(font, text, { ...style, antiAliasType: 'normal' }) + 4)))
+            .catch(() => !disposed && setWidth(null));
+
+        return () => {
+            disposed = true;
+        };
+    }, [text]);
+
+    return width;
+};
 
 export const PurseView: FC<{}> = (props) => {
     const { purse = null, hcDisabled = false } = usePurse();
@@ -72,6 +95,7 @@ export const PurseView: FC<{}> = (props) => {
 
     const earningsLabel = useMemo(() => localizeWithFallback('earnings.title', 'Earnings'), []);
     const helpLabel = useMemo(() => localizeWithFallback('toolbar.help', 'Help'), []);
+    const helpLabelWidth = useHelpLabelWidth(helpLabel);
     const logoutLabel = useMemo(() => localizeWithFallback('toolbar.logout', 'Log out'), []);
     const settingsLabel = useMemo(() => localizeWithFallback('widget.memenu.settings', 'Settings'), []);
     const clubTitle = useMemo(() => localizeWithFallback('catalog.club.hc', 'Habbo Club'), []);
@@ -132,7 +156,9 @@ export const PurseView: FC<{}> = (props) => {
                             }}
                             aria-label={helpLabel}
                         >
-                            <span>{helpLabel}</span>
+                            <span className="volt-purse__help-label" style={{ left: 22 - Math.floor((helpLabelWidth ?? 0) / 2) }}>
+                                <NativeText background={0x2f7db5} overrides={{ color: 0xffffff }} text={helpLabel} textStyle="u_regular" transparent />
+                            </span>
                         </button>
                         <button
                             type="button"
