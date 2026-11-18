@@ -669,44 +669,6 @@
     cursor: pointer;
 }
 
-/* Volt's inventory list for filling the slots, over the machine. */
-.volt-catalog-recycler-picker {
-    top: 62px;
-    left: 16px;
-    z-index: 3;
-    box-sizing: border-box;
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    gap: 2px;
-    width: 328px;
-    max-height: 230px;
-    padding: 6px;
-    overflow-y: auto;
-    border: 6px solid transparent;
-    border-image: var(--habbo-skin-border-white) 6 fill / 6px stretch;
-    image-rendering: var(--volt-pixel-art, pixelated);
-}
-
-.volt-catalog-window .volt-catalog-recycler-picker > button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    border-radius: 0;
-    background: url('../../assets/images/catalog/air/recycler/slot-bg.png') center no-repeat;
-    cursor: pointer;
-}
-
-.volt-catalog-recycler-picker > button > img {
-    max-width: 34px;
-    max-height: 34px;
-}
-
 /* disabled_border (0, 258, 360x208): border style 3 (border_slot) in 0x888888 at 0.7 blend, Frank and his bubble. */
 .volt-catalog-recycler-disabled {
     top: 258px;
