@@ -7,7 +7,7 @@ import { CatalogNavigationRuntime } from './CatalogNavigationRuntime';
 import { CatalogNavigationSetView } from './CatalogNavigationSetView';
 
 /** border style 6 at blend 0.5 over the frame: the list's surface colour. */
-const NAVIGATION_BACKGROUND = 0xd2d1cb;
+const NAVIGATION_BACKGROUND = 0xd1d0ca;
 
 export interface CatalogNavigationItemViewProps {
     node: ICatalogNode;
@@ -79,6 +79,7 @@ export const CatalogNavigationItemView: FC<CatalogNavigationItemViewProps> = (pr
                     <NativeText
                         ariaHidden
                         nativeResolution
+                        transparent
                         background={isBuilder ? 0xff8d00 : 0x63c5e9}
                         className="volt-catalog-navigation-label-selected"
                         overrides={{ color: 0xffffff, etchingColor: isBuilder ? 0xcf7200 : 0xb4b4ae, etchingPosition: 'top' }}
