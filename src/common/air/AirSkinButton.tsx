@@ -166,11 +166,21 @@ export function useAirButton<T extends HTMLElement>({
     const field = useLabelField(caption, fontStyle);
     const [left, top, right, bottom] = air.margins;
     const labelWidth = field ? field.width + left + right : 0;
-    const labelHeight = Math.max(air.height, field ? field.height + top + bottom : 0);
+    // TextLabelController.refresh sets the label to the text field plus margins on both axes once its width changes, so a Volter
+    // label (13 + 8) is lower than the window layout's 22.
+    const labelHeight = field ? field.height + top + bottom : air.height;
     const ref = useRef<T>(null);
     const [renderedHeight, setRenderedHeight] = useState(height ?? air.height);
     const skins = useStretchedSkin(air, renderedHeight);
-    const color = air.color ?? (nativeTextStyles[fontStyle] as NativeFontStyle).color;
+    const textStyleDefinition = nativeTextStyles[fontStyle] as NativeFontStyle;
+    const color = air.color ?? textStyleDefinition.color;
+    // LabelRenderer draws a label with antiAliasType advanced in its own text colour, so a Volter caption sits on whole pixels.
+    // The label size still uses the style's normal mode, like the shared text field AIR measures it with.
+    const volter = textStyleDefinition.family === 'Volter';
+    const overrides: Partial<NativeFontStyle> = {
+        ...(volter ? { antiAliasType: 'advanced', kerning: false } : {}),
+        ...(color === undefined ? {} : { color })
+    };
 
     useLayoutEffect(() => {
         const element = ref.current;
@@ -199,11 +209,11 @@ export function useAirButton<T extends HTMLElement>({
 
     const captionNode = (
         <NativeText
-            tinted
+            tinted={!volter}
             transparent
             background={0xf2f2f2}
             className="air-skin-button__caption"
-            overrides={color === undefined ? undefined : { color }}
+            overrides={overrides}
             style={{
                 left: `max(0px, calc(round(down, 50%, 1px) - ${Math.floor(labelWidth / 2) - left}px))`,
                 top: `calc(max(0px, round(down, 50%, 1px) - ${Math.floor(labelHeight / 2)}px) + ${top}px)`
