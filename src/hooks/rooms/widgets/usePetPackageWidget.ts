@@ -1,97 +1,88 @@
-import { GetRoomEngine, OpenPetPackageMessageComposer, RoomObjectCategory, RoomSessionPetPackageEvent } from '@volt/renderer';
-import { useReducer } from 'react';
-import { LocalizeText, SendMessageComposer } from '../../../api';
+import { OpenPetPackageMessageComposer, PetFigureData, RoomSessionPetPackageEvent } from '@volt/renderer';
+import { useRef, useState } from 'react';
+import { LocalizeText, NotificationAlertType, SendMessageComposer } from '../../../api';
 import { useVoltEvent } from '../../events';
+import { useNotification } from '../../notification';
 
 interface PetPackageState {
-    isVisible: boolean;
     objectId: number;
-    objectType: string;
-    petName: string;
-    errorResult: string;
+    figure: PetFigureData;
 }
 
-type PetPackageAction =
-    | { type: 'open'; objectId: number; objectType: string }
-    | { type: 'close' }
-    | { type: 'set-name'; petName: string }
-    | { type: 'set-error'; errorResult: string };
-
-const INITIAL_STATE: PetPackageState = {
-    isVisible: false,
-    objectId: -1,
-    objectType: '',
-    petName: '',
-    errorResult: ''
-};
-
-const petPackageReducer = (state: PetPackageState, action: PetPackageAction): PetPackageState => {
-    switch (action.type) {
-        case 'open':
-            return { ...INITIAL_STATE, isVisible: true, objectId: action.objectId, objectType: action.objectType };
-        case 'close':
-            return INITIAL_STATE;
-        case 'set-name':
-            // Typing into the input always clears any previous error label.
-            return { ...state, petName: action.petName, errorResult: '' };
-        case 'set-error':
-            return { ...state, errorResult: action.errorResult };
-    }
-};
+const PET_NAME_ERRORS: Record<number, string> = { 1: 'long', 2: 'short', 3: 'chars' };
 
 /**
- * Maps the pet-package name-validation error code returned by the
- * server to a localized error label. Exported for testability — the
- * mapping is server-protocol contract, not UI state.
+ * The alert text for a refused pet name. The `.additionalInfo` text with the server's info is used when the server sent info
+ * and the hotel has that text; otherwise the plain text.
  */
-export const getPetPackageNameError = (errorCode: number): string => {
+export const getPetPackageNameError = (errorCode: number, info: string = null): string => {
     if (!errorCode) return '';
 
-    switch (errorCode) {
-        case 1:
-            return LocalizeText('catalog.alert.petname.long');
-        case 2:
-            return LocalizeText('catalog.alert.petname.short');
-        case 3:
-            return LocalizeText('catalog.alert.petname.chars');
-        case 4:
-        default:
-            return LocalizeText('catalog.alert.petname.bobba');
+    const key = `catalog.alert.petname.${PET_NAME_ERRORS[errorCode] ?? 'bobba'}`;
+
+    if (info && info.length) {
+        const additionalKey = `${key}.additionalInfo`;
+        const additional = LocalizeText(additionalKey, ['additional_info'], [info]);
+
+        if (additional && additional.length && additional !== additionalKey) return additional;
     }
+
+    return LocalizeText(key);
 };
 
 const usePetPackageWidgetState = () => {
-    const [state, dispatch] = useReducer(petPackageReducer, INITIAL_STATE);
+    const [state, setState] = useState<PetPackageState>(null);
+    const [petName, setPetName] = useState('');
+    const isPending = useRef(false);
+    const { simpleAlert = null } = useNotification();
 
-    const onClose = () => dispatch({ type: 'close' });
-    const onConfirm = () => SendMessageComposer(new OpenPetPackageMessageComposer(state.objectId, state.petName));
-    const onChangePetName = (petName: string) => dispatch({ type: 'set-name', petName });
+    const alert = (message: string) => simpleAlert(message, NotificationAlertType.WINDOW, null, null, LocalizeText('widgets.petpackage.alert.petname.title'));
+
+    const onClose = () => {
+        isPending.current = false;
+        setState(null);
+        setPetName('');
+    };
+
+    const onConfirm = () => {
+        if (!state || isPending.current) return;
+
+        if (!petName.length) {
+            alert(LocalizeText('catalog.alert.petname.short'));
+            return;
+        }
+
+        isPending.current = true;
+        SendMessageComposer(new OpenPetPackageMessageComposer(state.objectId, petName));
+    };
 
     useVoltEvent<RoomSessionPetPackageEvent>(RoomSessionPetPackageEvent.RSOPPE_OPEN_PET_PACKAGE_REQUESTED, (event) => {
         if (!event) return;
 
-        const roomObject = GetRoomEngine().getRoomObject(event.session.roomId, event.objectId, RoomObjectCategory.FLOOR);
-
-        dispatch({ type: 'open', objectId: event.objectId, objectType: roomObject.type });
+        isPending.current = false;
+        setPetName('');
+        setState({ objectId: event.objectId, figure: event.figureData ?? null });
     });
 
     useVoltEvent<RoomSessionPetPackageEvent>(RoomSessionPetPackageEvent.RSOPPE_OPEN_PET_PACKAGE_RESULT, (event) => {
-        if (!event) return;
+        if (!event || !isPending.current) return;
+
+        isPending.current = false;
 
         if (event.nameValidationStatus === 0) {
-            dispatch({ type: 'close' });
+            onClose();
             return;
         }
 
-        dispatch({ type: 'set-error', errorResult: getPetPackageNameError(event.nameValidationStatus) });
+        alert(getPetPackageNameError(event.nameValidationStatus, event.nameValidationInfo));
     });
 
     return {
-        isVisible: state.isVisible,
-        errorResult: state.errorResult,
-        petName: state.petName,
-        objectType: state.objectType,
-        onChangePetName,
+        isVisible: !!state,
+        objectId: state?.objectId ?? -1,
+        figure: state?.figure ?? null,
+        petName,
+        onChangePetName: setPetName,
         onConfirm,
         onClose
     };
