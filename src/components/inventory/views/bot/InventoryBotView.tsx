@@ -5,6 +5,7 @@ import { ClassicScrollAreaView } from '../../../../common/scroll-area/ClassicScr
 import { useInventoryBots, useInventoryUnseenTracker } from '../../../../hooks';
 import { VoltButton } from '../../../../layout';
 import { InventoryCategoryEmptyView } from '../InventoryCategoryEmptyView';
+import { InventoryInfoTextView } from '../InventoryInfoTextView';
 import { InventoryBotImageView } from './InventoryBotImageView';
 import { InventoryBotItemView } from './InventoryBotItemView';
 
@@ -49,11 +50,11 @@ export const InventoryBotView: FC<{
                 </ClassicScrollAreaView>
             </div>
             <div className="volt-inventory-animal-preview">
-                <div className="volt-inventory-animal-name">{selectedBot?.botData.name}</div>
+                <InventoryInfoTextView className="volt-inventory-animal-name" text={selectedBot?.botData.name ?? ''} textStyle="u_headline_small" />
                 <div className="volt-inventory-animal-image">
                     {selectedBot && <InventoryBotImageView figure={selectedBot.botData.figure} gender={selectedBot.botData.gender} preview />}
                 </div>
-                <div className="volt-inventory-animal-description">{selectedBot?.botData.motto}</div>
+                <InventoryInfoTextView className="volt-inventory-animal-description" height={45} text={selectedBot?.botData.motto ?? ''} width={190} />
                 <div className="volt-inventory-animal-actions">
                     <VoltButton
                         className="volt-inventory-animal-place"

@@ -50,8 +50,7 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
     const machineRef = useRef<HTMLImageElement>(null);
     const arrowRef = useRef<HTMLImageElement>(null);
     const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    // RecyclerLogic: catalog.getInteger("recycler.number_of_slots", 5).
-    const slotCount = normalizeRecyclerSlotCount(GetConfigurationValue<number>('recycler.number_of_slots', 5), 5);
+    const slotCount = normalizeRecyclerSlotCount(GetConfigurationValue<number>('recycler.number_of_slots', 8));
     const selectedIds = useMemo(() => new Set(slots.map((slot) => slot.itemId)), [slots]);
     const eligibleIds = useMemo(() => getRecyclerEligibleItemIds(groupItems), [groupItems]);
     const choices = useMemo(() => getRecyclerInventoryChoices(groupItems, selectedIds), [groupItems, selectedIds]);
