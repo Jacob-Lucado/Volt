@@ -48,7 +48,7 @@ const context = {
 };
 
 const createRoomPreviewer = () => {
-    const renderingCanvas = { canvasUpdated: true, master: {} };
+    const renderingCanvas = { canvasUpdated: true, master: {}, setMask: vi.fn() };
 
     return {
         changeRoomObjectDirection: vi.fn(),

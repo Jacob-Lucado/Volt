@@ -9,7 +9,7 @@ import {
     RoomObjectVariable
 } from '@volt/renderer';
 import { FC, useEffect, useMemo, useState } from 'react';
-import { FurniCategory, GetFurnitureDataForRoomObject, LocalizeText, UseProductItem } from '../../../../api';
+import { FurniCategory, LocalizeText, UseProductItem } from '../../../../api';
 import { Button, Column, Flex, LayoutPetImageView, VoltCardContentView, VoltCardHeaderView, VoltCardView, Text } from '../../../../common';
 import { useRoom } from '../../../../hooks';
 
@@ -41,7 +41,7 @@ export const AvatarInfoUseProductConfirmView: FC<AvatarInfoUseProductConfirmView
     };
 
     const useProduct = () => {
-        roomSession.usePetProduct(item.requestRoomObjectId, petData.webID);
+        roomSession.usePetProduct(item.productItemId, petData.webID);
 
         onClose();
     };
@@ -217,7 +217,7 @@ export const AvatarInfoUseProductConfirmView: FC<AvatarInfoUseProductConfirmView
 
         setPetData(userData);
 
-        const furniData = GetFurnitureDataForRoomObject(roomSession.roomId, item.requestRoomObjectId, RoomObjectCategory.FLOOR);
+        const furniData = item.getFurnitureData(roomSession.roomId);
 
         if (!furniData) return;
 
