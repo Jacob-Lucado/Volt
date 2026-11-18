@@ -215,9 +215,10 @@ const RewardTrackPrizeView: FC<{
             data-tier={prize.premium ? 'premium' : 'free'}
             data-state={state}
             data-dimmed={dimmed}
-            style={{ left, opacity: dimmed ? 0.75 : 1 }}
+            style={{ left }}
             title={getRewardTrackPrizeTooltip(state)}
         >
+            <span className="volt-reward-track-prize-stem" />
             <button type="button" className="volt-reward-track-prize-hit" disabled={dimmed} onClick={onClick}>
                 <span className="volt-reward-track-prize-shadow" />
                 <span className="volt-reward-track-prize-plate">
@@ -227,7 +228,6 @@ const RewardTrackPrizeView: FC<{
                     {prize.rewardAmount > 1 && <RewardTrackPrizeAmount amount={prize.rewardAmount} background={prize.premium ? 0xf1def7 : 0xf9efe0} />}
                 </span>
             </button>
-            <span className="volt-reward-track-prize-stem" />
             {state === 'premium_locked' && (
                 <img src={lockedReward} alt="" width={18} height={22} draggable={false} className="volt-reward-track-prize-lock" />
             )}
