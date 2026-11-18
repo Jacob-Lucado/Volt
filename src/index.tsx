@@ -85,6 +85,7 @@ import './css/room/InfoStand.css';
 import './css/room/NavigatorRoomInfo.css';
 import './css/room/NavigatorRoomSettings.css';
 import './css/room/RoomWidgets.css';
+import './css/room/MonsterPlantBreeding.css';
 import './css/room/WiredVariableFx.css';
 import './css/room/VariableLeaderboard.css';
 import './css/room/HighScoreDisplay.css';
