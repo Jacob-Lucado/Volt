@@ -374,7 +374,6 @@ export const NavigatorView: FC<{}> = () => {
                                                 {(active ? ([['selected', 0xeceae0]] as const) : ([['default', 0xcbc9c1], ['hover', 0xf6f5f0]] as const)).map(([state, background]) => (
                                                     <NativeText
                                                         key={state}
-                                                        ariaHidden={state === 'hover'}
                                                         className={`volt-navigator-air__tab-label-${state}`}
                                                         text={LocalizeText('navigator.toplevelview.' + context.code)}
                                                         textStyle="button_shiny_regular"
