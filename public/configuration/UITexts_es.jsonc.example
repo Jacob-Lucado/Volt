@@ -510,6 +510,8 @@
     "radio.live": "En directo",
     "radio.hide": "Ocultar",
     "radio.show": "Mostrar",
+    "recycler.broken": "La máquina está rota..\n\n¡Vuelve pronto!",
+    "recycler.pat_frank": "Haz clic para acariciar a Frank",
     "rarevalues.title": "Valores de Raros",
     "rarevalues.loading": "Cargando valores…",
     "rarevalues.empty": "No se encontraron raros",
