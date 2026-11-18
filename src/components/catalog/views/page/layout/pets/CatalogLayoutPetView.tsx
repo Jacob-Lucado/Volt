@@ -75,32 +75,16 @@ export const CatalogLayoutPetView: FC<CatalogLayoutProps> = ({ page = null }) =>
         !!petTypeName
     );
 
+    // NewPetsCatalogWidget: every sellable palette can be bought, but only palettes with a colour in the pet asset get a swatch.
     const newPetChoices = useMemo(() => {
         if (legacyPet) return [];
 
         void petAssetRefreshKey;
 
-        let palettes: PetPaletteLike[] = sellablePalettes as unknown as PetPaletteLike[];
-
-        if (!palettes.length) {
-            const derived: PetPaletteLike[] = [];
-
-            for (let paletteId = 0; paletteId <= 128; paletteId++) {
-                if (GetRoomEngine().getPetColorResult(petIndex, paletteId)) {
-                    derived.push({ breedId: paletteId, paletteId, rare: false, sellable: true, type: petIndex, clubOnly: false });
-                }
-            }
-
-            palettes = derived;
-        }
-
-        return buildNewPetPaletteChoices(petIndex, palettes, (type, paletteId) => GetRoomEngine().getPetColorResult(type, paletteId));
+        return buildNewPetPaletteChoices(petIndex, sellablePalettes as PetPaletteLike[], (type, paletteId) => GetRoomEngine().getPetColorResult(type, paletteId));
     }, [legacyPet, petAssetRefreshKey, petIndex, sellablePalettes]);
 
-    const selectablePalettes = useMemo(
-        () => (legacyPet ? legacyBreeds : newPetChoices.map((choice) => choice.palette)),
-        [legacyPet, legacyBreeds, newPetChoices]
-    );
+    const selectablePalettes: PetPaletteLike[] = legacyPet ? legacyBreeds : sellablePalettes;
 
     const legacyColors = useMemo(
         () => (legacyPet ? GetPetAvailableColors(petIndex, sellablePalettes as SellablePetPaletteData[]) : []),
@@ -200,8 +184,11 @@ export const CatalogLayoutPetView: FC<CatalogLayoutProps> = ({ page = null }) =>
 
     // Page texts 1, 2 and 3 fill ctlg_text_1, ctlg_text_2 and ctlg_text_3. petsWidget: name, colour and breed labels.
     // newPetsWidget: the name label is ctlg_text_2 and ctlg_text_3 sits under the colour grid.
+    // LocalizationCatalogWidget.initLocalizables: a text the page sends replaces the caption, even when it is empty.
     const pageText = (index: number, fallbackKey: string) =>
-        (page?.localization?.getText(index) ?? '').replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '') || LocalizeText(fallbackKey);
+        index < (page?.localization?.textCount ?? 0)
+            ? page.localization.getText(index).replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '')
+            : LocalizeText(fallbackKey);
     const colorLabel = pageText(legacyPet ? 2 : 3, 'catalog.pets.choose.color');
     const breedLabel = pageText(3, 'catalog.pets.choose.breed');
     const nameLabel = pageText(legacyPet ? 1 : 2, 'widgets.petpackage.name.title');
