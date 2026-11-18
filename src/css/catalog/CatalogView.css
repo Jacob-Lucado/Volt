@@ -2000,15 +2000,6 @@
     line-height: 0;
 }
 
-.volt-catalog-grid-price-text-selected,
-.layout-grid-item.is-active .volt-catalog-grid-price-text-normal {
-    display: none !important;
-}
-
-.layout-grid-item.is-active .volt-catalog-grid-price-text-selected {
-    display: inline-block !important;
-}
-
 .volt-catalog-price-row {
     position: absolute;
     left: 0;
@@ -2091,16 +2082,16 @@
     margin-left: auto !important;
 }
 
-/* Captions are AIR text fields: purchase_label at (0, 3) in a 160px field; the gift label centred 3px down. The offsets are
-   measured from inside the 3px skin border. */
+/* Captions are AIR text fields: purchase_label at (0, 3) in a 160px field of the 170px button; the gift label centred 3px down.
+   The buy caption offsets are measured from inside the button's 5px skin border. */
 .volt-catalog-window .volt-catalog-standard-button:has(> :is(.volt-catalog-buy-caption, .volt-catalog-gift-caption)) {
     position: relative;
 }
 
 .volt-catalog-window .volt-catalog-standard-button > .volt-catalog-buy-caption {
     position: absolute !important;
-    top: 0;
-    left: -3px;
+    top: -2px;
+    left: -5px;
 }
 
 .volt-catalog-window .volt-catalog-standard-button > .volt-catalog-gift-caption {
