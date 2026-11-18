@@ -3,8 +3,10 @@ import { FC, useEffect, useState } from 'react';
 import { IRoomData, LocalizeText, SendMessageComposer } from '../../../../api';
 import { ClassicScrollAreaView, UserProfileIconView } from '../../../../common';
 import { HabboDropMenuView } from '../../../../common/dropmenu/HabboDropMenuView';
+import { NativeText } from '../../../../common/native-text/NativeText';
 import { useMessageEvent } from '../../../../hooks';
 import { NavigatorRoomSettingsAtView } from './NavigatorRoomSettingsAtView';
+import { RoomSettingsTextView } from './RoomSettingsTextView';
 
 interface NavigatorRoomSettingsTabViewProps {
     roomData: IRoomData;
@@ -46,12 +48,8 @@ export const NavigatorRoomSettingsModTabView: FC<NavigatorRoomSettingsTabViewPro
 
     return (
         <div className="ros-tab ros-tab-wide" style={{ height: 356 }}>
-            <NavigatorRoomSettingsAtView className="ros-text ros-multi" h={37} w={317} x={6} y={5}>
-                {LocalizeText('navigator.roomsettings.moderation.header')}
-            </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={24} w={276} x={7} y={42}>
-                {LocalizeText('navigator.roomsettings.moderation.mute.header')}
-            </NavigatorRoomSettingsAtView>
+            <RoomSettingsTextView wrap h={37} text={LocalizeText('navigator.roomsettings.moderation.header')} w={317} x={6} y={5} />
+            <RoomSettingsTextView autoSize={false} h={24} text={LocalizeText('navigator.roomsettings.moderation.mute.header')} textStyle="u_bold" w={276} x={7} y={42} />
             <NavigatorRoomSettingsAtView className="ros-drop" h={24} w={276} x={10} y={61}>
                 <HabboDropMenuView
                     label={LocalizeText('navigator.roomsettings.moderation.mute.header')}
@@ -63,9 +61,7 @@ export const NavigatorRoomSettingsModTabView: FC<NavigatorRoomSettingsTabViewPro
                     onSelect={(value) => handleChange('moderation_mute', value)}
                 />
             </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={20} w={273} x={7} y={92}>
-                {LocalizeText('navigator.roomsettings.moderation.kick.header')}
-            </NavigatorRoomSettingsAtView>
+            <RoomSettingsTextView autoSize={false} h={20} text={LocalizeText('navigator.roomsettings.moderation.kick.header')} textStyle="u_bold" w={273} x={7} y={92} />
             <NavigatorRoomSettingsAtView className="ros-drop" h={24} w={276} x={10} y={112}>
                 <HabboDropMenuView
                     label={LocalizeText('navigator.roomsettings.moderation.kick.header')}
@@ -78,9 +74,7 @@ export const NavigatorRoomSettingsModTabView: FC<NavigatorRoomSettingsTabViewPro
                     onSelect={(value) => handleChange('moderation_kick', value)}
                 />
             </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={21} w={292} x={7} y={142}>
-                {LocalizeText('navigator.roomsettings.moderation.ban.header')}
-            </NavigatorRoomSettingsAtView>
+            <RoomSettingsTextView autoSize={false} h={21} text={LocalizeText('navigator.roomsettings.moderation.ban.header')} textStyle="u_bold" w={292} x={7} y={142} />
             <NavigatorRoomSettingsAtView className="ros-drop" h={24} w={276} x={10} y={161}>
                 <HabboDropMenuView
                     label={LocalizeText('navigator.roomsettings.moderation.ban.header')}
@@ -104,12 +98,12 @@ export const NavigatorRoomSettingsModTabView: FC<NavigatorRoomSettingsTabViewPro
                     ))}
                 </ClassicScrollAreaView>
             </NavigatorRoomSettingsAtView>
-            <NavigatorRoomSettingsAtView className="ros-text" h={23} w={125} x={190} y={236}>
-                {LocalizeText('navigator.roomsettings.moderation.banned.users')}
-            </NavigatorRoomSettingsAtView>
+            <RoomSettingsTextView autoSize={false} h={23} text={LocalizeText('navigator.roomsettings.moderation.banned.users')} w={125} x={190} y={236} />
             <NavigatorRoomSettingsAtView h={32} x={190} y={261}>
                 <button type="button" className="ros-button ros-button-fit" onClick={() => selectedUserId > 0 && unBanUser(selectedUserId)}>
-                    <span className="ros-button-label">{LocalizeText('navigator.roomsettings.moderation.unban')}</span>
+                    <span className="ros-button-label">
+                        <NativeText tinted transparent background={0xffffff} text={LocalizeText('navigator.roomsettings.moderation.unban')} textStyle="button_shiny_regular" />
+                    </span>
                 </button>
             </NavigatorRoomSettingsAtView>
         </div>

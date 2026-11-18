@@ -18,6 +18,10 @@ export class PageLocalization implements IPageLocalization {
         return message;
     }
 
+    public get textCount(): number {
+        return this._texts.length;
+    }
+
     public getImage(index: number): string {
         const imageName = this._images[index] || '';
 

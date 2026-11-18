@@ -4,6 +4,7 @@ import { GetClubMemberLevel, IRoomData, LocalizeText, localizeWithFallback } fro
 import { HabboDropMenuView } from '../../../../common/dropmenu/HabboDropMenuView';
 import { NavigatorRoomSettingsAtView } from './NavigatorRoomSettingsAtView';
 import { RoomSettingsInputErrorView } from './RoomSettingsInputErrorView';
+import { RoomSettingsTextView } from './RoomSettingsTextView';
 
 const VIP_CAPTIONS: Record<string, string> = {
     'navigator.roomsettings.room_behavior': 'Room behavior',
@@ -32,159 +33,90 @@ interface NavigatorRoomSettingsTabViewProps {
 export const NavigatorRoomSettingsVipChatTabView: FC<NavigatorRoomSettingsTabViewProps> = (props) => {
     const { roomData = null, handleChange = null, handleDraftChange, idleSleepTimeoutSeconds, idleAutokickTimeoutSeconds, inputError } = props;
     const isHC = GetClubMemberLevel() > 0;
-    const sleepError = inputError?.field === 'idle_sleep_timeout_seconds' && roomData.idleSleepEnabled;
-    const autokickError = inputError?.field === 'idle_autokick_timeout_seconds' && roomData.idleAutokickEnabled;
+    const sleepError = inputError?.field === 'idle_sleep_timeout_seconds' && isHC && roomData.idleSleepEnabled;
+    const autokickError = inputError?.field === 'idle_autokick_timeout_seconds' && isHC && roomData.idleAutokickEnabled;
 
-    const dim = isHC ? '' : ' ros-disabled';
-    const sleepDim = isHC && roomData.idleSleepEnabled ? '' : ' ros-disabled';
-    const kickDim = isHC && roomData.idleAutokickEnabled ? '' : ' ros-disabled';
+    // RoomSettingsCtrl.refreshRoomBehaviorSettingsState: without VIP the walls, thickness, door tile and idle controls are
+    // disabled and blended to 0.5; a timeout field also needs its checkbox. The flood filter stays enabled.
+    const sleepFieldEnabled = isHC && roomData.idleSleepEnabled;
+    const kickFieldEnabled = isHC && roomData.idleAutokickEnabled;
+    const thickness = (prefix: string) => [
+        { value: -2, label: LocalizeText(`${prefix}.thinnest`) },
+        { value: -1, label: LocalizeText(`${prefix}.thin`) },
+        { value: 0, label: LocalizeText(`${prefix}.normal`) },
+        { value: 1, label: LocalizeText(`${prefix}.thick`) }
+    ];
+    const checkbox = (id: string, checked: boolean, y: number, onChange: (checked: boolean) => void) => (
+        <NavigatorRoomSettingsAtView className={isHC ? '' : 'ros-disabled'} h={20} w={20} x={0} y={y}>
+            <input id={id} checked={checked} className="ros-check" disabled={!isHC} type="checkbox" onChange={(event) => onChange(event.target.checked)} />
+        </NavigatorRoomSettingsAtView>
+    );
+    const timeoutField = (field: 'idle_sleep_timeout_seconds' | 'idle_autokick_timeout_seconds', value: string, enabled: boolean, error: boolean, caption: string, y: number) => (
+        <NavigatorRoomSettingsAtView className={enabled ? '' : 'ros-disabled'} h={20} w={50} x={24} y={y}>
+            <input
+                className={`ros-input ros-input-20${error ? ' is-invalid' : ''}`}
+                aria-invalid={error}
+                aria-label={`${caption} ${vipCaption('navigator.roomsettings.timeout.seconds')}`}
+                disabled={!enabled}
+                inputMode="numeric"
+                maxLength={5}
+                value={value}
+                onBlur={(event) => handleChange(field, event.currentTarget.value)}
+                onChange={(event) => handleDraftChange(field, event.target.value.replace(/\D/g, ''))}
+            />
+            {error && <RoomSettingsInputErrorView message={vipCaption(inputError.key)} />}
+        </NavigatorRoomSettingsAtView>
+    );
 
     return (
-        <>
-            <div className="ros-tab" style={{ height: 395 }}>
-                <NavigatorRoomSettingsAtView className="ros-text ros-head" h={19} w={237} x={0} y={3}>
-                    {LocalizeText('navigator.roomsettings.vip.caption')}
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-text ros-multi" h={63} w={310} x={0} y={19}>
-                    {LocalizeText('navigator.roomsettings.vip.info')}
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={206} x={0} y={84}>
-                    {LocalizeText('navigator.roomsettings.vip_settings')}
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className={dim.trim()} h={20} w={20} x={0} y={104}>
-                    <input
-                        id="ros-hide-walls"
-                        checked={roomData.hideWalls}
-                        className="ros-check"
-                        disabled={!isHC}
-                        type="checkbox"
-                        onChange={(event) => handleChange('hide_walls', event.target.checked)}
-                    />
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className={`ros-text${dim}`} h={17} w={194} x={20} y={103}>
-                    <label htmlFor="ros-hide-walls">{LocalizeText('navigator.roomsettings.hide_walls')}</label>
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-drop" h={24} w={276} x={0} y={125}>
-                    <HabboDropMenuView
-                        label={localizeWithFallback('navigator.roomsettings.wall_thickness', 'Wall thickness')}
-                        value={roomData.wallThickness}
-                        options={[
-                            { value: -2, label: LocalizeText('navigator.roomsettings.wall_thickness.thinnest') },
-                            { value: -1, label: LocalizeText('navigator.roomsettings.wall_thickness.thin') },
-                            { value: 0, label: LocalizeText('navigator.roomsettings.wall_thickness.normal') },
-                            { value: 1, label: LocalizeText('navigator.roomsettings.wall_thickness.thick') }
-                        ]}
-                        disabled={!isHC}
-                        onSelect={(value) => handleChange('wall_thickness', value)}
-                    />
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-drop" h={24} w={276} x={0} y={156}>
-                    <HabboDropMenuView
-                        label={localizeWithFallback('navigator.roomsettings.floor_thickness', 'Floor thickness')}
-                        value={roomData.floorThickness}
-                        options={[
-                            { value: -2, label: LocalizeText('navigator.roomsettings.floor_thickness.thinnest') },
-                            { value: -1, label: LocalizeText('navigator.roomsettings.floor_thickness.thin') },
-                            { value: 0, label: LocalizeText('navigator.roomsettings.floor_thickness.normal') },
-                            { value: 1, label: LocalizeText('navigator.roomsettings.floor_thickness.thick') }
-                        ]}
-                        disabled={!isHC}
-                        onSelect={(value) => handleChange('floor_thickness', value)}
-                    />
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={221} x={0} y={191}>
-                    {vipCaption('navigator.roomsettings.room_behavior')}
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className={dim.trim()} h={20} w={20} x={0} y={212}>
-                    <input
-                        id="ros-door-tile"
-                        checked={!roomData.leaveOnDoorTileEnabled}
-                        className="ros-check"
-                        disabled={!isHC}
-                        type="checkbox"
-                        onChange={(event) => handleChange('leave_on_door_tile_enabled', !event.target.checked)}
-                    />
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className={`ros-text${dim}`} h={17} w={292} x={20} y={211}>
-                    <label htmlFor="ros-door-tile">{vipCaption('navigator.roomsettings.do_not_leave_on_door_tile')}</label>
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className={dim.trim()} h={20} w={20} x={0} y={234}>
-                    <input
-                        id="ros-idle-sleep"
-                        checked={roomData.idleSleepEnabled}
-                        className="ros-check"
-                        disabled={!isHC}
-                        type="checkbox"
-                        onChange={(event) => handleChange('idle_sleep_enabled', event.target.checked)}
-                    />
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className={`ros-text${dim}`} h={17} w={192} x={20} y={233}>
-                    <label htmlFor="ros-idle-sleep">{vipCaption('navigator.roomsettings.idle_sleep')}</label>
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className={sleepDim.trim()} h={20} w={50} x={24} y={255}>
-                    <input
-                        className={`ros-input ros-idle-timeout${sleepError ? ' is-invalid' : ''}`}
-                        aria-invalid={!!sleepError}
-                        aria-label={`${vipCaption('navigator.roomsettings.idle_sleep')} ${vipCaption('navigator.roomsettings.timeout.seconds')}`}
-                        disabled={!isHC || !roomData.idleSleepEnabled}
-                        inputMode="numeric"
-                        maxLength={5}
-                        value={idleSleepTimeoutSeconds}
-                        onBlur={(event) => handleChange('idle_sleep_timeout_seconds', event.currentTarget.value)}
-                        onChange={(event) => handleDraftChange('idle_sleep_timeout_seconds', event.target.value.replace(/\D/g, ''))}
-                    />
-                    {sleepError && <RoomSettingsInputErrorView message={vipCaption(inputError.key)} />}
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className={`ros-text${sleepDim}`} h={17} w={231} x={77} y={257}>
-                    {vipCaption('navigator.roomsettings.timeout.seconds')}
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className={dim.trim()} h={20} w={20} x={0} y={280}>
-                    <input
-                        id="ros-idle-autokick"
-                        checked={roomData.idleAutokickEnabled}
-                        className="ros-check"
-                        disabled={!isHC}
-                        type="checkbox"
-                        onChange={(event) => handleChange('idle_autokick_enabled', event.target.checked)}
-                    />
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className={`ros-text${dim}`} h={17} w={210} x={20} y={279}>
-                    <label htmlFor="ros-idle-autokick">{vipCaption('navigator.roomsettings.idle_autokick')}</label>
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className={kickDim.trim()} h={20} w={50} x={24} y={301}>
-                    <input
-                        className={`ros-input ros-idle-timeout${autokickError ? ' is-invalid' : ''}`}
-                        aria-invalid={!!autokickError}
-                        aria-label={`${vipCaption('navigator.roomsettings.idle_autokick')} ${vipCaption('navigator.roomsettings.timeout.seconds')}`}
-                        disabled={!isHC || !roomData.idleAutokickEnabled}
-                        inputMode="numeric"
-                        maxLength={5}
-                        value={idleAutokickTimeoutSeconds}
-                        onBlur={(event) => handleChange('idle_autokick_timeout_seconds', event.currentTarget.value)}
-                        onChange={(event) => handleDraftChange('idle_autokick_timeout_seconds', event.target.value.replace(/\D/g, ''))}
-                    />
-                    {autokickError && <RoomSettingsInputErrorView message={vipCaption(inputError.key)} />}
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className={`ros-text${kickDim}`} h={17} w={231} x={77} y={303}>
-                    {vipCaption('navigator.roomsettings.timeout.seconds')}
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={260} x={0} y={335}>
-                    {vipCaption('navigator.roomsettings.chat.flood_sensitivity')}
-                </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-drop" h={24} w={276} x={0} y={358}>
-                    <HabboDropMenuView
-                        label={vipCaption('navigator.roomsettings.chat.flood_sensitivity')}
-                        value={roomData.chatSettings.protection}
-                        options={[
-                            { value: RoomChatSettings.FLOOD_FILTER_STRICT, label: LocalizeText('navigator.roomsettings.chat.flood.strict') },
-                            { value: RoomChatSettings.FLOOD_FILTER_NORMAL, label: LocalizeText('navigator.roomsettings.chat.flood.normal') },
-                            { value: RoomChatSettings.FLOOD_FILTER_LOOSE, label: LocalizeText('navigator.roomsettings.chat.flood.loose') }
-                        ]}
-                        disabled={!isHC}
-                        onSelect={(value) => handleChange('flood_protection', value)}
-                    />
-                </NavigatorRoomSettingsAtView>
-            </div>
-        </>
+        <div className="ros-tab" style={{ height: 395 }}>
+            <RoomSettingsTextView h={19} text={LocalizeText('navigator.roomsettings.vip.caption')} textStyle="u_headline_small" w={237} x={0} y={3} />
+            <RoomSettingsTextView wrap h={63} text={LocalizeText('navigator.roomsettings.vip.info')} w={310} x={0} y={19} />
+            <RoomSettingsTextView h={17} text={LocalizeText('navigator.roomsettings.vip_settings')} textStyle="u_bold" w={206} x={0} y={84} />
+            {checkbox('ros-hide-walls', roomData.hideWalls, 104, (checked) => handleChange('hide_walls', checked))}
+            <RoomSettingsTextView disabled={!isHC} h={17} htmlFor="ros-hide-walls" text={LocalizeText('navigator.roomsettings.hide_walls')} w={194} x={20} y={103} />
+            <NavigatorRoomSettingsAtView className={`ros-drop${isHC ? '' : ' ros-disabled'}`} h={24} w={276} x={0} y={125}>
+                <HabboDropMenuView
+                    label={localizeWithFallback('navigator.roomsettings.wall_thickness', 'Wall thickness')}
+                    value={roomData.wallThickness}
+                    options={thickness('navigator.roomsettings.wall_thickness')}
+                    disabled={!isHC}
+                    onSelect={(value) => handleChange('wall_thickness', value)}
+                />
+            </NavigatorRoomSettingsAtView>
+            <NavigatorRoomSettingsAtView className={`ros-drop${isHC ? '' : ' ros-disabled'}`} h={24} w={276} x={0} y={156}>
+                <HabboDropMenuView
+                    label={localizeWithFallback('navigator.roomsettings.floor_thickness', 'Floor thickness')}
+                    value={roomData.floorThickness}
+                    options={thickness('navigator.roomsettings.floor_thickness')}
+                    disabled={!isHC}
+                    onSelect={(value) => handleChange('floor_thickness', value)}
+                />
+            </NavigatorRoomSettingsAtView>
+            <RoomSettingsTextView h={17} text={vipCaption('navigator.roomsettings.room_behavior')} textStyle="u_bold" w={221} x={0} y={191} />
+            {checkbox('ros-door-tile', !roomData.leaveOnDoorTileEnabled, 212, (checked) => handleChange('leave_on_door_tile_enabled', !checked))}
+            <RoomSettingsTextView disabled={!isHC} h={17} htmlFor="ros-door-tile" text={vipCaption('navigator.roomsettings.do_not_leave_on_door_tile')} w={292} x={20} y={211} />
+            {checkbox('ros-idle-sleep', roomData.idleSleepEnabled, 234, (checked) => handleChange('idle_sleep_enabled', checked))}
+            <RoomSettingsTextView disabled={!isHC} h={17} htmlFor="ros-idle-sleep" text={vipCaption('navigator.roomsettings.idle_sleep')} w={192} x={20} y={233} />
+            {timeoutField('idle_sleep_timeout_seconds', idleSleepTimeoutSeconds, sleepFieldEnabled, sleepError, vipCaption('navigator.roomsettings.idle_sleep'), 255)}
+            <RoomSettingsTextView disabled={!sleepFieldEnabled} h={17} text={vipCaption('navigator.roomsettings.timeout.seconds')} w={231} x={77} y={257} />
+            {checkbox('ros-idle-autokick', roomData.idleAutokickEnabled, 280, (checked) => handleChange('idle_autokick_enabled', checked))}
+            <RoomSettingsTextView disabled={!isHC} h={17} htmlFor="ros-idle-autokick" text={vipCaption('navigator.roomsettings.idle_autokick')} w={210} x={20} y={279} />
+            {timeoutField('idle_autokick_timeout_seconds', idleAutokickTimeoutSeconds, kickFieldEnabled, autokickError, vipCaption('navigator.roomsettings.idle_autokick'), 301)}
+            <RoomSettingsTextView disabled={!kickFieldEnabled} h={17} text={vipCaption('navigator.roomsettings.timeout.seconds')} w={231} x={77} y={303} />
+            <RoomSettingsTextView h={17} text={vipCaption('navigator.roomsettings.chat.flood_sensitivity')} textStyle="u_bold" w={260} x={0} y={335} />
+            <NavigatorRoomSettingsAtView className="ros-drop" h={24} w={276} x={0} y={358}>
+                <HabboDropMenuView
+                    label={vipCaption('navigator.roomsettings.chat.flood_sensitivity')}
+                    value={roomData.chatSettings.protection}
+                    options={[
+                        { value: RoomChatSettings.FLOOD_FILTER_STRICT, label: LocalizeText('navigator.roomsettings.chat.flood.strict') },
+                        { value: RoomChatSettings.FLOOD_FILTER_NORMAL, label: LocalizeText('navigator.roomsettings.chat.flood.normal') },
+                        { value: RoomChatSettings.FLOOD_FILTER_LOOSE, label: LocalizeText('navigator.roomsettings.chat.flood.loose') }
+                    ]}
+                    onSelect={(value) => handleChange('flood_protection', value)}
+                />
+            </NavigatorRoomSettingsAtView>
+        </div>
     );
 };

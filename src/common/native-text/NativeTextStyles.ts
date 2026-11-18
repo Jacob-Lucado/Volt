@@ -185,6 +185,17 @@ export const nativeTextStyles = {
         sharpness: 80.0,
         thickness: -15.0
     },
+    // il_regular_white with the layout's bold variable (purse amount).
+    il_bold_white: {
+        family: 'Ubuntu',
+        size: 11,
+        bold: true,
+        color: 16777215,
+        kerning: true,
+        antiAliasType: 'advanced',
+        sharpness: 80.0,
+        thickness: -15.0
+    },
     il_small: {
         family: 'Ubuntu',
         size: 9,
