@@ -1283,7 +1283,7 @@ const AVATAR_FRAMES: { [posture: string]: AvatarFrame } = {
     std: AVATAR_STANDING_FRAME,
     mv: AVATAR_STANDING_FRAME,
     sit: { ...AVATAR_STANDING_FRAME, y: -68 },
-    // The client draws a lying avatar toward direction 2, or mirrored toward direction 4 when it faces direction 0.
+    // The room draws the mirrored lying pose when its direction is 0.
     lay: { x: -25, mirroredX: -84, mirroredDirections: [ 0 ], y: -3, width: 110, height: 64, small: { width: 56, height: 33, x: -4, y: 1 } }
 };
 const AVATAR_HEAD_FRAME: AvatarFrame = { x: 19, mirroredX: 20, mirroredDirections: [ 4, 5, 6 ], y: 22, width: 54, height: 62, small: { width: 27, height: 30, x: 0, y: 0 } };
@@ -1311,15 +1311,20 @@ function readAvatarJob(job: AvatarImageJob): AvatarImageJob
 
     if(!AVATAR_SCALES.includes(job.scale)) fail('Invalid avatar scale');
 
+    // Lying avatars face one of two ways. A sitting body in a diagonal direction uses pose 4.
+    if(job.posture === 'lay')
+    {
+        const direction = (job.direction === 2) ? 2 : 0;
+
+        return { ...job, direction, headDirection: direction };
+    }
+
+    if((job.posture === 'sit') && (job.direction % 2)) return { ...job, direction: 4 };
+
     return job;
 }
 
-function frameX(frame: AvatarFrame, direction: number): number
-{
-    return frame.mirroredDirections.includes(direction) ? frame.mirroredX : frame.x;
-}
-
-function encodeAvatarFrame(source: HTMLCanvasElement, x: number, y: number, frame: AvatarFrame, scale: number): string
+function encodeAvatarFrame(source: HTMLCanvasElement, x: number, y: number, frame: AvatarFrame, scale: number, mirrored: boolean): string
 {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
@@ -1328,10 +1333,15 @@ function encodeAvatarFrame(source: HTMLCanvasElement, x: number, y: number, fram
 
     const small = (scale < 1);
 
-    canvas.width = small ? frame.small.width : (frame.width * scale);
+    const width = frame.width * scale;
+
+    canvas.width = small ? frame.small.width : width;
     canvas.height = small ? frame.small.height : (frame.height * scale);
+
+    const smallX = mirrored ? (canvas.width - width - frame.small.x) : frame.small.x;
+
     context.imageSmoothingEnabled = small;
-    context.drawImage(source, x, y, frame.width, frame.height, small ? frame.small.x : 0, small ? frame.small.y : 0, frame.width * scale, frame.height * scale);
+    context.drawImage(source, x, y, frame.width, frame.height, small ? smallX : 0, small ? frame.small.y : 0, width, frame.height * scale);
 
     const encoded = canvas.toDataURL('image/png');
 
@@ -1341,30 +1351,31 @@ function encodeAvatarFrame(source: HTMLCanvasElement, x: number, y: number, fram
     return encoded.slice(encoded.indexOf(',') + 1);
 }
 
-async function figureLibraries(figure: string): Promise<void>
-{
-    const avatars = GetAvatarRenderManager();
-    const container = avatars.createFigureContainer(figure);
-    const deadline = performance.now() + READY_BUDGET_MS;
-
-    avatars.downloadAvatarFigure(container, { resetFigure: () => undefined, dispose: () => undefined, disposed: false });
-
-    while(!avatars.isFigureContainerReady(container))
-    {
-        if(performance.now() > deadline) fail('Avatar figure library was not ready');
-
-        await new Promise(resolve => setTimeout(resolve, 10));
-    }
-}
-
 // A head is drawn as the client draws its own head images, since a room always draws the whole body.
 async function renderAvatarHead(job: AvatarImageJob): Promise<string[]>
 {
-    await figureLibraries(job.figure);
+    const avatars = GetAvatarRenderManager();
+    let ready = false;
+    const listener = { resetFigure: () => { ready = true; }, dispose: () => undefined, disposed: false };
+    let image = avatars.createAvatarImage(job.figure, AvatarScaleType.LARGE, job.gender, listener);
 
-    const image = GetAvatarRenderManager().createAvatarImage(job.figure, AvatarScaleType.LARGE, job.gender);
+    // The renderer adds default parts to incomplete figures before it requests their libraries.
+    if(image?.isPlaceholder())
+    {
+        image.dispose();
+        const deadline = performance.now() + READY_BUDGET_MS;
 
-    if(!image || image.isPlaceholder()) fail('Avatar head was not created');
+        while(!ready)
+        {
+            if(performance.now() > deadline) fail('Avatar figure library was not ready');
+
+            await new Promise(resolve => setTimeout(resolve, 10));
+        }
+
+        image = avatars.createAvatarImage(job.figure, AvatarScaleType.LARGE, job.gender);
+    }
+
+    if(!image) fail('Avatar head was not created');
 
     try
     {
@@ -1379,10 +1390,11 @@ async function renderAvatarHead(job: AvatarImageJob): Promise<string[]>
 
         const canvas = GetRenderer().texture.generateCanvas(image.processAsTexture(AvatarSetType.HEAD, false)) as HTMLCanvasElement;
         const frame = AVATAR_HEAD_FRAME;
+        const mirrored = frame.mirroredDirections.includes(job.headDirection);
 
         try
         {
-            return [ encodeAvatarFrame(canvas, frameX(frame, job.headDirection), frame.y, frame, job.scale) ];
+            return [ encodeAvatarFrame(canvas, mirrored ? frame.mirroredX : frame.x, frame.y, frame, job.scale, mirrored) ];
         }
         finally
         {
@@ -1477,7 +1489,8 @@ async function renderAvatarBody(job: AvatarImageJob): Promise<string[]>
         const shadow = GetAssetManager().getAsset('h_std_sd_1_0_0')?.texture ?? null;
         const engineTime = { value: GetTicker().lastTime };
         const frame = AVATAR_FRAMES[job.posture];
-        const images: Uint8ClampedArray<ArrayBuffer>[] = [];
+        const mirrored = frame.mirroredDirections.includes(job.direction);
+        const frames: string[] = [];
         const matte = document.createElement('canvas');
         const context = matte.getContext('2d', { willReadFrequently: true });
 
@@ -1523,17 +1536,14 @@ async function renderAvatarBody(job: AvatarImageJob): Promise<string[]>
 
             hideAvatarSurroundings(master, shadow);
 
-            const bounds = new VoltRectangle(Math.round(location.x) + frameX(frame, job.direction), Math.round(location.y) + frame.y, frame.width, frame.height);
+            const bounds = new VoltRectangle(Math.round(location.x) + (mirrored ? frame.mirroredX : frame.x), Math.round(location.y) + frame.y, frame.width, frame.height);
 
-            images.push(matteOnTransparent(drawOn(0x000000, bounds), drawOn(0xFFFFFF, bounds)));
-        }
+            const image = matteOnTransparent(drawOn(0x000000, bounds), drawOn(0xFFFFFF, bounds));
 
-        const frames = images.map(image =>
-        {
             context.putImageData(new ImageData(image, frame.width, frame.height), 0, 0);
 
-            return encodeAvatarFrame(matte, 0, 0, frame, job.scale);
-        });
+            frames.push(encodeAvatarFrame(matte, 0, 0, frame, job.scale, mirrored));
+        }
 
         matte.width = 0;
         matte.height = 0;
