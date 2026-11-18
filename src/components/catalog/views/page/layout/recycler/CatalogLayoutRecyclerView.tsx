@@ -6,7 +6,7 @@ import {
     RecyclerFinishedMessageEvent,
     RecyclerStatusMessageEvent
 } from '@volt/renderer';
-import { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { GetConfigurationValue, GetFurnitureData, LocalizeText, localizeWithFallback, ProductTypeEnum, SendMessageComposer } from '../../../../../../api';
 import { NativeText } from '../../../../../../common/native-text/NativeText';
 import { useInventoryFurni, useInventoryTrade, useMessageEvent, useNotification, usePurse, useRoom } from '../../../../../../hooks';
@@ -20,8 +20,10 @@ import {
     RecyclerInventoryChoice,
     reconcileRecyclerSlots
 } from './recycler.helpers';
+import { createFrankEmotion, FrankEmotion, FrankRecyclerEmotion } from './FrankRecyclerEmotion';
 import { useRecyclerEngineAnimator } from './useRecyclerEngineAnimator';
 import frankImage from '../../../../../../assets/images/collectibles/image-frank-dont-know.png';
+import sadImage from '../../../../../../assets/images/catalog/air/recycler/franks-emotions-sad.png';
 import indicatorImage from '../../../../../../assets/images/catalog/air/recycler/furnimatic-indicator.png';
 import machineImage from '../../../../../../assets/images/catalog/air/recycler/furnimatic-machine.png';
 import pointerArrowImage from '../../../../../../assets/images/catalog/air/recycler/furnimatic-pointer-arrow.png';
@@ -47,6 +49,9 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
     const [secondsLeft, setSecondsLeft] = useState(0);
     const [processing, setProcessing] = useState(false);
     const [abortVisible, setAbortVisible] = useState(false);
+    const [emotions, setEmotions] = useState<FrankEmotion[]>([]);
+    const emotionIdRef = useRef(0);
+    const removeEmotion = useCallback((id: number) => setEmotions((current) => current.filter((emotion) => emotion.id !== id)), []);
     const machineRef = useRef<HTMLImageElement>(null);
     const arrowRef = useRef<HTMLImageElement>(null);
     const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -280,7 +285,16 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
                             text={localizeWithFallback('recycler.broken', LocalizeText('recycler.info.closed'))}
                             textStyle="u_regular"
                         />
+                        <img alt="" className="volt-catalog-recycler-bubble-emoji" draggable={false} src={sadImage} />
                     </div>
+                    <CatalogAirShinyButton
+                        caption={LocalizeText('recycler.pat_frank')}
+                        rect={[235, 11, 115, 30]}
+                        onClick={() => setEmotions((current) => [...current, createFrankEmotion(++emotionIdRef.current)])}
+                    />
+                    {emotions.map((emotion) => (
+                        <FrankRecyclerEmotion key={emotion.id} emotion={emotion} onDone={removeEmotion} />
+                    ))}
                 </div>
             )}
         </div>
