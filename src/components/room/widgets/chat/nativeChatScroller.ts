@@ -18,6 +18,8 @@ const CATCH_UP_FRAME = 16;
 const CATCH_UP_MAX_BUSY_FRAMES = 60;
 
 interface Rect { x: number; y: number; width: number; height: number; }
+// The speaker's current screen x, or null when it is no longer in the room.
+export type ChatSpeakerLocator = (chat: ChatBubbleMessage) => number | null;
 export interface NativeChatGeometry { overlap: Rect; unlimitedHeight: boolean; }
 
 // v75 HabboFreeFlowChatCom/chatstyles_xml and style_*_regpoints.
@@ -148,6 +150,8 @@ interface Collider {
 // Ports v75 v2/qm/O5/w2. Collider type and visual clamp are captured at creation;
 // the active mode selects the simulation branch without rebuilding older colliders.
 export class NativeChatScroller {
+    constructor(private readonly locateSpeaker: ChatSpeakerLocator = null) {}
+
     private bubbles: Collider[] = [];
     // Scratch list for simulate(): the bubbles sorted by y.
     private byY: Collider[] = [];
@@ -160,6 +164,7 @@ export class NativeChatScroller {
     private viewportWidth = 0;
 
     private fontScale = 1;
+    private speakerX = new Map<number, number | null>();
     // The last simulate() ended without a collision, so nothing moves until the next insert, scroll or cleanup.
     private settled = true;
 
@@ -322,6 +327,7 @@ export class NativeChatScroller {
 
     advance(elapsed: number, chats: readonly ChatBubbleMessage[]): number[] {
         this.clock += elapsed;
+        this.speakerX.clear();
         const live = new Set(chats);
         this.bubbles = this.bubbles.filter((bubble) => !bubble.chat || live.has(bubble.chat));
         for (const bubble of this.bubbles) {
@@ -419,12 +425,23 @@ export class NativeChatScroller {
         const airPointer = AIR_CHAT_BUBBLE_STYLES[bubble.chat.styleId]?.pointer;
         if ((bubble.chat.styleId === 0 || airPointer) && bubble.chat.elementRef) {
             const [ marginLeft, marginRight ] = airPointer?.margins ?? [ 28, 15 ];
-            const pointerX = `${Math.max(marginLeft, Math.min(bubble.chat.width - marginRight, bubble.chat.location.x - left))}px`;
+            const pointerX = `${Math.max(marginLeft, Math.min(bubble.chat.width - marginRight, this.getSpeakerX(bubble.chat) - left))}px`;
             const style = bubble.chat.elementRef.style;
             if (style.getPropertyValue('--chat-pointer-x') !== pointerX) style.setProperty('--chat-pointer-x', pointerX);
         }
         bubble.writtenLeft = left;
         bubble.writtenTop = y;
+    }
+
+    // PooledChatBubble.currentUserScreenPos: the speaker's position this frame, or where it spoke once it has left.
+    private getSpeakerX(chat: ChatBubbleMessage): number {
+        if (!this.locateSpeaker) return chat.location.x;
+        let x = this.speakerX.get(chat.senderId);
+        if (x === undefined) {
+            x = this.locateSpeaker(chat);
+            this.speakerX.set(chat.senderId, x);
+        }
+        return x ?? chat.location.x;
     }
 
     private publish(immediate = false) {
