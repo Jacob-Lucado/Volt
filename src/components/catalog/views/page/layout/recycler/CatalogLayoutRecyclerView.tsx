@@ -246,6 +246,7 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
                         ? LocalizeText('catalog.recycler.button.wait', ['s'], [secondsLeft.toString()])
                         : LocalizeText('catalog.recycler.button.recycle')
                 }
+                fitCaption
                 disabled={!canRecycle}
                 rect={[19, 299, 194, 30]}
                 tint="green"
@@ -310,6 +311,7 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
                         <img alt="" className="volt-catalog-recycler-bubble-emoji" draggable={false} src={sadImage} />
                     </div>
                     <CatalogAirShinyButton
+                        fitCaption
                         caption={LocalizeText('recycler.pat_frank')}
                         rect={[235, 11, 115, 30]}
                         onClick={() => setEmotions((current) => [...current, createFrankEmotion(++emotionIdRef.current)])}
