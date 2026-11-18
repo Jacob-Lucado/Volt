@@ -9,9 +9,11 @@ import {
 } from '../../../../api';
 import removeIconSrc from '../../../../assets/images/navigator/room-settings/remove-icon-bb2200.png';
 import { HabboDropMenuView } from '../../../../common/dropmenu/HabboDropMenuView';
+import { NativeText } from '../../../../common/native-text/NativeText';
 import { useNavigatorData } from '../../../../hooks';
 import { NavigatorRoomSettingsAtView } from './NavigatorRoomSettingsAtView';
 import { RoomSettingsFieldError, RoomSettingsFieldErrorView } from './RoomSettingsFieldErrorView';
+import { ROOM_SETTINGS_BACKGROUND, RoomSettingsTextView } from './RoomSettingsTextView';
 
 const ROOM_NAME_MIN_LENGTH = 3;
 const ROOM_NAME_MAX_LENGTH = 60;
@@ -84,17 +86,20 @@ export const NavigatorRoomSettingsBasicTabView: FC<NavigatorRoomSettingsTabViewP
         setRoomTag2(roomData.tags.length > 0 && roomData.tags[1] ? roomData.tags[1] : '');
     }, [roomData]);
 
+    // setCategorySelection: visible, non-automatic categories (plus the room's own); without a match the first one shows.
+    const categoryOptions = (categories ?? [])
+        .filter((category) => (category.visible || category.id === roomData.categoryId) && !category.automatic)
+        .map((category) => ({ value: category.id, label: LocalizeText(category.name) }));
+
     const tagHasError = (tag: string) => fieldError?.field === 'tags' && tag !== '' && tag.toLowerCase() === fieldError.tagText;
 
     return (
         <>
             <div className="ros-tab" style={{ height: 360 }}>
-                <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={119} x={0} y={-3}>
-                    {LocalizeText('navigator.roomname')}
-                </NavigatorRoomSettingsAtView>
+                <RoomSettingsTextView h={17} text={LocalizeText('navigator.roomname')} textStyle="u_bold" w={119} x={0} y={-3} />
                 <NavigatorRoomSettingsAtView h={20} w={300} x={0} y={14}>
                     <input
-                        className={`ros-input${fieldError?.field === 'name' ? ' is-invalid' : ''}`}
+                        className={`ros-input ros-input-20${fieldError?.field === 'name' ? ' is-invalid' : ''}`}
                         value={roomName}
                         maxLength={ROOM_NAME_MAX_LENGTH}
                         onChange={(event) => setRoomName(event.target.value)}
@@ -104,9 +109,7 @@ export const NavigatorRoomSettingsBasicTabView: FC<NavigatorRoomSettingsTabViewP
                         }}
                     />
                 </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={163} x={0} y={35}>
-                    {LocalizeText('navigator.roomsettings.desc')}
-                </NavigatorRoomSettingsAtView>
+                <RoomSettingsTextView h={17} text={LocalizeText('navigator.roomsettings.desc')} textStyle="u_bold" w={163} x={0} y={35} />
                 <NavigatorRoomSettingsAtView h={39} w={300} x={0} y={51}>
                     <textarea
                         className={`ros-input ros-textarea${fieldError?.field === 'description' ? ' is-invalid' : ''}`}
@@ -116,20 +119,16 @@ export const NavigatorRoomSettingsBasicTabView: FC<NavigatorRoomSettingsTabViewP
                         onBlur={(event) => saveRoomDescription(event.currentTarget.value)}
                     />
                 </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={112} x={0} y={100}>
-                    {LocalizeText('navigator.category')}
-                </NavigatorRoomSettingsAtView>
+                <RoomSettingsTextView h={17} text={LocalizeText('navigator.category')} textStyle="u_bold" w={112} x={0} y={100} />
                 <NavigatorRoomSettingsAtView className="ros-drop" h={24} w={300} x={0} y={116}>
                     <HabboDropMenuView
                         label={LocalizeText('navigator.category')}
-                        value={roomData.categoryId}
-                        options={(categories ?? []).map((category) => ({ value: category.id, label: LocalizeText(category.name) }))}
+                        value={categoryOptions.some((option) => option.value === roomData.categoryId) ? roomData.categoryId : categoryOptions[0]?.value}
+                        options={categoryOptions}
                         onSelect={(value) => handleChange('category', value)}
                     />
                 </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={125} x={0} y={145}>
-                    {LocalizeText('navigator.maxvisitors')}
-                </NavigatorRoomSettingsAtView>
+                <RoomSettingsTextView h={17} text={LocalizeText('navigator.maxvisitors')} textStyle="u_bold" w={125} x={0} y={145} />
                 <NavigatorRoomSettingsAtView className="ros-drop" h={24} w={300} x={0} y={161}>
                     <HabboDropMenuView
                         label={LocalizeText('navigator.maxvisitors')}
@@ -138,9 +137,7 @@ export const NavigatorRoomSettingsBasicTabView: FC<NavigatorRoomSettingsTabViewP
                         onSelect={(index) => handleChange('max_visitors', visitorOptions[index])}
                     />
                 </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={138} x={0} y={190}>
-                    {LocalizeText('navigator.tradesettings')}
-                </NavigatorRoomSettingsAtView>
+                <RoomSettingsTextView h={17} text={LocalizeText('navigator.tradesettings')} textStyle="u_bold" w={138} x={0} y={190} />
                 <NavigatorRoomSettingsAtView className="ros-drop" h={24} w={300} x={0} y={206}>
                     <HabboDropMenuView
                         label={LocalizeText('navigator.tradesettings')}
@@ -153,9 +150,7 @@ export const NavigatorRoomSettingsBasicTabView: FC<NavigatorRoomSettingsTabViewP
                         onSelect={(value) => handleChange('trade_state', value)}
                     />
                 </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-text ros-bold" h={17} w={86} x={0} y={238}>
-                    {LocalizeText('navigator.tags')}
-                </NavigatorRoomSettingsAtView>
+                <RoomSettingsTextView h={17} text={LocalizeText('navigator.tags')} textStyle="u_bold" w={86} x={0} y={238} />
                 <NavigatorRoomSettingsAtView h={15} w={145} x={0} y={254}>
                     <input
                         className={`ros-input${tagHasError(roomTag1) ? ' is-invalid' : ''}`}
@@ -185,14 +180,20 @@ export const NavigatorRoomSettingsBasicTabView: FC<NavigatorRoomSettingsTabViewP
                         onChange={(event) => handleChange('allow_walkthrough', event.target.checked)}
                     />
                 </NavigatorRoomSettingsAtView>
-                <NavigatorRoomSettingsAtView className="ros-text" h={17} w={249} x={18} y={311}>
-                    <label htmlFor="ros-allow-walk-through">{LocalizeText('navigator.roomsettings.allow_walk_through')}</label>
-                </NavigatorRoomSettingsAtView>
+                <RoomSettingsTextView h={17} htmlFor="ros-allow-walk-through" text={LocalizeText('navigator.roomsettings.allow_walk_through')} w={249} x={18} y={311} />
                 {isEnteredRoom && (
                     <>
                         <NavigatorRoomSettingsAtView className={isSafetyLocked ? 'ros-disabled' : ''} h={18} w={174} x={59} y={339}>
                             <button type="button" className="ros-link ros-remove-link" disabled={isSafetyLocked} onClick={onDelete}>
-                                <span><img className="ros-remove-icon" src={removeIconSrc} alt="" />{LocalizeText('navigator.roomsettings.delete')}</span>
+                                <span>
+                                    <img className="ros-remove-icon" src={removeIconSrc} alt="" />
+                                    <NativeText
+                                        background={ROOM_SETTINGS_BACKGROUND}
+                                        overrides={{ color: 0xbb2200, underline: true }}
+                                        text={LocalizeText('navigator.roomsettings.delete')}
+                                        textStyle="u_bold"
+                                    />
+                                </span>
                             </button>
                         </NavigatorRoomSettingsAtView>
                     </>
