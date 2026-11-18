@@ -85,6 +85,10 @@ export const ToolbarMeView: FC<
                 <LosIcon name="gift" size={16} />
                 <span>{localizeWithFallback('memenu.dailyhub', 'Daily Hub')}</span>
             </button>
+            <button type="button" className="los-menu__item" onClick={() => open(() => CreateLinkEvent('rare-values/toggle'))}>
+                <LosIcon name="chart" size={16} />
+                <span>{localizeWithFallback('memenu.rarevalues', 'Rare values')}</span>
+            </button>
             {children}
         </div>
     );

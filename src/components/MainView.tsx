@@ -16,6 +16,7 @@ import { AchievementsView } from './achievements/AchievementsView';
 import { AvatarEditorView } from './avatar-editor';
 import { BadgeLeaderboardView } from './badge-leaderboard/BadgeLeaderboardView';
 import { DailyHubView } from './daily-hub/DailyHubView';
+import { RareValuesView } from './rare-values/RareValuesView';
 import { CameraWidgetView } from './camera/CameraWidgetView';
 import { CampaignView } from './campaign/CampaignView';
 import { CatalogView } from './catalog/CatalogView';
@@ -151,6 +152,7 @@ export const MainView: FC<{}> = (props) =>
             <AvatarEditorView />
             <BadgeLeaderboardView />
             <DailyHubView />
+            <RareValuesView />
             <AchievementsView />
             <HabbiconHubView />
             <NavigatorView />
