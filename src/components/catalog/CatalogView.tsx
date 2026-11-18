@@ -1,5 +1,5 @@
 import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
-import { FC, useCallback, useEffect } from 'react';
+import { FC, useCallback, useEffect, useRef } from 'react';
 import { CatalogType, GetConfigurationValue, LocalizeShortNumber, LocalizeText } from '../../api';
 import { LayoutCurrencyIcon, VoltCardContentView, VoltCardHeaderView, VoltCardTabsItemView, VoltCardTabsView, VoltCardView } from '../../common';
 import { NativeCenteredField } from '../../common/native-text/NativeCenteredField';
@@ -31,6 +31,9 @@ const isBuildersClubEnabled = () => GetConfigurationValue<boolean>('builders.clu
 
 /** catalog.header.description is a 475px window; its TextField wraps like a 479px field (the AIR wrap matches from 478 up). */
 const HEADER_DESCRIPTION_FIELD_WIDTH = 479;
+
+/** HabboCatalog DEFAULT_VIEW_LOCATION_LARGE: both catalogues open here and share the spot the player last dragged the window to. */
+const catalogWindowPosition = { x: 100, y: 5 };
 
 const TAB_WIDTH = 110;
 const TAB_STRIP_WIDTH = 560;
@@ -107,6 +110,17 @@ const CatalogViewInner: FC<{}> = () => {
     // Keep technical suffixes and numeric page hints out of the tab captions.
     const stripSwfTabSuffix = (label: string) => (label || '').replace(/\s*\(\D[^)]*\)\s*$/g, '').trim();
     const getSwfTabLabel = (label: string) => stripSwfTabSuffix(parseCatalogTabLabel(label).name);
+
+    const initialPosition = useRef({ ...catalogWindowPosition });
+
+    useEffect(() => {
+        if (!isVisible) initialPosition.current = { ...catalogWindowPosition };
+    }, [isVisible]);
+
+    const onPositionChange = useCallback((position: { x: number; y: number }) => {
+        catalogWindowPosition.x = position.x;
+        catalogWindowPosition.y = position.y;
+    }, []);
 
     const hideCatalogNavigation = useCallback(() => setNavigationHidden(true), [setNavigationHidden]);
 
@@ -204,9 +218,11 @@ const CatalogViewInner: FC<{}> = () => {
                 <VoltCardView
                     classNames={['volt-catalog-window', ...(isBuilder ? ['is-builder'] : [])]}
                     frameStyle={3}
+                    initialPosition={initialPosition.current}
                     isResizable
                     resizeAxis="vertical"
                     uniqueKey="catalog"
+                    onPositionChange={onPositionChange}
                 >
                     <VoltCardHeaderView headerText="" onCloseClick={() => setIsVisible(false)}>
                         {/* header_3 caption: u_frame_title in white, centred over the title bar (frame_3 leaves 6px left and 8px right: 556px). */}
