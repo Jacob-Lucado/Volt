@@ -102,6 +102,9 @@
     "catalog.asset.icon.url": "${catalog.asset.url}/icon_%name%.png",
     "catalog.tab.icons": false,
     "catalog.headers": false,
+    "recycler.number_of_slots": 8,
+    "recycler.ducket_cost": 10,
+    "recycler.timeout_seconds": 10,
     "chat.input.maxlength": 200,
     "zoom.enabled": false,
     "chat.styles": [
