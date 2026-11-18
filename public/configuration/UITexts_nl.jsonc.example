@@ -514,7 +514,7 @@
     "radio.live": "Live",
     "radio.hide": "Verbergen",
     "radio.show": "Tonen",
-    "recycler.broken": "De machine is kapot..\n\\Check later opnieuw!",
+    "recycler.broken": "De machine is kapot..\n\nCheck later opnieuw!",
     "recycler.pat_frank": "Klik om Frank te aaien",
     "rarevalues.title": "Rare Values",
     "rarevalues.loading": "Waarden laden…",
