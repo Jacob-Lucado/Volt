@@ -236,7 +236,7 @@ const CatalogViewInner: FC<{}> = () => {
                         <NativeCenteredField className="volt-catalog-title" width={556}>
                             <NativeText
                                 nativeResolution
-                                background={isBuilder ? 0xd79c34 : 0x377998}
+                                background={isBuilder ? 0xd79b34 : 0x377998}
                                 overrides={{ color: 0xffffff }}
                                 text={isBusy ? LocalizeText('generic.loading') || 'Loading...' : LocalizeText(isBuilder ? 'builder.catalog.title' : 'catalog.title')}
                                 textStyle="u_frame_title"
