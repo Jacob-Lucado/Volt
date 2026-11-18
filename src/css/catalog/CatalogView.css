@@ -2217,7 +2217,7 @@
 .volt-catalog-standard-spinner-input-frame {
     position: absolute;
     top: 0;
-    left: 54px;
+    left: 65px; /* layout_default quantityInput x=65 */
     width: 30px;
     height: 25px;
     z-index: 2;
