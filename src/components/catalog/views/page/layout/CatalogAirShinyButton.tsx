@@ -1,5 +1,6 @@
-import { FC, useLayoutEffect, useRef, useState } from 'react';
+import { FC } from 'react';
 import { NativeCenteredField } from '../../../../../common/native-text/NativeCenteredField';
+import { useTextWindowWidths } from '../../../../../common/native-text/useTextWindowWidths';
 import { NativeText } from '../../../../../common/native-text/NativeText';
 
 /** The button_shiny_regular text field height, Flash gutters included. */
@@ -36,23 +37,8 @@ export const CatalogAirShinyButton: FC<CatalogAirShinyButtonProps> = ({
 }) => {
     const [x, y, layoutWidth, height] = rect;
     const green = tint === 'green';
-    const fieldRef = useRef<HTMLSpanElement>(null);
-    const [fieldWidth, setFieldWidth] = useState<number | null>(null);
-    const width = fitCaption && fieldWidth !== null ? fieldWidth + (green ? 20 : 16) : layoutWidth;
-
-    useLayoutEffect(() => {
-        const field = fieldRef.current;
-
-        if (!fitCaption || !field) return;
-
-        const measure = () => setFieldWidth(field.offsetWidth);
-        const observer = new ResizeObserver(measure);
-
-        measure();
-        observer.observe(field);
-
-        return () => observer.disconnect();
-    }, [fitCaption]);
+    const fieldWidth = useTextWindowWidths(fitCaption ? [{ text: caption, textStyle: 'button_shiny_regular' }] : [])?.[0];
+    const width = fitCaption && fieldWidth !== undefined ? fieldWidth + (green ? 20 : 16) : layoutWidth;
     const [top, bottom] = green ? [5, 6] : [2, 3];
     const captionTop = Math.floor((height - (FIELD_HEIGHT + top + bottom)) / 2) + top;
     const heightClass = SKIN_HEIGHTS.includes(height) ? `is-h${height}` : '';
@@ -67,15 +53,13 @@ export const CatalogAirShinyButton: FC<CatalogAirShinyButtonProps> = ({
         >
             <span className="volt-catalog-air-shiny-caption" style={{ top: captionTop }}>
                 <NativeCenteredField width={width}>
-                    <span ref={fieldRef} style={{ display: 'inline-block' }}>
-                        <NativeText
-                            transparent
-                            background={green ? 0x00aa00 : 0xf2f2f2}
-                            overrides={green ? { color: 0xffffff } : undefined}
-                            text={caption}
-                            textStyle="button_shiny_regular"
-                        />
-                    </span>
+                    <NativeText
+                        transparent
+                        background={green ? 0x00aa00 : 0xf2f2f2}
+                        overrides={green ? { color: 0xffffff } : undefined}
+                        text={caption}
+                        textStyle="button_shiny_regular"
+                    />
                 </NativeCenteredField>
             </span>
         </button>
