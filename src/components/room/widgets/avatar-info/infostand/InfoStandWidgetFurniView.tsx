@@ -822,7 +822,7 @@ export const InfoStandWidgetFurniView: FC<InfoStandWidgetFurniViewProps> = (prop
                         {furniKeys.length > 0 && (
                             <div className="volt-furni-infostand__branding">
                                 {furniKeys.map((key, index) => (
-                                    <div key={index} className="volt-furni-infostand__branding-field">
+                                    <label key={index} className="volt-furni-infostand__branding-field">
                                         <span className="volt-furni-infostand__branding-name">{key}</span>
                                         <textarea
                                             className="volt-furni-infostand__branding-value"
@@ -833,7 +833,7 @@ export const InfoStandWidgetFurniView: FC<InfoStandWidgetFurniViewProps> = (prop
                                                 if (event.key === 'Enter') event.preventDefault();
                                             }}
                                         />
-                                    </div>
+                                    </label>
                                 ))}
                             </div>
                         )}
