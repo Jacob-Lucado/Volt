@@ -1399,7 +1399,8 @@ export function layoutNormalText(font: NativeFont, text: string, size: number, u
             stringIndex: stringIndex,
             penTwips: penTwips,
             penX: penTwips / 20,
-            maskPenX: roundToQuarterPixel(penTwips / 20),
+            // AIR draws each normal anti-aliased (Volter) glyph on the whole pixel nearest to its pen.
+            maskPenX: Math.round(penTwips / 20),
             hasInk: swfGlyphHasInk(font, glyph, codepoint)
         });
         let advance = glyph.advance;
