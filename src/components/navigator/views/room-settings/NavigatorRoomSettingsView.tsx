@@ -25,7 +25,6 @@ const TABS: string[] = [
 const OWN_ROOM_ONLY_TABS: string[] = [TABS[1], TABS[2]];
 const FRAME_WIDTH = 341;
 type IdleTimeoutField = 'idle_sleep_timeout_seconds' | 'idle_autokick_timeout_seconds';
-const ROOM_BEHAVIOR_FIELDS = ['leave_on_door_tile_enabled', 'idle_sleep_enabled', 'idle_autokick_enabled'];
 
 interface RoomSettingsForm {
     roomData: IRoomData;
@@ -304,9 +303,6 @@ export const NavigatorRoomSettingsView: FC<{}> = (props) => {
 
             if (error) {
                 setForm(newForm);
-
-                // onRoomBehaviorSettingsChanged: a room behaviour checkbox only saves once the timeouts are valid and shows no error.
-                if (ROOM_BEHAVIOR_FIELDS.includes(field)) return;
 
                 setInputError(error);
                 setSelectedTab(TABS[3]);

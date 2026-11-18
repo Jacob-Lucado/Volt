@@ -153,6 +153,7 @@ export const NavigatorRoomSettingsRightsTabView: FC<NavigatorRoomSettingsTabView
                 <button
                     type="button"
                     className="ros-button ros-button-thick"
+                    disabled={!filteredUsersWithRights.size}
                     style={{ left: 4, top: 256, width: 142, height: 29 }}
                     onClick={onRemoveAll}
                 >

@@ -86,11 +86,6 @@ export const NavigatorRoomSettingsBasicTabView: FC<NavigatorRoomSettingsTabViewP
         setRoomTag2(roomData.tags.length > 0 && roomData.tags[1] ? roomData.tags[1] : '');
     }, [roomData]);
 
-    // setCategorySelection: visible, non-automatic categories (plus the room's own); without a match the first one shows.
-    const categoryOptions = (categories ?? [])
-        .filter((category) => (category.visible || category.id === roomData.categoryId) && !category.automatic)
-        .map((category) => ({ value: category.id, label: LocalizeText(category.name) }));
-
     const tagHasError = (tag: string) => fieldError?.field === 'tags' && tag !== '' && tag.toLowerCase() === fieldError.tagText;
 
     return (
@@ -123,8 +118,8 @@ export const NavigatorRoomSettingsBasicTabView: FC<NavigatorRoomSettingsTabViewP
                 <NavigatorRoomSettingsAtView className="ros-drop" h={24} w={300} x={0} y={116}>
                     <HabboDropMenuView
                         label={LocalizeText('navigator.category')}
-                        value={categoryOptions.some((option) => option.value === roomData.categoryId) ? roomData.categoryId : categoryOptions[0]?.value}
-                        options={categoryOptions}
+                        value={roomData.categoryId}
+                        options={(categories ?? []).map((category) => ({ value: category.id, label: LocalizeText(category.name) }))}
                         onSelect={(value) => handleChange('category', value)}
                     />
                 </NavigatorRoomSettingsAtView>
