@@ -513,6 +513,8 @@
     "radio.live": "Live",
     "radio.hide": "Ausblenden",
     "radio.show": "Einblenden",
+    "recycler.broken": "Die Maschine ist kaputt..\n\nSchau bald wieder vorbei!",
+    "recycler.pat_frank": "Klick, um Frank zu streicheln",
     "rarevalues.title": "Raritätenwerte",
     "rarevalues.loading": "Werte werden geladen…",
     "rarevalues.empty": "Keine Raritäten gefunden",
