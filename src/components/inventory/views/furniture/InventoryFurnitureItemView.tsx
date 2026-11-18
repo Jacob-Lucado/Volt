@@ -2,6 +2,7 @@ import { MouseEventType } from '@volt/renderer';
 import { FC, MouseEvent, useState } from 'react';
 import { attemptItemPlacement, GroupItem } from '../../../../api';
 import { classNames, InfiniteGrid } from '../../../../layout';
+import { useRecyclerStore } from '../../../../state/recyclerStore';
 import { InventoryThumbIconView } from '../InventoryThumbIconView';
 
 export const InventoryFurnitureItemView: FC<{
@@ -35,7 +36,13 @@ export const InventoryFurnitureItemView: FC<{
         }
     };
 
-    const count = groupItem.getUnlockedCount();
+    const recyclerActive = useRecyclerStore((state) => state.active);
+    const slotItemIds = useRecyclerStore((state) => state.slotItemIds);
+    // FurnitureItem locks: furni waiting in the recycler slots are not counted.
+    const inSlots = groupItem.items.filter((item) => !item.locked && slotItemIds.includes(item.id)).length;
+    const count = groupItem.getUnlockedCount() - inSlots;
+    // GroupItem.updateRecycleStatusVisual: recyclable_container while the recycler is open.
+    const recyclable = recyclerActive && groupItem.items.some((item) => item.recyclable && !item.locked && !slotItemIds.includes(item.id));
 
     return (
         <InfiniteGrid.Item
@@ -51,6 +58,7 @@ export const InventoryFurnitureItemView: FC<{
             onMouseUp={onMouseEvent}
         >
             {groupItem.stuffData.uniqueNumber <= 0 && <InventoryThumbIconView iconUrl={groupItem.iconUrl} />}
+            {recyclable && <span className="volt-inventory-thumb-recyclable" />}
         </InfiniteGrid.Item>
     );
 };
