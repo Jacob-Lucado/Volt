@@ -532,16 +532,6 @@
     left: 51px;
 }
 
-/* RecyclerEngineAnimator shakes the machine by up to 3px while the pointer swings. */
-.volt-catalog-recycler-air.is-processing .volt-catalog-recycler-machine {
-    animation: volt-recycler-shake 100ms steps(2) infinite;
-}
-
-@keyframes volt-recycler-shake {
-    0% { transform: translate(-1px, 1px); }
-    50% { transform: translate(2px, -1px); }
-    100% { transform: translate(-1px, 1px); }
-}
 
 /* The ducket cost list (19, 265): ducket_cost (bold, y 6), a 2px spacer and the iconDucketBig icon (y 4). */
 .volt-catalog-recycler-cost {
@@ -668,13 +658,15 @@
     left: 0;
 }
 
-.volt-catalog-recycler-air.is-processing .volt-catalog-recycler-pointer > .is-arrow {
-    animation: volt-recycler-pointer 1.6s ease-in-out infinite alternate;
-}
-
-@keyframes volt-recycler-pointer {
-    from { transform: rotate(-88deg); }
-    to { transform: rotate(88deg); }
+/* abort_region (244, 434, 65x17): catalog.recycler.button.abort in 10px underlined text. */
+.volt-catalog-window .volt-catalog-recycler-abort {
+    top: 434px;
+    left: 244px;
+    height: 17px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
 }
 
 /* Volt's inventory list for filling the slots, over the machine. */
@@ -755,13 +747,6 @@
     position: absolute !important;
     top: 12px;
     left: 12px;
-}
-
-.volt-catalog-recycler-finished {
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
 }
 
 /* AIR layout_recycler_prizes (1685): the 659px layout shrinks to 460, so itemList is 223px high. */

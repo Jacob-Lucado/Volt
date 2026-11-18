@@ -6,10 +6,10 @@ import {
     RecyclerFinishedMessageEvent,
     RecyclerStatusMessageEvent
 } from '@volt/renderer';
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { GetConfigurationValue, LocalizeText, localizeWithFallback, SendMessageComposer } from '../../../../../../api';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { GetConfigurationValue, GetFurnitureData, LocalizeText, localizeWithFallback, ProductTypeEnum, SendMessageComposer } from '../../../../../../api';
 import { NativeText } from '../../../../../../common/native-text/NativeText';
-import { useInventoryFurni, useMessageEvent } from '../../../../../../hooks';
+import { useInventoryFurni, useInventoryTrade, useMessageEvent, useNotification, usePurse, useRoom } from '../../../../../../hooks';
 import { CatalogAirShinyButton } from '../CatalogAirShinyButton';
 import { CatalogLayoutProps } from '../CatalogLayout.types';
 import {
@@ -20,14 +20,13 @@ import {
     RecyclerInventoryChoice,
     reconcileRecyclerSlots
 } from './recycler.helpers';
+import { useRecyclerEngineAnimator } from './useRecyclerEngineAnimator';
 import frankImage from '../../../../../../assets/images/collectibles/image-frank-dont-know.png';
 import indicatorImage from '../../../../../../assets/images/catalog/air/recycler/furnimatic-indicator.png';
 import machineImage from '../../../../../../assets/images/catalog/air/recycler/furnimatic-machine.png';
 import pointerArrowImage from '../../../../../../assets/images/catalog/air/recycler/furnimatic-pointer-arrow.png';
 import pointerBaseImage from '../../../../../../assets/images/catalog/air/recycler/furnimatic-pointer-base.png';
 import titleImage from '../../../../../../assets/images/catalog/air/recycler/furnimatic-title.png';
-
-const OPERATION_TIMEOUT_MS = 12000;
 
 /** The page colour under the texts: 0xe9e9e1 under the layout's 0x21ffffff fill. */
 const PAGE_BACKGROUND = 0xecece5;
@@ -38,54 +37,83 @@ const getSlotPosition = (index: number) => ({ left: 37 + (index % 4) * 37, top: 
 
 export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
     const { groupItems = [] } = useInventoryFurni();
+    const { roomSession = null } = useRoom();
+    const { isTrading = false } = useInventoryTrade();
+    const { getCurrencyAmount = null } = usePurse();
+    const { simpleAlert = null } = useNotification();
     const [slots, setSlots] = useState<RecyclerInventoryChoice[]>([]);
     const [status, setStatus] = useState<number>(null);
     const [pickerOpen, setPickerOpen] = useState(false);
     const [secondsLeft, setSecondsLeft] = useState(0);
     const [processing, setProcessing] = useState(false);
-    const [finished, setFinished] = useState(false);
-    const operationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    // AIR's own default is 5, but Habbo's live config sets 8.
+    const [abortVisible, setAbortVisible] = useState(false);
+    const machineRef = useRef<HTMLImageElement>(null);
+    const arrowRef = useRef<HTMLImageElement>(null);
+    const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const slotCount = normalizeRecyclerSlotCount(GetConfigurationValue<number>('recycler.number_of_slots', 8));
     const selectedIds = useMemo(() => new Set(slots.map((slot) => slot.itemId)), [slots]);
     const eligibleIds = useMemo(() => getRecyclerEligibleItemIds(groupItems), [groupItems]);
     const choices = useMemo(() => getRecyclerInventoryChoices(groupItems, selectedIds), [groupItems, selectedIds]);
     const enabled = status !== null && status !== RecyclerStatusMessageEvent.SYSTEM_STATUS_DISABLED;
+    const inPrivateRoom = !!roomSession?.isPrivateRoom;
     // RecyclerLogic.ducketCost: catalog.getInteger("recycler.ducket_cost", 0); a zero cost hides the cost row.
     const ducketCost = Number(GetConfigurationValue<number>('recycler.ducket_cost', 0)) || 0;
+    const alert = (key: string) => simpleAlert?.(LocalizeText(key), null, null, null, LocalizeText('generic.alert.title'));
 
-    const clearOperationTimeout = useCallback(() => {
-        if (!operationTimeoutRef.current) return;
+    const scheduleReset = (reset: () => void, delay: number) => {
+        if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
 
-        clearTimeout(operationTimeoutRef.current);
-        operationTimeoutRef.current = null;
-    }, []);
+        resetTimeoutRef.current = setTimeout(reset, delay);
+    };
+
+    // RecyclerCatalogWidget.onAnimationComplete: send the slots, then wait recycler.timeout_seconds before the next recycle.
+    const executeRecycler = () => {
+        const validSlots = reconcileRecyclerSlots(slots, eligibleIds);
+
+        setAbortVisible(false);
+        scheduleReset(animator.reset, 1000);
+        setSecondsLeft(Math.max(0, Number(GetConfigurationValue<number>('recycler.timeout_seconds', 10)) || 0));
+
+        if (processing || !enabled || !inPrivateRoom || validSlots.length !== slotCount) {
+            setSlots(validSlots);
+
+            return;
+        }
+
+        setProcessing(true);
+        SendMessageComposer(new RecycleItemsMessageComposer(...validSlots.map((slot) => new RecycleItemsEntry(slot.itemId))));
+    };
+
+    const animator = useRecyclerEngineAnimator(arrowRef, machineRef, executeRecycler);
 
     useMessageEvent<RecyclerStatusMessageEvent>(RecyclerStatusMessageEvent, (event) => {
         const parser = event.getParser();
 
         setStatus(parser.recyclerStatus);
         setSecondsLeft(Math.max(0, parser.recyclerTimeoutSeconds));
+
+        // RecyclerLogic.verifyRoomSessionStatus: an open machine outside a private room says where to go.
+        if (parser.recyclerStatus !== RecyclerStatusMessageEvent.SYSTEM_STATUS_DISABLED && !inPrivateRoom) alert('recycler.alert.privateroom');
     });
 
+    // RecyclerLogic.setFinished: either result empties the slots; a failure also shows that the machine is closed.
     useMessageEvent<RecyclerFinishedMessageEvent>(RecyclerFinishedMessageEvent, (event) => {
-        clearOperationTimeout();
+        if (!processing) return;
+
         setProcessing(false);
+        setSlots([]);
 
-        if (event.getParser().recyclerFinishedStatus === RecyclerFinishedMessageEvent.FINISHED_OK) {
-            setSlots([]);
-            setFinished(true);
-        }
-
-        SendMessageComposer(new GetRecyclerStatusMessageComposer());
+        if (event.getParser().recyclerFinishedStatus !== RecyclerFinishedMessageEvent.FINISHED_OK) alert('recycler.info.closed');
     });
 
     useEffect(() => {
         SendMessageComposer(new FurnitureListComposer());
         SendMessageComposer(new GetRecyclerStatusMessageComposer());
 
-        return clearOperationTimeout;
-    }, [clearOperationTimeout]);
+        return () => {
+            if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
+        };
+    }, []);
 
     useEffect(() => {
         if (secondsLeft <= 0) return;
@@ -102,33 +130,53 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
     const addChoice = (choice: RecyclerInventoryChoice) => {
         if (processing) return;
 
-        setFinished(false);
         setSlots((current) => addRecyclerSlot(current, choice, slotCount, eligibleIds));
         setPickerOpen(false);
     };
 
+    // RecyclerLogic.isReadyToRecycle: a full pool in a private room, without an open trade.
+    const readyToRecycle = !processing && enabled && inPrivateRoom && slots.length === slotCount;
+    const canRecycle = readyToRecycle && !animator.busy && secondsLeft <= 0;
+
+    // A wf_act_reset_timers in a slot makes the pointer spin and the machine shake harder.
+    const easterEgg = () =>
+        slots.some((slot) => {
+            const group = groupItems.find((candidate) => candidate.items.some((item) => item.id === slot.itemId));
+
+            return (
+                !!group && GetFurnitureData(group.type, group.isWallItem ? ProductTypeEnum.WALL : ProductTypeEnum.FLOOR)?.className === 'wf_act_reset_timers'
+            );
+        });
+
     const recycle = () => {
-        if (processing || !enabled || secondsLeft > 0) return;
+        if (!canRecycle) return;
 
-        const validSlots = reconcileRecyclerSlots(slots, eligibleIds);
+        if (isTrading) {
+            alert('recycler.alert.trading');
 
-        if (validSlots.length !== slotCount) {
-            setSlots(validSlots);
             return;
         }
 
-        setFinished(false);
-        setProcessing(true);
-        SendMessageComposer(new RecycleItemsMessageComposer(...validSlots.map((slot) => new RecycleItemsEntry(slot.itemId))));
-        clearOperationTimeout();
-        operationTimeoutRef.current = setTimeout(() => setProcessing(false), OPERATION_TIMEOUT_MS);
+        if ((getCurrencyAmount?.(0) ?? 0) < ducketCost) {
+            alert('catalog.alert.notenough.activitypoints.title.0');
+
+            return;
+        }
+
+        if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
+        animator.start(easterEgg());
+        setAbortVisible(true);
     };
 
-    const canRecycle = !processing && enabled && secondsLeft <= 0 && slots.length === slotCount;
+    const abort = () => {
+        setAbortVisible(false);
+        animator.stop();
+        scheduleReset(animator.reset, 650);
+    };
 
     return (
-        <div className={`volt-catalog-recycler-air${processing ? ' is-processing' : ''}`}>
-            <img alt="" className="volt-catalog-recycler-machine" draggable={false} src={machineImage} />
+        <div className="volt-catalog-recycler-air">
+            <img ref={machineRef} alt="" className="volt-catalog-recycler-machine" draggable={false} src={machineImage} />
             <img alt="" className="volt-catalog-recycler-title" draggable={false} src={titleImage} />
             {ducketCost > 0 && (
                 <div className="volt-catalog-recycler-cost">
@@ -167,9 +215,7 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
                             title={slot?.name}
                             type="button"
                             onClick={() =>
-                                slot
-                                    ? setSlots((current) => current.filter((_, slotIndex) => slotIndex !== index))
-                                    : setPickerOpen((open) => !open)
+                                slot ? setSlots((current) => current.filter((_, slotIndex) => slotIndex !== index)) : setPickerOpen((open) => !open)
                             }
                         >
                             {slot?.iconUrl && <img alt="" draggable={false} src={slot.iconUrl} />}
@@ -184,9 +230,20 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
             </div>
             <img alt="" className="volt-catalog-recycler-indicator" draggable={false} src={indicatorImage} />
             <div className="volt-catalog-recycler-pointer">
-                <img alt="" className="is-arrow" draggable={false} src={pointerArrowImage} />
+                <img ref={arrowRef} alt="" className="is-arrow" draggable={false} src={pointerArrowImage} />
                 <img alt="" className="is-base" draggable={false} src={pointerBaseImage} />
             </div>
+            {abortVisible && (
+                <button className="volt-catalog-recycler-abort" type="button" onClick={abort}>
+                    <NativeText
+                        background={PAGE_BACKGROUND}
+                        overrides={{ size: 10, underline: true }}
+                        text={LocalizeText('catalog.recycler.button.abort')}
+                        textStyle="u_regular"
+                        transparent
+                    />
+                </button>
+            )}
             {/* Volt keeps its inventory list instead of AIR's drag from the room or inventory: an empty slot opens it. */}
             {pickerOpen && !processing && (
                 <div className="volt-catalog-recycler-picker">
@@ -226,7 +283,6 @@ export const CatalogLayoutRecyclerView: FC<CatalogLayoutProps> = () => {
                     </div>
                 </div>
             )}
-            {finished && <span className="volt-catalog-recycler-finished" aria-live="polite">{LocalizeText('recycler.info.finished')}</span>}
         </div>
     );
 };
