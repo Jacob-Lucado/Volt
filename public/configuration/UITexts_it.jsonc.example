@@ -685,6 +685,8 @@
     "radio.live": "Live",
     "radio.hide": "Nascondi",
     "radio.show": "Mostra",
+    "recycler.broken": "La macchina è rotta..\n\nTorna presto!",
+    "recycler.pat_frank": "Clicca per accarezzare Frank",
 
     // ------------------------------------------------------------------------
     // Rare Values
