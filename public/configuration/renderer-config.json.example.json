@@ -51,7 +51,7 @@
 	"room.camera.move.speed": 12,
 	"habbicons.enabled": true,
 	"habbicons.asset.root": "/habbicons",
-	"habbicons.asset.hash": "default",
+	"habbicons.asset.hash": "habbo-225e1f8a",
 	"timezone.settings": "Europe/Amsterdam",
 	"user.badges.group.slot.enabled": true,
 	"badges.leaderboard.endpoint": "${api.url}/api/badges/leaderboard",
