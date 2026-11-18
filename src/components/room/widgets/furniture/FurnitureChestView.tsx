@@ -25,9 +25,7 @@ import {
     RoomObjectCategory,
     RoomObjectVariable,
     RoomPreviewer,
-    WIRED_TRANSACTION_LIST_CHEST,
     WiredTransactionGetChestLogsComposer,
-    WiredTransactionLogListEvent,
     Vector3d,
 } from '@volt/renderer';
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -58,7 +56,7 @@ import { useMessageEvent, useNotification, usePurse } from '../../../../hooks';
 import { useWiredToolsState } from '../../../../hooks/wired-tools/useWiredToolsState';
 import { ChestButton } from './ChestButton';
 import { ChestFurniGroup, chestFurniDisplayName, groupStoredFurni } from './chestFurniGrouping';
-import { WIRED_TRANSACTION_LOGS_PAGE_SIZE, WiredTransactionLogsPage, WiredTransactionLogsWindow } from '../../../wired-tools/WiredTransactionLogsWindow';
+import { WIRED_TRANSACTION_LOGS_PAGE_SIZE } from '../../../wired-tools/WiredTransactionLogsWindow';
 import { ChestCheckbox, ChestIconButton, ChestShinyButton, ChestText, ChestTitle } from './chest/ChestAirParts';
 import { ChestLockInfoBubble } from './chest/ChestLockInfoBubble';
 import { ChestNotificationsWindow, ChestSettingsWindow } from './chest/ChestPresetWindows';
@@ -170,7 +168,6 @@ export const FurnitureChestView: FC = () => {
     const [upgradeQty, setUpgradeQty] = useState(1);
     const [showLockInfo, setShowLockInfo] = useState(false);
     const [lockInfoAnchor, setLockInfoAnchor] = useState<HTMLButtonElement>(null);
-    const [logsPage, setLogsPage] = useState<WiredTransactionLogsPage>(null);
     const [upgradeResult, setUpgradeResult] = useState('');
     /** null shows the saved capacity; a string is what the owner is typing. */
     const [capacityDraft, setCapacityDraft] = useState<string | null>(null);
@@ -179,9 +176,6 @@ export const FurnitureChestView: FC = () => {
 
     /** The chest a ChestOpen (1595) was sent for; only its 988 / 44 answers open the window. */
     const openingIdRef = useRef(-1);
-
-    /** The chest a View logs request was sent for; its first log page opens the transaction logs window. */
-    const logsRequestRef = useRef(-1);
 
     const { showConfirm = null } = useNotification();
     const { getCurrencyAmount } = usePurse();
@@ -389,15 +383,6 @@ export const FurnitureChestView: FC = () => {
         );
     });
 
-    useMessageEvent<WiredTransactionLogListEvent>(WiredTransactionLogListEvent, (event) => {
-        const parser = event.getParser();
-
-        if (!parser || parser.listType !== WIRED_TRANSACTION_LIST_CHEST || parser.listId !== logsRequestRef.current || parser.amount !== WIRED_TRANSACTION_LOGS_PAGE_SIZE) return;
-
-        logsRequestRef.current = -1;
-        setLogsPage({ listType: parser.listType, listId: parser.listId, totalLogs: parser.totalLogs, page: parser.page, logs: [...parser.logs] });
-    });
-
     useMessageEvent<ChestLogEvent>(ChestLogEvent, (event) => {
         const p = event.getParser();
         setLogRows(p.rows.map((r) => ({ ...r })));
@@ -470,7 +455,6 @@ export const FurnitureChestView: FC = () => {
         showConfirm(LocalizeText(descKey).replace(/\\n/g, '\n'), onOk, () => {}, LocalizeText('generic.ok'), LocalizeText('generic.cancel'), LocalizeText(titleKey));
     const withdrawAll = () => confirm('wiredchests.withdraw_all.confirm.title', 'wiredchests.withdraw_all.confirm.desc', () => SendMessageComposer(new ChestWithdrawAllComposer(itemId)));
     const viewLogs = () => {
-        logsRequestRef.current = itemId;
         SendMessageComposer(new WiredTransactionGetChestLogsComposer(itemId, WIRED_TRANSACTION_LOGS_PAGE_SIZE, 1));
     };
     const withdrawFurni = () => {
@@ -712,7 +696,6 @@ export const FurnitureChestView: FC = () => {
                 </div>
             </VoltCardView>
             {showLockInfo && lockInfoAnchor && <ChestLockInfoBubble anchor={lockInfoAnchor} onClose={() => setShowLockInfo(false)} />}
-            {logsPage && <WiredTransactionLogsWindow data={logsPage} onClose={() => setLogsPage(null)} />}
 
             {/* ===== SETTINGS (ChestSettingsUI) ===== */}
             {showSettings && (
