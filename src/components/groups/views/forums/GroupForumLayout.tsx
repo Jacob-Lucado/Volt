@@ -3,6 +3,7 @@ import { FriendlyTime, LocalizeText } from '../../../../api';
 import settingsIcon from '../../../../assets/images/groups/native/pursearea_settings_icon.png';
 import { MessageData } from '@volt/renderer';
 import { LayoutBadgeImageView, VoltCardHeaderView, VoltCardView } from '../../../../common';
+import { SubpixelText } from '../../../../common/native-text/SubpixelText';
 import { flatText, GroupText, GroupWindowTitle } from '../GroupNativeLayout';
 
 export const FORUM_PAGE_SIZE = 20;
@@ -220,7 +221,16 @@ export const ForumPager: FC<ForumPagerProps> = ({ pageIndex, pageCount, onPage }
                     <GroupText blend="multiply" className="is-static" text={label} textStyle="u_bold" x={0} y={0} />
                 </button>
             ))}
-            <GroupText align="center" background={FORUM_SURFACE} overrides={flatText(12, { color: 0x949491 })} text={`${pageIndex + 1} / ${pageCount}`} width={50} x={58} y={5} />
+            {/* page_info: an auto size "center" text window, which AIR draws in sub-pixel mode. */}
+            <SubpixelText
+                align="field"
+                background={FORUM_SURFACE}
+                color={0x949491}
+                style={{ position: 'absolute', left: 58, top: 5 }}
+                text={`${pageIndex + 1} / ${pageCount}`}
+                textStyle="u_regular"
+                width={50}
+            />
         </div>
     );
 };
