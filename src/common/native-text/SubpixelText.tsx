@@ -258,7 +258,7 @@ export const SubpixelText: FC<SubpixelTextProps> = ({
                     }
                     const pen = runOrigin + Math.floor(cumulative + 0.5);
                     pens.push(pen);
-                    const tile = font.glyphs[character.charCodeAt(0)]?.[pen % 20];
+                    const tile = font.glyphs[character.charCodeAt(0)]?.[((pen % 20) + 20) % 20];
                     if (tile) {
                         const [atlasX, atlasY, tileWidth, tileHeight, offsetX, offsetY] = tile;
                         const left = Math.floor(pen / 20) + offsetX;
@@ -317,43 +317,39 @@ export const SubpixelText: FC<SubpixelTextProps> = ({
         };
     }, [text, textStyle, color, background, transparent, align, underlineKey, html, runsKey, linkKey, width, penX]);
 
-    if (fallback) {
-        const native = (
-            <NativeText
-                nativeResolution
-                align={align === 'left' ? 'left' : align === 'right' ? 'right' : 'center'}
-                ariaHidden={ariaHidden}
-                background={background}
-                className={link ? undefined : className}
-                overrides={
-                    textStyle === 'u_bold_default'
-                        ? { color, underline: !!underline, sharpness: 0, thickness: 0 }
-                        : textStyle === 'u_regular_11'
-                          ? { color, underline: !!underline, size: 11 }
-                          : { color, underline: !!underline }
-                }
-                style={link ? undefined : style}
-                text={text}
-                textStyle={textStyle === 'u_bold_default' ? 'u_bold' : textStyle === 'u_regular_11' ? 'u_regular' : textStyle}
-                transparent={transparent}
-                width={width}
-            />
-        );
-        // Without the atlas the whole line carries the link.
-        return link ? (
-            <button className={className} style={{ ...unstyledButton, display: 'inline-block', verticalAlign: 'top', ...style }} type="button" onClick={link.onClick}>
-                {native}
-            </button>
-        ) : (
-            native
-        );
-    }
-
     return (
         <span aria-hidden={ariaHidden || undefined} className={className} style={{ display: 'inline-block', verticalAlign: 'top', position: 'relative', ...size, ...style }}>
             <canvas ref={canvasRef} aria-hidden="true" style={{ display: size ? 'block' : 'none', width: size?.width, height: size?.height, imageRendering: 'pixelated' }} />
-            <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clipPath: 'inset(50%)', whiteSpace: 'pre' }}>{text}</span>
-            {link && linkBox && size && (
+            {fallback && link ? (
+                <span style={{ display: 'inline-block', width, textAlign: align === 'left' || align === 'right' ? align : 'center', whiteSpace: 'pre', color: `#${color.toString(16).padStart(6, '0')}`, fontFamily: 'HabboAirUbuntu, Ubuntu, sans-serif', fontSize: textStyle === 'u_regular_11' ? 11 : undefined }}>
+                    {[...text].slice(0, link.range[0]).join('')}
+                    <button style={{ ...unstyledButton, color: 'inherit', font: 'inherit', textDecoration: underline ? 'underline' : undefined }} type="button" onClick={link.onClick}>
+                        {[...text].slice(...link.range).join('')}
+                    </button>
+                    {[...text].slice(link.range[1]).join('')}
+                </span>
+            ) : fallback ? (
+                <NativeText
+                    nativeResolution
+                    align={align === 'left' ? 'left' : align === 'right' ? 'right' : 'center'}
+                    ariaHidden={ariaHidden}
+                    background={background}
+                    overrides={
+                        textStyle === 'u_bold_default'
+                            ? { color, underline: !!underline, sharpness: 0, thickness: 0 }
+                            : textStyle === 'u_regular_11'
+                              ? { color, underline: !!underline, size: 11 }
+                              : { color, underline: !!underline }
+                    }
+                    text={text}
+                    textStyle={textStyle === 'u_bold_default' ? 'u_bold' : textStyle === 'u_regular_11' ? 'u_regular' : textStyle}
+                    transparent={transparent}
+                    width={width}
+                />
+            ) : (
+                <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clipPath: 'inset(50%)', whiteSpace: 'pre' }}>{text}</span>
+            )}
+            {!fallback && link && linkBox && size && (
                 <button
                     aria-label={[...text].slice(...link.range).join('')}
                     style={{ ...unstyledButton, position: 'absolute', left: linkBox.left, top: 0, width: linkBox.width, height: size.height }}
