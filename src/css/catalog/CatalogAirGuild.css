@@ -1,32 +1,5 @@
 /* AIR catalog layouts (Guild group). */
 
-/* AIR button style 3 (habbo_skin_button_shiny_xml): 5px caps, caption button_shiny_regular with 8/2/8/3 margins, centred. */
-.volt-catalog-window .volt-catalog-guild-shiny-button {
-    position: absolute;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 0;
-    margin: 0;
-    padding: 0 3px;
-    border: 5px solid transparent;
-    border-image: var(--habbo-skin-shiny) 5 fill / 5px stretch;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-    cursor: pointer;
-    image-rendering: var(--volt-pixel-art, pixelated);
-}
-
-.volt-catalog-window .volt-catalog-guild-shiny-button:hover {
-    border-image-source: var(--habbo-skin-shiny-hover);
-}
-
-.volt-catalog-window .volt-catalog-guild-shiny-button:active {
-    border-image-source: var(--habbo-skin-shiny-pressed);
-}
-
 /*
  * AIR layout_guild_frontpage (360x460). Text rasters carry Flash's 2px gutter, so they sit at the text window's own x,y.
  */
@@ -86,12 +59,10 @@
     left: 1px;
 }
 
-/* find_groups_button (-23, 55, 210x25): button style 3, wider than the box on both sides. */
+/* find_groups_button (-23, 55) in members_only; the view sets its centred x. */
 .volt-catalog-window .volt-catalog-guild-find-groups {
+    position: absolute;
     top: 49px;
-    left: -29px;
-    width: 210px;
-    height: 25px;
 }
 
 /* guild_selector droplist (0, 0, 170x26): droplist_frame, 3px caps, the arrow at (width - 21, 2). */
@@ -191,12 +162,9 @@
     width: 9px;
 }
 
-/* buyGuildWidget (49, 231) holds start_guild_purchase at (19, 2): 28px high, sized to its caption, at least 190px wide. */
+/* buyGuildWidget (49, 231) holds start_guild_purchase at (19, 2); the view sets its centred x. */
 .volt-catalog-window .volt-catalog-guild-frontpage-button {
     top: 233px;
-    left: 68px;
-    min-width: 190px;
-    height: 28px;
 }
 
 /*
