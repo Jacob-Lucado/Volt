@@ -5,7 +5,8 @@ import { ClassicScrollAreaView, LayoutBadgeImageView } from '../../../../common'
 import { flatText, GroupText } from '../GroupNativeLayout';
 import { FORUM_PAGE_SIZE, FORUM_SURFACE, stripTags, ForumButton, forumAge, ForumPager } from './GroupForumLayout';
 
-const ROW_WIDTH = 532;
+// ForumsListView.updateItemWidths: a row is the scrollable list (534 less its 17px scrollbar) minus 2.
+const ROW_WIDTH = 515;
 
 /** ForumsListData: one answer to GetForumsList, as the forum window shows it. */
 export interface GroupForumsListData {

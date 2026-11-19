@@ -42,7 +42,8 @@ const moderationMessage = (thread: GuildForumThread): string => {
     return '';
 };
 
-const ROW_WIDTH = 532;
+// ThreadListView.updateItemWidths: a row is the scrollable list (534 less its 17px scrollbar) minus 2.
+const ROW_WIDTH = 515;
 const BUTTON_WIDTH = 25;
 
 /** Maps the error code of a permission to the text of that refusal ("Only group owner can start new threads."). */
