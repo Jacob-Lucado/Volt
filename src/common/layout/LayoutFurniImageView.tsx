@@ -1,4 +1,4 @@
-import { GetRoomEngine, IGetImageListener, IImageResult, ImageResult, Vector3d } from '@volt/renderer';
+import { GetRoomEngine, IGetImageListener, IImageResult, IObjectData, ImageResult, Vector3d } from '@volt/renderer';
 import { CSSProperties, FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ProductTypeEnum } from '../../api';
 import { Base, BaseProps } from '../Base';
@@ -14,11 +14,13 @@ interface LayoutFurniImageViewProps extends BaseProps<HTMLDivElement> {
     // way the room does (ObjectDataUpdateMessage), so a state change here matches
     // the in-game appearance instead of only tweaking the extras string.
     state?: number;
+    // Floor furni only: the data the image is drawn with, such as a group's colours.
+    objectData?: IObjectData;
     scale?: number;
 }
 
 export const LayoutFurniImageView: FC<LayoutFurniImageViewProps> = (props) => {
-    const { productType = 's', productClassId = -1, direction = 2, extraData = '', state = -1, scale = 1, style = {}, ...rest } = props;
+    const { productType = 's', productClassId = -1, direction = 2, extraData = '', state = -1, objectData = null, scale = 1, style = {}, ...rest } = props;
     const [imageElement, setImageElement] = useState<HTMLImageElement>(null);
     const isMounted = useRef(true);
     const requestIdRef = useRef(0);
@@ -74,7 +76,17 @@ export const LayoutFurniImageView: FC<LayoutFurniImageViewProps> = (props) => {
 
         switch (productType.toLocaleLowerCase()) {
             case ProductTypeEnum.FLOOR:
-                imageResult = GetRoomEngine().getFurnitureFloorImage(productClassId, new Vector3d(direction), 64, listener, 0, extraData, state);
+                imageResult = GetRoomEngine().getFurnitureFloorImage(
+                    productClassId,
+                    new Vector3d(direction),
+                    64,
+                    listener,
+                    0,
+                    extraData,
+                    state,
+                    -1,
+                    objectData
+                );
                 break;
             case ProductTypeEnum.WALL:
                 imageResult = GetRoomEngine().getFurnitureWallImage(productClassId, new Vector3d(direction), 64, listener, 0, extraData, state);
@@ -82,7 +94,7 @@ export const LayoutFurniImageView: FC<LayoutFurniImageViewProps> = (props) => {
         }
 
         if (imageResult?.data) updateImage(imageResult, requestId);
-    }, [productType, productClassId, direction, extraData, state, updateImage]);
+    }, [productType, productClassId, direction, extraData, state, objectData, updateImage]);
 
     return <Base classNames={['furni-image']} style={getStyle} {...rest} />;
 };

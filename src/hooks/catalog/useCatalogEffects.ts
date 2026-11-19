@@ -441,13 +441,24 @@ export const useCatalogEffects = (): void => {
                 return;
             }
 
-            useCatalogStore.setState({ objectMoverRequested: false, purchasableOffer: null, builderPlaceMultiple: false, isVisible: true });
+            useCatalogStore.setState({ objectMoverRequested: false, purchasableOffer: null, moverPurchaseOptions: null, builderPlaceMultiple: false, isVisible: true });
 
             return;
         }
 
         state.setPlacedObjectPurchaseData(
-            new PlacedObjectPurchaseData(event.roomId, event.objectId, event.category, event.wallLocation, event.x, event.y, event.direction, purchasableOffer, state.pageId)
+            new PlacedObjectPurchaseData(
+                event.roomId,
+                event.objectId,
+                event.category,
+                event.wallLocation,
+                event.x,
+                event.y,
+                event.direction,
+                purchasableOffer,
+                state.pageId,
+                state.moverPurchaseOptions
+            )
         );
 
         switch (state.currentType) {
@@ -494,7 +505,7 @@ export const useCatalogEffects = (): void => {
                 if (catalogSkipPurchaseConfirmation && !(product && product.isUniqueLimitedItem)) {
                     const placed = useCatalogStore.getState().placedObjectPurchaseData;
 
-                    if (claimPlacedOfferPurchase(placed)) SendMessageComposer(new PurchaseFromCatalogComposer(placed.pageId, purchasableOffer.offerId, product.extraParam, 1));
+                    if (claimPlacedOfferPurchase(placed)) SendMessageComposer(new PurchaseFromCatalogComposer(placed.pageId, purchasableOffer.offerId, placed.extraParam, 1));
                 }
 
                 if (state.catalogPlaceMultipleObjects) state.requestOfferToMover(purchasableOffer);

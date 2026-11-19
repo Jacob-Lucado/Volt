@@ -66,10 +66,19 @@ export const CatalogPlacedOfferConfirmView: FC = () => {
     const confirm = () => {
         if (!isOpen || !claimPlacedOfferPurchase(placedObjectPurchaseData)) return;
 
-        SendMessageComposer(new PurchaseFromCatalogComposer(placedObjectPurchaseData.pageId, offer.offerId, offer.product.extraParam, 1));
+        SendMessageComposer(new PurchaseFromCatalogComposer(placedObjectPurchaseData.pageId, offer.offerId, placedObjectPurchaseData.extraParam, 1));
     };
 
     if (!isOpen) return null;
 
-    return <CatalogPurchaseConfirmView isSubmitting={isSubmitting} offer={offer} quantity={1} onCancel={rollBack} onConfirm={confirm} />;
+    return (
+        <CatalogPurchaseConfirmView
+            isSubmitting={isSubmitting}
+            offer={offer}
+            quantity={1}
+            stuffData={placedObjectPurchaseData.purchaseOptions?.previewStuffData}
+            onCancel={rollBack}
+            onConfirm={confirm}
+        />
+    );
 };

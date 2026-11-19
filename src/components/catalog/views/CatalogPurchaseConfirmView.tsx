@@ -1,3 +1,4 @@
+import { IObjectData } from '@volt/renderer';
 import { CSSProperties, FC, KeyboardEvent, ReactNode, useEffect, useRef, useState } from 'react';
 import { GetConfigurationValue, IPurchasableOffer, LocalizeText, ProductTypeEnum } from '../../../api';
 import { getCatalogBundlePrice, ICatalogBundleDiscountRuleset } from '../../../api/catalog/CatalogBundleDiscount';
@@ -13,12 +14,14 @@ interface CatalogPurchaseConfirmViewProps {
     onConfirm: () => void;
     onCancel: () => void;
     preview?: ReactNode;
+    /** PurchaseConfirmationDialog.showOffer draws a floor offer with the previewer's stuff data, such as the chosen group's colours. */
+    stuffData?: IObjectData;
     /** PurchaseConfirmationDialog.showConfirmationDialog colours collectibles offers 0x2a2a2a. */
     frameColor?: number;
 }
 
 export const CatalogPurchaseConfirmView: FC<CatalogPurchaseConfirmViewProps> = (props) => {
-    const { offer = null, quantity = 1, bundleDiscountRuleset = null, isGift = false, isSubmitting = false, onConfirm = null, onCancel = null, preview = null, frameColor = null } = props;
+    const { offer = null, quantity = 1, bundleDiscountRuleset = null, isGift = false, isSubmitting = false, onConfirm = null, onCancel = null, preview = null, stuffData = null, frameColor = null } = props;
     const tintedFrame = useTintedSkin(frameColor === null ? null : frameBase, frameColor, 33);
     const dialogRef = useRef<HTMLDivElement>(null);
     const spendingDisclaimerEnabled = GetConfigurationValue<boolean>('disclaimer.credit_spending.enabled', false) === true;
@@ -107,6 +110,7 @@ export const CatalogPurchaseConfirmView: FC<CatalogPurchaseConfirmViewProps> = (
                             aria-label={offer.localizationName}
                             direction={90}
                             extraData={offer.product.extraParam}
+                            objectData={stuffData}
                             productClassId={offer.product.productClassId}
                             productType={offer.product.productType}
                             role="img"

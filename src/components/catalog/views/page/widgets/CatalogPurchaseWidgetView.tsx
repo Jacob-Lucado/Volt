@@ -447,6 +447,7 @@ export const CatalogPurchaseWidgetView: FC<CatalogPurchaseWidgetViewProps> = (pr
                     bundleDiscountRuleset={bundleDiscountRuleset}
                     offer={currentOffer}
                     quantity={purchaseOptions.quantity}
+                    stuffData={purchaseOptions.previewStuffData}
                     onCancel={() => {
                         confirmationOpenRef.current = false;
                         resetPlacedOfferData?.();
