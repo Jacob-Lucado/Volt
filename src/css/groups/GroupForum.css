@@ -158,26 +158,23 @@
     top: 88px;
     width: calc(100% + 10px);
     height: 25px;
-    display: flex;
-    align-items: flex-start;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    justify-content: start;
+    align-items: start;
     gap: 5px;
-    padding-top: 3px;
+    padding: 3px 0 0 5px;
     box-sizing: border-box;
     background: #fff;
 }
 
 .volt-forum__shortcuts > .volt-group-native__text {
     position: static;
-    margin-left: 5px;
-}
-
-.volt-forum__shortcut:first-of-type {
-    margin-left: -3px;
 }
 
 .volt-forum__shortcut {
     position: static;
-    margin-left: -1px;
     margin: 0;
     padding: 0;
     border: 0;
