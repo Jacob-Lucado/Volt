@@ -78,6 +78,9 @@ export const GroupForumSettingsView: FC<GroupForumSettingsViewProps> = ({ forumD
             className="volt-group-forum-settings"
             height={545}
             initialPosition={initialPosition}
+            isResizable={true}
+            minHeight={455}
+            resizeAxis="vertical"
             title={LocalizeText('groupforum.settings.window_title')}
             uniqueKey="group-forum-settings"
             width={350}
@@ -112,8 +115,11 @@ export const GroupForumSettingsView: FC<GroupForumSettingsViewProps> = ({ forumD
                     ))}
                 </div>
             ))}
-            <ForumButton label={LocalizeText('groupforum.settings.cancel')} width={120} x={25} y={478} onClick={onClose} />
-            <ForumButton label={LocalizeText('groupforum.settings.ok')} tint="blue" width={120} x={190} y={478} onClick={save} />
+            {/* cancel_btn and ok_btn (y 478) move with the bottom of the window. */}
+            <div className="volt-forum__footer is-settings">
+                <ForumButton label={LocalizeText('groupforum.settings.cancel')} width={120} x={25} onClick={onClose} />
+                <ForumButton label={LocalizeText('groupforum.settings.ok')} tint="blue" width={120} x={190} onClick={save} />
+            </div>
         </ForumFrame>
     );
 };

@@ -430,6 +430,18 @@
     height: 30px;
 }
 
+/* Forum settings: the buttons sit 12px above the bottom of the 520px client area. */
+.volt-forum__footer.is-settings {
+    bottom: 12px;
+}
+
+/* Measures the client area of a resizable dialog. */
+.volt-forum__client-size {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
 .volt-forum__footer > * {
     position: absolute;
 }
