@@ -2,6 +2,7 @@ import { CreateLinkEvent, ForumData } from '@volt/renderer';
 import { FC } from 'react';
 import { GetGroupInformation, LocalizeText } from '../../../../api';
 import { ClassicScrollAreaView, LayoutBadgeImageView } from '../../../../common';
+import { SubpixelText } from '../../../../common/native-text/SubpixelText';
 import { flatText, GroupText } from '../GroupNativeLayout';
 import { FORUM_PAGE_SIZE, FORUM_SURFACE, stripTags, ForumButton, forumAge, ForumPager } from './GroupForumLayout';
 
@@ -26,12 +27,13 @@ export const GroupForumListView: FC<GroupForumListViewProps> = ({ list, onMarkAs
     const pageIndex = Math.ceil(list.startIndex / FORUM_PAGE_SIZE);
     const pageCount = Math.ceil(list.totalAmount / FORUM_PAGE_SIZE);
 
-    // "Did you know? You can get your own group forum <u><a href=...>here</a></u>." keeps its link as a separate, working piece.
+    // "Did you know? You can get your own group forum <u><a href=...>here</a></u>.": the underlined link is its own html run.
     const status = LocalizeText('groupforum.view.forums_list.status');
     const linkMatch = status.match(/^(.*?)<u><a[^>]*>(.*?)<\/a><\/u>(.*)$/);
     const before = linkMatch ? stripTags(linkMatch[1]) : stripTags(status);
     const linkText = linkMatch ? linkMatch[2] : '';
     const after = linkMatch ? stripTags(linkMatch[3]) : '';
+    const linkRange: [number, number] = [before.length, before.length + linkText.length];
 
     return (
         <>
@@ -88,12 +90,19 @@ export const GroupForumListView: FC<GroupForumListViewProps> = ({ list, onMarkAs
                 <ForumButton label={LocalizeText('groupforum.view.mark_read')} width={95} x={10} onClick={onMarkAsRead} />
                 <ForumPager pageCount={pageCount} pageIndex={pageIndex} onPage={onPage} />
             </div>
+            {/* status: an auto size "center" html window, which AIR draws in sub-pixel mode. */}
             <div className="volt-forum__status is-list">
-                <GroupText background={FORUM_SURFACE} className="is-static" overrides={flatText(11)} text={before} x={0} y={0} />
-                {linkText && (
-                    <GroupText background={FORUM_SURFACE} className="is-static is-link" overrides={flatText(11, { underline: true })} text={linkText} x={0} y={0} onClick={() => CreateLinkEvent('catalog/open/guild_forum')} />
-                )}
-                {after && <GroupText background={FORUM_SURFACE} className="is-static" overrides={flatText(11)} text={after} x={0} y={0} />}
+                <SubpixelText
+                    html
+                    align="field"
+                    background={FORUM_SURFACE}
+                    link={linkText ? { range: linkRange, onClick: () => CreateLinkEvent('catalog/open/guild_forum') } : undefined}
+                    runs={linkText ? linkRange : undefined}
+                    text={before + linkText + after}
+                    textStyle="u_regular_11"
+                    underline={linkText ? linkRange : false}
+                    width={300}
+                />
             </div>
         </>
     );
