@@ -592,19 +592,11 @@
     background: #fff;
 }
 
+/* formatting_help: a 197px wide auto size "right" html window at (243, 4); it keeps its place when the editor grows. */
 .volt-forum__help-link {
     position: absolute;
-    right: 4px;
+    left: 243px;
     top: 4px;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: none;
-    cursor: pointer;
-}
-
-.volt-forum__help-link > .volt-group-native__text.is-static {
-    position: static;
 }
 
 /* settings window */

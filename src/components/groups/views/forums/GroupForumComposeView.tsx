@@ -2,6 +2,7 @@ import { ExtendedForumData, GuildForumThread, PostMessageMessageComposer, PostMe
 import { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { CreateLinkEvent, FriendlyTime, LocalizeText, SendMessageComposer } from '../../../../api';
 import { LayoutBadgeImageView } from '../../../../common';
+import { SubpixelText } from '../../../../common/native-text/SubpixelText';
 import { useMessageEvent } from '../../../../hooks';
 import { flatText, GroupInput, GroupText } from '../GroupNativeLayout';
 import { FORUM_HEADER, FORUM_SURFACE, ForumButton, ForumFrame, stripTags } from './GroupForumLayout';
@@ -145,6 +146,7 @@ export const GroupForumComposeView: FC<GroupForumComposeViewProps> = ({ compose,
     };
     const status = getStatus();
 
+    const formattingHelp = stripTags(LocalizeText('groupforum.compose.formatting_help'));
     return (
         <ForumFrame
             className="volt-group-forum-compose"
@@ -183,9 +185,19 @@ export const GroupForumComposeView: FC<GroupForumComposeViewProps> = ({ compose,
             )}
             <div className="volt-forum__compose-bar" style={{ top: 145, width: 444 + sizeDelta.width }}>
                 <GroupText background={0x227aad} overrides={flatText(12, { color: 0xeeeeee })} text={LocalizeText('groupforum.compose.message')} x={1} y={1} />
-                <button className="volt-forum__help-link" style={{ right: 4 + sizeDelta.width }} type="button" onClick={() => CreateLinkEvent('habbopages/forums/formatting')}>
-                    <GroupText background={0x227aad} className="is-static" overrides={{ underline: true }} text={stripTags(LocalizeText('groupforum.compose.formatting_help'))} textStyle="id_link_regular" x={0} y={0} />
-                </button>
+                <div className="volt-forum__help-link">
+                    <SubpixelText
+                        html
+                        underline
+                        align="right"
+                        background={0x227aad}
+                        color={0xffffff}
+                        link={{ range: [0, [...formattingHelp].length], onClick: () => CreateLinkEvent('habbopages/forums/formatting') }}
+                        text={formattingHelp}
+                        textStyle="u_regular_11"
+                        width={197}
+                    />
+                </div>
             </div>
             {/* message_text has its own white background. */}
             <div className="volt-forum__compose-field" style={{ left: 0, top: 165, width: 444 + sizeDelta.width, height: 200 + sizeDelta.height }} />
@@ -195,7 +207,7 @@ export const GroupForumComposeView: FC<GroupForumComposeViewProps> = ({ compose,
             }} />
             <ForumButton label={LocalizeText('groupforum.compose.cancel')} width={120} x={25} y={378 + sizeDelta.height} onClick={onClose} />
             <ForumButton disabled={isPosting || !subjectOk || !messageOk || !canPostHere || cooldown > 0} label={LocalizeText('groupforum.compose.post')} tint="blue" width={120} x={295 + sizeDelta.width} y={378 + sizeDelta.height} onClick={post} />
-            {status && <GroupText background={FORUM_SURFACE} overrides={flatText(11)} text={status} width={424 + sizeDelta.width} wrap x={10} y={422 + sizeDelta.height} />}
+            {status && <GroupText background={FORUM_SURFACE} overrides={{ size: 11 }} text={status} width={424 + sizeDelta.width} wrap x={10} y={422 + sizeDelta.height} />}
         </ForumFrame>
     );
 };
