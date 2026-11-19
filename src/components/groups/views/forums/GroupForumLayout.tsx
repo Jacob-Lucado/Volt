@@ -149,7 +149,7 @@ export const ForumShortcuts: FC<ForumShortcutsProps> = ({ unreadCount = 0, onOpe
 
     return (
         <div className="volt-forum__shortcuts">
-            <GroupText background={0xffffff} className="is-static" overrides={flatText(11, { bold: true })} text={LocalizeText('groupforum.view.shortcuts.header')} x={0} y={0} />
+            <GroupText background={0xffffff} className="is-static" overrides={{ size: 11, bold: true }} text={LocalizeText('groupforum.view.shortcuts.header')} x={0} y={0} />
             <ForumShortcutLink text={mine} onClick={() => onOpenList('my')} />
             <ForumShortcutLink text={strip('groupforum.view.shortcuts.active')} onClick={() => onOpenList('active')} />
             <ForumShortcutLink text={strip('groupforum.view.shortcuts.popular')} onClick={() => onOpenList('popular')} />
@@ -159,7 +159,7 @@ export const ForumShortcuts: FC<ForumShortcutsProps> = ({ unreadCount = 0, onOpe
 
 const ForumShortcutLink: FC<{ text: string; onClick: () => void }> = ({ text, onClick }) => (
     <button className="volt-forum__shortcut" type="button" onClick={onClick}>
-        <GroupText background={0xffffff} className="is-static" overrides={flatText(11, { color: 0x1b79ab, underline: true })} text={text} x={0} y={0} />
+        <GroupText background={0xffffff} className="is-static" overrides={{ size: 11, color: 0x1b79ab, underline: true }} text={text} x={0} y={0} />
     </button>
 );
 
