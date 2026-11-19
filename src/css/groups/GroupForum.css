@@ -423,10 +423,9 @@
     position: absolute;
 }
 
-/* The status html sits at (3, 3) in its 300x20 container at (180, 515). */
 .volt-forum__status {
-    left: 183px;
-    bottom: 2px;
+    left: 180px;
+    bottom: 5px;
     width: 300px;
     height: 20px;
 }
@@ -436,6 +435,8 @@
 }
 
 .volt-forum__status.is-list {
+    left: 183px;
+    bottom: 2px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
