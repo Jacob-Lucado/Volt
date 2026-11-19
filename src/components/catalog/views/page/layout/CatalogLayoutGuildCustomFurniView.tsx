@@ -1,13 +1,11 @@
-import { StringDataType } from '@volt/renderer';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC } from 'react';
 import { Offer } from '../../../../../api';
 import { NativeText } from '../../../../../common/native-text/NativeText';
-import { getCatalogGridMetrics, useCatalogData, useCatalogDisplayPreferences, useCatalogUiState, useUserGroups } from '../../../../../hooks';
+import { getCatalogGridMetrics, useCatalogData, useCatalogDisplayPreferences, useUserGroups } from '../../../../../hooks';
 import { getCatalogPlainText } from '../../../catalogLocalization.helpers';
 import { CatalogCentredImageView } from '../widgets/CatalogCentredImageView';
 import { CatalogFirstProductSelectorWidgetView } from '../widgets/CatalogFirstProductSelectorWidgetView';
 import { CatalogGuildBadgeWidgetView } from '../widgets/CatalogGuildBadgeWidgetView';
-import { CatalogGuildFurniRecolorFilter } from '../widgets/CatalogGuildFurniRecolorFilter';
 import { CatalogGuildSelectorWidgetView } from '../widgets/CatalogGuildSelectorWidgetView';
 import { CatalogItemGridWidgetView } from '../widgets/CatalogItemGridWidgetView';
 import { CatalogPreviewControls } from '../widgets/CatalogPreviewControls';
@@ -27,39 +25,10 @@ export const CatalogLayouGuildCustomFurniView: FC<CatalogLayoutProps> = (props) 
     const { page = null } = props;
     const { currentOffer = null, roomPreviewer = null } = useCatalogData();
     const isBundleOffer = currentOffer?.pricingModel === Offer.PRICING_MODEL_BUNDLE;
-    const { purchaseOptions = null } = useCatalogUiState();
     const { data: groups = null } = useUserGroups();
     const { density = 'standard', showTilePrices = true } = useCatalogDisplayPreferences();
     const gridMetrics = getCatalogGridMetrics(density);
     const hasGroups = !!(groups && groups.length);
-    const [groupColors, setGroupColors] = useState<{ colorA: string; colorB: string } | null>(null);
-
-    useEffect(() => {
-        const previewStuffData = purchaseOptions?.previewStuffData ?? null;
-
-        if (!previewStuffData) return;
-
-        const colorA = (previewStuffData as StringDataType).getValue(3);
-        const colorB = (previewStuffData as StringDataType).getValue(4);
-
-        if (!colorA || !colorA.length) return;
-
-        const next = { colorA, colorB: colorB && colorB.length ? colorB : colorA };
-
-        setGroupColors((prev) => (prev && prev.colorA === next.colorA && prev.colorB === next.colorB ? prev : next));
-    }, [purchaseOptions]);
-
-    // The grid icons are tinted in CSS; AIR renders them through the room engine with the group's stuff data.
-    const tintColor = useMemo(() => {
-        if (!groupColors) return null;
-
-        const { colorA, colorB } = groupColors;
-
-        if (colorB && colorB !== colorA) return `linear-gradient(90deg, #${colorA} 0 50%, #${colorB} 50% 100%)`;
-
-        return `#${colorA}`;
-    }, [groupColors]);
-
     const teaserImage = page.localization.getImage(1);
     const teaserText = getCatalogPlainText(page.localization.getText(1));
     const specialImage = page.localization.getImage(2);
@@ -69,7 +38,6 @@ export const CatalogLayouGuildCustomFurniView: FC<CatalogLayoutProps> = (props) 
         <div className="volt-catalog-guild-furni">
             {/* GuildMembershipsController selects the first offer once the groups arrive. */}
             <CatalogFirstProductSelectorWidgetView />
-            {!!groupColors && <CatalogGuildFurniRecolorFilter colorA={groupColors.colorA} colorB={groupColors.colorB} />}
 
             {/* productViewWidget (0, 0, 360x240). */}
             <div className="volt-catalog-guild-furni-product">
@@ -128,7 +96,6 @@ export const CatalogLayouGuildCustomFurniView: FC<CatalogLayoutProps> = (props) 
                 <CatalogItemGridWidgetView
                     className={`volt-catalog-grid volt-catalog-grid-density-${density}`}
                     showPrices={showTilePrices}
-                    tintColor={tintColor}
                     {...gridMetrics}
                 />
             </div>
