@@ -50,7 +50,7 @@ export const forumQuote = (message: MessageData): string =>
 };
 
 interface ForumFrameProps {
-    uniqueKey: string;
+    uniqueKey?: string;
     className: string;
     title: string;
     width: number;
@@ -58,6 +58,7 @@ interface ForumFrameProps {
     minWidth?: number;
     minHeight?: number;
     isResizable?: boolean;
+    resizeAxis?: 'both' | 'vertical';
     initialPosition?: { x: number; y: number };
     onClose: () => void;
     onHelp?: () => void;
@@ -65,13 +66,28 @@ interface ForumFrameProps {
 }
 
 /** A group forum window: frame 3 with the help and close buttons, its client origin 6px right of and 25px below the frame corner. */
-export const ForumFrame: FC<ForumFrameProps> = ({ uniqueKey, className, title, width, height, minWidth = width, minHeight = height, isResizable = false, initialPosition, onClose, onHelp, children }) => (
+export const ForumFrame: FC<ForumFrameProps> = ({
+    uniqueKey,
+    className,
+    title,
+    width,
+    height,
+    minWidth = width,
+    minHeight = height,
+    isResizable = false,
+    resizeAxis = 'both',
+    initialPosition,
+    onClose,
+    onHelp,
+    children
+}) => (
     <VoltCardView
         aria-label={title}
         className={`volt-forum ${className}`}
         frameStyle={3}
         initialPosition={initialPosition}
         isResizable={isResizable}
+        resizeAxis={resizeAxis}
         role="dialog"
         style={{ '--forum-width': width + 'px', '--forum-height': height + 'px', '--forum-min-width': minWidth + 'px', '--forum-min-height': minHeight + 'px' } as CSSProperties}
         uniqueKey={uniqueKey}
