@@ -981,7 +981,7 @@
     cursor: pointer;
 }
 
-:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget, .volt-catalog-guild-price) .volt-catalog-price-frame {
+:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget) .volt-catalog-price-frame {
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -1000,20 +1000,20 @@
     box-shadow: none;
 }
 
-:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget, .volt-catalog-guild-price) .volt-catalog-price-frame .volt-catalog-standard-price-display {
+:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget) .volt-catalog-price-frame .volt-catalog-standard-price-display {
     height: 13px;
     min-height: 13px;
     gap: 1px;
 }
 
-:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget, .volt-catalog-guild-price) .volt-catalog-price-frame .volt-catalog-standard-price-pill {
+:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget) .volt-catalog-price-frame .volt-catalog-standard-price-pill {
     min-width: 0;
     height: 13px;
     gap: 1px;
     padding: 0;
 }
 
-:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget, .volt-catalog-guild-price) .volt-catalog-price-frame .volt-catalog-standard-price-text {
+:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget) .volt-catalog-price-frame .volt-catalog-standard-price-text {
     color: #111 !important;
     font-family: Ubuntu, Arial, sans-serif;
     font-size: 14px !important;
@@ -1022,7 +1022,7 @@
     text-shadow: none !important;
 }
 
-:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget, .volt-catalog-guild-price) .volt-catalog-price-frame .volt-currency-icon {
+:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget) .volt-catalog-price-frame .volt-currency-icon {
     flex: 0 0 22px;
     width: 22px !important;
     height: 22px !important;
@@ -1030,7 +1030,7 @@
     image-rendering: var(--volt-pixel-art, pixelated);
 }
 
-:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget, .volt-catalog-guild-price) .volt-catalog-price-frame .is-credits .volt-currency-icon {
+:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget) .volt-catalog-price-frame .is-credits .volt-currency-icon {
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAD/SURBVEhLtZSBDYMwDAQzTTtNR2GmrlBW6SBlhFSO9OFsnJRKraUngPH5ZSCl1lr+oXZ43i8HtWQpdhhqWhuTBNZtrlGDA1hQFa7LXGxATgvdIFSF2+pFt3bNBoQ7MKECqXC57mA7l9hAcAeObgnmqrwacGR03cEZNILlUhCtmevTYCq6jNdfgW2lToBvHSw3hBMc8wSz2WmwxDydfwRbIhZzLMpRbKAX68DRdSwcic8ZuEMF5g8i5ywcSUA1GoHdSASO89a5VgO/HgGqzw1gu+lczcAGTKApuMOzmVMAOuhhE3Jb3v4gizPRZYNmm1AMV3RCPiZgRQRE5SHwr/UG8Hq+iW3+jYQAAAAASUVORK5CYII=") !important;
 }
 

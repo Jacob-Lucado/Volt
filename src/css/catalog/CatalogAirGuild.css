@@ -231,21 +231,12 @@
 }
 
 /*
- * simplePriceWidget (48, 341, 47x28) clips the priceDisplayWidget, which SimplePriceCatalogWidget leaves at its own (12, 9)
- * because the widget has no product image to align to.
+ * simplePriceWidget (48, 341) does not clip its priceDisplayWidget. The price border stays at (12, 9) because there is no
+ * product image to align to, and on_accommodate_align_right grows it to the left from its right edge at 48 + 12 + 20.
  */
 .volt-catalog-guild-forum-price {
-    top: 341px;
-    left: 48px;
-    width: 47px;
-    height: 28px;
-    overflow: hidden;
-}
-
-.volt-catalog-guild-forum-price > .volt-catalog-price-frame {
-    position: absolute;
-    top: 9px;
-    left: 12px;
+    top: 350px;
+    right: 280px;
 }
 
 /* guildBadgeViewWidget (271, 350, 40x40). */
@@ -308,13 +299,6 @@
 }
 
 /* HabboCatalogUtils.showPriceOnProduct: the price display 6px in from the right and bottom of the room canvas. */
-.volt-catalog-guild-furni-price {
-    position: absolute;
-    right: 6px;
-    bottom: 7px;
-    z-index: 4;
-}
-
 /* specialInfoWidget (94, 18, 142x73): ctlg_special_img pivoted bottom centre, ctlg_special_txt at (2, 28, 139 wide). */
 .volt-catalog-guild-furni-special {
     position: absolute;
