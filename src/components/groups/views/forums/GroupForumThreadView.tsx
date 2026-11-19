@@ -17,6 +17,7 @@ import replyIcon from '../../../../assets/images/groups/native/forum_reply.png';
 import reportIcon from '../../../../assets/images/groups/native/forum_forum_report.png';
 import unhideIcon from '../../../../assets/images/groups/native/forum_forum_unhide.png';
 import { ClassicScrollAreaView, LayoutAvatarImageView } from '../../../../common';
+import { SubpixelText } from '../../../../common/native-text/SubpixelText';
 import { useHelp, useMessageEvent } from '../../../../hooks';
 import { flatText, GroupText } from '../GroupNativeLayout';
 import { FORUM_PAGE_SIZE, FORUM_SURFACE, stripTags, ForumButton, forumAge, forumQuote, ForumPager } from './GroupForumLayout';
@@ -201,15 +202,16 @@ export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({
                         return (
                             <div key={message.messageId} className="volt-forum__message">
                                 <div className="volt-forum__message-bar">
-                                    <GroupText background={0x227aad} overrides={flatText(12, { color: 0xeeeeee })} text={forumAge(message.creationTime)} x={0} y={4} />
-                                    <GroupText
-                                        align="center"
+                                    <GroupText background={0x227aad} overrides={{ color: 0xeeeeee }} text={forumAge(message.creationTime)} x={0} y={4} />
+                                    {/* reply_num: an auto size "right" text window, which AIR draws in sub-pixel mode. */}
+                                    <SubpixelText
+                                        align="right"
                                         background={0x227aad}
-                                        overrides={flatText(12, { color: 0xeeeeee })}
+                                        color={0xeeeeee}
+                                        style={{ position: 'absolute', left: ITEM_WIDTH - actionsWidth - 40, top: 4 }}
                                         text={'#' + (message.messageIndex + 1)}
+                                        textStyle="u_regular"
                                         width={40}
-                                        x={ITEM_WIDTH - actionsWidth - 40}
-                                        y={4}
                                     />
                                     <div className="volt-forum__message-actions" style={{ width: actionsWidth }}>
                                         {hideAction && (
@@ -242,7 +244,7 @@ export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({
                                     </div>
                                     <div className="volt-forum__message-text" style={{ background: '#' + textColor.toString(16).padStart(6, '0') }}>
                                         {showText && (
-                                            <GroupText background={textColor} overrides={flatText(12)} text={text} width={ITEM_WIDTH - 130 - 12} wrap x={8} y={4} />
+                                            <GroupText background={textColor} text={text} width={ITEM_WIDTH - 130 - 12} wrap x={8} y={4} />
                                         )}
                                     </div>
                                 </div>
