@@ -11,8 +11,8 @@ import { CatalogItemGridWidgetView } from '../widgets/CatalogItemGridWidgetView'
 import { CatalogPreviewControls } from '../widgets/CatalogPreviewControls';
 import { CatalogProductDetailsView } from '../widgets/CatalogProductDetailsView';
 import { CatalogPurchaseWidgetView } from '../widgets/CatalogPurchaseWidgetView';
-import { CatalogTotalPriceWidget } from '../widgets/CatalogTotalPriceWidget';
 import { CatalogViewProductWidgetView } from '../widgets/CatalogViewProductWidgetView';
+import { CatalogAirPriceDisplayView } from './CatalogAirPriceDisplayView';
 import { CatalogLayoutProps } from './CatalogLayout.types';
 
 const PAGE_BACKGROUND = 0xe9e9e1;
@@ -48,11 +48,7 @@ export const CatalogLayouGuildCustomFurniView: FC<CatalogLayoutProps> = (props) 
                         </div>
                         {!isBundleOffer && <CatalogPreviewControls productType={currentOffer.product.productType} roomPreviewer={roomPreviewer} />}
                         <CatalogViewProductWidgetView height={240} />
-                        <div className="volt-catalog-guild-furni-price volt-catalog-guild-price">
-                            <div className="volt-catalog-preview-price volt-catalog-price-frame">
-                                <CatalogTotalPriceWidget alignItems="end" />
-                            </div>
-                        </div>
+                        <CatalogAirPriceDisplayView className="volt-catalog-default-price" offer={currentOffer} />
                     </div>
                 ) : (
                     <>
