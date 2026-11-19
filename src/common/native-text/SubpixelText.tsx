@@ -6,7 +6,7 @@ import { NativeText } from './NativeText';
  * glyphs sit on 1/20 px pens and each pen phase has its own raster. These styles carry AIR's own rasters per phase
  * (WIN63-202610201032, rendered by the AIR runtime); characters without one are drawn by NativeText.
  */
-export type SubpixelTextStyle = 'u_regular' | 'u_bold' | 'u_bold_default' | 'u_headline_small' | 'u_headline_medium' | 'il_bold_white';
+export type SubpixelTextStyle = 'u_regular' | 'u_regular_11' | 'u_bold' | 'u_bold_default' | 'u_headline_small' | 'u_headline_medium' | 'il_bold_white';
 
 type FontAsset = { metrics: string; atlas: string };
 
@@ -20,6 +20,17 @@ const fontAssets: Record<SubpixelTextStyle, { dark?: FontAsset; light?: FontAsse
         light: {
             metrics: new URL('../../assets/native-fonts/subpixel/u_regular_light.json', import.meta.url).href,
             atlas: new URL('../../assets/native-fonts/subpixel/u_regular_light.png', import.meta.url).href
+        }
+    },
+    // Ubuntu 11 (80 / -15): u_regular at font size 11, and id_link_regular in white.
+    u_regular_11: {
+        dark: {
+            metrics: new URL('../../assets/native-fonts/subpixel/u_regular_11.json', import.meta.url).href,
+            atlas: new URL('../../assets/native-fonts/subpixel/u_regular_11.png', import.meta.url).href
+        },
+        light: {
+            metrics: new URL('../../assets/native-fonts/subpixel/u_regular_11_light.json', import.meta.url).href,
+            atlas: new URL('../../assets/native-fonts/subpixel/u_regular_11_light.png', import.meta.url).href
         }
     },
     u_bold_default: {
@@ -58,6 +69,8 @@ const fontAssets: Record<SubpixelTextStyle, { dark?: FontAsset; light?: FontAsse
         }
     }
 };
+
+const unstyledButton: CSSProperties = { margin: 0, padding: 0, border: 0, background: 'none', cursor: 'pointer' };
 
 const isLightColor = (color: number) => 30 * ((color >>> 16) & 255) + 59 * ((color >>> 8) & 255) + 11 * (color & 255) > 20000;
 
@@ -129,6 +142,15 @@ const lineOrigin = (align: SubpixelTextProps['align'], fieldWidth: number, exact
     }
 };
 
+/**
+ * An html window's field is its floored textWidth plus the 4px gutters wide (whole pixels), and TextSkinRenderer puts it at
+ * floor(width - field) when right-aligned or floor(width / 2 - field / 2) when centred; the line starts at the 2px gutter.
+ */
+const htmlLineOrigin = (align: SubpixelTextProps['align'], width: number, flooredWidth: number): number => {
+    const field = Math.floor(flooredWidth / 20) + 4;
+    return ((align === 'right' ? width - field : Math.floor(width / 2 - field / 2)) + 2) * 20;
+};
+
 interface SubpixelTextProps {
     text: string;
     textStyle: SubpixelTextStyle;
@@ -143,7 +165,17 @@ interface SubpixelTextProps {
      * `right`: an auto size "right" window of `width`: TextSkinRenderer draws the text-sized field at floor(width - field width).
      */
     align?: 'left' | 'center' | 'field' | 'cell' | 'paragraph' | 'right';
-    underline?: boolean;
+    /** Underline the whole line, or the characters from start up to (not including) end. */
+    underline?: boolean | [number, number];
+    /** An html window: a whole-pixel field (see htmlLineOrigin), and its underline ends on the nearest pixel edge instead of the last whole pixel. */
+    html?: boolean;
+    /**
+     * The index of the first character of each html run after the first (a link or an underline starts a run). In a centred or
+     * right-aligned html window a run starts at the previous run start plus that run's advances floored to twips.
+     */
+    runs?: number[];
+    /** An html link over the characters from start up to (not including) end: a click on their advances runs onClick. */
+    link?: { range: [number, number]; onClick: () => void };
     /** A fixed text field width (gutters included); by default the field fits the text. */
     width?: number;
     className?: string;
@@ -169,6 +201,9 @@ export const SubpixelText: FC<SubpixelTextProps> = ({
     transparent = false,
     align = 'left',
     underline = false,
+    html = false,
+    runs,
+    link,
     width,
     className,
     style,
@@ -178,6 +213,11 @@ export const SubpixelText: FC<SubpixelTextProps> = ({
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [size, setSize] = useState<{ width: number; height: number }>(null);
     const [fallback, setFallback] = useState(false);
+    const [linkBox, setLinkBox] = useState<{ left: number; width: number }>(null);
+    // Arrays change identity on every render; the effect keys on their contents.
+    const underlineKey = underline === true ? 'line' : underline ? underline.join(',') : '';
+    const runsKey = runs?.join(',') ?? '';
+    const linkKey = link?.range.join(',') ?? '';
 
     useEffect(() => {
         let disposed = false;
@@ -197,11 +237,27 @@ export const SubpixelText: FC<SubpixelTextProps> = ({
                 const textHeight = floorToTwips((font.ascent * font.size) / font.emSquare) + floorToTwips((font.descent * font.size) / font.emSquare);
                 const fieldHeight = Math.ceil(textHeight) + 4;
                 const flooredWidth = [...text].reduce((sum, character) => sum + Math.floor(twips(character)), 0);
-                const origin = penX !== undefined ? Math.round(penX * 20) : lineOrigin(align, fieldWidth, exact, flooredWidth);
+                const origin =
+                    penX !== undefined
+                        ? Math.round(penX * 20)
+                        : html && align !== 'left'
+                          ? htmlLineOrigin(align, fieldWidth, flooredWidth)
+                          : lineOrigin(align, fieldWidth, exact, flooredWidth);
                 const coverage = new Uint8ClampedArray(fieldWidth * fieldHeight);
+                const characters = [...text];
+                const runStarts = runsKey ? runsKey.split(',').map(Number) : [];
+                const pens: number[] = [];
+                let runOrigin = origin;
                 let cumulative = 0;
-                for (const character of text) {
-                    const pen = origin + Math.floor(cumulative + 0.5);
+                let runFlooredWidth = 0;
+                for (const [index, character] of characters.entries()) {
+                    if (runStarts.includes(index)) {
+                        runOrigin += runFlooredWidth;
+                        cumulative = 0;
+                        runFlooredWidth = 0;
+                    }
+                    const pen = runOrigin + Math.floor(cumulative + 0.5);
+                    pens.push(pen);
                     const tile = font.glyphs[character.charCodeAt(0)]?.[pen % 20];
                     if (tile) {
                         const [atlasX, atlasY, tileWidth, tileHeight, offsetX, offsetY] = tile;
@@ -219,13 +275,23 @@ export const SubpixelText: FC<SubpixelTextProps> = ({
                         }
                     }
                     cumulative += twips(character);
+                    runFlooredWidth += Math.floor(twips(character));
                 }
-                // A window's underline covers the whole pixels of the field's textWidth (advances floored to twips), without a partial last pixel.
-                if (underline && font.underlineY !== undefined && font.underlineY < fieldHeight) {
+                // A text window's underline ends on the last whole pixel of the underlined advances floored to twips.
+                if (underlineKey && font.underlineY !== undefined && font.underlineY < fieldHeight) {
+                    const [first, last] = underlineKey === 'line' ? [0, characters.length] : underlineKey.split(',').map(Number);
+                    const start = pens[first] ?? origin;
+                    const end = start + characters.slice(first, last).reduce((sum, character) => sum + Math.floor(twips(character)), 0);
                     const row = font.underlineY * fieldWidth;
-                    const end = Math.min(Math.floor((origin + flooredWidth) / 20), fieldWidth);
-                    for (let x = Math.max(0, Math.floor(origin / 20)); x < end; x++) coverage[row + x] = 255;
+                    const endX = Math.min((html ? Math.round : Math.floor)(end / 20), fieldWidth);
+                    for (let x = Math.max(0, Math.floor(start / 20)); x < endX; x++) coverage[row + x] = 255;
                 }
+                if (linkKey) {
+                    const [first, last] = linkKey.split(',').map(Number);
+                    const start = pens[first] ?? origin;
+                    const end = start + characters.slice(first, last).reduce((sum, character) => sum + Math.floor(twips(character)), 0);
+                    setLinkBox({ left: Math.floor(start / 20), width: Math.ceil(end / 20) - Math.floor(start / 20) });
+                } else setLinkBox(null);
                 const pixels = new Uint8ClampedArray(fieldWidth * fieldHeight * 4);
                 const foreground = [(color >>> 16) & 255, (color >>> 8) & 255, color & 255];
                 const surface = [(background >>> 16) & 255, (background >>> 8) & 255, background & 255];
@@ -249,29 +315,52 @@ export const SubpixelText: FC<SubpixelTextProps> = ({
         return () => {
             disposed = true;
         };
-    }, [text, textStyle, color, background, transparent, align, underline, width, penX]);
+    }, [text, textStyle, color, background, transparent, align, underlineKey, html, runsKey, linkKey, width, penX]);
 
-    if (fallback)
-        return (
+    if (fallback) {
+        const native = (
             <NativeText
                 nativeResolution
                 align={align === 'left' ? 'left' : align === 'right' ? 'right' : 'center'}
                 ariaHidden={ariaHidden}
                 background={background}
-                className={className}
-                overrides={textStyle === 'u_bold_default' ? { color, underline, sharpness: 0, thickness: 0 } : { color, underline }}
-                style={style}
+                className={link ? undefined : className}
+                overrides={
+                    textStyle === 'u_bold_default'
+                        ? { color, underline: !!underline, sharpness: 0, thickness: 0 }
+                        : textStyle === 'u_regular_11'
+                          ? { color, underline: !!underline, size: 11 }
+                          : { color, underline: !!underline }
+                }
+                style={link ? undefined : style}
                 text={text}
-                textStyle={textStyle === 'u_bold_default' ? 'u_bold' : textStyle}
+                textStyle={textStyle === 'u_bold_default' ? 'u_bold' : textStyle === 'u_regular_11' ? 'u_regular' : textStyle}
                 transparent={transparent}
                 width={width}
             />
         );
+        // Without the atlas the whole line carries the link.
+        return link ? (
+            <button className={className} style={{ ...unstyledButton, display: 'inline-block', verticalAlign: 'top', ...style }} type="button" onClick={link.onClick}>
+                {native}
+            </button>
+        ) : (
+            native
+        );
+    }
 
     return (
         <span aria-hidden={ariaHidden || undefined} className={className} style={{ display: 'inline-block', verticalAlign: 'top', position: 'relative', ...size, ...style }}>
             <canvas ref={canvasRef} aria-hidden="true" style={{ display: size ? 'block' : 'none', width: size?.width, height: size?.height, imageRendering: 'pixelated' }} />
             <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clipPath: 'inset(50%)', whiteSpace: 'pre' }}>{text}</span>
+            {link && linkBox && size && (
+                <button
+                    aria-label={[...text].slice(...link.range).join('')}
+                    style={{ ...unstyledButton, position: 'absolute', left: linkBox.left, top: 0, width: linkBox.width, height: size.height }}
+                    type="button"
+                    onClick={link.onClick}
+                />
+            )}
         </span>
     );
 };
