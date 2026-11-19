@@ -9,7 +9,7 @@ import { forumPermissionText } from './GroupForumThreadListView';
 
 // ComposeMessageView.validateInputs: a subject or a message of 10 characters or fewer is refused, and a post follows the last one by at least 30 seconds.
 const MIN_LENGTH = 10;
-// The client area of the 455x470 frame; the window grows from it.
+// Client dimensions at the opening frame size of 455x470.
 const CLIENT_WIDTH = 443;
 const CLIENT_HEIGHT = 445;
 const POST_COOLDOWN = 30000;
@@ -40,7 +40,7 @@ export const GroupForumComposeView: FC<GroupForumComposeViewProps> = ({ compose,
     const [now, setNow] = useState<number>(() => performance.now());
     const [isHintShown, setIsHintShown] = useState<boolean>(true);
     const clientRef = useRef<HTMLDivElement>(null);
-    const [grow, setGrow] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
+    const [sizeDelta, setSizeDelta] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
 
     // new_compose_message: the subject and message boxes stretch with the window, the buttons and status follow its bottom
     // and the post button its right edge.
@@ -49,7 +49,7 @@ export const GroupForumComposeView: FC<GroupForumComposeViewProps> = ({ compose,
 
         if (!client) return;
 
-        const measure = () => setGrow({ width: Math.max(0, client.clientWidth - CLIENT_WIDTH), height: Math.max(0, client.clientHeight - CLIENT_HEIGHT) });
+        const measure = () => setSizeDelta({ width: client.clientWidth - CLIENT_WIDTH, height: client.clientHeight - CLIENT_HEIGHT });
         const observer = new ResizeObserver(measure);
 
         measure();
@@ -153,48 +153,49 @@ export const GroupForumComposeView: FC<GroupForumComposeViewProps> = ({ compose,
             isResizable={true}
             minHeight={455}
             title={LocalizeText('groupforum.compose.window_title')}
-            uniqueKey="group-forum-compose"
             width={455}
             onClose={onClose}
             onHelp={() => CreateLinkEvent('habbopages/forums')}
         >
             <div ref={clientRef} className="volt-forum__client-size" />
-            <div className="volt-forum__header" style={{ width: 453 + grow.width }}>
+            <div className="volt-forum__header" style={{ width: 453 + sizeDelta.width }}>
                 <div className="volt-forum__header-icon">
                     <div className="volt-forum__header-badge">
                         <LayoutBadgeImageView badgeCode={forumData.icon} isGroup={true} />
                     </div>
                 </div>
                 <GroupText background={FORUM_HEADER} height={30} overrides={{ size: 24, color: 0xffffff }} text={forumData.name} textStyle="u_headline_big" width={360} x={90} y={10} />
-                <GroupText background={FORUM_HEADER} height={40} overrides={flatText(12, { color: 0xffffff })} text={forumData.description} width={359 + grow.width} wrap x={90} y={40} />
+                <GroupText background={FORUM_HEADER} height={40} overrides={flatText(12, { color: 0xffffff })} text={forumData.description} width={359 + sizeDelta.width} wrap x={90} y={40} />
             </div>
-            <div className="volt-forum__compose-bar" style={{ top: 96, width: 444 + grow.width }}>
+            <div className="volt-forum__compose-bar" style={{ top: 96, width: 444 + sizeDelta.width }}>
                 <GroupText background={0x227aad} overrides={flatText(12, { color: 0xeeeeee })} text={LocalizeText(isReply ? 'groupforum.compose.subject_replying_to' : 'groupforum.compose.subject')} x={1} y={1} />
             </div>
-            {(isReply || subject.length > 0) && <div className="volt-forum__compose-field" style={{ left: 0, top: 117, width: 444 + grow.width, height: 22 }} />}
-            {isReply ? (
-                <GroupText background={0xffffff} overrides={flatText(16)} text={compose.subject} x={0} y={117} />
-            ) : (
-                <GroupInput fontSize={16} height={22} inset={2} label={LocalizeText('groupforum.compose.subject')} maxLength={120} plain value={subject} width={444 + grow.width} x={0} y={117} onChange={(value) =>
+            {(isReply || subject.length > 0) && (
+                <div className="volt-forum__compose-field" style={{ left: 0, top: 117, width: 444 + sizeDelta.width, height: 22 }}>
+                    {isReply && <GroupText background={0xffffff} overrides={flatText(16)} text={compose.subject} x={0} y={0} />}
+                </div>
+            )}
+            {!isReply && (
+                <GroupInput fontSize={16} height={22} inset={2} label={LocalizeText('groupforum.compose.subject')} maxLength={120} plain value={subject} width={444 + sizeDelta.width} x={0} y={117} onChange={(value) =>
                 {
                     setSubject(value); setIsHintShown(false);
                 }} />
             )}
-            <div className="volt-forum__compose-bar" style={{ top: 145, width: 444 + grow.width }}>
+            <div className="volt-forum__compose-bar" style={{ top: 145, width: 444 + sizeDelta.width }}>
                 <GroupText background={0x227aad} overrides={flatText(12, { color: 0xeeeeee })} text={LocalizeText('groupforum.compose.message')} x={1} y={1} />
-                <button className="volt-forum__help-link" style={{ right: 4 + grow.width }} type="button" onClick={() => CreateLinkEvent('habbopages/forums/formatting')}>
+                <button className="volt-forum__help-link" style={{ right: 4 + sizeDelta.width }} type="button" onClick={() => CreateLinkEvent('habbopages/forums/formatting')}>
                     <GroupText background={0x227aad} className="is-static" overrides={{ underline: true }} text={stripTags(LocalizeText('groupforum.compose.formatting_help'))} textStyle="id_link_regular" x={0} y={0} />
                 </button>
             </div>
             {/* message_text has its own white background. */}
-            <div className="volt-forum__compose-field" style={{ left: 0, top: 165, width: 444 + grow.width, height: 200 + grow.height }} />
-            <GroupInput fontSize={12} height={200 + grow.height} inset={4} label={LocalizeText('groupforum.compose.message')} maxLength={4000} multiline plain value={message} width={444 + grow.width} x={0} y={165} onChange={(value) =>
+            <div className="volt-forum__compose-field" style={{ left: 0, top: 165, width: 444 + sizeDelta.width, height: 200 + sizeDelta.height }} />
+            <GroupInput fontSize={12} height={200 + sizeDelta.height} inset={4} label={LocalizeText('groupforum.compose.message')} maxLength={4000} multiline plain value={message} width={444 + sizeDelta.width} x={0} y={165} onChange={(value) =>
             {
                 setMessage(value); setIsHintShown(false);
             }} />
-            <ForumButton label={LocalizeText('groupforum.compose.cancel')} width={120} x={25} y={378 + grow.height} onClick={onClose} />
-            <ForumButton disabled={isPosting || !subjectOk || !messageOk || !canPostHere || cooldown > 0} label={LocalizeText('groupforum.compose.post')} tint="blue" width={120} x={295 + grow.width} y={378 + grow.height} onClick={post} />
-            {status && <GroupText background={FORUM_SURFACE} overrides={flatText(11)} text={status} width={424 + grow.width} wrap x={10} y={422 + grow.height} />}
+            <ForumButton label={LocalizeText('groupforum.compose.cancel')} width={120} x={25} y={378 + sizeDelta.height} onClick={onClose} />
+            <ForumButton disabled={isPosting || !subjectOk || !messageOk || !canPostHere || cooldown > 0} label={LocalizeText('groupforum.compose.post')} tint="blue" width={120} x={295 + sizeDelta.width} y={378 + sizeDelta.height} onClick={post} />
+            {status && <GroupText background={FORUM_SURFACE} overrides={flatText(11)} text={status} width={424 + sizeDelta.width} wrap x={10} y={422 + sizeDelta.height} />}
         </ForumFrame>
     );
 };

@@ -50,7 +50,7 @@ export const forumQuote = (message: MessageData): string =>
 };
 
 interface ForumFrameProps {
-    uniqueKey: string;
+    uniqueKey?: string;
     className: string;
     title: string;
     width: number;

@@ -569,6 +569,15 @@
     border-image-source: var(--habbo-skin-shiny-thick-disabled);
 }
 
+/* GroupWindowTitle centers the caption within the opening width. */
+.volt-group-forum-compose > .is-title {
+    margin-left: calc((100% - var(--forum-width)) / 2);
+}
+
+.volt-group-forum-settings .volt-forum__client {
+    clip-path: inset(0 -5px 2px);
+}
+
 /* compose window */
 .volt-forum__compose-bar {
     left: 0;
@@ -582,6 +591,7 @@
 }
 
 .volt-forum__compose-field {
+    overflow: hidden;
     background: #fff;
 }
 

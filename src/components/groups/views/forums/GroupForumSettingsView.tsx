@@ -82,7 +82,6 @@ export const GroupForumSettingsView: FC<GroupForumSettingsViewProps> = ({ forumD
             minHeight={455}
             resizeAxis="vertical"
             title={LocalizeText('groupforum.settings.window_title')}
-            uniqueKey="group-forum-settings"
             width={350}
             onClose={onClose}
             onHelp={() => CreateLinkEvent('habbopages/forums')}
@@ -115,7 +114,6 @@ export const GroupForumSettingsView: FC<GroupForumSettingsViewProps> = ({ forumD
                     ))}
                 </div>
             ))}
-            {/* cancel_btn and ok_btn (y 478) move with the bottom of the window. */}
             <div className="volt-forum__footer is-settings">
                 <ForumButton label={LocalizeText('groupforum.settings.cancel')} width={120} x={25} onClick={onClose} />
                 <ForumButton label={LocalizeText('groupforum.settings.ok')} tint="blue" width={120} x={190} onClick={save} />
