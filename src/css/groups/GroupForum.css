@@ -423,9 +423,10 @@
     position: absolute;
 }
 
+/* The status html sits at (3, 3) in its 300x20 container at (180, 515). */
 .volt-forum__status {
-    left: 180px;
-    bottom: 5px;
+    left: 183px;
+    bottom: 2px;
     width: 300px;
     height: 20px;
 }
@@ -442,6 +443,11 @@
 
 .volt-forum__status.is-list > .volt-group-native__text {
     position: static;
+}
+
+/* The status is one html field in AIR: each following piece drops the 2px gutters both pieces carry. */
+.volt-forum__status.is-list > .volt-group-native__text + .volt-group-native__text {
+    margin-left: -4px;
 }
 
 /* container_button: the shiny thick skin tinted 0xdddddd (grey) or 0x0a9bc5 (blue), or untinted for the pager. The skin sits on a pseudo-element under the label; the disabled skins carry their own 79% alpha. */
