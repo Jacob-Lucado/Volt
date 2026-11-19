@@ -111,17 +111,39 @@
     pointer-events: none;
 }
 
+/*
+ * settings_button: border style 1 (habbo_skin_border_black) tinted with its colour 0x000000. It keeps its right edge and fits its
+ * label: the text at x 17 plus its 3px right margin.
+ */
 .volt-forum__settings {
     right: 1px;
     top: 60px;
-    width: 65px;
+    display: flex;
+    align-items: flex-start;
+    box-sizing: border-box;
+    width: auto;
     height: 18px;
     margin: 0;
-    padding: 0;
+    padding: 1px 3px 0 17px;
     border: 0;
-    border-radius: 5px;
-    background: #000;
+    border-radius: 0;
+    background: none;
     cursor: pointer;
+}
+
+.volt-forum__settings::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 6px solid transparent;
+    border-image: url('../../assets/images/reward-track/air/border-black.png') 6 fill / 6px stretch;
+    filter: brightness(0);
+    image-rendering: pixelated;
+    pointer-events: none;
+}
+
+.volt-forum__settings > .volt-group-native__text.is-static {
+    position: static;
 }
 
 .volt-forum__settings > img {

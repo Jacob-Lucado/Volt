@@ -113,7 +113,8 @@ export const ForumHeader: FC<ForumHeaderProps> = ({ title, description, badge, i
         {canChangeSettings && (
             <button className="volt-forum__settings" type="button" onClick={onSettings}>
                 <img alt="" draggable={false} src={settingsIcon} />
-                <GroupText background={0x000000} overrides={flatText(11, { bold: true, color: 0xffffff, thickness: 15 })} text={LocalizeText('groupforum.view.settings.header')} x={17} y={1} />
+                {/* u_bold at size 11 with bold off and thickness 15. */}
+                <GroupText background={0x000000} className="is-static" overrides={{ size: 11, bold: false, color: 0xffffff, thickness: 15 }} text={LocalizeText('groupforum.view.settings.header')} textStyle="u_bold" x={17} y={1} />
             </button>
         )}
     </div>
