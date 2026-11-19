@@ -33,7 +33,8 @@ export const GroupForumListView: FC<GroupForumListViewProps> = ({ list, onMarkAs
     const before = linkMatch ? stripTags(linkMatch[1]) : stripTags(status);
     const linkText = linkMatch ? linkMatch[2] : '';
     const after = linkMatch ? stripTags(linkMatch[3]) : '';
-    const linkRange: [number, number] = [before.length, before.length + linkText.length];
+    const linkStart = [...before].length;
+    const linkRange: [number, number] = [linkStart, linkStart + [...linkText].length];
 
     return (
         <>
