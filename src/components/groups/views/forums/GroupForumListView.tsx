@@ -58,7 +58,7 @@ export const GroupForumListView: FC<GroupForumListViewProps> = ({ list, onMarkAs
                                 </div>
                                 <div className="volt-forum__forum-body" style={{ left: 42, right: 101, background: rowColor }}>
                                     <GroupText background={background} overrides={isUnread ? { bold: true } : undefined} text={forum.name} x={0} y={0} />
-                                    <GroupText background={background} overrides={flatText(10)} text={details} x={0} y={16} />
+                                    <GroupText background={background} overrides={{ size: 10 }} text={details} x={0} y={16} />
                                     {/* header_region: the 280x17 strip over the group name opens the forum. */}
                                     <div className="volt-forum__forum-header" role="button" onClick={() => onOpenForum(forum.groupId)} />
                                 </div>

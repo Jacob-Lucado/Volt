@@ -173,7 +173,7 @@ export const GroupForumThreadListView: FC<GroupForumThreadListViewProps> = ({ fo
                                 </div>
                                 <div className="volt-forum__thread-body" style={{ left: 21, right: countsRight + 141, background: rowColor }}>
                                     <GroupText background={background} overrides={isUnread ? { bold: true } : undefined} text={header} x={0} y={0} />
-                                    <GroupText background={background} overrides={flatText(10)} text={details} x={0} y={16} />
+                                    <GroupText background={background} overrides={{ size: 10 }} text={details} x={0} y={16} />
                                     {/* header_region and unread_region go to the first unread message (onGoToFirstUnread). */}
                                     <div className="volt-forum__thread-header" role="button" onClick={() => onOpenThread(thread)} />
                                 </div>
