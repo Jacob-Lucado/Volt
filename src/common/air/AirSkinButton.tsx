@@ -262,6 +262,24 @@ export const AirSkinButton: FC<AirSkinButtonProps> = ({
     );
 };
 
+/**
+ * The x of a button with on_resize_align_center after it went through the given widths. WindowController.setRectangle moves
+ * the window by half of each width change and carries the odd pixel into the next change.
+ */
+export function centredResizeX(x: number, widths: number[]): number {
+    let remainder = 0;
+
+    for (let index = 1; index < widths.length; index++) {
+        const change = remainder - (widths[index] - widths[index - 1]);
+        const half = Math.trunc(change / 2);
+
+        x += half;
+        remainder = change - half * 2;
+    }
+
+    return x;
+}
+
 /** The caption when a button's children are only text, so it can be drawn as an AIR label. */
 export function textCaption(children: ReactNode): string | null {
     if (typeof children === 'string' || typeof children === 'number') return String(children);
