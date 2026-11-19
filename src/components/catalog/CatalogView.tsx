@@ -87,17 +87,6 @@ const CatalogViewInner: FC<{}> = () => {
     const stripSwfTabSuffix = (label: string) => (label || '').replace(/\s*\(\D[^)]*\)\s*$/g, '').trim();
     const getSwfTabLabel = (label: string) => stripSwfTabSuffix(parseCatalogTabLabel(label).name);
 
-    const initialPosition = useRef({ ...catalogWindowPosition });
-
-    useEffect(() => {
-        if (!isVisible) initialPosition.current = { ...catalogWindowPosition };
-    }, [isVisible]);
-
-    const onPositionChange = useCallback((position: { x: number; y: number }) => {
-        catalogWindowPosition.x = position.x;
-        catalogWindowPosition.y = position.y;
-    }, []);
-
     const hideCatalogNavigation = useCallback(() => setNavigationHidden(true), [setNavigationHidden]);
 
     const visibleTabs = rootNode?.children.filter((child) => child.isVisible) ?? [];
