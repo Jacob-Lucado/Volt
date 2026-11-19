@@ -5,9 +5,6 @@ import { ClassicScrollAreaView, LayoutBadgeImageView } from '../../../../common'
 import { flatText, GroupText } from '../GroupNativeLayout';
 import { FORUM_PAGE_SIZE, FORUM_SURFACE, stripTags, ForumButton, forumAge, ForumPager } from './GroupForumLayout';
 
-// ForumsListView.updateItemWidths: a row is the scrollable list (534 less its 17px scrollbar) minus 2.
-const ROW_WIDTH = 515;
-
 /** ForumsListData: one answer to GetForumsList, as the forum window shows it. */
 export interface GroupForumsListData {
     listCode: number;
@@ -59,14 +56,14 @@ export const GroupForumListView: FC<GroupForumListViewProps> = ({ list, onMarkAs
                                 <div className="volt-forum__forum-badge" style={{ background: rowColor }} onClick={() => GetGroupInformation(forum.groupId)}>
                                     <LayoutBadgeImageView badgeCode={forum.icon} isGroup={true} />
                                 </div>
-                                <div className="volt-forum__forum-body" style={{ left: 42, width: ROW_WIDTH - 42 - 1 - 100, background: rowColor }}>
+                                <div className="volt-forum__forum-body" style={{ left: 42, right: 101, background: rowColor }}>
                                     <GroupText background={background} overrides={isUnread ? { bold: true } : undefined} text={forum.name} x={0} y={0} />
                                     <GroupText background={background} overrides={flatText(10)} text={details} x={0} y={16} />
                                     {/* header_region: the 280x17 strip over the group name opens the forum. */}
                                     <div className="volt-forum__forum-header" role="button" onClick={() => onOpenForum(forum.groupId)} />
                                 </div>
                                 {/* unread_region: the message counts open the forum too. */}
-                                <div className="volt-forum__forum-counts" role="button" style={{ left: ROW_WIDTH - 100, background: rowColor }} onClick={() => onOpenForum(forum.groupId)}>
+                                <div className="volt-forum__forum-counts" role="button" style={{ right: 0, background: rowColor }} onClick={() => onOpenForum(forum.groupId)}>
                                     <GroupText
                                         background={background}
                                         overrides={flatText(10, { bold: isUnread })}

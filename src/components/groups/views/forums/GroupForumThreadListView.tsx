@@ -42,8 +42,6 @@ const moderationMessage = (thread: GuildForumThread): string => {
     return '';
 };
 
-// ThreadListView.updateItemWidths: a row is the scrollable list (534 less its 17px scrollbar) minus 2.
-const ROW_WIDTH = 515;
 const BUTTON_WIDTH = 25;
 
 /** Maps the error code of a permission to the text of that refusal ("Only group owner can start new threads."). */
@@ -143,7 +141,7 @@ export const GroupForumThreadListView: FC<GroupForumThreadListViewProps> = ({ fo
                         const hideAction = hideActionOf(thread);
                         const buttonCount = (hideAction ? 1 : 0) + (canReport ? 1 : 0);
                         const buttonsWidth = buttonCount * BUTTON_WIDTH;
-                        const textsWidth = ROW_WIDTH - 20 - 1 - 1 - 140 - (buttonCount ? 1 + buttonsWidth : 0);
+                        const countsRight = buttonCount ? buttonsWidth + 1 : 0;
 
                         return (
                             <div key={thread.threadId} className="volt-forum__thread">
@@ -173,13 +171,13 @@ export const GroupForumThreadListView: FC<GroupForumThreadListViewProps> = ({ fo
                                         </button>
                                     )}
                                 </div>
-                                <div className="volt-forum__thread-body" style={{ left: 21, width: textsWidth, background: rowColor }}>
+                                <div className="volt-forum__thread-body" style={{ left: 21, right: countsRight + 141, background: rowColor }}>
                                     <GroupText background={background} overrides={isUnread ? { bold: true } : undefined} text={header} x={0} y={0} />
                                     <GroupText background={background} overrides={flatText(10)} text={details} x={0} y={16} />
                                     {/* header_region and unread_region go to the first unread message (onGoToFirstUnread). */}
                                     <div className="volt-forum__thread-header" role="button" onClick={() => onOpenThread(thread)} />
                                 </div>
-                                <div className="volt-forum__thread-counts" role="button" style={{ left: 21 + textsWidth + 1, background: rowColor }} onClick={() => onOpenThread(thread)}>
+                                <div className="volt-forum__thread-counts" role="button" style={{ right: countsRight, background: rowColor }} onClick={() => onOpenThread(thread)}>
                                     <GroupText
                                         background={background}
                                         overrides={flatText(10, { bold: isUnread })}
@@ -196,7 +194,7 @@ export const GroupForumThreadListView: FC<GroupForumThreadListViewProps> = ({ fo
                                     />
                                 </div>
                                 {buttonCount > 0 && (
-                                    <div className="volt-forum__thread-actions" style={{ left: ROW_WIDTH - buttonsWidth, width: buttonsWidth }}>
+                                    <div className="volt-forum__thread-actions" style={{ right: 0, width: buttonsWidth }}>
                                         {hideAction && (
                                             <button className="volt-forum__action is-hide" type="button" onClick={() => moderate(thread, hideAction)}>
                                                 <img alt="" draggable={false} src={hideAction === 'unhide' ? unhideIcon : hideIcon} style={{ left: 5, top: 11 }} />
