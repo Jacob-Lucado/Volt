@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes, CSSProperties, FC, ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { resolveLineMetrics } from '../native-text/Air32NativeTextRenderer';
+import { resolveLineMetrics, roundTiesEven } from '../native-text/Air32NativeTextRenderer';
 import { loadNativeFont, measureNativeText, NativeFontStyle } from '../native-text/NativeFont';
 import { NativeText } from '../native-text/NativeText';
 import { NativeTextStyleName, nativeTextStyles } from '../native-text/NativeTextStyles';
@@ -58,11 +58,7 @@ export type AirButtonKindName = keyof typeof AIR_BUTTONS;
 
 const stretched = new Map<string, Promise<string>>();
 
-/**
- * The skin bitmap at the button's height. AIR scales a stretched entity with BitmapData.draw and no smoothing, which takes the
- * source row under the centre of each target row: floor((row + 0.5) * source / target). The browser's own border-image stretch
- * does not follow it, so the skin is redrawn at the button height.
- */
+/** Stretch the middle rows with the 16.16 fixed-point sampling used by AIR's BitmapData.draw. */
 function stretchSkin(url: string, cap: number, height: number): Promise<string> {
     const key = `${url}|${cap}|${height}`;
     if (!stretched.has(key)) {
@@ -79,8 +75,11 @@ function stretchSkin(url: string, cap: number, height: number): Promise<string> 
                     canvas.height = height;
                     const context = canvas.getContext('2d');
                     context.drawImage(image, 0, 0, image.width, cap, 0, 0, image.width, cap);
+                    const unit = 65536;
+                    const step = roundTiesEven(middle * unit / target);
+                    const first = roundTiesEven(step / 2);
                     for (let row = 0; row < target; row++) {
-                        const source = cap + Math.floor(((row + 0.5) * middle) / target);
+                        const source = cap + Math.floor((first + row * step) / unit);
                         context.drawImage(image, 0, source, image.width, 1, 0, cap + row, image.width, 1);
                     }
                     context.drawImage(image, 0, image.height - cap, image.width, cap, 0, height - cap, image.width, cap);
