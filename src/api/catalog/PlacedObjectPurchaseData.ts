@@ -1,5 +1,6 @@
 import { IFurnitureData, IProductData } from '@volt/renderer';
 import { IPurchasableOffer } from './IPurchasableOffer';
+import { IPurchaseOptions } from './IPurchaseOptions';
 
 export class PlacedObjectPurchaseData {
     constructor(
@@ -11,7 +12,8 @@ export class PlacedObjectPurchaseData {
         public readonly y: number,
         public readonly direction: number,
         public readonly offer: IPurchasableOffer,
-        public readonly pageId: number = -1
+        public readonly pageId: number = -1,
+        public readonly purchaseOptions: IPurchaseOptions = null
     ) {}
 
     public get offerId(): number {
@@ -31,6 +33,6 @@ export class PlacedObjectPurchaseData {
     }
 
     public get extraParam(): string {
-        return this.offer.product.extraParam;
+        return this.purchaseOptions?.extraData ?? this.offer.product.extraParam;
     }
 }

@@ -1,6 +1,7 @@
 import { CreateLinkEvent, FrontPageItem, GetRoomEngine, RoomObjectPlacementSource, RoomObjectType, RoomObjectVariable, RoomPreviewer } from '@volt/renderer';
 import {
     BuilderFurniPlaceableStatus,
+    CatalogPageName,
     CatalogType,
     CreateRecolorableStuffData,
     GetConfigurationValue,
@@ -35,6 +36,9 @@ export type CatalogPendingRequest = { kind: 'id'; id: number } | { kind: 'name';
 
 const DEFAULT_PURCHASE_OPTIONS: IPurchaseOptions = { quantity: 1, extraData: null, extraParamRequired: false, previewStuffData: null };
 
+const isGroupFurnitureOffer = (offer: IPurchasableOffer) =>
+    [CatalogPageName.GUILD_CUSTOM_FURNI, 'guild_furni', 'guild_forum'].includes(offer.page?.layoutCode);
+
 export interface CatalogUiState {
     isVisible: boolean;
     currentType: string;
@@ -60,6 +64,7 @@ export interface CatalogUiState {
     roomPreviewer: RoomPreviewer | null;
     objectMoverRequested: boolean;
     purchasableOffer: IPurchasableOffer | null;
+    moverPurchaseOptions: IPurchaseOptions | null;
     /** AIR HabboCatalog var_5235: a Builders Club offer goes back to the mover after each placement ("Place multiple"). */
     builderPlaceMultiple: boolean;
     placedObjectPurchaseData: PlacedObjectPurchaseData | null;
@@ -133,6 +138,7 @@ export const INITIAL_CATALOG_UI_STATE: CatalogUiState = {
     roomPreviewer: null,
     objectMoverRequested: false,
     purchasableOffer: null,
+    moverPurchaseOptions: null,
     builderPlaceMultiple: false,
     placedObjectPurchaseData: null,
     placedObjectPurchaseSent: false,
@@ -378,6 +384,7 @@ export const useCatalogStore = createVoltStore<CatalogStoreState>((set, get) => 
 
     selectCatalogOffer: (offer) => {
         if (!offer) return;
+        if (offer === get().currentOffer && isGroupFurnitureOffer(offer)) return;
 
         // Matches the old hook's effective behaviour: it used to set
         // purchaseOptions.extraData from the WALL product's extraParam here,
@@ -500,6 +507,12 @@ export const useCatalogStore = createVoltStore<CatalogStoreState>((set, get) => 
     requestOfferToMover: (offer, placeMultiple = false) => {
         if (!get().isDraggable(offer)) return;
 
+        const { currentOffer, currentType, purchaseOptions } = get();
+        const needsGroup = currentType === CatalogType.NORMAL && isGroupFurnitureOffer(offer);
+        const moverPurchaseOptions = needsGroup && currentOffer === offer ? purchaseOptions : null;
+
+        if (needsGroup && !moverPurchaseOptions?.previewStuffData) return;
+
         const product = offer.product;
 
         if (!product) return;
@@ -519,7 +532,7 @@ export const useCatalogStore = createVoltStore<CatalogStoreState>((set, get) => 
         const stuffData = IsRecolorableFurniturePage(offer.page) && product.extraParam ? CreateRecolorableStuffData(product.extraParam) : null;
 
         if (GetRoomEngine().processRoomObjectPlacement(RoomObjectPlacementSource.CATALOG, -offer.offerId, category, product.productClassId, product.extraParam, stuffData)) {
-            set({ purchasableOffer: offer, objectMoverRequested: true, isVisible: false, builderPlaceMultiple: placeMultiple });
+            set({ purchasableOffer: offer, moverPurchaseOptions, objectMoverRequested: true, isVisible: false, builderPlaceMultiple: placeMultiple });
         }
     },
 
@@ -528,13 +541,13 @@ export const useCatalogStore = createVoltStore<CatalogStoreState>((set, get) => 
 
         GetRoomEngine().cancelRoomObjectInsert();
 
-        set({ objectMoverRequested: false, purchasableOffer: null });
+        set({ objectMoverRequested: false, purchasableOffer: null, moverPurchaseOptions: null });
     },
 
     resetObjectMover: (flag = true) => {
         if (get().objectMoverRequested && flag) CreateLinkEvent('catalog/open');
 
-        set({ objectMoverRequested: false });
+        set({ objectMoverRequested: false, moverPurchaseOptions: null });
     },
 
     setPlacedObjectPurchaseData: (placedObjectPurchaseData) => set({ placedObjectPurchaseData, placedObjectPurchaseSent: false, placedObjectPurchaseBought: false }),
