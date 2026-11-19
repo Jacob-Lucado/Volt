@@ -1,4 +1,5 @@
 import { CSSProperties, FC, ReactNode } from 'react';
+import { useTextWindowWidths } from '../../../../common/native-text/useTextWindowWidths';
 import { FriendlyTime, LocalizeText } from '../../../../api';
 import settingsIcon from '../../../../assets/images/groups/native/pursearea_settings_icon.png';
 import { MessageData } from '@volt/renderer';
@@ -147,12 +148,21 @@ export const ForumShortcuts: FC<ForumShortcutsProps> = ({ unreadCount = 0, onOpe
     const strip = (key: string) => stripTags(LocalizeText(key));
     const mine = unreadCount > 0 ? stripTags(LocalizeText('groupforum.view.shortcuts.my.unread', ['UNREAD_COUNT'], [String(unreadCount)])) : strip('groupforum.view.shortcuts.my');
 
+    const header = LocalizeText('groupforum.view.shortcuts.header');
+    const active = strip('groupforum.view.shortcuts.active');
+    const popular = strip('groupforum.view.shortcuts.popular');
+    const widths = useTextWindowWidths([header, mine, active, popular].map((text, index) => ({
+        text,
+        textStyle: 'u_regular',
+        overrides: { size: 11, bold: index === 0 }
+    })));
+
     return (
-        <div className="volt-forum__shortcuts">
-            <GroupText background={0xffffff} className="is-static" overrides={{ size: 11, bold: true }} text={LocalizeText('groupforum.view.shortcuts.header')} x={0} y={0} />
+        <div className="volt-forum__shortcuts" style={{ gridTemplateColumns: widths?.map((width) => `${width}px`).join(' ') }}>
+            <GroupText background={0xffffff} className="is-static" overrides={{ size: 11, bold: true }} text={header} x={0} y={0} />
             <ForumShortcutLink text={mine} onClick={() => onOpenList('my')} />
-            <ForumShortcutLink text={strip('groupforum.view.shortcuts.active')} onClick={() => onOpenList('active')} />
-            <ForumShortcutLink text={strip('groupforum.view.shortcuts.popular')} onClick={() => onOpenList('popular')} />
+            <ForumShortcutLink text={active} onClick={() => onOpenList('active')} />
+            <ForumShortcutLink text={popular} onClick={() => onOpenList('popular')} />
         </div>
     );
 };
