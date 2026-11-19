@@ -1,5 +1,5 @@
 import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
-import { FC, useCallback, useEffect } from 'react';
+import { FC, useCallback, useEffect, useRef } from 'react';
 import { CatalogType, GetConfigurationValue, LocalizeShortNumber, LocalizeText } from '../../api';
 import { DraggableWindow, LayoutCurrencyIcon } from '../../common';
 import { LosWindow } from '../../common/lucadoos';
@@ -21,8 +21,8 @@ import { MarketplacePostOfferView } from './views/page/layout/marketplace/Market
 // The Builders Club page icon (LocalizationCatalogWidget: builder pages show icon_193 in the header).
 const BUILDER_HEADER_ICON = 193;
 
-/** catalog_ubuntu catalog.header.image: AIR keeps this default while a Builders Club page sets no header image of its own. */
-const BUILDER_HEADER_IMAGE = 'catalog_header_roombuilder';
+/** catalog_ubuntu catalog.header.image: AIR keeps this default until a page sets a header image of its own. */
+const DEFAULT_HEADER_IMAGE = 'catalog_header_roombuilder';
 
 /** AIR HabboCatalog.toggleCatalog: the Builders Club catalogue is only there while builders.club.enabled is on. */
 const isBuildersClubEnabled = () => GetConfigurationValue<boolean>('builders.club.enabled', true);
@@ -71,14 +71,32 @@ const CatalogViewInner: FC<{}> = () => {
     const displayedCurrencies = GetConfigurationValue<number[]>('system.currency.types', []);
     // The header belongs to the open page: a folder (pageId -1) can be active without opening one.
     const pageId = currentPage?.pageId ?? -1;
+    // LocalizationCatalogWidget.initLocalizables only replaces catalog.header.image when a page names an image, so a page
+    // without one keeps the previous picture of its catalogue window (the XML default until a page names one).
+    const lastHeaderImages = useRef<Record<string, string>>({});
+    const headerImageKey = isBuilder ? CatalogType.BUILDER : CatalogType.NORMAL;
+    const pageHeaderImage = currentPage?.localization?.getImage(0);
+
+    if (pageHeaderImage) lastHeaderImages.current[headerImageKey] = pageHeaderImage;
+
     const headerImage =
-        currentPage?.localization?.getImage(0) ||
-        (isBuilder ? GetConfigurationValue<string>('catalog.asset.image.url', '').replace('%name%', BUILDER_HEADER_IMAGE) : '');
+        lastHeaderImages.current[headerImageKey] || GetConfigurationValue<string>('catalog.asset.image.url', '').replace('%name%', DEFAULT_HEADER_IMAGE);
     const activeCatalogNode =
         (pageId > -1 && (activeNodes.findLast((node) => node.pageId === pageId) ?? getNodeById(pageId, rootNode))) || activeNodes.at(-1) || null;
     // Keep technical suffixes and numeric page hints out of the tab captions.
     const stripSwfTabSuffix = (label: string) => (label || '').replace(/\s*\(\D[^)]*\)\s*$/g, '').trim();
     const getSwfTabLabel = (label: string) => stripSwfTabSuffix(parseCatalogTabLabel(label).name);
+
+    const initialPosition = useRef({ ...catalogWindowPosition });
+
+    useEffect(() => {
+        if (!isVisible) initialPosition.current = { ...catalogWindowPosition };
+    }, [isVisible]);
+
+    const onPositionChange = useCallback((position: { x: number; y: number }) => {
+        catalogWindowPosition.x = position.x;
+        catalogWindowPosition.y = position.y;
+    }, []);
 
     const hideCatalogNavigation = useCallback(() => setNavigationHidden(true), [setNavigationHidden]);
 

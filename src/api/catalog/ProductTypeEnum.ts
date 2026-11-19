@@ -8,4 +8,5 @@ export class ProductTypeEnum {
     public static GAME_TOKEN: string = 'GAME_TOKEN';
     public static PET: string = 'p';
     public static ROBOT: string = 'r';
+    public static CHAT_STYLE: string = 'chat_style';
 }

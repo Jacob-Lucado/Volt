@@ -13,7 +13,13 @@ export const captureNativeChatCreation = (chat: ChatBubbleMessage, mode: number)
 };
 export const getNativeChatCreation = (chat: ChatBubbleMessage): ChatCreation => creations.get(chat);
 
+const CATCH_UP_FRAME = 16;
+// Bounds the replay cost when a crowded stage keeps colliding.
+const CATCH_UP_MAX_BUSY_FRAMES = 60;
+
 interface Rect { x: number; y: number; width: number; height: number; }
+// The speaker's current screen x, or null when it is no longer in the room.
+export type ChatSpeakerLocator = (chat: ChatBubbleMessage) => number | null;
 export interface NativeChatGeometry { overlap: Rect; unlimitedHeight: boolean; }
 
 // v75 HabboFreeFlowChatCom/chatstyles_xml and style_*_regpoints.
@@ -144,6 +150,8 @@ interface Collider {
 // Ports v75 v2/qm/O5/w2. Collider type and visual clamp are captured at creation;
 // the active mode selects the simulation branch without rebuilding older colliders.
 export class NativeChatScroller {
+    constructor(private readonly locateSpeaker: ChatSpeakerLocator = null) {}
+
     private bubbles: Collider[] = [];
     // Scratch list for simulate(): the bubbles sorted by y.
     private byY: Collider[] = [];
@@ -156,6 +164,9 @@ export class NativeChatScroller {
     private viewportWidth = 0;
 
     private fontScale = 1;
+    private speakerX = new Map<number, number | null>();
+    // The last simulate() ended without a collision, so nothing moves until the next insert, scroll or cleanup.
+    private settled = true;
 
     configure(mode: number, speed: number, fontScale = 1) {
         this.line = mode === 1;
@@ -256,11 +267,12 @@ export class NativeChatScroller {
     private collision(a: Collider, b: Collider) {
         return intersects(a.body, b.body) || (a.extended ? intersects(a.extended, b.extended ?? b.body) : b.extended ? intersects(a.body, b.extended) : false);
     }
-    private simulate() {
+    private simulate(): boolean {
         const bubbles = this.bubbles;
         const count = bubbles.length;
         const byY = this.byY;
         for (let index = 0; index < count; index++) bubbles[index].index = index;
+        let settled = false;
         for (let iteration = 0; iteration < 20; iteration++) {
             for (const bubble of bubbles) { bubble.dx = 0; bubble.dy = 0; }
             let collided = false;
@@ -306,14 +318,16 @@ export class NativeChatScroller {
                     }
                 }
             }
-            if (!collided) break;
+            if (!collided) { settled = true; break; }
             for (const bubble of bubbles) { this.moveX(bubble, bubble.dx); this.moveY(bubble, Math.max(bubble.dy, -8)); }
         }
         byY.length = 0;
+        return settled;
     }
 
     advance(elapsed: number, chats: readonly ChatBubbleMessage[]): number[] {
         this.clock += elapsed;
+        this.speakerX.clear();
         const live = new Set(chats);
         this.bubbles = this.bubbles.filter((bubble) => !bubble.chat || live.has(bubble.chat));
         for (const bubble of this.bubbles) {
@@ -341,7 +355,7 @@ export class NativeChatScroller {
             }
             if (this.clock - bubble.created > 150 && bubble.chat.elementRef && bubble.chat.elementRef.style.visibility !== 'visible') bubble.chat.elementRef.style.visibility = 'visible';
         }
-        this.simulate();
+        this.settled = this.simulate();
         if (this.lastScroll + this.speed < this.clock) {
             for (const bubble of this.bubbles) {
                 if (!this.line) for (const other of this.bubbles) if (bubble !== other) this.moveX(bubble, this.repulsion(bubble, other));
@@ -351,7 +365,7 @@ export class NativeChatScroller {
                 const body = { x: -10, y: this.height, width: 20, height: 19 };
                 this.bubbles.push({ chat: null, body, extended: { x: -2510, y: this.height, width: 5020, height: 19 }, overlap: { x: 0, y: 0, width: 0, height: 0 }, offset: -2500, narrow: false, line: true, spacer: true, timestamp: Date.now(), dx: 0, dy: 0, clipped: false, pendingImmediate: false, writtenLeft: 0, writtenTop: 0, visualX: 0, visualY: 0, targetX: 0, targetY: 0, startX: 0, startY: 0, moveStarted: this.clock, created: this.clock, index: 0 });
             }
-            this.simulate();
+            this.settled = this.simulate();
             this.lastScroll = this.clock;
         }
         this.publish();
@@ -364,6 +378,35 @@ export class NativeChatScroller {
             });
             this.lastCleanup = this.clock;
         }
+        return removed;
+    }
+
+    // AIR keeps its chat stage running while the window is in the background, so a gap with no frames
+    // (a hidden tab) is replayed one frame at a time: each late bubble goes in at its arrival time, and
+    // stretches where nothing moves jump to the next arrival, scroll or cleanup.
+    catchUp(elapsed: number, arrivals: readonly { chat: ChatBubbleMessage; mode: number; at: number }[], chats: readonly ChatBubbleMessage[]): number[] {
+        const start = this.clock;
+        const end = start + elapsed;
+        const removed: number[] = [];
+        let next = 0;
+        let settled = false;
+        let busyFrames = 0;
+        while (this.clock < end) {
+            for (; next < arrivals.length && start + arrivals[next].at <= this.clock; next++) {
+                this.register(arrivals[next].chat, arrivals[next].mode);
+                settled = false;
+                busyFrames = 0;
+            }
+            let step = CATCH_UP_FRAME;
+            if (settled) {
+                const nextArrival = next < arrivals.length ? start + arrivals[next].at : end;
+                step = Math.max(step, Math.min(nextArrival, this.lastScroll + this.speed, this.lastCleanup + 5000, end) - this.clock);
+            }
+            for (const id of this.advance(Math.min(step, end - this.clock), chats)) removed.push(id);
+            busyFrames = this.settled ? 0 : busyFrames + 1;
+            settled = this.settled || busyFrames >= CATCH_UP_MAX_BUSY_FRAMES;
+        }
+        for (; next < arrivals.length; next++) this.register(arrivals[next].chat, arrivals[next].mode);
         return removed;
     }
 
@@ -382,12 +425,23 @@ export class NativeChatScroller {
         const airPointer = AIR_CHAT_BUBBLE_STYLES[bubble.chat.styleId]?.pointer;
         if ((bubble.chat.styleId === 0 || airPointer) && bubble.chat.elementRef) {
             const [ marginLeft, marginRight ] = airPointer?.margins ?? [ 28, 15 ];
-            const pointerX = `${Math.max(marginLeft, Math.min(bubble.chat.width - marginRight, bubble.chat.location.x - left))}px`;
+            const pointerX = `${Math.max(marginLeft, Math.min(bubble.chat.width - marginRight, this.getSpeakerX(bubble.chat) - left))}px`;
             const style = bubble.chat.elementRef.style;
             if (style.getPropertyValue('--chat-pointer-x') !== pointerX) style.setProperty('--chat-pointer-x', pointerX);
         }
         bubble.writtenLeft = left;
         bubble.writtenTop = y;
+    }
+
+    // PooledChatBubble.currentUserScreenPos: the speaker's position this frame, or where it spoke once it has left.
+    private getSpeakerX(chat: ChatBubbleMessage): number {
+        if (!this.locateSpeaker) return chat.location.x;
+        let x = this.speakerX.get(chat.senderId);
+        if (x === undefined) {
+            x = this.locateSpeaker(chat);
+            this.speakerX.set(chat.senderId, x);
+        }
+        return x ?? chat.location.x;
     }
 
     private publish(immediate = false) {

@@ -75,6 +75,11 @@ export const NavigatorRoomSettingsBasicTabView: FC<NavigatorRoomSettingsTabViewP
         setRoomTag2(roomData.tags.length > 0 && roomData.tags[1] ? roomData.tags[1] : '');
     }, [roomData]);
 
+    // setCategorySelection: visible, non-automatic categories (plus the room's own); without a match the first one shows.
+    const categoryOptions = (categories ?? [])
+        .filter((category) => (category.visible || category.id === roomData.categoryId) && !category.automatic)
+        .map((category) => ({ value: category.id, label: LocalizeText(category.name) }));
+
     const tagHasError = (tag: string) => fieldError?.field === 'tags' && tag !== '' && tag.toLowerCase() === fieldError.tagText;
 
     return (

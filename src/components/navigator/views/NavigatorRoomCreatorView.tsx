@@ -11,6 +11,8 @@ import tileIconBlack from '../../../assets/images/navigator/air/tile-icon-black.
 import tileIconWhite from '../../../assets/images/navigator/air/tile-icon-white.png';
 import { VoltCardView } from '../../../common';
 import { HabboDropMenuView } from '../../../common/dropmenu/HabboDropMenuView';
+import { NativeCenteredField } from '../../../common/native-text/NativeCenteredField';
+import { NativeText } from '../../../common/native-text/NativeText';
 import { useNavigatorData, useNavigatorUiStore, useUserDataSnapshot } from '../../../hooks';
 import { useRoomCreatorStore } from './navigatorRoomCreatorStore';
 
@@ -359,7 +361,9 @@ export const NavigatorRoomCreatorView: FC = () => {
                 />
             </div>
 
-            <span className="volt-room-creator-air__label volt-room-creator-air__label--name">{LocalizeText('navigator.roomname')}</span>
+            <span className="volt-room-creator-air__label volt-room-creator-air__label--name">
+                <NativeText text={LocalizeText('navigator.roomname')} textStyle="bold" background={0xe9e9e1} overrides={{ kerning: false }} nativeResolution />
+            </span>
             <div className={`volt-room-creator-air__field volt-room-creator-air__field--name${nameInvalid ? ' is-invalid' : ''}`}>
                 <input
                     className="volt-room-creator-air__input"
@@ -384,7 +388,9 @@ export const NavigatorRoomCreatorView: FC = () => {
                 </div>
             )}
 
-            <span className="volt-room-creator-air__label volt-room-creator-air__label--desc">{LocalizeText('navigator.roomdesc')}</span>
+            <span className="volt-room-creator-air__label volt-room-creator-air__label--desc">
+                <NativeText text={LocalizeText('navigator.roomdesc')} textStyle="bold" background={0xe9e9e1} overrides={{ kerning: false }} nativeResolution />
+            </span>
             <div className="volt-room-creator-air__field volt-room-creator-air__field--desc">
                 <textarea
                     className="volt-room-creator-air__input volt-room-creator-air__input--multiline"
@@ -396,8 +402,11 @@ export const NavigatorRoomCreatorView: FC = () => {
                 />
             </div>
 
-            <span className="volt-room-creator-air__label volt-room-creator-air__label--category">{LocalizeText('navigator.category')}</span>
+            <span className="volt-room-creator-air__label volt-room-creator-air__label--category">
+                <NativeText text={LocalizeText('navigator.category')} textStyle="bold" background={0xe9e9e1} overrides={{ kerning: false }} nativeResolution />
+            </span>
             <HabboDropMenuView
+                popupClassName="volt-navigator-air__dropmenu-popup"
                 className="volt-room-creator-air__dropmenu volt-room-creator-air__dropmenu--category"
                 label={LocalizeText('navigator.category')}
                 options={selectableCategories.map((category, index) => ({ value: index, label: LocalizeText(category.name) }))}
@@ -405,8 +414,11 @@ export const NavigatorRoomCreatorView: FC = () => {
                 onSelect={(categoryIndex) => setForm({ categoryIndex })}
             />
 
-            <span className="volt-room-creator-air__label volt-room-creator-air__label--visitors">{LocalizeText('navigator.maxvisitors')}</span>
+            <span className="volt-room-creator-air__label volt-room-creator-air__label--visitors">
+                <NativeText text={LocalizeText('navigator.maxvisitors')} textStyle="bold" background={0xe9e9e1} overrides={{ kerning: false }} nativeResolution />
+            </span>
             <HabboDropMenuView
+                popupClassName="volt-navigator-air__dropmenu-popup"
                 className="volt-room-creator-air__dropmenu volt-room-creator-air__dropmenu--visitors"
                 label={LocalizeText('navigator.maxvisitors')}
                 options={visitorOptions.map((label, value) => ({ value, label }))}
@@ -414,8 +426,11 @@ export const NavigatorRoomCreatorView: FC = () => {
                 onSelect={(visitorsIndex) => setForm({ visitorsIndex })}
             />
 
-            <span className="volt-room-creator-air__label volt-room-creator-air__label--trade">{LocalizeText('navigator.tradesettings')}</span>
+            <span className="volt-room-creator-air__label volt-room-creator-air__label--trade">
+                <NativeText text={LocalizeText('navigator.tradesettings')} textStyle="bold" background={0xe9e9e1} overrides={{ kerning: false }} nativeResolution />
+            </span>
             <HabboDropMenuView
+                popupClassName="volt-navigator-air__dropmenu-popup"
                 className="volt-room-creator-air__dropmenu volt-room-creator-air__dropmenu--trade"
                 label={LocalizeText('navigator.tradesettings')}
                 options={AIR_TRADE_KEYS.map((key, value) => ({ value, label: LocalizeText(key) }))}
@@ -424,14 +439,18 @@ export const NavigatorRoomCreatorView: FC = () => {
             />
 
             <button type="button" className="volt-room-creator-air__button volt-room-creator-air__button--create" onClick={createRoom}>
-                {LocalizeText('navigator.createroom.create')}
+                <NativeCenteredField width={96}>
+                    <NativeText text={LocalizeText('navigator.createroom.create')} textStyle="button_bold" background={0xffffff} overrides={{ kerning: false }} transparent nativeResolution />
+                </NativeCenteredField>
             </button>
             <button type="button" className="volt-room-creator-air__button volt-room-creator-air__button--cancel" onClick={closeCreator}>
-                {LocalizeText('generic.cancel')}
+                <NativeCenteredField width={98}>
+                    <NativeText text={LocalizeText('generic.cancel')} textStyle="button_regular" background={0xffffff} overrides={{ kerning: false }} transparent nativeResolution />
+                </NativeCenteredField>
             </button>
 
             <span className="volt-room-creator-air__label volt-room-creator-air__label--layout">
-                {LocalizeText('navigator.createroom.chooselayoutcaption')}
+                <NativeText text={LocalizeText('navigator.createroom.chooselayoutcaption')} textStyle="bold" background={0xe9e9e1} overrides={{ kerning: false }} nativeResolution />
             </span>
             <RoomLayoutScrollView viewportRef={layoutsRef}>
                 {roomModels.map((model) => {
@@ -463,7 +482,13 @@ export const NavigatorRoomCreatorView: FC = () => {
                                 height={10}
                             />
                             <span className="volt-room-creator-air__thumbnail-tiles">
-                                {model.tileSize} {tileSizeLabel}
+                                <NativeText
+                                    text={`${model.tileSize} ${tileSizeLabel}`}
+                                    textStyle="regular"
+                                    background={isSelected ? 0x6e8184 : 0xcbcbcb}
+                                    overrides={{ color: isSelected ? 0xffffff : 0, kerning: false }}
+                                    nativeResolution
+                                />
                             </span>
                             {model.clubLevel > 0 && <img className="volt-room-creator-air__thumbnail-club" src={vipIconSmall} alt="" width={19} height={10} />}
                         </div>

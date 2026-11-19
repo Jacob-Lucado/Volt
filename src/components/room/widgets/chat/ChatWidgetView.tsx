@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ChatBubbleMessage, GetConfigurationValue, resolveChatBubbleWidth } from '../../../../api';
+import { ChatBubbleMessage, GetConfigurationValue, GetRoomObjectScreenLocation, resolveChatBubbleWidth } from '../../../../api';
 import { useChatWidget, useChatWindow } from '../../../../hooks';
 import { useSessionInfo } from '../../../../hooks/session/useSessionInfo';
 import { CHAT_FONT_SCALES } from '../chat-input/chatTextSize';
@@ -7,7 +7,13 @@ import { ChatWidgetMessageView } from './ChatWidgetMessageView';
 import { ChatWidgetWindowView } from './ChatWidgetWindowView';
 import { measureChatBubble } from './chatBubbleMetrics';
 import { getChatViewerHeight } from './freeFlowChatLayout';
-import { NativeChatScroller } from './nativeChatScroller';
+import { ChatSpeakerLocator, getNativeChatCreation, NativeChatScroller } from './nativeChatScroller';
+
+// Users, bots and pets are all room units (category 100), so one lookup serves every speaker.
+const locateSpeaker: ChatSpeakerLocator = (chat) => GetRoomObjectScreenLocation(chat.roomId, chat.senderId, chat.senderCategory)?.x ?? null;
+
+// A frame gap this long means the tab was hidden (no frames at all), not a slow frame.
+const CATCH_UP_GAP = 1000;
 
 export const ChatWidgetView: FC<{}> = (props) => {
     const { chatMessages = [], setChatMessages = null, chatSettings = null, getScrollSpeed = 6000, roomId = null } = useChatWidget();
@@ -16,7 +22,7 @@ export const ChatWidgetView: FC<{}> = (props) => {
     const [chatWindowEnabled] = useChatWindow();
     const elementRef = useRef<HTMLDivElement>(null);
     const chatMessagesRef = useRef(chatMessages);
-    const [scroller] = useState(() => new NativeChatScroller());
+    const [scroller] = useState(() => new NativeChatScroller(locateSpeaker));
     // Bubbles that mounted or resized since the last frame, with their creation mode.
     const pendingRef = useRef(new Map<ChatBubbleMessage, number>());
     const settingsRef = useRef({ mode: chatSettings.mode, speed: getScrollSpeed, fontScale });
@@ -65,12 +71,31 @@ export const ChatWidgetView: FC<{}> = (props) => {
             scroller.configure(settings.mode, settings.speed, settings.fontScale);
             for (const [chat, creationMode] of entries) if (chat.elementRef) scroller.register(chat, creationMode);
         };
+        const catchUp = (now: number) => {
+            const entries = [...pendingRef.current];
+            pendingRef.current.clear();
+            for (const [chat] of entries) measureChatBubble(chat);
+            const settings = settingsRef.current;
+            scroller.configure(settings.mode, settings.speed, settings.fontScale);
+            const arrivals = entries
+                .filter(([chat]) => chat.elementRef)
+                .map(([chat, mode]) => ({ chat, mode, at: (getNativeChatCreation(chat)?.timestamp ?? now) - previous }))
+                .sort((a, b) => a.at - b.at);
+            return scroller.catchUp(now - previous, arrivals, chatMessagesRef.current);
+        };
         const update = () => {
-            placePending();
-            const now = Date.now();
-            // v75 normal core passes one wall-clock delta per ticker frame, without replaying missed frames.
-            const removed = scroller.advance(now - previous, chatMessagesRef.current);
-            previous = now;
+            let removed: number[];
+            if (Date.now() - previous > CATCH_UP_GAP) {
+                const now = Date.now();
+                removed = catchUp(now);
+                previous = now;
+            } else {
+                placePending();
+                const now = Date.now();
+                // v75 normal core passes one wall-clock delta per ticker frame, without replaying missed frames.
+                removed = scroller.advance(now - previous, chatMessagesRef.current);
+                previous = now;
+            }
             if (removed.length) {
                 const ids = new Set(removed);
                 setChatMessages((messages) => messages.filter((chat) => !ids.has(chat.id)));

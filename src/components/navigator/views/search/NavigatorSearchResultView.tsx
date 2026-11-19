@@ -8,6 +8,7 @@ import navViewMini from '../../../../assets/images/navigator/air/nav-view-mini.p
 import navViewRow from '../../../../assets/images/navigator/air/nav-view-row.png';
 import navViewThumbs from '../../../../assets/images/navigator/air/nav-view-thumbs.png';
 import quicklinkAdd from '../../../../assets/images/navigator/air/quicklink-add.png';
+import { NativeText } from '../../../../common/native-text/NativeText';
 import { useNavigatorUiStore } from '../../../../hooks';
 import { usePerkAllowed } from '../../../../state/perkAllowancesStore';
 import { NavigatorSearchResultItemView } from './NavigatorSearchResultItemView';
@@ -78,7 +79,15 @@ export const NavigatorSearchResultView: FC<NavigatorSearchResultViewProps> = (pr
                     onClick={() => useNavigatorUiStore.getState().setResultCollapsed(searchResult.code, isExtended)}
                 >
                     {(!isExtended || searchResult.action !== 2) && <img src={isExtended ? categoryCollapse : categoryExpand} alt="" />}
-                    <span>{resultTitle}</span>
+                    <NativeText
+                        className="volt-navigator-air__category-name"
+                        text={resultTitle}
+                        textStyle="u_regular"
+                        background={0xffffff}
+                        overrides={{ size: 14, color: 0x0f557b }}
+                        maxWidth={270}
+                        nativeResolution
+                    />
                 </button>
                 <div className="volt-navigator-air__category-controls">
                     {isExtended && canToggleViewMode && displayMode === NavigatorSearchResultViewDisplayMode.LIST && (
@@ -104,7 +113,7 @@ export const NavigatorSearchResultView: FC<NavigatorSearchResultViewProps> = (pr
                         </button>
                     )}
                     {searchResult.action > 0 && searchResult.action === 1 && (
-                        <button type="button" className="volt-navigator-air__icon-button" title={LocalizeText('navigator.more.rooms')} onClick={showMore}>
+                        <button type="button" className="volt-navigator-air__icon-button volt-navigator-air__icon-button--more" title={LocalizeText('navigator.more.rooms')} onClick={showMore}>
                             <img src={categoryShowMore} alt="" />
                         </button>
                     )}

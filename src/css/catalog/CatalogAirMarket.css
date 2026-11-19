@@ -532,16 +532,6 @@
     left: 51px;
 }
 
-/* RecyclerEngineAnimator shakes the machine by up to 3px while the pointer swings. */
-.volt-catalog-recycler-air.is-processing .volt-catalog-recycler-machine {
-    animation: volt-recycler-shake 100ms steps(2) infinite;
-}
-
-@keyframes volt-recycler-shake {
-    0% { transform: translate(-1px, 1px); }
-    50% { transform: translate(2px, -1px); }
-    100% { transform: translate(-1px, 1px); }
-}
 
 /* The ducket cost list (19, 265): ducket_cost (bold, y 6), a 2px spacer and the iconDucketBig icon (y 4). */
 .volt-catalog-recycler-cost {
@@ -668,51 +658,15 @@
     left: 0;
 }
 
-.volt-catalog-recycler-air.is-processing .volt-catalog-recycler-pointer > .is-arrow {
-    animation: volt-recycler-pointer 1.6s ease-in-out infinite alternate;
-}
-
-@keyframes volt-recycler-pointer {
-    from { transform: rotate(-88deg); }
-    to { transform: rotate(88deg); }
-}
-
-/* Volt's inventory list for filling the slots, over the machine. */
-.volt-catalog-recycler-picker {
-    top: 62px;
-    left: 16px;
-    z-index: 3;
-    box-sizing: border-box;
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    gap: 2px;
-    width: 328px;
-    max-height: 230px;
-    padding: 6px;
-    overflow-y: auto;
-    border: 6px solid transparent;
-    border-image: var(--habbo-skin-border-white) 6 fill / 6px stretch;
-    image-rendering: var(--volt-pixel-art, pixelated);
-}
-
-.volt-catalog-window .volt-catalog-recycler-picker > button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    margin: 0;
+/* abort_region (244, 434, 65x17): catalog.recycler.button.abort in 10px underlined text. */
+.volt-catalog-window .volt-catalog-recycler-abort {
+    top: 434px;
+    left: 244px;
+    height: 17px;
     padding: 0;
     border: 0;
-    border-radius: 0;
-    background: url('../../assets/images/catalog/air/recycler/slot-bg.png') center no-repeat;
+    background: none;
     cursor: pointer;
-}
-
-.volt-catalog-recycler-picker > button > img {
-    max-width: 34px;
-    max-height: 34px;
 }
 
 /* disabled_border (0, 258, 360x208): border style 3 (border_slot) in 0x888888 at 0.7 blend, Frank and his bubble. */
@@ -720,6 +674,7 @@
     top: 258px;
     left: 0;
     z-index: 4;
+    overflow: hidden;
     width: 360px;
     height: 208px;
 }
@@ -751,17 +706,23 @@
     background: url('../../assets/images/catalog/air/recycler/bubble-7-155x81.png') no-repeat;
 }
 
+/* emoji_1 (115, 5, 20x20) inside the bubble's 8px margins. */
+.volt-catalog-recycler-bubble > .volt-catalog-recycler-bubble-emoji {
+    position: absolute;
+    top: 13px;
+    left: 123px;
+}
+
+/* FrankRecyclerEmotion: emoji_2_template clones that rise inside disabled_border. */
+.volt-catalog-recycler-emotion {
+    position: absolute;
+    pointer-events: none;
+}
+
 .volt-catalog-recycler-bubble > span {
     position: absolute !important;
     top: 12px;
     left: 12px;
-}
-
-.volt-catalog-recycler-finished {
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
 }
 
 /* AIR layout_recycler_prizes (1685): the 659px layout shrinks to 460, so itemList is 223px high. */
@@ -796,9 +757,11 @@
 .volt-catalog-recycler-prizes-preview {
     position: absolute;
     inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+}
+
+.volt-catalog-recycler-prizes-centre {
+    position: absolute;
+    display: block;
 }
 
 .volt-catalog-recycler-prizes-name {
@@ -807,15 +770,58 @@
     left: 10px;
 }
 
+.volt-catalog-recycler-prizes-bubble {
+    position: relative;
+    display: block;
+}
+
+.volt-catalog-recycler-prizes-bubble > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* itemList: scrollable_itemlist_vertical style 100, so the 9px illumina scrollbar without arrows. */
 .volt-catalog-recycler-prizes-list {
     top: 237px;
     left: 0;
     width: 360px;
     height: 223px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
-.volt-catalog-recycler-prizes-list .volt-classic-scroll-area-viewport {
-    overflow-y: auto;
+.has-classic-scrollbar .volt-catalog-recycler-prizes-list::-webkit-scrollbar {
+    width: 9px !important;
+    height: 9px !important;
+    background: transparent !important;
+}
+
+.has-classic-scrollbar .volt-catalog-recycler-prizes-list::-webkit-scrollbar-button,
+.has-classic-scrollbar .volt-catalog-recycler-prizes-list::-webkit-scrollbar-button:single-button:vertical:decrement,
+.has-classic-scrollbar .volt-catalog-recycler-prizes-list::-webkit-scrollbar-button:single-button:vertical:increment {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.has-classic-scrollbar .volt-catalog-recycler-prizes-list::-webkit-scrollbar-track:vertical {
+    border: solid transparent !important;
+    border-width: 2px 0 !important;
+    border-image: url('../../assets/images/reward-track/air/scrollbar-track.png') 2 0 fill / 2px 0 stretch !important;
+    background: transparent !important;
+    image-rendering: pixelated !important;
+}
+
+.has-classic-scrollbar .volt-catalog-recycler-prizes-list::-webkit-scrollbar-thumb:vertical,
+.has-classic-scrollbar .volt-catalog-recycler-prizes-list::-webkit-scrollbar-thumb:vertical:hover,
+.has-classic-scrollbar .volt-catalog-recycler-prizes-list::-webkit-scrollbar-thumb:vertical:active {
+    min-height: 9px !important;
+    border: solid transparent !important;
+    border-width: 4px 0 !important;
+    border-image: url('../../assets/images/reward-track/air/scrollbar-lift.png') 4 0 fill / 4px 0 stretch !important;
+    background: transparent !important;
+    image-rendering: pixelated !important;
 }
 
 /*
@@ -828,6 +834,11 @@
     width: 348px;
     margin-bottom: 11px;
     padding: 5px;
+}
+
+/* itemList spacing 11 sits between levels only. */
+.volt-catalog-recycler-prize-level:last-child {
+    margin-bottom: 0;
 }
 
 .volt-catalog-recycler-prize-level::before {
@@ -845,6 +856,7 @@
     position: relative;
     display: flex;
     align-items: flex-start;
+    box-sizing: content-box;
     height: 20px;
     padding-top: 3px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.314);
@@ -866,11 +878,29 @@
     background: #e8eaec;
 }
 
+/* gridItem (36x36): the icon centred; the ITEM_HILIGHT frame (2px 0x62c4e8, white inside) only on the selected prize. */
 .volt-catalog-window .volt-catalog-recycler-prize-tile {
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px;
-    min-height: 36px;
-    background-position: center;
-    background-repeat: no-repeat;
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    width: 36px;
+    height: 36px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    cursor: pointer;
+}
+
+.volt-catalog-window .volt-catalog-recycler-prize-tile.is-active {
+    background: url('../../assets/images/catalog/air/recycler/prize-selected.png') no-repeat;
+}
+
+.volt-catalog-recycler-prize-icon {
+    position: absolute;
+    max-width: 36px;
+    max-height: 36px;
+    image-rendering: var(--volt-pixel-art, pixelated);
+    pointer-events: none;
 }

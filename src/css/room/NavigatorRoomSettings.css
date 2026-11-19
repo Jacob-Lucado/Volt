@@ -39,6 +39,23 @@
     background: transparent;
 }
 
+/* the tab_context draws no line under the tabs */
+.volt-room-settings .volt-room-settings-tabs.volt-card-tabs-shell {
+    border-bottom-color: transparent;
+}
+
+/* habbo_window_layout_tab_button_3: the title label sits at y 4 with margins 10/6/10/4. A caption wider than the
+   space between the margins is not cut; it starts at the left margin (ModTool). */
+.volt-room-settings .volt-room-settings-tabs .volt-card-tab-item {
+    padding: 10px 10px 0 !important;
+}
+
+.volt-room-settings .volt-room-settings-tabs .volt-card-tab-item .volt-card-tab-item-label {
+    overflow: visible;
+    text-overflow: clip;
+    line-height: 0;
+}
+
 .volt-room-settings .volt-room-settings-content.volt-card-content-shell {
     position: absolute;
     top: 33px;
@@ -151,7 +168,7 @@
 }
 
 .volt-room-settings .ros-input.ros-textarea {
-    padding: 3px 6px;
+    padding: 0 1px;
     overflow-y: auto;
     resize: none;
 }
@@ -160,7 +177,12 @@
 .volt-room-settings .ros-input.ros-idle-timeout {
     border: 1px solid #8292a8 !important;
     border-image-source: none !important;
-    padding: 1px;
+    padding: 0 1px;
+}
+
+/* a 20px field: the line starts at the 2px gutter instead of the middle */
+.volt-room-settings .ros-input.ros-input-20 {
+    padding-bottom: 4px;
 }
 
 .volt-room-settings .ros-input.is-invalid {
@@ -240,28 +262,51 @@
     position: absolute;
 }
 
-/* checkbox / radiobutton: the shared Habbo artwork (HabboTheme.css) at the XML size */
-.volt-room-settings .ros-check {
+/* checkbox and radiobutton style 0 (habbo_skin_button_checkbox / _radio): a fixed 15x15 or 16x16 bitmap of
+   habbo_blue_skin_png at the top left of the 20px window. A disabled control is only blended to 0.5 by its
+   .ros-disabled box, so the shared disabled opacity is cancelled here. */
+.volt-room-settings .ros-check,
+.volt-room-settings .ros-radio {
     display: block;
+    width: 15px;
+    height: 15px;
+    min-width: 0;
     margin: 0;
+    background: url('@/assets/images/navigator/room-settings/checkbox-default.png') 0 0 / 15px 15px no-repeat;
 }
 
-.volt-room-settings .ros-radio-row {
-    position: absolute;
-    left: 0;
-    display: flex;
-    width: 270px;
-    height: 20px;
-    align-items: center;
-    gap: 4px;
-    margin: 0;
-    font-size: 12px;
-    line-height: 17px;
+.volt-room-settings .ros-check:checked {
+    background-image: url('@/assets/images/navigator/room-settings/checkbox-checked.png');
+}
+
+.volt-room-settings .ros-radio {
+    width: 16px;
+    height: 16px;
+    background: url('@/assets/images/navigator/room-settings/radio-default.png') 0 0 / 16px 16px no-repeat;
+}
+
+.volt-room-settings .ros-radio:checked {
+    background-image: url('@/assets/images/navigator/room-settings/radio-checked.png');
+}
+
+.volt-room-settings :is(.ros-check, .ros-radio):disabled {
+    opacity: 1;
+    cursor: default;
+}
+
+/* a text window without auto_size clips what does not fit */
+.volt-room-settings .ros-clip {
+    overflow: hidden;
+}
+
+.volt-room-settings .ros-native {
+    line-height: 0;
+    white-space: nowrap;
+}
+
+.volt-room-settings .ros-native label {
+    display: inline-block;
     cursor: pointer;
-}
-
-.volt-room-settings .ros-radio-row input {
-    margin: 0 0 0 2px;
 }
 
 /* remove_link_region: bold underlined #bb2200 text with the icon_9 symbol (habbo_icons 82,0 13x13) */
@@ -391,6 +436,7 @@
     image-rendering: var(--volt-pixel-art, pixelated);
 }
 
+/* search_border: border style 0 (border_white) coloured 0xe9e9e1 */
 .volt-room-settings .ros-search {
     background: #eef2f7;
 }
@@ -637,7 +683,7 @@
     height: 30px;
 }
 
-/* remove_link is centred in its 174px field; icon_9 (bb2200) sits 17px left of that text */
+/* remove_link is centred in its 174px field; icon_9 (bb2200) sits 15px left of the text window */
 .volt-room-settings .ros-link.ros-remove-link {
     text-align: center;
     text-indent: 0;
@@ -645,14 +691,16 @@
 
 .volt-room-settings .ros-remove-link > span {
     position: relative;
-    color: inherit;
-    font: inherit;
+    display: inline-block;
+    line-height: 0;
+    vertical-align: top;
 }
 
+/* remove_icon: x = remove_link.x - 15, 2px below the text window */
 .volt-room-settings .ros-remove-icon {
     position: absolute;
-    top: -1px;
-    left: -17px;
+    top: 2px;
+    left: -15px;
     width: 13px;
     height: 13px;
     image-rendering: var(--volt-pixel-art, pixelated);
@@ -735,4 +783,36 @@
     border: 0 solid transparent;
     border-image: var(--habbo-skin-border-white) 6 fill / 6px stretch;
     image-rendering: var(--volt-pixel-art, pixelated);
+}
+
+/* help button of frame style 3 (shown while the window has a help page: the HC tab), 24px left of the close button */
+.volt-room-settings > .volt-card-header-shell .volt-card-header-info-habbopages {
+    top: 2px;
+    right: 24px;
+    width: 19px;
+    height: 20px;
+    background: url('@/assets/images/habbo-skin/slices/help-3-default.png') 0 0 / 19px 20px no-repeat;
+    image-rendering: var(--volt-pixel-art, pixelated);
+}
+
+.volt-room-settings > .volt-card-header-shell .volt-card-header-info-habbopages:hover {
+    background-image: url('@/assets/images/habbo-skin/slices/help-3-hover.png');
+}
+
+.volt-room-settings > .volt-card-header-shell .volt-card-header-info-habbopages:active {
+    background-image: url('@/assets/images/habbo-skin/slices/help-3-pressed.png');
+}
+
+/* button captions are labels: habbo_window_layout_button_shiny (button_shiny_regular, margins 8/2/8/3) and
+   _button_shiny_thick (button_shiny_bold, margins 10/2/10/3), centred in what the margins leave */
+.volt-room-settings .ros-button .ros-button-label {
+    line-height: 0;
+}
+
+.volt-room-settings .ros-button.ros-button-fit {
+    padding: 2px 8px 3px;
+}
+
+.volt-room-settings .ros-button.ros-button-thick {
+    padding: 2px 10px 3px;
 }

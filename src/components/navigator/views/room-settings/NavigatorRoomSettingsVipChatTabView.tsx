@@ -30,8 +30,8 @@ interface NavigatorRoomSettingsTabViewProps {
 export const NavigatorRoomSettingsVipChatTabView: FC<NavigatorRoomSettingsTabViewProps> = (props) => {
     const { roomData = null, handleChange = null, handleDraftChange, idleSleepTimeoutSeconds, idleAutokickTimeoutSeconds, inputError } = props;
     const isHC = GetClubMemberLevel() > 0;
-    const sleepError = inputError?.field === 'idle_sleep_timeout_seconds' && roomData.idleSleepEnabled;
-    const autokickError = inputError?.field === 'idle_autokick_timeout_seconds' && roomData.idleAutokickEnabled;
+    const sleepError = inputError?.field === 'idle_sleep_timeout_seconds' && isHC && roomData.idleSleepEnabled;
+    const autokickError = inputError?.field === 'idle_autokick_timeout_seconds' && isHC && roomData.idleAutokickEnabled;
 
     return (
         <div className="los-ros__tab">

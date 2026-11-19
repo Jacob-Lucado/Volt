@@ -335,3 +335,11 @@
 .volt-catalog-price-box-unit > .volt-activity-point-icon {
     display: block !important;
 }
+
+/* showPriceOnProduct: the price box sits 6px from the right and bottom edge of the product view. */
+.volt-catalog-offer-preview > .volt-catalog-default-price {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    z-index: 3;
+}

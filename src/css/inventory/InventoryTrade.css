@@ -213,7 +213,6 @@
 
 .volt-trade-buttons > .volt-trade-continue {
     left: 7px;
-    width: 70px;
 }
 
 .volt-trade.is-minimized .volt-trade-buttons > .volt-trade-cancel {
@@ -282,13 +281,10 @@
 
 .volt-trade-buttons > .volt-trade-accept {
     left: 5px;
-    width: auto;
-    padding: 0 5.8px 1px !important;
 }
 
 .volt-trade-buttons > .volt-trade-cancel {
     left: 415px;
-    width: 56px;
 }
 
 /* inventory furni preview: offertotrade_cnt (50x19) and offertotrade_btn (148x22). */

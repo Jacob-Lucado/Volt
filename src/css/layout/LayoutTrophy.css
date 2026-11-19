@@ -4,74 +4,63 @@
     height: 173px;
     color: black;
     pointer-events: all;
-
-    font-size: 12px;
-    line-height: 12px;
+    cursor: default;
+    user-select: none;
     background-position: 0px 0px;
     background-image: url('@/assets/images/room-widgets/trophy-widget/trophy-spritesheet.png');
 
     &.trophy-2 {
         --trophy-patch: #bdc3cc;
-        background-position: 0px 173px;
+        background-position: 0px -173px;
     }
 
     &.trophy-3 {
-        --trophy-patch: #b87834;
-        background-position: 0px 346px;
-    }
-
-    * {
-        font-size: inherit !important;
-        line-height: inherit !important;
+        background-position: 0px -346px;
     }
 
     .trophy-header {
-        height: 22px;
-
-        &::before {
-            content: '';
-            position: absolute;
-            top: 4px;
-            left: 110px;
-            width: 120px;
-            height: 18px;
-            background: var(--trophy-patch, #ecc547);
-        }
+        position: absolute;
+        left: 110px;
+        top: 4px;
+        width: 120px;
+        height: 18px;
 
         > * {
-            position: relative;
-        }
-
-        > .trophy-close {
             position: absolute;
-        }
-
-        > :not(.trophy-close) {
-            transform: translateY(2px);
-        }
-
-        .trophy-close {
-            width: 15px;
-            height: 15px;
-            right: 5.5px;
-            top: 5px;
+            left: 0;
+            top: 1px;
         }
     }
 
     .trophy-content {
-        transform: translate(4px, 0);
+        position: absolute;
+        left: 22px;
+        top: 25px;
         width: 297px;
         height: 116px;
-        white-space: pre-wrap;
-        overflow: auto;
+        overflow: hidden;
     }
 
-    .trophy-footer {
-        transform: translateY(3px);
-        width: 297px;
+    .trophy-date {
+        position: absolute;
+        left: 21px;
+        top: 142px;
+    }
 
-        > :first-child {
-            margin-left: 3px;
-        }
+    .trophy-name {
+        position: absolute;
+        top: 142px;
+    }
+
+    .trophy-close {
+        position: absolute;
+        left: 318px;
+        top: 3px;
+        width: 18px;
+        height: 20px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
     }
 }

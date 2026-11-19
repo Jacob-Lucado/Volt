@@ -292,3 +292,86 @@
 .has-air-scrollbar[data-scrollable="false"]::-webkit-scrollbar-button:single-button:vertical:increment {
     background-image: url("../../assets/images/habbo-skin/slices/scroll-down-3-disabled.png");
 }
+
+/* The root .has-classic-scrollbar skin is !important; the AIR skin keeps its own look inside it. */
+.has-classic-scrollbar .has-air-scrollbar {
+    scrollbar-color: auto !important;
+    scrollbar-width: auto !important;
+}
+
+.has-classic-scrollbar .has-air-scrollbar::-webkit-scrollbar {
+    width: 17px !important;
+    height: 17px !important;
+}
+
+.has-classic-scrollbar .has-air-scrollbar::-webkit-scrollbar-track:vertical {
+    background: url("../../assets/images/habbo-skin/slices/scroll-track-3.png") repeat-y !important;
+}
+
+.has-classic-scrollbar .has-air-scrollbar::-webkit-scrollbar-thumb:vertical {
+    min-height: 26px !important;
+    border: 0 solid transparent !important;
+    border-image: url("../../assets/images/habbo-skin/slices/scroll-thumb-3-default.png") 5 0 / 5px 0 stretch !important;
+    background: url("../../assets/images/habbo-skin/slices/scroll-grip-3-default.png") center no-repeat,
+        url("../../assets/images/habbo-skin/slices/scroll-mid-3-default.png") repeat-y !important;
+}
+
+.has-classic-scrollbar .has-air-scrollbar::-webkit-scrollbar-thumb:vertical:active {
+    border-image-source: url("../../assets/images/habbo-skin/slices/scroll-thumb-3-pressed.png") !important;
+    background-image: url("../../assets/images/habbo-skin/slices/scroll-grip-3-pressed.png"), url("../../assets/images/habbo-skin/slices/scroll-mid-3-pressed.png") !important;
+}
+
+.has-classic-scrollbar .has-air-scrollbar::-webkit-scrollbar-button:single-button:vertical {
+    display: block !important;
+    height: 16px !important;
+    background: center / 17px 16px no-repeat !important;
+}
+
+.has-classic-scrollbar .has-air-scrollbar::-webkit-scrollbar-button:single-button:vertical:decrement {
+    background-image: url("../../assets/images/habbo-skin/slices/scroll-up-3-default.png") !important;
+}
+
+.has-classic-scrollbar .has-air-scrollbar::-webkit-scrollbar-button:single-button:vertical:increment {
+    background-image: url("../../assets/images/habbo-skin/slices/scroll-down-3-default.png") !important;
+}
+
+.has-classic-scrollbar .has-air-scrollbar::-webkit-scrollbar-button:single-button:vertical:decrement:active {
+    background-image: url("../../assets/images/habbo-skin/slices/scroll-up-3-pressed.png") !important;
+}
+
+.has-classic-scrollbar .has-air-scrollbar::-webkit-scrollbar-button:single-button:vertical:increment:active {
+    background-image: url("../../assets/images/habbo-skin/slices/scroll-down-3-pressed.png") !important;
+}
+
+.has-classic-scrollbar .has-air-scrollbar::-webkit-scrollbar-button:single-button:vertical:decrement:disabled {
+    background-image: url("../../assets/images/habbo-skin/slices/scroll-up-3-disabled.png") !important;
+}
+
+.has-classic-scrollbar .has-air-scrollbar::-webkit-scrollbar-button:single-button:vertical:increment:disabled {
+    background-image: url("../../assets/images/habbo-skin/slices/scroll-down-3-disabled.png") !important;
+}
+
+.has-classic-scrollbar .has-air-scrollbar::-webkit-scrollbar-thumb:vertical:hover:not(:active) {
+    border-image-source: url("../../assets/images/habbo-skin/slices/scroll-thumb-3-hover.png") !important;
+    background-image: url("../../assets/images/habbo-skin/slices/scroll-grip-3-hover.png"), url("../../assets/images/habbo-skin/slices/scroll-mid-3-hover.png") !important;
+}
+
+.has-classic-scrollbar .has-air-scrollbar::-webkit-scrollbar-button:single-button:vertical:decrement:hover:not(:active) {
+    background-image: url("../../assets/images/habbo-skin/slices/scroll-up-3-hover.png") !important;
+}
+
+.has-classic-scrollbar .has-air-scrollbar::-webkit-scrollbar-button:single-button:vertical:increment:hover:not(:active) {
+    background-image: url("../../assets/images/habbo-skin/slices/scroll-down-3-hover.png") !important;
+}
+
+.has-classic-scrollbar .has-air-scrollbar[data-scrollable="false"]::-webkit-scrollbar-track:vertical {
+    background-image: url("../../assets/images/habbo-skin/slices/scroll-track-v-disabled.png") !important;
+}
+
+.has-classic-scrollbar .has-air-scrollbar[data-scrollable="false"]::-webkit-scrollbar-button:single-button:vertical:decrement {
+    background-image: url("../../assets/images/habbo-skin/slices/scroll-up-3-disabled.png") !important;
+}
+
+.has-classic-scrollbar .has-air-scrollbar[data-scrollable="false"]::-webkit-scrollbar-button:single-button:vertical:increment {
+    background-image: url("../../assets/images/habbo-skin/slices/scroll-down-3-disabled.png") !important;
+}

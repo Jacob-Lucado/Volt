@@ -615,9 +615,7 @@
     top: 5px;
 }
 
-.volt-reward-track .volt-reward-track-prize-product img,
-.volt-reward-track .volt-reward-track-prize-furni,
-.volt-reward-track .volt-reward-track-prize-currency {
+.volt-reward-track .volt-reward-track-prize-product img {
     max-width: 40px;
     max-height: 40px;
 }
@@ -625,9 +623,7 @@
 /* quantity_container: round rectangle r5, stroke shaded 0.9, blend 0.8; il_small text blend 0.7 */
 .volt-reward-track .volt-reward-track-prize-amount {
     position: absolute;
-    left: 18px;
     top: 37px;
-    width: 20px;
     height: 14px;
 }
 
@@ -645,29 +641,22 @@
     border-image-source: url("../../assets/images/reward-track/air/quantity-f1def7.png");
 }
 
-.volt-reward-track .volt-reward-track-prize-amount span {
-    position: absolute;
-    left: 4px;
-    top: -1px;
-    min-width: 10px;
-    height: 16px;
-    padding: 0 2px;
+.volt-reward-track .volt-reward-track-prize-amount-text {
     opacity: 0.7;
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 16px;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
-    white-space: nowrap;
 }
 
-.volt-reward-track .volt-reward-track-prize-generic {
-    font-size: 9px;
-    line-height: 10px;
-    text-align: center;
-    word-break: break-all;
+/* disableSection(0.75) blends the template window; AIR multiplies that into each child's own blend. */
+.volt-reward-track .volt-reward-track-prize[data-dimmed="true"] .volt-reward-track-prize-hit,
+.volt-reward-track .volt-reward-track-prize[data-dimmed="true"] .volt-reward-track-prize-stem,
+.volt-reward-track .volt-reward-track-prize[data-dimmed="true"] .volt-reward-track-prize-check {
+    opacity: 0.75;
 }
 
-/* connector: container background 0x33000000 */
+.volt-reward-track .volt-reward-track-prize[data-dimmed="true"] .volt-reward-track-prize-lock {
+    opacity: 0.525;
+}
+
+/* connector: container background 0x33000000, drawn in the template's own graphic context under the click region */
 .volt-reward-track .volt-reward-track-prize-stem {
     position: absolute;
     left: 39px;

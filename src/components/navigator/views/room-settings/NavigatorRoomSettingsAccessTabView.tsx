@@ -1,5 +1,5 @@
 import { GetSessionDataManager, RoomDataParser } from '@volt/renderer';
-import { FC, useEffect, useState } from 'react';
+import { FC, Fragment, useEffect, useState } from 'react';
 import { CreateLinkEvent, IRoomData, LocalizeText, localizeWithFallback } from '../../../../api';
 import { LosCheck, LosField, LosRadio } from '../../../../common/lucadoos';
 import { RoomSettingsFieldError } from './RoomSettingsFieldErrorView';
@@ -48,6 +48,20 @@ export const NavigatorRoomSettingsAccessTabView: FC<NavigatorRoomSettingsTabView
     // Builders Club furni overrides its door mode; staff (security 4) see the normal settings.
     const lockedByBuildersClub = !!roomData.hiddenByBc && !GetSessionDataManager().hasSecurity(4);
 
+    const doorModes = [
+        { id: 'ros-door-open', state: RoomDataParser.OPEN_STATE, key: 'navigator.roomsettings.doormode.open', label: { y: 104, w: 230 } },
+        { id: 'ros-door-bell', state: RoomDataParser.DOORBELL_STATE, key: 'navigator.roomsettings.doormode.doorbell', label: { y: 123, w: 249 } },
+        { id: 'ros-door-invisible', state: RoomDataParser.INVISIBLE_STATE, key: 'navigator.roomsettings.doormode.invisible', label: { y: 143, w: 245 } },
+        { id: 'ros-door-password', state: RoomDataParser.PASSWORD_STATE, key: 'navigator.roomsettings.doormode.password', label: { y: 163, w: 253 } }
+    ];
+    const pets = [
+        { id: 'ros-allow-pets', field: 'allow_pets', checked: roomData.allowPets, text: LocalizeText('navigator.roomsettings.allowpets'), w: 191 },
+        { id: 'ros-allow-food', field: 'allow_pets_eat', checked: roomData.allowPetsEat, text: LocalizeText('navigator.roomsettings.allowfoodconsume'), w: 245 },
+        { id: 'ros-mute-pets', field: 'mute_all_pets', checked: roomData.muteAllPets, text: localizeWithFallback('navigator.roomsettings.mute_all_pets', 'Mute all pets'), w: 215 }
+    ];
+
+    // tab_container_2: doormode selector (5,105) with 20px radio rows and labels at x 20; flexible_content (0,260) stacks
+    // the 30px guild disclaimer (only in a group room) over advanced_container.
     return (
         <div className="los-ros__tab">
             <div className="los-ros__intro">

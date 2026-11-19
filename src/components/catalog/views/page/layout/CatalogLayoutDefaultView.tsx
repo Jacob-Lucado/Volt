@@ -15,6 +15,7 @@ import { CatalogPurchaseWidgetView } from '../widgets/CatalogPurchaseWidgetView'
 import { CatalogSpinnerWidgetView } from '../widgets/CatalogSpinnerWidgetView';
 import { CatalogTotalPriceWidget } from '../widgets/CatalogTotalPriceWidget';
 import { CatalogViewProductWidgetView } from '../widgets/CatalogViewProductWidgetView';
+import { CatalogAirPriceDisplayView } from './CatalogAirPriceDisplayView';
 import { CatalogLayoutProps } from './CatalogLayout.types';
 
 interface CatalogLayoutDefaultViewProps extends CatalogLayoutProps {
@@ -92,6 +93,8 @@ export const CatalogLayoutDefaultView: FC<CatalogLayoutDefaultViewProps> = (prop
                                     <CatalogAddOnBadgeWidgetView className="bg-muted rounded bottom-1 right-1 absolute" />
                                 </>
                             )}
+                            {/* ProductViewCatalogWidget.onPreviewProduct: without the quantity and total price widgets the price sits on the product. */}
+                            {!showBundlePurchase && <CatalogAirPriceDisplayView className="volt-catalog-default-price" offer={currentOffer} />}
                             {currentOffer.product.productType === ProductTypeEnum.BADGE && <CatalogAddOnBadgeWidgetView className="scale-200" />}
                         </div>
                     </div>

@@ -9,7 +9,7 @@ import {
 } from '@volt/renderer';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { Permission } from '../../../../../api/permissions';
-import { AvatarInfoPet, GetOwnRoomObject, LocalizeText, SendMessageComposer } from '../../../../../api';
+import { AvatarInfoPet, GetConfigurationValue, GetOwnRoomObject, LocalizeText, SendMessageComposer } from '../../../../../api';
 import { useHasPermission, useRoom, useSessionInfo } from '../../../../../hooks';
 import { ContextMenuHeaderView } from '../../context-menu/ContextMenuHeaderView';
 import { ContextMenuListItemView } from '../../context-menu/ContextMenuListItemView';
@@ -36,8 +36,12 @@ export const AvatarInfoWidgetPetView: FC<AvatarInfoWidgetPetViewProps> = (props)
         return roomSession.isRoomOwner || roomSession.controllerLevel >= RoomControllerLevel.GUEST || canManageAnyRoom;
     }, [roomSession, canManageAnyRoom]);
 
+    const sharedRiding = GetConfigurationValue<boolean>('sharedhorseriding.enabled', true);
+
     const canGiveHandItem = useMemo(() => {
         let flag = false;
+
+        if (!GetConfigurationValue<boolean>('handitem.give.pet.enabled', false)) return flag;
 
         const roomObject = GetOwnRoomObject();
 
@@ -111,7 +115,7 @@ export const AvatarInfoWidgetPetView: FC<AvatarInfoWidgetPetViewProps> = (props)
                 )}
                 {mode === MODE_SADDLED_UP && (
                     <>
-                        {!!avatarInfo.publiclyRideable && (
+                        {sharedRiding && (
                             <ContextMenuListItemView onClick={(event) => processAction('mount')}>{LocalizeText('infostand.button.mount')}</ContextMenuListItemView>
                         )}
                         {petRespectRemaining > 0 && (
@@ -123,9 +127,11 @@ export const AvatarInfoWidgetPetView: FC<AvatarInfoWidgetPetViewProps> = (props)
                 )}
                 {mode === MODE_RIDING && (
                     <>
-                        <ContextMenuListItemView onClick={(event) => processAction('dismount')}>
-                            {LocalizeText('infostand.button.dismount')}
-                        </ContextMenuListItemView>
+                        {sharedRiding && (
+                            <ContextMenuListItemView onClick={(event) => processAction('dismount')}>
+                                {LocalizeText('infostand.button.dismount')}
+                            </ContextMenuListItemView>
+                        )}
                         {petRespectRemaining > 0 && (
                             <ContextMenuListItemView onClick={(event) => processAction('respect')}>
                                 {LocalizeText('infostand.button.petrespect', ['count'], [petRespectRemaining.toString()])}
@@ -133,15 +139,15 @@ export const AvatarInfoWidgetPetView: FC<AvatarInfoWidgetPetViewProps> = (props)
                         )}
                     </>
                 )}
-                {mode === MODE_MONSTER_PLANT && !avatarInfo.dead && avatarInfo.energy / avatarInfo.maximumEnergy < 0.98 && (
-                    <ContextMenuListItemView onClick={(event) => processAction('treat')}>{LocalizeText('infostand.button.pettreat')}</ContextMenuListItemView>
+                {mode === MODE_MONSTER_PLANT && !avatarInfo.dead && (
+                    <ContextMenuListItemView disabled={avatarInfo.energy / avatarInfo.maximumEnergy >= 0.98} onClick={(event) => processAction('treat')}>{LocalizeText('infostand.button.pettreat')}</ContextMenuListItemView>
                 )}
                 {canPickUp && (
                     <ContextMenuListItemView onClick={(event) => processAction('pick_up')}>{LocalizeText('infostand.button.pickup')}</ContextMenuListItemView>
                 )}
                 {canGiveHandItem && (
-                    <ContextMenuListItemView onClick={(event) => processAction('pass_hand_item')}>
-                        {LocalizeText('infostand.button.pass_hand_item')}
+                    <ContextMenuListItemView onClick={(event) => processAction('pass_handitem')}>
+                        {LocalizeText('infostand.button.give_handitem_to_pet')}
                     </ContextMenuListItemView>
                 )}
             </div>

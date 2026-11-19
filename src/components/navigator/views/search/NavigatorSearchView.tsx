@@ -4,6 +4,7 @@ import { INavigatorSearchFilter, LocalizeText, SearchFilterOptions } from '../..
 import refreshIcon from '../../../../assets/images/navigator/air/refresh-search.png';
 import searchCloseIcon from '../../../../assets/images/navigator/air/search-close.png';
 import searchPenIcon from '../../../../assets/images/navigator/air/search-pen.png';
+import { NativeText } from '../../../../common/native-text/NativeText';
 import { useNavigatorData, useNavigatorUiStore } from '../../../../hooks';
 import { NavigatorFilterChipsView } from './NavigatorFilterChipsView';
 
@@ -69,12 +70,16 @@ export const NavigatorSearchView: FC<NavigatorSearchViewProps> = (props) => {
                     ref={inputRef}
                     className="volt-navigator-air__search-input"
                     name="q"
-                    placeholder={placeholder}
                     aria-label={LocalizeText('navigator.tooltip.filter.input')}
                     type="text"
                     value={inputText}
                     onChange={(event) => setInputText(event.target.value)}
                 />
+                {!hasQuery && (
+                    <span className="volt-navigator-air__search-placeholder">
+                        <NativeText text={placeholder} textStyle="u_regular" background={0xffffff} overrides={{ color: 0x9f9f9f }} nativeResolution />
+                    </span>
+                )}
                 <button
                     type="button"
                     className="volt-navigator-air__search-clear"

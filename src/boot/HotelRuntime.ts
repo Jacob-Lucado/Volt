@@ -18,7 +18,7 @@ const phase = async <T>(name: string, task: () => Promise<T>): Promise<T> => {
 const prepareHotelRuntime = async (width: number, height: number) => {
     await GetConfiguration().init();
     const config = GetConfiguration();
-    GetTicker().maxFPS = config.getValue<number>('system.fps.max', 0);
+    GetTicker().maxFPS = config.getValue<number>('system.fps.max', 60);
     VoltLogger.LOG_DEBUG = config.getValue<boolean>('system.log.debug', true);
     VoltLogger.LOG_WARN = config.getValue<boolean>('system.log.warn', false);
     VoltLogger.LOG_ERROR = config.getValue<boolean>('system.log.error', false);

@@ -41,6 +41,13 @@ interface NativeTextProps {
     tinted?: boolean;
     /** Hide the text from assistive technology, for an extra copy drawn for another state of the same label. */
     ariaHidden?: boolean;
+    /** An auto-sized text window is int(textHeight + 4) high: the fraction is cut, so the box can end inside the last line's raster. */
+    truncateHeight?: boolean;
+    /** A text window's max_lines with overflow_replace: the text is cut after the longest prefix that, followed by the replacement, fits. */
+    maxLines?: number;
+    overflowReplace?: string;
+    /** Size the box like an auto sized text window, int(textHeight + 4) high, and cut the raster there (truncateHeight only trims the layout margin). */
+    clipToWindow?: boolean;
 }
 
 /** Recolours a black retained raster in place: the coverage stays, the premultiplied colour becomes the tint. */
@@ -122,11 +129,15 @@ export const NativeText: FC<NativeTextProps> = ({
     transparent = true,
     width: fixedWidth,
     tinted: tintedProp,
-    ariaHidden = false
+    ariaHidden = false,
+    truncateHeight = false,
+    maxLines,
+    overflowReplace = '',
+    clipToWindow = false
 }) =>
 {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [size, setSize] = useState<{ width: number; height: number }>(null);
+    const [size, setSize] = useState<{ width: number; height: number; trim?: number }>(null);
     const fontStyle = { ...nativeTextStyles[textStyle], ...overrides, background };
     const tinted = tintedProp ?? fontStyle.tinted ?? false;
     const styleKey = JSON.stringify(fontStyle);
@@ -180,7 +191,20 @@ export const NativeText: FC<NativeTextProps> = ({
 
                     canvas.width = spaced.canvas.width;
                     canvas.height = spaced.canvas.height;
-                    canvas.getContext('2d').drawImage(spaced.canvas as CanvasImageSource, 0, 0);
+                    const context = canvas.getContext('2d');
+
+                    context.drawImage(spaced.canvas as CanvasImageSource, 0, 0);
+                    // White text on black is the coverage itself: for a transparent field it becomes the alpha of white.
+                    if (transparent) {
+                        const image = context.getImageData(0, 0, canvas.width, canvas.height);
+
+                        for (let offset = 0; offset < image.data.length; offset += 4) {
+                            image.data[offset + 3] = image.data[offset];
+                            image.data[offset] = image.data[offset + 1] = image.data[offset + 2] = 255;
+                        }
+
+                        context.putImageData(image, 0, 0);
+                    }
                     setSize({ width: spaced.width, height: spaced.height });
                     onRasterRef.current?.({ canvas, text, background });
 
@@ -192,7 +216,22 @@ export const NativeText: FC<NativeTextProps> = ({
             if (disposed || !supportsNativeText(loaded.font, text.replace(/[\r\n]/g, ''))) return;
             const measure = (value: string) => measureNativeText(loaded.font, value, fontStyle);
             const width = maxWidth === undefined ? Infinity : Math.max(1, maxWidth - 4);
-            const lines = text.split(/\r\n|\r|\n/).flatMap((paragraph) => wrapNativeParagraph(paragraph, width, measure));
+            const wrapText = (value: string) => value.split(/\r\n|\r|\n/).flatMap((paragraph) => wrapNativeParagraph(paragraph, width, measure));
+            let lines = wrapText(text);
+
+            if (maxLines && lines.length > maxLines) {
+                let low = 0;
+                let high = text.length;
+
+                while (low < high) {
+                    const middle = Math.floor((low + high + 1) / 2);
+
+                    if (wrapText(text.slice(0, middle) + overflowReplace).length <= maxLines) low = middle;
+                    else high = middle - 1;
+                }
+
+                lines = wrapText(text.slice(0, low) + overflowReplace);
+            }
             const metrics = resolveLineMetrics(loaded.font.swfFont, fontStyle.size, fontStyle.antiAliasType === 'normal');
             const lineHeight = metrics.textHeight + leading;
             // TextField puts every line's baseline on a whole pixel: round(2 + ascent + index * lineHeight) (AIR WIN63-202610201032).
@@ -252,7 +291,7 @@ export const NativeText: FC<NativeTextProps> = ({
                 ? unpremultiplyRetained(pixels)
                 : compositeAir32RetainedToOpaque(pixels, [(background >>> 16) & 255, (background >>> 8) & 255, background & 255, 255]);
             canvas.getContext('2d').putImageData(new ImageData(composited, pixelWidth, pixelHeight), 0, 0);
-            setSize({ width: pixelWidth / scale, height: fieldHeight });
+            setSize({ width: pixelWidth / scale, height: fieldHeight, trim: fieldHeight - Math.floor(lines.length * lineHeight + 4) });
             onRasterRef.current?.({ canvas, text, background });
         };
         render().catch((error) => {
@@ -261,19 +300,19 @@ export const NativeText: FC<NativeTextProps> = ({
         return () => {
             disposed = true;
         };
-    }, [text, textStyle, styleKey, maxWidth, leading, align, scale, transparent, fixedWidth, tinted]);
+    }, [text, textStyle, styleKey, maxWidth, leading, align, scale, transparent, fixedWidth, tinted, maxLines, overflowReplace]);
 
     return (
         <span
             aria-hidden={ariaHidden || undefined}
             className={className}
             data-native-text={size ? textStyle : 'fallback'}
-            style={{ display: 'inline-block', verticalAlign: 'top', position: 'relative', ...size, ...(align ? { textAlign: align } : {}), ...style }}
+            style={{ display: 'inline-block', verticalAlign: 'top', position: 'relative', ...size, ...(clipToWindow && size ? { height: size.height - (size.trim ?? 0), overflow: 'hidden' } : {}), ...(align ? { textAlign: align } : {}), ...style }}
         >
             <canvas
                 ref={canvasRef}
                 aria-hidden="true"
-                style={{ display: size ? 'block' : 'none', width: size?.width, height: size?.height, imageRendering: nativeResolution ? sampling : scale > 1 ? 'auto' : 'pixelated' }}
+                style={{ display: size ? 'block' : 'none', width: size?.width, height: size?.height, marginBottom: truncateHeight && size?.trim ? -size.trim : undefined, imageRendering: nativeResolution ? sampling : scale > 1 ? 'auto' : 'pixelated' }}
             />
             <span
                 style={

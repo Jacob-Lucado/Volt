@@ -118,7 +118,8 @@ export const ToolbarView: FC<{ isInRoom: boolean }> = (props) => {
     // CAMERA icon: room only, camera.launch.ui.position "bottom-icons" and the CAMERA perk.
     const cameraInBottomBar = GetConfigurationValue<string>('camera.launch.ui.position', 'bottom-icons') === 'bottom-icons';
     const cameraAvailable = isInRoom && cameraInBottomBar && cameraAllowed;
-    const gamesAvailable = GetConfigurationValue<boolean>('games_icon_enabled', GetConfigurationValue<boolean>('game.center.enabled', false));
+    // BottomBarLeft.as:191-199: only games_icon_enabled shows HTIE_ICON_GAMES; habbo.com sets it to false.
+    const gamesAvailable = GetConfigurationValue<boolean>('games_icon_enabled', false);
     // BUILDER (HTIE_ICON_BUILDER): next to the catalogue in the room and hotel view while builders.club.enabled is on.
     const buildersClubEnabled = GetConfigurationValue<boolean>('builders.club.enabled', true);
     const [messengerNotifyFrame, setMessengerNotifyFrame] = useState(0);
@@ -379,7 +380,6 @@ export const ToolbarView: FC<{ isInRoom: boolean }> = (props) => {
                                     <ToolbarUnseenCountView count={unseenProgMenuCount} />
                                 </motion.div>
                             )}
-                            {/* GAMES: visible in room and hotel view when games_icon_enabled (game.center.enabled kept as a fallback key) */}
                             {gamesAvailable && (
                                 <motion.div variants={itemVariants} className="tb-slot">
                                     <ToolbarItemView icon="game" onClick={() => CreateLinkEvent('games/toggle')} className="tb-icon" />

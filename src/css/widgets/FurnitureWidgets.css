@@ -421,19 +421,9 @@
     }
 }
 
-.volt-widget-exchange-credit {
-    width: min(375px, calc(100vw - 16px));
-    min-width: 0;
-    max-width: calc(100vw - 16px);
-    height: min(150px, calc(100vh - 16px));
-    min-height: 0;
-    max-height: calc(100vh - 16px);
-
-    .exchange-image {
-        background-image: url('@/assets/images/room-widgets/exchange-credit/exchange-credit-image.png');
-        width: 103px;
-        height: 103px;
-    }
+/* AIR credit_redeem text fields set their first glyph on the 2px gutter of the field. */
+.furniture-exchange-credit .native0-text > .native0-text__line {
+    left: 0;
 }
 
 /* AIR stories_image_widget at a 320px photo: ExternalImageWidget.drawImage geometry. */
@@ -1174,10 +1164,6 @@
             width: 100%;
             min-height: 0;
         }
-    }
-
-    .volt-widget-exchange-credit {
-        height: auto;
     }
 }
 

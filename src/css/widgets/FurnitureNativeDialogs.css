@@ -275,3 +275,96 @@
     width: 45px;
     height: 45px;
 }
+
+/* ecotronbox_card / ecotronbox_card_furnimatic (257x114). Text fields keep their 2px gutter, so they sit at the layout coordinates. */
+.volt-ecotron-box {
+    position: relative;
+    width: 257px;
+    height: 114px;
+    cursor: default;
+    user-select: none;
+}
+
+.volt-ecotron-box__background {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.volt-ecotron-box__preview {
+    position: absolute;
+    left: 7px;
+    top: 38px;
+    width: 39px;
+    height: 39px;
+    overflow: hidden;
+}
+
+.volt-ecotron-box__preview img {
+    position: absolute;
+    image-rendering: var(--volt-pixel-art, pixelated);
+}
+
+.volt-ecotron-box__date,
+.volt-ecotron-box__message {
+    position: absolute;
+    display: block;
+}
+
+.volt-ecotron-box__date {
+    left: 12px;
+    top: 9px;
+}
+
+.volt-ecotron-box__message {
+    left: 49px;
+    top: 39px;
+}
+
+/* button / button_thick style 0: the caption field starts 9px from the left edge and 5px below the top edge. */
+.volt-ecotron-box__button {
+    position: absolute;
+    top: 90px;
+    box-sizing: border-box;
+    height: 22px;
+    margin: 0;
+    padding: 0;
+    border: 3px solid transparent;
+    border-image: var(--habbo-skin-button) 3 fill / 3px stretch;
+    background: transparent;
+    cursor: pointer;
+    image-rendering: var(--volt-pixel-art, pixelated);
+}
+
+.volt-ecotron-box__button:hover {
+    border-image-source: var(--habbo-skin-button-hover);
+}
+
+.volt-ecotron-box__button:active {
+    border-image-source: var(--habbo-skin-button-pressed);
+}
+
+.volt-ecotron-box__button.is-thick {
+    border-width: 4px;
+    border-image: url('../../assets/images/habbo-skin/slices/button-thick-default.png') 4 fill / 4px stretch;
+}
+
+.volt-ecotron-box__button.is-thick:hover {
+    border-image-source: url('../../assets/images/habbo-skin/slices/button-thick-hover.png');
+}
+
+.volt-ecotron-box__button.is-thick:active {
+    border-image-source: url('../../assets/images/habbo-skin/slices/button-thick-pressed.png');
+}
+
+.volt-ecotron-box__caption {
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    display: inline-block;
+}
+
+.volt-ecotron-box__button.is-thick .volt-ecotron-box__caption {
+    left: 5px;
+    top: 1px;
+}

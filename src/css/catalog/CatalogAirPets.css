@@ -325,11 +325,14 @@
     right: 6px;
 }
 
-.volt-catalog-pet-customization-grid {
+/* itemGridWidget: border style 6 at blend 0.5, the grid 4px inside. */
+.volt-catalog-pet-customization-layout > .volt-catalog-pet-customization-grid {
     top: 245px;
+    bottom: auto;
     left: 0;
     width: 360px;
     height: 180px;
+    padding: 4px;
 }
 
 .volt-catalog-pet-customization-purchase {

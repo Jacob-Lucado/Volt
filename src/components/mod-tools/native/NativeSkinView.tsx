@@ -22,7 +22,12 @@ const loadImage = (url: string): Promise<HTMLImageElement> => {
 
 const tinted = new Map<string, HTMLCanvasElement>();
 
-/** BitmapSkinRenderer colorTransform: every colour channel is multiplied by (window colour channel / 255), the alpha channel is kept; products are rounded (the native title bar 0xd7dbdc x 0x24344c gives 0x377998). */
+/**
+ * BitmapSkinRenderer colorTransform: every colour channel is multiplied by (window colour channel / 255), the alpha channel is kept.
+ * Flash applies the multiplier in 8.8 fixed point, so the product is (value * floor(channel * 256 / 255)) >> 8.
+ */
+export const multiplyColorChannel = (value: number, channel: number): number => (value * Math.floor((channel * 256) / 255)) >> 8;
+
 const tint = (image: HTMLImageElement, url: string, rect: NativeSkinRect, color: number): HTMLCanvasElement => {
     const key = `${url}|${rect.x},${rect.y},${rect.width},${rect.height}|${color}`;
     let canvas = tinted.get(key);
@@ -42,9 +47,9 @@ const tint = (image: HTMLImageElement, url: string, rect: NativeSkinRect, color:
         const blue = color & 255;
 
         for (let index = 0; index < data.data.length; index += 4) {
-            data.data[index] = Math.round((data.data[index] * red) / 255);
-            data.data[index + 1] = Math.round((data.data[index + 1] * green) / 255);
-            data.data[index + 2] = Math.round((data.data[index + 2] * blue) / 255);
+            data.data[index] = multiplyColorChannel(data.data[index], red);
+            data.data[index + 1] = multiplyColorChannel(data.data[index + 1], green);
+            data.data[index + 2] = multiplyColorChannel(data.data[index + 2], blue);
         }
 
         context.putImageData(data, 0, 0);

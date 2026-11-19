@@ -1,6 +1,7 @@
 import { NavigatorDeleteSavedSearchComposer, NavigatorSavedSearch } from '@volt/renderer';
 import { FC, MouseEvent } from 'react';
 import { LocalizeText, localizeWithFallback, SendMessageComposer } from '../../../../api';
+import { NativeText } from '../../../../common/native-text/NativeText';
 import { useNavigatorUiStore } from '../../../../hooks';
 
 export interface NavigatorSearchSavesResultItemViewProps {
@@ -35,7 +36,9 @@ export const NavigatorSearchSavesResultItemView: FC<NavigatorSearchSavesResultIt
     return (
         <div className="saved-search-row">
             <button type="button" className="saved-search-row__open" title={LocalizeText('navigator.tooltip.open.saved.search')} onClick={openSearch}>
-                <span className="saved-search-row__label">{title}</span>
+                <span className="saved-search-row__label">
+                    <NativeText text={title} textStyle="u_regular" background={0xffffff} nativeResolution />
+                </span>
             </button>
             <button
                 type="button"

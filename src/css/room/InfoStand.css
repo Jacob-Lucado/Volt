@@ -274,6 +274,11 @@
     }
   }
 
+  /* BadgeImageWidget.playGlow: the glow strength eases from 0 to 1 over 500 ms, then the filters clear. */
+  .volt-infostand__badge-slot.is-glowing {
+    animation: volt-infostand-badge-glow 500ms cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
   .volt-infostand__badge-slot-plus {
     color: rgba(255, 255, 255, 0.75);
     font-family: Arial, sans-serif;
@@ -428,6 +433,10 @@
 
   .volt-infostand__score + .volt-infostand__score {
     margin-top: 3px;
+  }
+
+  .volt-infostand__score--rank {
+    cursor: pointer;
   }
 
   .volt-infostand__score-link {
@@ -810,6 +819,52 @@
     overflow-wrap: anywhere;
 }
 
+/* furni_view_branding_element: a 65px row with the key in Volter Bold and a 160x40 wrapping input with a 1px white border. */
+.volt-furni-infostand__branding {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.volt-furni-infostand__branding-field {
+    position: relative;
+    flex: 0 0 65px;
+    height: 65px;
+}
+
+.volt-furni-infostand__branding-name {
+    display: block;
+    box-sizing: border-box;
+    width: 160px;
+    padding: 1px 0 0 2px;
+    color: #ffffff;
+    font-weight: bold;
+    overflow-wrap: anywhere;
+    filter: var(--volt-native-text-halo);
+}
+
+.volt-furni-infostand__branding-value {
+    position: absolute;
+    top: 13px;
+    left: 0;
+    box-sizing: border-box;
+    width: 160px;
+    height: 40px;
+    margin: 0;
+    padding: 1px 3px 0 2px;
+    border: 1px solid #ffffff;
+    border-radius: 0;
+    background: transparent;
+    color: #ffffff;
+    font: inherit;
+    line-height: 10px;
+    overflow-wrap: anywhere;
+    resize: none;
+    overflow: hidden;
+    outline: none;
+    -webkit-font-smoothing: none;
+}
+
 .volt-furni-infostand__link {
     cursor: pointer;
     text-decoration: underline;
@@ -1096,4 +1151,14 @@
 .volt-furni-infostand__group-name,
 .volt-furni-infostand__text {
     filter: var(--volt-native-text-halo);
+}
+
+@keyframes volt-infostand-badge-glow {
+  from {
+    filter: none;
+  }
+
+  to {
+    filter: drop-shadow(0 0 4px var(--badge-glow)) drop-shadow(0 0 8px var(--badge-glow)) brightness(1.2);
+  }
 }

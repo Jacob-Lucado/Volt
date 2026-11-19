@@ -12,7 +12,9 @@ const ToneSlider: FC<{ top: number; label: string; value: number; onChange: (val
     const move = (event: ReactPointerEvent<HTMLDivElement>) => {
         const bounds = event.currentTarget.getBoundingClientRect();
 
-        onChange(Math.round(Math.min(1, Math.max(0, (event.clientX - bounds.left - 6) / SLIDER_TRAVEL)) * 255));
+        const position = Math.round(Math.min(SLIDER_TRAVEL, Math.max(0, event.clientX - bounds.left - 6)));
+
+        onChange(Math.floor((position / SLIDER_TRAVEL) * 255));
     };
 
     return (
@@ -29,7 +31,7 @@ const ToneSlider: FC<{ top: number; label: string; value: number; onChange: (val
                 }}
                 onPointerMove={(event) => event.currentTarget.hasPointerCapture(event.pointerId) && move(event)}
             >
-                <span className="volt-toner__thumb" style={{ left: Math.round((value / 255) * SLIDER_TRAVEL) - 15 }} />
+                <span className="volt-toner__thumb" style={{ left: Math.floor((value / 255) * SLIDER_TRAVEL) - 15 }} />
             </div>
         </>
     );

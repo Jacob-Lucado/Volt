@@ -8,7 +8,7 @@ import {
     RoomUnitGiveHandItemPetComposer
 } from '@volt/renderer';
 import { FC, useEffect, useMemo, useState } from 'react';
-import { AvatarInfoPet, GetConfigurationValue, GetOwnRoomObject, LocalizeText, SendMessageComposer } from '../../../../../api';
+import { AvatarInfoPet, FurniCategory, GetConfigurationValue, GetOwnRoomObject, GetSessionDataManager, LocalizeText, SendMessageComposer } from '../../../../../api';
 import { useRoom, useSessionInfo } from '../../../../../hooks';
 import { ContextMenuHeaderView } from '../../context-menu/ContextMenuHeaderView';
 import { ContextMenuListItemView } from '../../context-menu/ContextMenuListItemView';
@@ -17,6 +17,7 @@ import { ContextMenuView } from '../../context-menu/ContextMenuView';
 interface AvatarInfoWidgetOwnPetViewProps {
     avatarInfo: AvatarInfoPet;
     onClose: () => void;
+    onRequestBreed?: (petWebId: number) => void;
 }
 
 const MODE_NORMAL: number = 0;
@@ -24,14 +25,24 @@ const MODE_SADDLED_UP: number = 1;
 const MODE_RIDING: number = 2;
 const MODE_MONSTER_PLANT: number = 3;
 
+const BREEDING_CONFIG: Record<number, string> = {
+    [PetType.BEAR]: 'nest.breeding.bear.enabled',
+    [PetType.TERRIER]: 'nest.breeding.terrier.enabled',
+    [PetType.CAT]: 'nest.breeding.cat.enabled',
+    [PetType.DOG]: 'nest.breeding.dog.enabled',
+    [PetType.PIG]: 'nest.breeding.pig.enabled'
+};
+
 export const AvatarInfoWidgetOwnPetView: FC<AvatarInfoWidgetOwnPetViewProps> = (props) => {
-    const { avatarInfo = null, onClose = null } = props;
+    const { avatarInfo = null, onClose = null, onRequestBreed = null } = props;
     const [mode, setMode] = useState(MODE_NORMAL);
     const { roomSession = null } = useRoom();
-    const { petRespectRemaining = 0, respectPet = null } = useSessionInfo();
+    const { petRespectRemaining = 0, respectPet = null, chatStyleId = 0 } = useSessionInfo();
 
     const canGiveHandItem = useMemo(() => {
         let flag = false;
+
+        if (!GetConfigurationValue<boolean>('handitem.give.pet.enabled', false)) return flag;
 
         const roomObject = GetOwnRoomObject();
 
@@ -82,21 +93,19 @@ export const AvatarInfoWidgetOwnPetView: FC<AvatarInfoWidgetOwnPetViewProps> = (
                     roomSession.removePetSaddle(avatarInfo.id);
                     break;
                 case 'breed':
-                    if (mode === MODE_NORMAL) {
-                        // _local_7 = RoomWidgetPetCommandMessage._Str_16282;
-                        // _local_8 = ("pet.command." + _local_7);
-                        // _local_9 = _Str_2268.catalog.localization.getLocalization(_local_8);
-                        // _local_4 = new RoomWidgetPetCommandMessage(RoomWidgetPetCommandMessage.RWPCM_PET_COMMAND, this._Str_594.id, ((this._Str_594.name + " ") + _local_9));
-                    } else if (mode === MODE_MONSTER_PLANT) {
-                        // messageType = RoomWidgetUserActionMessage.REQUEST_BREED_PET;
-                    }
+                    if (mode === MODE_NORMAL) roomSession.sendChatMessage(`${avatarInfo.name} ${LocalizeText('pet.command.46')}`, chatStyleId);
+                    else if (mode === MODE_MONSTER_PLANT) onRequestBreed?.(avatarInfo.id);
                     break;
                 case 'harvest':
                     roomSession.harvestPet(avatarInfo.id);
                     break;
-                case 'revive':
-                    //
+                case 'revive': {
+                    const revival = GetSessionDataManager().getAllFurnitureData().find(furni =>
+                        furni.specialType === FurniCategory.MONSTERPLANT_REVIVAL && parseInt(furni.customParams?.split(' ')[0]) === avatarInfo.petType);
+
+                    if (revival && revival.purchaseOfferId >= 0) CreateLinkEvent(`catalog/open/offerId/${ revival.purchaseOfferId }`);
                     break;
+                }
                 case 'compost':
                     roomSession.compostPlant(avatarInfo.id);
                     break;
@@ -146,7 +155,7 @@ export const AvatarInfoWidgetOwnPetView: FC<AvatarInfoWidgetOwnPetViewProps> = (
                                 {LocalizeText('infostand.button.buy_saddle')}
                             </ContextMenuListItemView>
                         )}
-                        {[PetType.BEAR, PetType.TERRIER, PetType.CAT, PetType.DOG, PetType.PIG].indexOf(avatarInfo.petType) > -1 && (
+                        {BREEDING_CONFIG[avatarInfo.petType] && GetConfigurationValue<boolean>(BREEDING_CONFIG[avatarInfo.petType], true) && (
                             <ContextMenuListItemView onClick={(event) => processAction('breed')}>{LocalizeText('infostand.button.breed')}</ContextMenuListItemView>
                         )}
                     </>
@@ -154,10 +163,12 @@ export const AvatarInfoWidgetOwnPetView: FC<AvatarInfoWidgetOwnPetViewProps> = (
                 {mode === MODE_SADDLED_UP && (
                     <>
                         <ContextMenuListItemView onClick={(event) => processAction('mount')}>{LocalizeText('infostand.button.mount')}</ContextMenuListItemView>
-                        <ContextMenuListItemView classNames={['air-avatar-menu-item--toggle']} onClick={(event) => processAction('toggle_riding_permission')}>
-                            <i className={'air-avatar-menu-checkbox' + (avatarInfo.publiclyRideable ? ' is-checked' : '')} aria-hidden="true" />
-                            <span className="air-avatar-menu-toggle-label">{LocalizeText('infostand.button.toggle_riding_permission')}</span>
-                        </ContextMenuListItemView>
+                        {GetConfigurationValue<boolean>('sharedhorseriding.enabled', true) && (
+                            <ContextMenuListItemView classNames={['air-avatar-menu-item--toggle']} onClick={(event) => processAction('toggle_riding_permission')}>
+                                <i className={'air-avatar-menu-checkbox' + (avatarInfo.publiclyRideable ? ' is-checked' : '')} aria-hidden="true" />
+                                <span className="air-avatar-menu-toggle-label">{LocalizeText('infostand.button.toggle_riding_permission')}</span>
+                            </ContextMenuListItemView>
+                        )}
                         {petRespectRemaining > 0 && (
                             <ContextMenuListItemView onClick={(event) => processAction('respect')}>
                                 {LocalizeText('infostand.button.petrespect', ['count'], [petRespectRemaining.toString()])}
@@ -195,8 +206,8 @@ export const AvatarInfoWidgetOwnPetView: FC<AvatarInfoWidgetOwnPetViewProps> = (
                                 {LocalizeText('infostand.button.compost')}
                             </ContextMenuListItemView>
                         )}
-                        {!avatarInfo.dead && avatarInfo.energy / avatarInfo.maximumEnergy < 0.98 && (
-                            <ContextMenuListItemView onClick={(event) => processAction('treat')}>
+                        {!avatarInfo.dead && (
+                            <ContextMenuListItemView disabled={avatarInfo.energy / avatarInfo.maximumEnergy >= 0.98} onClick={(event) => processAction('treat')}>
                                 {LocalizeText('infostand.button.pettreat')}
                             </ContextMenuListItemView>
                         )}
@@ -214,8 +225,8 @@ export const AvatarInfoWidgetOwnPetView: FC<AvatarInfoWidgetOwnPetViewProps> = (
                     </>
                 )}
                 {canGiveHandItem && (
-                    <ContextMenuListItemView onClick={(event) => processAction('pass_hand_item')}>
-                        {LocalizeText('infostand.button.pass_hand_item')}
+                    <ContextMenuListItemView onClick={(event) => processAction('pass_handitem')}>
+                        {LocalizeText('infostand.button.give_handitem_to_pet')}
                     </ContextMenuListItemView>
                 )}
             </div>

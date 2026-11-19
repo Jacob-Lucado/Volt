@@ -51,6 +51,7 @@ import { UserSettingsView } from './user-settings/UserSettingsView';
 import { VariablesExplorerView } from './variables-explorer/VariablesExplorerView';
 import { VaultView } from './vault/VaultView';
 import { WiredView } from './wired/WiredView';
+import { WiredTransactionLogsView } from './wired-tools/WiredTransactionLogsView';
 import { WiredCreatorToolsView } from './wired-tools/WiredCreatorToolsView';
 
 export const MainView: FC<{}> = (props) =>
@@ -150,6 +151,7 @@ export const MainView: FC<{}> = (props) =>
             <ToolbarView isInRoom={!landingViewVisible} />
             <ModToolsView />
             <WiredCreatorToolsView />
+            <WiredTransactionLogsView />
             <VariablesExplorerView />
             <RoomView />
             <ChatHistoryView />

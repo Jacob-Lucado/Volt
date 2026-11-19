@@ -1,8 +1,9 @@
 import { FC, useEffect, useState } from 'react';
+import { AirSkinButton } from '../../../../common/air/AirSkinButton';
 import creditsIcon from '@/assets/images/inventory/trading/credits-icon.png';
 import { GetConfigurationValue, GroupItem, LocalizeText, TradeState, TradeUserData } from '../../../../api';
 import { useInventoryTrade } from '../../../../hooks';
-import { VoltButton, VoltItemCountBadge } from '../../../../layout';
+import { VoltItemCountBadge } from '../../../../layout';
 import { InventoryThumbIconView } from '../InventoryThumbIconView';
 import { MAX_ITEMS_TO_TRADE } from './inventoryTradeOffer';
 
@@ -22,8 +23,7 @@ const TradeOfferView: FC<{
     user: TradeUserData;
     disabledText?: string;
     onRemove?: (groupItem: GroupItem) => void;
-}> = (props) =>
-{
+}> = (props) => {
     const { side, user, disabledText = null, onRemove = null } = props;
     const isOwn = side === 'own';
     // v75 only fills content_text_*_a/b while trading.warning.enabled (on in the legacy variables).
@@ -37,8 +37,7 @@ const TradeOfferView: FC<{
             </div>
             {!!disabledText && <div className="volt-trade-offer-info">{disabledText}</div>}
             <div className="volt-trade-offer-grid" hidden={disabledText !== null}>
-                {Array.from(Array(MAX_ITEMS_TO_TRADE), (_, slotIndex) =>
-                {
+                {Array.from(Array(MAX_ITEMS_TO_TRADE), (_, slotIndex) => {
                     // v75 builds a CreditTradingItem out of the credit total and lists it before the furni.
                     const hasCredits = user.creditsCount > 0;
                     const isCreditSlot = hasCredits && slotIndex === 0;
@@ -116,20 +115,20 @@ export const InventoryTradeView: FC<InventoryTradeViewProps> = (props) => {
     if (tradeState === TradeState.TRADING_STATE_READY || !ownUser || !otherUser) return null;
 
     // inventory_trading_minimized_xml: shown while another inventory tab is open.
-    if (isMinimized)
-    {
+    if (isMinimized) {
         return (
             <div className="volt-trade is-minimized">
                 <div className="volt-trade-minimized-panel" />
                 <div className="volt-trade-minimized-icon" />
                 <div className="volt-trade-minimized-help">{LocalizeText('inventory.trading.minimized.trade_in_progress')}</div>
                 <div className="volt-trade-buttons">
-                    <VoltButton className="volt-trade-continue" onClick={continueTrade}>
-                        {LocalizeText('inventory.trading.minimized.continue_trade')}
-                    </VoltButton>
-                    <VoltButton className="volt-trade-cancel" onClick={closeTrade}>
-                        {LocalizeText('generic.cancel')}
-                    </VoltButton>
+                    <AirSkinButton
+                        className="volt-trade-continue"
+                        onClick={continueTrade}
+                        height={28}
+                        caption={LocalizeText('inventory.trading.minimized.continue_trade')}
+                    />
+                    <AirSkinButton className="volt-trade-cancel" onClick={closeTrade} height={28} caption={LocalizeText('generic.cancel')} />
                 </div>
             </div>
         );
@@ -139,8 +138,7 @@ export const InventoryTradeView: FC<InventoryTradeViewProps> = (props) => {
     let buttonCaption = LocalizeText('inventory.trading.accept');
     let buttonEnabled = false;
 
-    switch (tradeState)
-    {
+    switch (tradeState) {
         case TradeState.TRADING_STATE_RUNNING:
             buttonEnabled = hasOffers(ownUser) || hasOffers(otherUser);
             buttonCaption = LocalizeText(ownUser.accepts ? 'inventory.trading.modify' : 'inventory.trading.accept');
@@ -185,15 +183,13 @@ export const InventoryTradeView: FC<InventoryTradeViewProps> = (props) => {
                 <div className="volt-trade-note">{LocalizeText('inventory.trading.warning.credits')}</div>
             )}
             <div className="volt-trade-buttons">
-                <VoltButton className="volt-trade-accept" disabled={!buttonEnabled} onClick={progressTrade}>
-                    {buttonCaption}
-                </VoltButton>
-                <VoltButton
+                <AirSkinButton className="volt-trade-accept" disabled={!buttonEnabled} onClick={progressTrade} height={28} caption={buttonCaption} />
+                <AirSkinButton
                     className="volt-trade-cancel"
                     onClick={tradeState === TradeState.TRADING_STATE_RUNNING || tradeState === TradeState.TRADING_STATE_CONFIRMING ? cancelTrade : undefined}
-                >
-                    {LocalizeText('generic.cancel')}
-                </VoltButton>
+                    height={28}
+                    caption={LocalizeText('generic.cancel')}
+                />
             </div>
         </div>
     );

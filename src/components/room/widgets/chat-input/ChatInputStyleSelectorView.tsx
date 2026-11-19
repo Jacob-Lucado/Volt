@@ -1,12 +1,8 @@
 import * as Popover from '@radix-ui/react-popover';
 import { CSSProperties, FC, SyntheticEvent, useState } from 'react';
-import { localizeWithFallback } from '../../../../api';
+import { GetChatStylePreviewUrl, localizeWithFallback } from '../../../../api';
 import { useSessionInfo } from '../../../../hooks/session/useSessionInfo';
 import { CHAT_TEXT_SIZES, ChatTextSize, getChatTextSize, getChatTextSizeLabel } from './chatTextSize';
-
-// style_<assetId>_selector_preview bitmaps, keyed by style id.
-const STYLE_PREVIEWS = Object.fromEntries(Object.entries(import.meta.glob('../../../../assets/images/chat-style-previews/*.png', { eager: true, import: 'default' }) as Record<string, string>)
-    .map(([ path, url ]) => [ Number(path.slice(path.lastIndexOf('/') + 1, -4)), url ])) as Record<number, string>;
 
 // chatfontsize_template: label at (4,1); item lefts and widths inside the 56px band as laid out by the v75 itemlist.
 const TEXT_SIZE_ITEMS: Record<ChatTextSize, { left: number; width: number }> = {
@@ -73,7 +69,7 @@ export const ChatInputStyleSelectorView: FC<ChatInputStyleSelectorViewProps> = (
                                 className={`swf-chat-style-option ${clickedStyleId === styleId ? 'is-active' : ''}`}
                                 onClick={() => selectStyle(styleId)}
                             >
-                                {STYLE_PREVIEWS[styleId] && <img className="swf-chat-style-preview" src={STYLE_PREVIEWS[styleId]} alt="" onLoad={centerPreview} />}
+                                {GetChatStylePreviewUrl(styleId) && <img className="swf-chat-style-preview" src={GetChatStylePreviewUrl(styleId)} alt="" onLoad={centerPreview} />}
                             </button>
                         ))}
                     </div>

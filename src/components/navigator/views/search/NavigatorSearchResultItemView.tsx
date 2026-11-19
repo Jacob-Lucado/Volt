@@ -2,6 +2,7 @@ import { GetSessionDataManager, RoomDataParser } from '@volt/renderer';
 import { FC, KeyboardEvent, MouseEvent } from 'react';
 import { CreateRoomSession, DoorStateType, TryVisitRoom } from '../../../../api';
 import { LayoutBadgeImageView, LayoutRoomThumbnailView } from '../../../../common';
+import { NativeText } from '../../../../common/native-text/NativeText';
 import { useDoorState, useNavigatorRoomInfoPopupStore } from '../../../../hooks';
 import { NavigatorSearchResultItemInfoView } from './NavigatorSearchResultItemInfoView';
 import { NavigatorUserCountView } from './NavigatorUserCountView';
@@ -87,7 +88,7 @@ export const NavigatorSearchResultItemView: FC<NavigatorSearchResultItemViewProp
                     <LayoutBadgeImageView badgeCode={roomData.groupBadgeCode} className="volt-navigator-air__tile-badge" isGroup={true} />
                 )}
                 <div className="volt-navigator-air__tile-name">
-                    <span>{title}</span>
+                    <NativeText text={title} textStyle="u_small" background={0xebe9df} maxWidth={92} nativeResolution />
                     <NavigatorSearchResultItemInfoView roomData={roomData} thumbnail={true} />
                 </div>
             </div>
@@ -104,7 +105,9 @@ export const NavigatorSearchResultItemView: FC<NavigatorSearchResultItemViewProp
             onMouseEnter={retargetPopup}
         >
             <NavigatorUserCountView userCount={roomData.userCount} maxUserCount={roomData.maxUserCount} />
-            <span className="volt-navigator-air__row-name">{title}</span>
+            <span className="volt-navigator-air__row-name">
+                <NativeText text={title} textStyle="u_regular" background={stripe ? 0xffffff : 0xd6eeff} nativeResolution />
+            </span>
             {roomData.doorMode !== RoomDataParser.OPEN_STATE && <i className={`volt-navigator-air__row-door ${doorClass()}`} />}
             {roomData.habboGroupId > 0 && <i className="volt-navigator-air__row-group volt-navigator-air__group" />}
             <NavigatorSearchResultItemInfoView roomData={roomData} />

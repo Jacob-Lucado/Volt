@@ -97,7 +97,7 @@ export const useChatInputActions = () => {
 
                         break;
                     case ':67':
-                        if (GetConfigurationValue('avatar.expression.67.enabled', false) && (GetClubMemberLevel() === HabboClubLevelEnum.VIP)) {
+                        if (GetConfigurationValue('avatar.expression.67.enabled', true) && (GetClubMemberLevel() === HabboClubLevelEnum.VIP)) {
                             roomSession?.sendExpressionMessage(AvatarExpressionEnum.EXPRESSION_67.ordinal);
 
                             return null;
@@ -244,9 +244,13 @@ export const useChatInputActions = () => {
                     case ':playtest':
                         togglePlayTestMode();
                         return null;
+                    case ':fps':
+                        GetTicker().maxFPS = Math.min(10000, Math.max(5, Number(secondPart) | 0));
+
+                        return null;
                     case ':togglefps': {
                         if (GetTicker().maxFPS > 0) GetTicker().maxFPS = 0;
-                        else GetTicker().maxFPS = GetConfigurationValue('system.animation.fps');
+                        else GetTicker().maxFPS = GetConfigurationValue<number>('system.fps.max', 60);
 
                         return null;
                     }

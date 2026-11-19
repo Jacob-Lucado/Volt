@@ -89,6 +89,7 @@ export const InfoStandWidgetUserView: FC<InfoStandWidgetUserViewProps> = (props)
             newValue.figure = event.figure;
             newValue.motto = event.customInfo;
             newValue.achievementScore = event.activityPoints;
+            newValue.badgesRank = event.badgesRank;
             return newValue;
         });
     });
@@ -130,10 +131,10 @@ export const InfoStandWidgetUserView: FC<InfoStandWidgetUserViewProps> = (props)
 
     if (!avatarInfo) return null;
 
-    // The room unit packet of this hotel carries no badge rank, which the official infostand then shows as 0.
-    const badgesRank = 0;
+    const badgesRank = avatarInfo.badgesRank;
     const isOwnUser = avatarInfo.type === AvatarInfoUser.OWN_USER;
     const mottoMaxLength = GetConfigurationValue<number>('motto.max.length', 38);
+    const showRelationships = GetConfigurationValue<boolean>('relationship.status.enabled', true);
     const showAchievementScore = GetConfigurationValue<boolean>('activity.point.display.enabled', true);
 
     return (
@@ -237,8 +238,12 @@ export const InfoStandWidgetUserView: FC<InfoStandWidgetUserViewProps> = (props)
                         </>
                     )}
                 </div>
-                <div className="volt-infostand__rule" />
-                <div className="volt-infostand__score">{localizeWithFallback('infostand.text.badges_rank', `Badge rank: #${badgesRank}`, ['rank'], [`#${badgesRank}`])}</div>
+                {badgesRank >= 0 && (
+                    <>
+                        <div className="volt-infostand__rule" />
+                        <div className="volt-infostand__score volt-infostand__score--rank" onClick={() => CreateLinkEvent('badge_leaderboard/0/-1/0')}>{localizeWithFallback('infostand.text.badges_rank', `Badge rank: #${badgesRank}`, ['rank'], [`#${badgesRank}`])}</div>
+                    </>
+                )}
                 {showAchievementScore && (
                     <>
                         <div className="volt-infostand__rule" />
@@ -266,9 +271,11 @@ export const InfoStandWidgetUserView: FC<InfoStandWidgetUserViewProps> = (props)
                     </>
                 )}
                 <div className="volt-infostand__rule" />
-                <div className="volt-infostand__relationships">
-                    <InfoStandWidgetUserRelationshipsView relationships={relationships} />
-                </div>
+                {showRelationships && (
+                    <div className="volt-infostand__relationships">
+                        <InfoStandWidgetUserRelationshipsView relationships={relationships} />
+                    </div>
+                )}
                 {GetConfigurationValue('user.tags.enabled') && (
                     <Column className="mt-1" gap={1}>
                         <InfoStandWidgetUserTagsView tags={GetSessionDataManager().tags} />

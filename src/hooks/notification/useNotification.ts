@@ -2,6 +2,7 @@ import {
     AchievementNotificationMessageEvent,
     ActivityPointNotificationMessageEvent,
     BadgeReceivedEvent,
+    ChatStyleNotificationMessageEvent,
     ChestNotificationEvent,
     ClaimProductResultMessageEvent,
     ClubGiftNotificationEvent,
@@ -24,6 +25,7 @@ import {
     NotificationDialogMessageEvent,
     PetLevelNotificationEvent,
     PetReceivedMessageEvent,
+    RecyclerFinishedMessageEvent,
     RespectReceivedEvent,
     RoomEnterEffect,
     RoomEnterEvent,
@@ -38,6 +40,7 @@ import {
 import { useCallback, useState } from 'react';
 import { registerSharedHook, useSharedHook } from '@/state/useSharedHook';
 import {
+    GetChatStylePreviewUrl,
     GetConfigurationValue,
     LocalizeBadgeName,
     LocalizeText,
@@ -308,6 +311,20 @@ const useNotificationStore = () => {
             return newConfirms;
         });
     }, []);
+
+    // NotificationCenter.onChatStyleNotification (AIR class_1952.as:677): an info bubble with the style's selector preview.
+    useMessageEvent<ChatStyleNotificationMessageEvent>(ChatStyleNotificationMessageEvent, (event) => {
+        const parser = event.getParser();
+
+        showSingleBubble(LocalizeText(parser.added ? 'notification.chatstyles.added' : 'notification.chatstyles.removed'), NotificationBubbleType.INFO, GetChatStylePreviewUrl(parser.styleId));
+    });
+
+    // AIR class_1952.onRecyclerFinished: a finished recycle (status 1) shows the recycler bubble.
+    useMessageEvent<RecyclerFinishedMessageEvent>(RecyclerFinishedMessageEvent, (event) => {
+        if (event.getParser().recyclerFinishedStatus !== RecyclerFinishedMessageEvent.FINISHED_OK) return;
+
+        showSingleBubble(LocalizeText('notifications.text.recycle.ok'), NotificationBubbleType.RECYCLEROK);
+    });
 
     useMessageEvent<RespectReceivedEvent>(RespectReceivedEvent, (event) => {
         const parser = event.getParser();

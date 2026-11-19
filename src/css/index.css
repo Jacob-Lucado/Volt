@@ -1702,45 +1702,15 @@ body {
         font-size: 11px;
         text-align: center;
     }
-
-    .volt-chest__input--scene {
-        width: 27px;
-        height: 19px;
-        padding: 0;
-        border-color: #d8c184;
-    }
-
-    .volt-chest__input--furni-withdraw {
-        width: 36px;
-        height: 22px;
-        padding: 0;
-    }
-
     .volt-chest__actions {
         display: flex;
         align-items: center;
         gap: 4px;
     }
-
-    .volt-chest__actions--footer {
-        justify-content: space-between;
-        gap: 8px;
-    }
-
-    .volt-chest__actions--dialog {
-        gap: 4px;
-    }
-
-    .volt-chest__actions--dialog .volt-chest__button {
-        flex: 1 1 0;
-    }
 }
 
 /* Wired chest (Scrigno) — Putyhef buttons + inputs from chest_generic / coins_chest_contents XML */
 .volt-widget-chest,
-.volt-widget-chest-settings,
-.volt-widget-chest-notifications,
-.volt-widget-chest-upgrade,
 .volt-widget-chest-log,
 .volt-widget-chest-confirm {
     .volt-chest__btn {
@@ -1823,29 +1793,6 @@ body {
         height: 19px;
         border-color: #d8c184;
     }
-
-    .volt-chest__input--furni {
-        width: 36px;
-    }
-
-    .volt-chest__input--qty {
-        width: 72px;
-    }
-
-    .volt-chest__footer-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 6px;
-        margin-top: 4px;
-    }
-
-    .volt-chest__footer-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4px;
-    }
-
     .volt-chest__actions {
         display: flex;
         flex-wrap: wrap;
