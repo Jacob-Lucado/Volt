@@ -59,8 +59,9 @@ export type AirButtonKindName = keyof typeof AIR_BUTTONS;
 const stretched = new Map<string, Promise<string>>();
 
 /**
- * The skin bitmap at the button's height. AIR scales a stretched entity with BitmapData.draw and no smoothing, which takes
- * source row floor(row * source / target); the browser samples pixel centres, so odd heights would split the shine one row off.
+ * The skin bitmap at the button's height. AIR scales a stretched entity with BitmapData.draw and no smoothing, which takes the
+ * source row under the centre of each target row: floor((row + 0.5) * source / target). The browser's own border-image stretch
+ * does not follow it, so the skin is redrawn at the button height.
  */
 function stretchSkin(url: string, cap: number, height: number): Promise<string> {
     const key = `${url}|${cap}|${height}`;
@@ -79,7 +80,7 @@ function stretchSkin(url: string, cap: number, height: number): Promise<string> 
                     const context = canvas.getContext('2d');
                     context.drawImage(image, 0, 0, image.width, cap, 0, 0, image.width, cap);
                     for (let row = 0; row < target; row++) {
-                        const source = cap + Math.floor((row * middle) / target);
+                        const source = cap + Math.floor(((row + 0.5) * middle) / target);
                         context.drawImage(image, 0, source, image.width, 1, 0, cap + row, image.width, 1);
                     }
                     context.drawImage(image, 0, image.height - cap, image.width, cap, 0, height - cap, image.width, cap);
