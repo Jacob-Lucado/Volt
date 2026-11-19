@@ -23,9 +23,21 @@ const ENTITIES: Record<string, string> = { lt: '<', gt: '>', amp: '&', quot: '"'
 
 const decodeEntities = (text: string) =>
     text.replace(/&(#x[0-9a-f]+|#\d+|\w+);/gi, (entity, name: string) => {
-        if (name[0] === '#') return String.fromCodePoint(name[1] === 'x' || name[1] === 'X' ? parseInt(name.slice(2), 16) : parseInt(name.slice(1), 10));
+        if (name[0] === '#') {
+            const hex = name[1] === 'x';
+            const digits = name.slice(hex ? 2 : 1);
+            if (!hex && !/^\d+$/.test(digits)) return entity;
 
-        return ENTITIES[name.toLowerCase()] ?? entity;
+            // Flash reads numeric entities as unsigned 16-bit character codes.
+            let code = 0;
+            const radix = hex ? 16 : 10;
+            for (const digit of digits) code = (code * radix + parseInt(digit, radix)) & 0xffff;
+
+            return code >= 0xd800 && code <= 0xdfff ? '' : String.fromCharCode(code);
+        }
+
+        const key = name.toLowerCase();
+        return Object.hasOwn(ENTITIES, key) ? ENTITIES[key] : entity;
     });
 
 const fontStyle = (tag: string, style: NativeFontStyle): NativeFontStyle => {
@@ -34,7 +46,7 @@ const fontStyle = (tag: string, style: NativeFontStyle): NativeFontStyle => {
     const size = /\bsize\s*=\s*["']?([+-]?)(\d+)/i.exec(tag);
 
     if (color) next.color = parseInt(color[1], 16);
-    if (size) next.size = size[1] ? style.size + Number(size[1] + size[2]) : Number(size[2]);
+    if (size) next.size = Math.max(1, size[1] ? style.size + Number(size[1] + size[2]) : Number(size[2]));
 
     return next;
 };
