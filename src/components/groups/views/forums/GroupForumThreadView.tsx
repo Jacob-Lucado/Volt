@@ -58,9 +58,7 @@ export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({
     onMessagesSeen,
     onReply
 }) => {
-    const [messages, setMessages] = useState<MessageData[]>([]);
-    // MessageListView.update: messages after the last one read when the page arrived are new.
-    const [lastReadIndex, setLastReadIndex] = useState<number>(Infinity);
+    const [messages, setMessages] = useState<{ message: MessageData; isNew: boolean }[]>([]);
     const [thread, setThread] = useState<GuildForumThread>(initialThread);
     const [pageIndex, setPageIndex] = useState<number>(initialPageIndex);
     const viewportRef = useRef<HTMLDivElement>(null);
@@ -78,8 +76,9 @@ export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({
 
         if (parser.groupId !== groupId || parser.threadId !== threadId || parser.startIndex !== pageIndex * FORUM_PAGE_SIZE) return;
 
-        setLastReadIndex(thread ? getLastReadMessageIndex(thread) : Infinity);
-        setMessages(parser.messages);
+        const lastReadIndex = thread ? getLastReadMessageIndex(thread) : Infinity;
+
+        setMessages(parser.messages.map((message) => ({ message, isNew: message.messageIndex > lastReadIndex })));
 
         // updateUnreadMessageCounts: the newest message of the page counts as seen; the marker is sent when the forum is left (GroupForumController.markForumAsRead).
         if (parser.messages.length > 0) {
@@ -108,7 +107,7 @@ export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({
 
         if (parser.groupId !== groupId || parser.threadId !== threadId) return;
 
-        setMessages((previous) => previous.map((message) => (message.messageId === parser.message.messageId ? parser.message : message)));
+        setMessages((previous) => previous.map((row) => (row.message.messageId === parser.message.messageId ? { message: parser.message, isNew: false } : row)));
     });
 
     useMessageEvent<PostThreadMessageEvent>(PostThreadMessageEvent, (event) => {
@@ -178,9 +177,8 @@ export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({
             <GroupText background={FORUM_SURFACE} height={25} overrides={flatText(16, { bold: true, color: 0xa6a6a2 })} text={subject} width={541} x={0} y={115} />
             <div className="volt-forum__list">
                 <ClassicScrollAreaView className="volt-forum__scroll is-messages" contentClassName="volt-forum__scroll-content" minThumbSize={26} scrollStep={127} viewportRef={viewportRef}>
-                    {messages.map((message) => {
+                    {messages.map(({ message, isNew }) => {
                         // MessageListView.createListItem: a new message is drawn as state -1, cream and with its own text, whatever its real state.
-                        const isNew = message.messageIndex > lastReadIndex;
                         const state = isNew ? MESSAGE_NEW : message.state;
                         const isHiddenByAdmin = state === MESSAGE_HIDDEN_BY_ADMIN;
                         const isDeleted = state === MESSAGE_DELETED_BY_STAFF;
