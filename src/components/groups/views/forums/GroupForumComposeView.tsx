@@ -146,6 +146,7 @@ export const GroupForumComposeView: FC<GroupForumComposeViewProps> = ({ compose,
     };
     const status = getStatus();
 
+    const formattingHelp = stripTags(LocalizeText('groupforum.compose.formatting_help'));
     return (
         <ForumFrame
             className="volt-group-forum-compose"
@@ -184,18 +185,19 @@ export const GroupForumComposeView: FC<GroupForumComposeViewProps> = ({ compose,
             )}
             <div className="volt-forum__compose-bar" style={{ top: 145, width: 444 + sizeDelta.width }}>
                 <GroupText background={0x227aad} overrides={flatText(12, { color: 0xeeeeee })} text={LocalizeText('groupforum.compose.message')} x={1} y={1} />
-                <button className="volt-forum__help-link" type="button" onClick={() => CreateLinkEvent('habbopages/forums/formatting')}>
+                <div className="volt-forum__help-link">
                     <SubpixelText
                         html
                         underline
                         align="right"
                         background={0x227aad}
                         color={0xffffff}
-                        text={stripTags(LocalizeText('groupforum.compose.formatting_help'))}
+                        link={{ range: [0, [...formattingHelp].length], onClick: () => CreateLinkEvent('habbopages/forums/formatting') }}
+                        text={formattingHelp}
                         textStyle="u_regular_11"
                         width={197}
                     />
-                </button>
+                </div>
             </div>
             {/* message_text has its own white background. */}
             <div className="volt-forum__compose-field" style={{ left: 0, top: 165, width: 444 + sizeDelta.width, height: 200 + sizeDelta.height }} />
