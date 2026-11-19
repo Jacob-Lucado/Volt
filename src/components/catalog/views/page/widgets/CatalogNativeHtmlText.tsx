@@ -19,32 +19,81 @@ type Run = { text: string; style: NativeFontStyle };
 // LocalizationCatalogWidget.setLinkStyle: a:link is underlined #333333.
 const LINK_COLOR = 0x333333;
 
+const ENTITIES: Record<string, string> = { lt: '<', gt: '>', amp: '&', quot: '"', apos: "'", nbsp: '\u00a0' };
+
+const decodeEntities = (text: string) =>
+    text.replace(/&(#x[0-9a-f]+|#\d+|\w+);/gi, (entity, name: string) => {
+        if (name[0] === '#') return String.fromCodePoint(name[1] === 'x' || name[1] === 'X' ? parseInt(name.slice(2), 16) : parseInt(name.slice(1), 10));
+
+        return ENTITIES[name.toLowerCase()] ?? entity;
+    });
+
+const fontStyle = (tag: string, style: NativeFontStyle): NativeFontStyle => {
+    const next = { ...style };
+    const color = /\bcolor\s*=\s*["']?#([0-9a-f]{6})/i.exec(tag);
+    const size = /\bsize\s*=\s*["']?([+-]?)(\d+)/i.exec(tag);
+
+    if (color) next.color = parseInt(color[1], 16);
+    if (size) next.size = size[1] ? style.size + Number(size[1] + size[2]) : Number(size[2]);
+
+    return next;
+};
+
+/**
+ * Flash htmlText: a tag runs from "<" to the next ">", and a tag Flash does not know is dropped with its markup. So
+ * "<<i>" is one unknown tag named "<i", and the text after it is not italic.
+ */
 const parseRuns = (html: string, base: NativeFontStyle): Run[] => {
-    const root = new DOMParser().parseFromString(`<div>${html.replace(/\r\n?/g, '\n')}</div>`, 'text/html').body.firstElementChild;
     const runs: Run[] = [];
-    const visit = (node: Node, style: NativeFontStyle) => {
-        if (node.nodeType === Node.TEXT_NODE) {
-            if (node.textContent) runs.push({ text: node.textContent, style });
-            return;
+    const stack: { name: string; style: NativeFontStyle }[] = [];
+    const style = () => (stack.length ? stack[stack.length - 1].style : base);
+    const source = html.replace(/\r\n?/g, '\n');
+    let index = 0;
+
+    while (index < source.length) {
+        const open = source.indexOf('<', index);
+        const close = open < 0 ? -1 : source.indexOf('>', open);
+
+        if (open < 0 || close < 0) {
+            runs.push({ text: decodeEntities(source.slice(index)), style: style() });
+            break;
         }
-        if (!(node instanceof HTMLElement)) return;
-        if (node.tagName === 'BR') {
-            runs.push({ text: '\n', style });
-            return;
+
+        if (open > index) runs.push({ text: decodeEntities(source.slice(index, open)), style: style() });
+
+        index = close + 1;
+
+        const tag = source.slice(open + 1, close).trim();
+        const closing = tag.startsWith('/');
+        const name = (closing ? tag.slice(1) : tag).split(/[\s/]/)[0].toLowerCase();
+
+        if (closing) {
+            const at = stack.map((entry) => entry.name).lastIndexOf(name);
+
+            if (at >= 0) stack.length = at;
+            if (name === 'p' || name === 'li') runs.push({ text: '\n', style: style() });
+            continue;
         }
-        const next = { ...style };
-        if (node.matches('B, STRONG')) next.bold = true;
-        if (node.matches('I, EM')) next.italic = true;
-        if (node.matches('U')) next.underline = true;
-        if (node.tagName === 'A') {
-            next.underline = true;
-            next.color = LINK_COLOR;
+
+        if (name === 'br') {
+            runs.push({ text: '\n', style: style() });
+            continue;
         }
-        node.childNodes.forEach((child) => visit(child, next));
-        if (node.tagName === 'P') runs.push({ text: '\n', style });
-    };
-    root?.childNodes.forEach((child) => visit(child, base));
-    return runs;
+
+        const current = style();
+        let next: NativeFontStyle = null;
+
+        if (name === 'b') next = { ...current, bold: true };
+        else if (name === 'i') next = { ...current, italic: true };
+        else if (name === 'u') next = { ...current, underline: true };
+        else if (name === 'a') next = { ...current, underline: true, color: LINK_COLOR };
+        else if (name === 'font') next = fontStyle(tag, current);
+        else if (name === 'p' || name === 'li' || name === 'span' || name === 'textformat') next = current;
+
+        if (next && !tag.endsWith('/')) stack.push({ name, style: next });
+    }
+
+    return runs.filter((run) => run.text.length);
 };
 
 /**
@@ -55,7 +104,7 @@ export const CatalogNativeHtmlText: FC<CatalogNativeHtmlTextProps> = ({ html, wi
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [height, setHeight] = useState<number>(null);
     const scale = useNativeTextScale();
-    const plainText = useMemo(() => new DOMParser().parseFromString(html ?? '', 'text/html').body.textContent ?? '', [html]);
+    const plainText = useMemo(() => parseRuns(html ?? '', nativeTextStyles.u_regular).map((run) => run.text).join(''), [html]);
 
     useEffect(() => {
         let disposed = false;
@@ -66,9 +115,12 @@ export const CatalogNativeHtmlText: FC<CatalogNativeHtmlTextProps> = ({ html, wi
             const loadedRuns = await Promise.all(runs.map(async (run) => ({ ...run, loaded: await loadNativeFont(run.style) })));
             if (disposed || loadedRuns.some((run) => !supportsNativeText(run.loaded.font, run.text.replace(/\n/g, '')))) return;
 
-            type Piece = (typeof loadedRuns)[number] & { x: number };
+            type LoadedRun = (typeof loadedRuns)[number];
+            type Piece = LoadedRun & { x: number };
             const limit = width - 4;
             const lines: Piece[][] = [[]];
+            // The run of the line break that ends each line: an empty line takes its height from it.
+            const lineBreaks: LoadedRun[] = [];
             let lineWidth = 0;
             // A line is drawn per style run, like one TextField line: same-style tokens join so their advances stay unrounded.
             const push = (run: (typeof loadedRuns)[number], text: string) => {
@@ -82,7 +134,8 @@ export const CatalogNativeHtmlText: FC<CatalogNativeHtmlTextProps> = ({ html, wi
                 line.push({ ...run, text, x: lineWidth });
                 lineWidth += measureNativeText(run.loaded.font, text, run.style);
             };
-            const newLine = () => {
+            const newLine = (lineBreak: LoadedRun = null) => {
+                lineBreaks.push(lineBreak);
                 lines.push([]);
                 lineWidth = 0;
             };
@@ -91,7 +144,7 @@ export const CatalogNativeHtmlText: FC<CatalogNativeHtmlTextProps> = ({ html, wi
             for (const run of loadedRuns) {
                 for (const token of run.text.split(/(\n|[^\S\n]+)/).filter(Boolean)) {
                     if (token === '\n') {
-                        newLine();
+                        newLine(run);
                         continue;
                     }
                     const tokenWidth = measureNativeText(run.loaded.font, token, run.style);
@@ -104,11 +157,25 @@ export const CatalogNativeHtmlText: FC<CatalogNativeHtmlTextProps> = ({ html, wi
                 }
             }
 
+            lineBreaks.push(loadedRuns[loadedRuns.length - 1] ?? null);
+
             const baseLoaded = await loadNativeFont(base);
             if (disposed || !canvasRef.current) return;
-            const metrics = resolveLineMetrics(baseLoaded.font.swfFont, base.size, false);
-            const lineOffset = (index: number) => roundTiesEven(2 + metrics.ascent + index * metrics.textHeight) - roundTiesEven(2 + metrics.ascent);
-            const fieldHeight = Math.ceil(lines.length * metrics.textHeight) + 4;
+            const metricsOf = (run: LoadedRun) => (run ? resolveLineMetrics(run.loaded.font.swfFont, run.style.size, false) : resolveLineMetrics(baseLoaded.font.swfFont, base.size, false));
+            // A TextField line is as high as the biggest font on it, including its line break; every run sits on the line's baseline.
+            let top = 0;
+            const baselines = lines.map((line, index) => {
+                const runs = [...line, lineBreaks[index]].filter(Boolean);
+                const metrics = (runs.length ? runs : [null]).map(metricsOf);
+                const ascent = Math.max(...metrics.map((value) => value.ascent));
+                const baseline = 2 + top + ascent;
+
+                top += ascent + Math.max(...metrics.map((value) => value.descent));
+
+                return baseline;
+            });
+            const pieceOffset = (piece: Piece, index: number) => roundTiesEven(baselines[index]) - roundTiesEven(2 + metricsOf(piece).ascent);
+            const fieldHeight = Math.ceil(top) + 4;
             const pixelWidth = width * scale;
             const pixelHeight = fieldHeight * scale;
             const pixels = new Uint8ClampedArray(pixelWidth * pixelHeight * 4);
@@ -129,9 +196,9 @@ export const CatalogNativeHtmlText: FC<CatalogNativeHtmlTextProps> = ({ html, wi
                         renderingPipeline: 'habbo-retained',
                         textDecoration: piece.style.underline ? 'underline' : null,
                         target: {
-                            pixels: pixels.subarray(lineOffset(index) * scale * pixelWidth * 4),
+                            pixels: pixels.subarray(pieceOffset(piece, index) * scale * pixelWidth * 4),
                             width: pixelWidth,
-                            height: pixelHeight - lineOffset(index) * scale,
+                            height: pixelHeight - pieceOffset(piece, index) * scale,
                             offsetX: Math.round(piece.x * scale)
                         }
                     });
