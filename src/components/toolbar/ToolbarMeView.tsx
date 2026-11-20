@@ -90,6 +90,12 @@ export const ToolbarMeView: FC<
                 <span className="volt-icon icon-progression-leaderboards" />
                 <span>{localizeWithFallback('memenu.rarevalues', 'Rare values')}</span>
             </div>
+            {GetConfigurationValue('discord.url') && (
+                <div className="tbme-item" onClick={() => open(() => window.open(GetConfigurationValue('discord.url'), '_blank', 'noopener,noreferrer'))}>
+                    <span className="volt-icon icon-me-forums" />
+                    <span>{localizeWithFallback('memenu.discord', 'Join our Discord')}</span>
+                </div>
+            )}
             {children}
         </Flex>
     );
