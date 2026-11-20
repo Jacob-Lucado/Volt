@@ -577,14 +577,16 @@ export const RewardTrackView: FC<{}> = () => {
                                         <img src={freeTrackIcon} alt="" width={49} height={48} draggable={false} />
                                         <span className="volt-reward-track-band-title">{rewardText('reward_track.rewards.free', 'Free Track')}</span>
                                     </div>
-                                    <div className="volt-reward-track-band" data-tier="premium">
-                                        <span className="volt-reward-track-band-bg" />
-                                        <span className="volt-reward-track-band-info" />
-                                        <span className="volt-reward-track-band-split" />
-                                        <img src={premiumTrackIcon} alt="" width={58} height={45} draggable={false} />
-                                        <span className="volt-reward-track-band-title">{rewardText('reward_track.rewards.premium', 'Premium')}</span>
-                                        <small>{rewardText('reward_track.rewards.premium.info', 'Extra rewards')}</small>
-                                    </div>
+                                    {track.hasPremiumConfig && (
+                                        <div className="volt-reward-track-band" data-tier="premium">
+                                            <span className="volt-reward-track-band-bg" />
+                                            <span className="volt-reward-track-band-info" />
+                                            <span className="volt-reward-track-band-split" />
+                                            <img src={premiumTrackIcon} alt="" width={58} height={45} draggable={false} />
+                                            <span className="volt-reward-track-band-title">{rewardText('reward_track.rewards.premium', 'Premium')}</span>
+                                            <small>{rewardText('reward_track.rewards.premium.info', 'Extra rewards')}</small>
+                                        </div>
+                                    )}
                                     {pagePrizes.points[safePage].map((points) => (
                                         <div key={points} className="volt-reward-track-indicator" style={{ left: 196 + prizeLeft(points) }}>
                                             <img
