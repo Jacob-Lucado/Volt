@@ -86,6 +86,11 @@ export const GroupCreatorView: FC<GroupCreatorViewProps> = (props) => {
 
         parser.availableRooms.forEach((name, id) => rooms.push({ id, name }));
 
+        const groupBadgeParts = parser.badgeParts.map((part) =>
+            new GroupBadgePart(part.isBase ? GroupBadgePart.BASE : GroupBadgePart.SYMBOL, part.key, part.color, part.position)
+        );
+
+        setGroupData((previous) => ({ ...previous, groupBadgeParts }));
         setAvailableRooms(rooms);
         setPurchaseCost(parser.groupCost);
     });
