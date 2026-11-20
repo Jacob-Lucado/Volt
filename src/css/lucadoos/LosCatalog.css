@@ -870,3 +870,43 @@
     background: rgba(10, 16, 26, .72);
     color: var(--los-text);
 }
+
+.los-front__discord {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border: 1px solid rgba(124, 108, 255, .55);
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(88, 101, 242, .38), rgba(77, 163, 255, .16));
+    color: #fff;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.los-front__discord:hover {
+    border-color: var(--los-accent);
+    background: linear-gradient(135deg, rgba(88, 101, 242, .55), rgba(77, 163, 255, .26));
+}
+
+.los-front__discord-text {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.los-front__discord-text small {
+    color: rgba(255, 255, 255, .68);
+    font-size: 11px;
+}
+
+.los-front__discord-go {
+    padding: 5px 14px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--los-accent-2), var(--los-accent));
+    font-size: 12px;
+    font-weight: 700;
+}
