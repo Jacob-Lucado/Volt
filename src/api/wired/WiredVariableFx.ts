@@ -106,6 +106,8 @@ export interface IWiredVariableFxStyle {
     /** Levelling only: the bars a level badge may draw beside it (style 0) or its fixed bar (style 1). */
     subRendererIds: number[];
     defaultSubRendererId: number;
+    /** The icon the style draws; a style whose icon has a campaign prefix ("xmas26.") sits under that campaign in the style picker. */
+    icon: string;
 }
 
 /** The status bar themes, in the server's order; the style id is the index. A battery has no baked colour and runs red to green. */
@@ -250,6 +252,45 @@ export const WIRED_FX_ICONS = [
 
 export const WIRED_FX_NUMBER_ALIGNMENTS = ['left', 'right', 'double'];
 
+export interface IWiredVariableFxPickerOption {
+    label: string;
+    value: string | null;
+    children: IWiredVariableFxPickerOption[];
+}
+
+/**
+ * The style and icon pickers' option tree (VariableFxVisualizationSettingsPreset.addOption): an option whose group id has a
+ * prefix ("xmas26.tree") goes into one branch per prefix, labelled wiredfurni.params.variablefx.icon.<prefix>, placed where
+ * the first option of that prefix would be; the others stay at the top.
+ */
+export const groupWiredVariableFxOptions = (entries: { group: string; label: string; value: string }[], branchLabel: (prefix: string) => string): IWiredVariableFxPickerOption[] => {
+    const top: IWiredVariableFxPickerOption[] = [];
+    const branches = new Map<string, IWiredVariableFxPickerOption>();
+
+    for (const entry of entries) {
+        const option = { label: entry.label, value: entry.value, children: [] };
+        const dot = entry.group.indexOf('.');
+
+        if (dot < 0) {
+            top.push(option);
+            continue;
+        }
+
+        const prefix = entry.group.substring(0, dot);
+        let branch = branches.get(prefix);
+
+        if (!branch) {
+            branch = { label: branchLabel(prefix), value: null, children: [] };
+            branches.set(prefix, branch);
+            top.push(branch);
+        }
+
+        branch.children.push(option);
+    }
+
+    return top;
+};
+
 const COLOR_GREEN = 1;
 const COLOR_YELLOW = 3;
 const COLOR_RED = 5;
@@ -280,6 +321,7 @@ interface IFxStyleSpec {
     width: number;
     renderer: number;
     subRenderers?: number[];
+    icon?: string;
 }
 
 const buildStyles = (specs: IFxStyleSpec[]): IWiredVariableFxStyle[] =>
@@ -294,7 +336,8 @@ const buildStyles = (specs: IFxStyleSpec[]): IWiredVariableFxStyle[] =>
         defaultColorId: spec.color,
         defaultWidthId: spec.width,
         subRendererIds: spec.subRenderers ?? [],
-        defaultSubRendererId: spec.subRenderers?.[0] ?? 0
+        defaultSubRendererId: spec.subRenderers?.[0] ?? 0,
+        icon: spec.icon ?? ''
     }));
 
 const progressStyle = (key: string, fallback: string, renderer: number): IFxStyleSpec => ({
@@ -318,7 +361,8 @@ const STYLES: Record<number, IWiredVariableFxStyle[]> = {
             widths: [WIDTH_SMALL, WIDTH_MEDIUM, WIDTH_LARGE],
             color: WIRED_FX_COLOR_DYNAMIC_RED_TO_GREEN,
             width: WIDTH_MEDIUM,
-            renderer: WIRED_FX_RENDERER.HEALTH_BAR
+            renderer: WIRED_FX_RENDERER.HEALTH_BAR,
+            icon: 'misc_heart'
         },
         {
             key: 'wiredfurni.params.variablefx.style.health_points.1',
@@ -394,7 +438,8 @@ const STYLES: Record<number, IWiredVariableFxStyle[]> = {
                 widths: WIDTHS_ALL,
                 color: dynamic ? WIRED_FX_COLOR_DYNAMIC_RED_TO_GREEN : WIRED_FX_COLOR_NOT_APPLICABLE,
                 width: WIDTH_MEDIUM,
-                renderer: WIRED_FX_RENDERER.BLOCK
+                renderer: WIRED_FX_RENDERER.BLOCK,
+                icon: theme.icon
             };
         })
     ),
@@ -407,7 +452,8 @@ const STYLES: Record<number, IWiredVariableFxStyle[]> = {
             widths: [WIDTH_LARGE, WIDTH_EXTRA_LARGE, WIDTH_HUGE],
             color: COLOR_RED,
             width: WIDTH_EXTRA_LARGE,
-            renderer: WIRED_FX_RENDERER.BOSS
+            renderer: WIRED_FX_RENDERER.BOSS,
+            icon: 'misc_skull'
         },
         {
             key: 'wiredfurni.params.variablefx.style.boss_plain',
@@ -427,7 +473,8 @@ const STYLES: Record<number, IWiredVariableFxStyle[]> = {
             widths: [WIDTH_LARGE, WIDTH_EXTRA_LARGE, WIDTH_HUGE],
             color: WIRED_FX_COLOR_NOT_APPLICABLE,
             width: WIDTH_EXTRA_LARGE,
-            renderer: WIRED_FX_RENDERER.BOSS
+            renderer: WIRED_FX_RENDERER.BOSS,
+            icon: 'xmas26.snowman'
         }
     ]),
     [WIRED_FX_CATEGORY.NUMBER_DISPLAY]: buildStyles([

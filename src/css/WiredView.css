@@ -3413,3 +3413,96 @@
     overflow: hidden;
     pointer-events: none;
 }
+
+/* AIR hierarchical_dropdown_xml: a 24px border-105 field, 22px rows, branch columns beside their row. */
+.volt-wired-hdropdown {
+    position: relative;
+    isolation: isolate;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 24px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid transparent;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+}
+
+.volt-wired-hdropdown:disabled {
+    cursor: default;
+    opacity: 0.5;
+}
+
+.volt-wired-hdropdown__label {
+    position: absolute;
+    left: 7px;
+    top: 3px;
+    right: 22px;
+    height: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.volt-wired-hdropdown__arrow {
+    position: absolute;
+    right: 7px;
+    top: 9px;
+    border-top: 5px solid #777;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+}
+
+.volt-wired-hdropdown__popup {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    pointer-events: none;
+}
+
+.volt-wired-hdropdown__column {
+    position: fixed;
+    isolation: isolate;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    background: #fff;
+    pointer-events: auto;
+}
+
+.volt-wired-hdropdown__nodes {
+    position: absolute;
+    inset: 1px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.volt-wired-hdropdown__row {
+    position: relative;
+    height: 22px;
+    cursor: pointer;
+}
+
+.volt-wired-hdropdown__row.is-disabled {
+    cursor: default;
+    opacity: 0.5;
+}
+
+.volt-wired-hdropdown__node-label {
+    position: absolute;
+    left: 7px;
+    top: 3px;
+    right: 23px;
+    height: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.volt-wired-hdropdown__branch-arrow {
+    position: absolute;
+    right: 8px;
+    top: 6px;
+    border-left: 5px solid #777;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+}
