@@ -5,24 +5,24 @@ import { DraggableWindowPosition, LayoutCurrencyIcon, LayoutHabbiconImageView, V
 import { HabbiconProgressBarView } from './HabbiconProgressBarView';
 import { HabbiconPurchaseView } from './HabbiconPurchaseView';
 
+/** One row per currency: credits unless the price is activity points only, activity points when there are any. */
 export const HabbiconPrice: FC<{ priceCredits: number; priceActivityPoints: number; activityPointType: number }> = ({
     priceCredits,
     priceActivityPoints,
     activityPointType
 }) => (
-    <span className="habbicon-price">
-        {priceCredits > 0 && (
-            <>
-                {priceCredits}
+    <span className="habbicon-price habbicon-price--rows">
+        {(priceCredits > 0 || priceActivityPoints <= 0) && (
+            <span className="habbicon-price__row">
+                {Math.max(0, priceCredits)}
                 <LayoutCurrencyIcon type={-1} />
-            </>
+            </span>
         )}
-        {priceCredits > 0 && priceActivityPoints > 0 && ' + '}
         {priceActivityPoints > 0 && (
-            <>
+            <span className="habbicon-price__row">
                 {priceActivityPoints}
                 <LayoutCurrencyIcon type={activityPointType} />
-            </>
+            </span>
         )}
     </span>
 );
