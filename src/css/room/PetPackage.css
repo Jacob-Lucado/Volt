@@ -4,17 +4,17 @@
     padding: 0 2px;
     border: 0;
     border-radius: 0;
-    background: #fff;
+    background: #ffffff;
     box-shadow: none;
     outline: none;
-    color: #000;
+    color: #000000;
     font: 700 12px/17px Ubuntu, sans-serif;
 }
 
 /* Flash sets the first line at the 2px gutter plus the font ascent; a 22px line box puts the 16px baseline there. */
 .volt-pet-package input.volt-pet-package__input.is-big {
     padding-left: 3px;
-    color: #888;
+    color: #888888;
     font-size: 16px;
     line-height: 22px;
 }

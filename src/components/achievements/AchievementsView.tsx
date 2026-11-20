@@ -90,7 +90,7 @@ export const AchievementsView: FC = () => {
         >
             <VoltCardHeaderView headerText="" onCloseClick={close}>
                 <NativeText
-                    background={0x377998}
+                    background={0x32699d}
                     className="air-achievements-native-title"
                     overrides={{ color: 0xffffff }}
                     text={LocalizeText('inventory.achievements')}

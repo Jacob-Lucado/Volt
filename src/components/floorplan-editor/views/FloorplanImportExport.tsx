@@ -40,7 +40,7 @@ export const FloorplanImportExport: FC<Props> = ({ state, dispatch, onClose, onS
             ) : (
                 <div className="volt-card-header-shell">
                     <span className="volt-card-title">
-                        <FloorplanCenteredText background={0x377998} color={0xffffff} text={LocalizeText('floor.plan.editor.import.export')} textStyle="u_frame_title" width={377} />
+                        <FloorplanCenteredText background={0x32699d} color={0xffffff} text={LocalizeText('floor.plan.editor.import.export')} textStyle="u_frame_title" width={377} />
                     </span>
                     <button aria-label={LocalizeText('generic.close')} className="volt-card-close-button" type="button" onClick={onClose} />
                 </div>

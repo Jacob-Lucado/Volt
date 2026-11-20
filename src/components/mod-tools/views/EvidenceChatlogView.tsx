@@ -33,7 +33,7 @@ export const EvidenceChatlogView: FC<EvidenceChatlogProps> = ({ kind, id, x, y, 
         <NativeWindowShell type={`${kind}Chatlog` as 'userChatlog'} windowKey={`${id}`} x={x} y={y}>
             <Native0Frame caption={evidence.caption} height={height} width={width} onClose={onClose} onResize={onResize}>
                 {/* the scroller column sits on a slightly darker blue that reaches 8px to its left; the rest of the frame is the plain frame blue */}
-                <div className="native0-box" style={{ left: width - 37, top: 0, width: 25, height: height - 32, backgroundColor: '#4184b0' }} />
+                <div className="native0-box" style={{ left: width - 37, top: 0, width: 25, height: height - 32, backgroundColor: '#3b7bb6' }} />
                 <EvidenceChatlogList
                     evidence={evidence}
                     lineFollowsList

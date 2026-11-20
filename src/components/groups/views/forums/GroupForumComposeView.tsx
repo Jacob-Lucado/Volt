@@ -145,7 +145,7 @@ export const GroupForumComposeView: FC<GroupForumComposeViewProps> = ({ compose,
                 <GroupText background={FORUM_HEADER} height={40} overrides={flatText(12, { color: 0xffffff })} text={forumData.description} width={359} wrap x={90} y={40} />
             </div>
             <div className="volt-forum__compose-bar" style={{ top: 96 }}>
-                <GroupText background={0x227aad} overrides={flatText(12, { color: 0xeeeeee })} text={LocalizeText(isReply ? 'groupforum.compose.subject_replying_to' : 'groupforum.compose.subject')} x={1} y={1} />
+                <GroupText background={0x1b6ab4} overrides={flatText(12, { color: 0xeeeeee })} text={LocalizeText(isReply ? 'groupforum.compose.subject_replying_to' : 'groupforum.compose.subject')} x={1} y={1} />
             </div>
             {(isReply || subject.length > 0) && <div className="volt-forum__compose-field" style={{ left: 0, top: 117, width: 444, height: 22 }} />}
             {isReply ? (
@@ -157,9 +157,9 @@ export const GroupForumComposeView: FC<GroupForumComposeViewProps> = ({ compose,
                 }} />
             )}
             <div className="volt-forum__compose-bar" style={{ top: 145 }}>
-                <GroupText background={0x227aad} overrides={flatText(12, { color: 0xeeeeee })} text={LocalizeText('groupforum.compose.message')} x={1} y={1} />
+                <GroupText background={0x1b6ab4} overrides={flatText(12, { color: 0xeeeeee })} text={LocalizeText('groupforum.compose.message')} x={1} y={1} />
                 <button className="volt-forum__help-link" type="button" onClick={() => CreateLinkEvent('habbopages/forums/formatting')}>
-                    <GroupText background={0x227aad} className="is-static" overrides={flatText(12, { color: 0xffffff, underline: true })} text={stripTags(LocalizeText('groupforum.compose.formatting_help'))} x={0} y={0} />
+                    <GroupText background={0x1b6ab4} className="is-static" overrides={flatText(12, { color: 0xffffff, underline: true })} text={stripTags(LocalizeText('groupforum.compose.formatting_help'))} x={0} y={0} />
                 </button>
             </div>
             <GroupInput fontSize={12} height={200} inset={4} label={LocalizeText('groupforum.compose.message')} maxLength={4000} multiline plain value={message} width={444} x={0} y={165} onChange={(value) =>

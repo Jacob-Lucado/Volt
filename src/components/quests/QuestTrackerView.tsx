@@ -122,7 +122,7 @@ export const QuestTrackerView: FC<{}> = () => {
                         align="center"
                         background={BODY_COLOR}
                         bold
-                        color={0x23c5ff}
+                        color={0x61b2ff}
                         height={17}
                         text={localizeWithFallback('quests.tracker.moreinfo', 'Details')}
                         underline

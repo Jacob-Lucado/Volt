@@ -18,7 +18,7 @@ export type WiredSourceType = 'furni' | 'user' | 'global' | 'context';
 const TYPES = {
     furni: { icon: furniIcon, height: 11, selected: 0xe5be21, hover: 0xebcd57, key: 'furni', label: 'Furniture' },
     user: { icon: userIcon, height: 10, selected: 0x30b233, hover: 0x48ce4b, key: 'users', label: 'Users' },
-    global: { icon: globalIcon, height: 7, selected: 0x25a6b1, hover: 0x31c7d5, key: 'global', label: 'Room' },
+    global: { icon: globalIcon, height: 7, selected: 0x1e6eb8, hover: 0x2986dd, key: 'global', label: 'Room' },
     context: { icon: contextIcon, height: 10, selected: 0xda7828, hover: 0xe3985b, key: 'context', label: 'Context' }
 };
 const SKINS = { left: parseNativeSkin(leftXml), middle: parseNativeSkin(middleXml), right: parseNativeSkin(rightXml) };

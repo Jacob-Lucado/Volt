@@ -290,7 +290,7 @@ export const NavigatorRoomCreatorView: FC = () => {
                         <NativeText
                             text={LocalizeText('navigator.createroom.title')}
                             textStyle="u_frame_title"
-                            background={0x377998}
+                            background={0x32699d}
                             overrides={{ color: 0xffffff }}
                             nativeResolution
                         />

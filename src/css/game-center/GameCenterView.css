@@ -56,7 +56,7 @@
     border-image: url("@/assets/images/snowstorm/button/shiny-thick-55cc00-default.png") 5 fill / 5px stretch;
     border-radius: 0;
     background: transparent;
-    color: #fff;
+    color: #ffffff;
     cursor: pointer;
     image-rendering: pixelated;
 }
@@ -107,7 +107,7 @@
     border-image: url("@/assets/images/habbo-skin/slices/button-shiny-thick-default.png") 5 fill / 5px stretch;
     border-radius: 0;
     background: transparent;
-    color: #000;
+    color: #000000;
     font: 400 13px/1.121 Ubuntu, sans-serif;
     white-space: nowrap;
     cursor: pointer;
@@ -130,7 +130,7 @@
     display: flex;
     gap: 5px;
     height: 28px;
-    background: #b9e2ec;
+    background: #b6d3ef;
 }
 
 .snowwar-games-left-band .snowwar-text,
@@ -184,7 +184,7 @@
     top: 5px;
     width: 5px;
     height: 10px;
-    background: #000;
+    background: #000000;
     mask: url("@/assets/images/snowstorm/button/icon-triangle-left.png") no-repeat;
 }
 
@@ -219,13 +219,13 @@ body.snowwar-desktop-hidden #draggable-windows-container > .draggable-window:not
     inset: 0;
     z-index: 300;
     overflow: hidden;
-    color: #000;
+    color: #000000;
 }
 
 .snowwar-backdrop {
     position: absolute;
     inset: 0;
-    background: #eefafc;
+    background: #edf5fd;
 }
 
 .snowwar-backdrop__sky,

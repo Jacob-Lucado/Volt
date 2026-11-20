@@ -7,7 +7,7 @@
     max-height: 537px !important;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 12px;
-    color: #000;
+    color: #000000;
 }
 
 .volt-extended-profile-window button { font: inherit; color: inherit; cursor: pointer; padding: 0; }
@@ -44,15 +44,15 @@
 .volt-extended-profile__badge-slot:nth-child(3) { left: 107px; }
 .volt-extended-profile__badge-slot:nth-child(4) { left: 157px; }
 .volt-extended-profile__badge-slot:nth-child(5) { left: 207px; }
-.volt-profile-badge-details { position: fixed; box-sizing: border-box; width: 263px; padding: 6px 5px 6px 8px; transform: translateY(-50%); font-family: Volter, sans-serif; font-size: 9px; font-weight: 400; line-height: normal; color: #000; pointer-events: none; }
+.volt-profile-badge-details { position: fixed; box-sizing: border-box; width: 263px; padding: 6px 5px 6px 8px; transform: translateY(-50%); font-family: Volter, sans-serif; font-size: 9px; font-weight: 400; line-height: normal; color: #000000; pointer-events: none; }
 .volt-profile-badge-details::before { content: ''; position: absolute; inset: 0; border: 6px solid transparent; border-image: url('../../assets/images/habbo-skin/slices/border-white.png') 6 fill / 6px stretch; }
 .volt-profile-badge-details__name, .volt-profile-badge-details__description { position: relative; box-sizing: border-box; width: 250px; padding: 2px; white-space: pre-wrap; overflow-wrap: break-word; }
 .volt-profile-badge-details__name { font-weight: 700; }
 .volt-profile-badge-details__description { margin-top: 3px; }
-.volt-profile-badge-details__rarity { position: relative; width: max-content; height: 17px; margin-top: 3px; padding: 2px 5px; color: #fff; font-weight: 700; line-height: 13px; }
+.volt-profile-badge-details__rarity { position: relative; width: max-content; height: 17px; margin-top: 3px; padding: 2px 5px; color: #ffffff; font-weight: 700; line-height: 13px; }
 .volt-profile-badge-details__rarity-skin { position: absolute; inset: 0; border: 6px solid transparent; border-image: url('../../assets/images/habbo-skin/slices/border-colorless-d48612.png') 6 fill / 6px stretch; }
 .volt-profile-badge-details__rarity-text { position: relative; white-space: nowrap; }
-.volt-profile-badge-details__owners { position: relative; box-sizing: border-box; width: 250px; margin-top: 3px; padding: 2px; color: #555; }
+.volt-profile-badge-details__owners { position: relative; box-sizing: border-box; width: 250px; margin-top: 3px; padding: 2px; color: #555555; }
 .volt-extended-profile__separator { position: absolute; left: 265px; top: 12px; width: 1px; height: 192px; background: #afafaf; }
 .volt-extended-profile__right { position: absolute; left: 274px; top: 13px; width: 226px; height: 192px; }
 .volt-extended-profile__friend-count { position: absolute; left: 0; top: 5px; height: 16px; line-height: 16px; }
@@ -84,8 +84,8 @@
 .volt-extended-profile__summary-rank { margin-left: -4px; }
 .volt-extended-profile__summary-button--level { cursor: default; }
 .volt-extended-profile-window__body { position: absolute; left: 6px; top: 259px; width: 500px; height: 236px; }
-.volt-extended-profile__hidden-profile { position: absolute; left: 0; top: 5px; width: 498px; height: 226px; background: #ccc; clip-path: polygon(5px 0,calc(100% - 5px) 0,calc(100% - 5px) 1px,calc(100% - 3px) 1px,calc(100% - 3px) 2px,calc(100% - 2px) 2px,calc(100% - 2px) 3px,calc(100% - 1px) 3px,calc(100% - 1px) 5px,100% 5px,100% calc(100% - 5px),calc(100% - 1px) calc(100% - 5px),calc(100% - 1px) calc(100% - 3px),calc(100% - 2px) calc(100% - 3px),calc(100% - 2px) calc(100% - 2px),calc(100% - 3px) calc(100% - 2px),calc(100% - 3px) calc(100% - 1px),calc(100% - 5px) calc(100% - 1px),calc(100% - 5px) 100%,5px 100%,5px calc(100% - 1px),3px calc(100% - 1px),3px calc(100% - 2px),2px calc(100% - 2px),2px calc(100% - 3px),1px calc(100% - 3px),1px calc(100% - 5px),0 calc(100% - 5px),0 5px,1px 5px,1px 3px,2px 3px,2px 2px,3px 2px,3px 1px,5px 1px); }
-.volt-extended-profile__hidden-profile p { position: absolute; left: 131px; top: 104px; width: max-content; height: 17px; transform: translateX(round(to-zero, calc(107.5px - 50%), 1px)); color: #555; font-weight: 700; line-height: 17px; white-space: nowrap; }
+.volt-extended-profile__hidden-profile { position: absolute; left: 0; top: 5px; width: 498px; height: 226px; background: #cccccc; clip-path: polygon(5px 0,calc(100% - 5px) 0,calc(100% - 5px) 1px,calc(100% - 3px) 1px,calc(100% - 3px) 2px,calc(100% - 2px) 2px,calc(100% - 2px) 3px,calc(100% - 1px) 3px,calc(100% - 1px) 5px,100% 5px,100% calc(100% - 5px),calc(100% - 1px) calc(100% - 5px),calc(100% - 1px) calc(100% - 3px),calc(100% - 2px) calc(100% - 3px),calc(100% - 2px) calc(100% - 2px),calc(100% - 3px) calc(100% - 2px),calc(100% - 3px) calc(100% - 1px),calc(100% - 5px) calc(100% - 1px),calc(100% - 5px) 100%,5px 100%,5px calc(100% - 1px),3px calc(100% - 1px),3px calc(100% - 2px),2px calc(100% - 2px),2px calc(100% - 3px),1px calc(100% - 3px),1px calc(100% - 5px),0 calc(100% - 5px),0 5px,1px 5px,1px 3px,2px 3px,2px 2px,3px 2px,3px 1px,5px 1px); }
+.volt-extended-profile__hidden-profile p { position: absolute; left: 131px; top: 104px; width: max-content; height: 17px; transform: translateX(round(to-zero, calc(107.5px - 50%), 1px)); color: #555555; font-weight: 700; line-height: 17px; white-space: nowrap; }
 .volt-extended-profile-groups { position: relative; width: 500px; height: 236px; }
 .volt-extended-profile-groups__count { position: absolute; left: 0; top: 5px; height: 16px; line-height: 16px; }
 .volt-extended-profile-groups__list { position: absolute; left: 3px; top: 32px; width: 74px; height: 195px; overflow-x: hidden; overflow-y: auto; }
@@ -121,7 +121,7 @@
 .volt-extended-profile__blocked-frank { position: absolute; left: 312px; top: 146px; width: 148px; height: 192px; }
 .volt-extended-profile-window img { image-rendering: pixelated; }
 
-.volt-profile-group-info { position: relative; width: 343px; height: 214px; background: #ccc; }
+.volt-profile-group-info { position: relative; width: 343px; height: 214px; background: #cccccc; }
 .volt-profile-group-info > p, .volt-profile-group-info > span, .volt-profile-group-info > button, .volt-profile-group-info > img { position: absolute; }
 .volt-profile-group-info button:not(.volt-profile-group-info__button) { border: 0; background: none; text-decoration: underline; height: 18px; line-height: 17px; text-align: left; white-space: nowrap; }
 .volt-profile-group-info__badge { position: absolute; left: 11px; top: 14px; width: 85px; height: 85px; display: flex; align-items: center; justify-content: center; }

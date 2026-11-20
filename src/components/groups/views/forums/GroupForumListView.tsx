@@ -42,7 +42,7 @@ export const GroupForumListView: FC<GroupForumListViewProps> = ({ list, onMarkAs
                 <ClassicScrollAreaView className="volt-forum__scroll" contentClassName="volt-forum__scroll-content" minThumbSize={26} scrollStep={42}>
                     {forums.map((forum, rowIndex) => {
                         const isUnread = forum.unreadMessages > 0;
-                        const background = rowIndex % 2 === 1 ? 0xb2e6fa : 0xeefeff;
+                        const background = rowIndex % 2 === 1 ? 0xc1e1fe : 0xcce6ff;
                         const rowColor = '#' + background.toString(16).padStart(6, '0');
                         const details = stripTags(
                             LocalizeText(

@@ -24,7 +24,7 @@
     border-radius: 4px;
     background: rgba(255, 255, 255, 0.96);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-    color: #222;
+    color: #222222;
     font-size: 11px;
     line-height: 1.25;
 }
@@ -39,7 +39,7 @@
 }
 
 .volt-variable-leaderboard__description {
-    color: #555;
+    color: #555555;
     text-align: center;
     overflow-wrap: anywhere;
 }
@@ -98,7 +98,7 @@
 .volt-variable-leaderboard__state {
     padding: 10px 0;
     text-align: center;
-    color: #555;
+    color: #555555;
 }
 
 .volt-variable-leaderboard__footer {

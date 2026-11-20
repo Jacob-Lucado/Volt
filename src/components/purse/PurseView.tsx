@@ -157,7 +157,7 @@ export const PurseView: FC<{}> = (props) => {
                             aria-label={helpLabel}
                         >
                             <span className="volt-purse__help-label" style={{ left: 22 - Math.floor((helpLabelWidth ?? 0) / 2) }}>
-                                <NativeText background={0x2f7db5} overrides={{ color: 0xffffff }} text={helpLabel} textStyle="u_regular" transparent />
+                                <NativeText background={0x2874bc} overrides={{ color: 0xffffff }} text={helpLabel} textStyle="u_regular" transparent />
                             </span>
                         </button>
                         <button

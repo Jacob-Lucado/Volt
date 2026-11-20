@@ -8,7 +8,7 @@ import { Native0Border, Native0Button, Native0Frame, Native0Rows, Native0Scrollb
 import { NativeWindowShell } from '../native/NativeWindowShell';
 
 const rectOf = (node: NativeNode) => ({ x: nativeNumber(node, 'x'), y: nativeNumber(node, 'y'), width: nativeNumber(node, 'width'), height: nativeNumber(node, 'height') });
-const SHADE = 0xb2e6fa;
+const SHADE = 0xc1e1fe;
 const ROW_HEIGHT = 24;
 const TABS: { tab: IssueTab; name: string }[] = [
     { tab: 'open', name: 'open_issues' },

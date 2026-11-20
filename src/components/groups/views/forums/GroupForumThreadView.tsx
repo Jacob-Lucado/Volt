@@ -163,7 +163,7 @@ export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({ forumData,
                     {messages.map((message) => {
                         const isHiddenByAdmin = message.state === MESSAGE_HIDDEN_BY_ADMIN;
                         const isDeleted = message.state === MESSAGE_DELETED_BY_STAFF;
-                        const panelColor = isDeleted ? 0xffdfd2 : isHiddenByAdmin ? 0xd7d7cf : 0xc6eff9;
+                        const panelColor = isDeleted ? 0xffdfd2 : isHiddenByAdmin ? 0xd7d7cf : 0xcfe6fc;
                         const textColor = isDeleted ? 0xffc6ba : isHiddenByAdmin ? 0xe9e9e0 : 0xffffff;
                         // MessageListView.createListItem: a message deleted by staff reads as such for everyone but staff, any other hidden one for everyone but moderators.
                         const isModerationMessage = (isDeleted && !isStaff) || (message.state > 1 && !canModerate);
@@ -182,10 +182,10 @@ export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({ forumData,
                         return (
                             <div key={message.messageId} className="volt-forum__message">
                                 <div className="volt-forum__message-bar">
-                                    <GroupText background={0x227aad} overrides={flatText(12, { color: 0xeeeeee })} text={forumAge(message.creationTime)} x={0} y={4} />
+                                    <GroupText background={0x1b6ab4} overrides={flatText(12, { color: 0xeeeeee })} text={forumAge(message.creationTime)} x={0} y={4} />
                                     <GroupText
                                         align="center"
-                                        background={0x227aad}
+                                        background={0x1b6ab4}
                                         overrides={flatText(12, { color: 0xeeeeee })}
                                         text={'#' + (message.messageIndex + 1)}
                                         width={40}

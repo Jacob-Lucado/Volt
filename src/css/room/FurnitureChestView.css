@@ -9,7 +9,7 @@
     min-height: 390px;
     max-height: 730px;
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
-    color: #000;
+    color: #000000;
 }
 
 .volt-chest-air.is-coins {
@@ -215,13 +215,13 @@
     height: 16px;
     padding: 1px;
     box-sizing: border-box;
-    background: #2f6982;
+    background: #2b5a86;
 }
 
 .volt-chest-air__item-quantity > * {
     min-width: 11px;
     height: 14px;
-    background: #fff;
+    background: #ffffff;
 }
 
 .volt-chest-air__item-selected {
@@ -286,7 +286,7 @@
     box-shadow: none;
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
     font-size: 12px;
-    color: #000;
+    color: #000000;
     outline: none;
     -webkit-font-smoothing: antialiased;
 }
@@ -298,9 +298,9 @@
     left: 0;
     width: 31px;
     height: 20px;
-    border: 1px solid #000;
+    border: 1px solid #000000;
     border-radius: 0;
-    background: #fff;
+    background: #ffffff;
     line-height: 16px;
 }
 
@@ -582,7 +582,7 @@
     white-space: pre-wrap;
     font-size: 12px;
     line-height: 13px;
-    color: #000;
+    color: #000000;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -720,7 +720,7 @@
 /* Ubuntu wired UI builder windows (chest settings and notification settings). */
 .volt-chest-preset {
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
-    color: #000;
+    color: #000000;
 }
 
 .volt-chest-preset .volt-catalog-air-shiny {
@@ -784,7 +784,7 @@
 .has-classic-scrollbar .volt-chest-preset .volt-chest-preset__list.is-scrolling::-webkit-scrollbar-track:vertical {
     border: 1px solid #c9c5d2 !important;
     border-radius: 4px !important;
-    background: #fff !important;
+    background: #ffffff !important;
 }
 
 .has-classic-scrollbar .volt-chest-preset .volt-chest-preset__list.is-scrolling::-webkit-scrollbar-thumb:vertical {
@@ -892,7 +892,7 @@
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
     font-size: 12px;
     line-height: 14px;
-    color: #000;
+    color: #000000;
     resize: none;
     -webkit-font-smoothing: antialiased;
 }

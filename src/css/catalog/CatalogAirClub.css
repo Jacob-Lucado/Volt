@@ -11,7 +11,7 @@
     height: 460px;
     overflow: hidden;
     background: rgb(255 255 255 / 12.94%);
-    color: #000;
+    color: #000000;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 12px;
 }
@@ -181,7 +181,7 @@
     width: 236px;
     height: 30px;
     padding: 2px 2px 0;
-    color: #000;
+    color: #000000;
     cursor: pointer;
     font-size: 12px;
     line-height: 13.464px;
@@ -189,7 +189,7 @@
 }
 
 .volt-air-club .volt-club-center-link a {
-    color: #000;
+    color: #000000;
     text-decoration: underline;
 }
 
@@ -361,7 +361,7 @@
     border-image: var(--habbo-skin-shiny) 5 fill / 5px stretch;
     border-radius: 0;
     background: transparent;
-    color: #000;
+    color: #000000;
     cursor: pointer;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif !important;
     font-size: 12px;
@@ -438,7 +438,7 @@
     position: relative;
     width: 360px;
     height: 460px;
-    color: #000;
+    color: #000000;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
 }
 

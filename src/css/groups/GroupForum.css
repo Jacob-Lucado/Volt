@@ -6,7 +6,7 @@
     height: var(--forum-height);
     min-height: var(--forum-min-height);
     padding: 0 !important;
-    color: #000;
+    color: #000000;
     font-family: Ubuntu, sans-serif;
     font-size: 13px;
     line-height: 1;
@@ -78,7 +78,7 @@
     top: 8px;
     width: calc(100% + 10px);
     height: 80px;
-    background: #0e3f52;
+    background: #0b3155;
 }
 
 .volt-forum__header-click {
@@ -94,7 +94,7 @@
     top: 0;
     width: 80px;
     height: 80px;
-    background: #000;
+    background: #000000;
 }
 
 .volt-forum__header-icon > img {
@@ -120,7 +120,7 @@
     padding: 0;
     border: 0;
     border-radius: 5px;
-    background: #000;
+    background: #000000;
     cursor: pointer;
 }
 
@@ -141,7 +141,7 @@
     gap: 5px;
     padding-top: 3px;
     box-sizing: border-box;
-    background: #fff;
+    background: #ffffff;
 }
 
 .volt-forum__shortcuts > .volt-group-native__text {
@@ -314,7 +314,7 @@
 }
 
 .volt-forum__action.is-reply {
-    background: #45a3d9;
+    background: #3e92e0;
 }
 
 .volt-forum__action:disabled {
@@ -341,7 +341,7 @@
 .volt-forum__message-bar {
     position: relative;
     height: 26px;
-    background: #227aad;
+    background: #1b6ab4;
 }
 
 .volt-forum__message-bar > .volt-group-native__text {
@@ -452,7 +452,7 @@
     border: 0;
     border-radius: 0;
     background: transparent;
-    color: #000;
+    color: #000000;
     cursor: pointer;
     image-rendering: pixelated;
     display: flex;
@@ -533,7 +533,7 @@
     left: 0;
     width: 444px;
     height: 21px;
-    background: #227aad;
+    background: #1b6ab4;
 }
 
 .volt-forum__compose-bar > .volt-group-native__text {
@@ -541,7 +541,7 @@
 }
 
 .volt-forum__compose-field {
-    background: #fff;
+    background: #ffffff;
 }
 
 .volt-forum__help-link {

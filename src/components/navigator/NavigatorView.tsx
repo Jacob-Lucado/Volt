@@ -324,7 +324,7 @@ export const NavigatorView: FC<{}> = () => {
                                     <NativeText
                                         text={headerText}
                                         textStyle="u_frame_title"
-                                        background={0x377998}
+                                        background={0x32699d}
                                         overrides={{ color: 0xffffff }}
                                         nativeResolution
                                     />

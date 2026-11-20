@@ -41,7 +41,7 @@ const withoutEntities = (skin: NativeSkin, layoutName: string, keep: (name: stri
 });
 const DROPMENU_LIST = withoutEntities(SKINS.dropmenu, 'dropmenu_frame', (name) => name !== 'arrow');
 
-export const FRAME_COLOR = 0x418db0;
+export const FRAME_COLOR = 0x3b7bb6;
 
 const rect = (x: number, y: number, width: number, height: number): CSSProperties => ({ left: x, top: y, width, height });
 

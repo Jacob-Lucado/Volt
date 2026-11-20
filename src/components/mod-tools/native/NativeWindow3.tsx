@@ -12,7 +12,7 @@ import { multiplyColorChannel, NativeSkinView } from './NativeSkinView';
 // Window-manager style 3 (the Ubuntu skin): frame_3 coloured 0xff418db0, close button, shiny thick button, Ubuntu text styles.
 const SKINS = { frame: parseNativeSkin(frameXml), close: parseNativeSkin(closeXml), thick: parseNativeSkin(thickXml) };
 
-export const FRAME3_COLOR = 0x418db0;
+export const FRAME3_COLOR = 0x3b7bb6;
 /** The title bar pixel of the frame_3 skin before the frame colour is applied. */
 const FRAME3_TITLE_SKIN = 0xd7dbdc;
 
@@ -26,7 +26,7 @@ interface Native3FrameProps {
     height: number;
     title: string;
     onClose: () => void;
-    /** The frame's window colour (0x418db0 unless the layout sets its own). */
+    /** The frame's window colour (0x3b7bb6 unless the layout sets its own). */
     color?: number;
     /** The client area origin: the frame margins (6, 25) unless the layout sets its own margin variables. */
     clientX?: number;

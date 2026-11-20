@@ -184,7 +184,7 @@ export const WiredMenuFrame: FC<PropsWithChildren<WiredMenuFrameProps>> = ({ tit
                 {BOX_LINES.map((x, index) => (
                     <img key={x} alt="" className="volt-wired-menu__box-lines" draggable={false} src={boxLines} style={{ left: x, top: index % 2 === 0 ? 20 : -20 }} />
                 ))}
-                <SubpixelText transparent align="field" background={0x235061} className="volt-wired-menu__header-title" color={0xffffff} text={headerTitle} textStyle="u_headline_medium" width={500} />
+                <SubpixelText transparent align="field" background={0x204364} className="volt-wired-menu__header-title" color={0xffffff} text={headerTitle} textStyle="u_headline_medium" width={500} />
                 <div className="volt-wired-menu__discord">
                     <img alt="" draggable={false} src={discordIcon} />
                 </div>
@@ -237,7 +237,7 @@ const CELL_MARGIN = 4;
 const TEXT_HEIGHT = 17;
 
 /** TableRowView.updateColor: even and odd rows, and the selected row with and without focus. */
-const ROW_COLORS = { even: '#eaeaea', odd: '#f9f9f9', focused: '#b8e2fc', selected: '#d1d1d1' };
+const ROW_COLORS = { even: '#eaeaea', odd: '#f9f9f9', focused: '#bee0ff', selected: '#d1d1d1' };
 
 /** A selected row is drawn with focus after a mouse down on it, until the next mouse down outside it (WME_CLICK_AWAY). */
 const useRowFocus = () => {

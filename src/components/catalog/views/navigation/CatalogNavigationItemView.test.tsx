@@ -46,7 +46,7 @@ describe('catalog navigation item accessibility', () => {
     it('keeps the standard selection palette', () => {
         const css = readFileSync(resolve(process.cwd(), 'src/css/catalog/CatalogView.css'), 'utf8');
 
-        expect(css).toMatch(/--catalog-standard-select:\s*#63c5e9/);
-        expect(css).toMatch(/--catalog-standard-select-outer:\s*#82d1ed/);
+        expect(css).toMatch(/--catalog-standard-select:\s*#5ca8f0/);
+        expect(css).toMatch(/--catalog-standard-select-outer:\s*#7db9f2/);
     });
 });

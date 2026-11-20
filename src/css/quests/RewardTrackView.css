@@ -22,9 +22,9 @@
     height: 722px !important;
     min-height: 722px !important;
     max-height: 722px !important;
-    color: #000;
+    color: #000000;
     font-family: HabboAirUbuntu, Ubuntu, sans-serif;
-    --volt-card-text: #000;
+    --volt-card-text: #000000;
 }
 
 /* RewardTrackTheme.resolve(): frame, recolorable borders and the HsvLayerColor shades they derive. */
@@ -87,16 +87,16 @@
 
 .volt-card-shell.volt-reward-track[data-theme="cyan"] {
     --volt-card-frame-3: url("../../assets/images/reward-track/air/frame-cyan.png");
-    --volt-card-frame-3-title: #1f9eb3;
+    --volt-card-frame-3-title: #186cba;
     --rt-border-light: url("../../assets/images/reward-track/air/border-15-dcf7fb.png");
     --rt-border-medium: url("../../assets/images/reward-track/air/border-15-c7eff5.png");
     --rt-border-active: url("../../assets/images/reward-track/air/border-15-b5e9f1.png");
     --rt-tab-selected: url("../../assets/images/reward-track/air/button-shiny-1f9eb3-default.png");
     --rt-tab-hover: url("../../assets/images/reward-track/air/tab-hover-1f9eb3.png");
-    --rt-light-shade-10: #b9e7ee;
-    --rt-light-shade-20: #99d8e2;
-    --rt-medium-shade-20: #86d0dc;
-    --rt-medium-shade-36: #5ab9c7;
+    --rt-light-shade-10: #b6d4f1;
+    --rt-light-shade-20: #95bfe6;
+    --rt-medium-shade-20: #82b3e0;
+    --rt-medium-shade-36: #5592cc;
 }
 
 .volt-reward-track,
@@ -134,7 +134,7 @@
     top: 8px;
     width: 1079px;
     height: 667px;
-    color: #000;
+    color: #000000;
     font-family: HabboAirUbuntu, Ubuntu, sans-serif;
 }
 
@@ -225,14 +225,14 @@
     mask-size: 843px 243px;
 }
 
-/* gradient color1 #569BD3 to color2 #0023D6, direction down, blend 0.1. */
+/* gradient color1 #5097d9 to color2 #0023d6, direction down, blend 0.1. */
 .volt-reward-track .volt-reward-track-sky {
     position: absolute;
     left: 2px;
     top: 2px;
     width: 843px;
     height: 239px;
-    background: linear-gradient(#569bd3, #0023d6);
+    background: linear-gradient(#5097d9, #0023d6);
     opacity: 0.1;
     pointer-events: none;
 }
@@ -291,7 +291,7 @@
     top: 1px;
     right: 0;
     height: 11px;
-    background: linear-gradient(#fff, #000);
+    background: linear-gradient(#ffffff, #000000);
     mix-blend-mode: plus-lighter;
     opacity: 0.2;
     pointer-events: none;
@@ -325,7 +325,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom left, #fff, #000);
+    background: linear-gradient(to bottom left, #ffffff, #000000);
     mix-blend-mode: plus-lighter;
     opacity: 0.02;
 }
@@ -748,14 +748,14 @@
     left: 805px;
 }
 
-/* previous/next_unclaimed_indicator: border style 7 in #EE2924, right aligned, il_regular_white bold. */
+/* previous/next_unclaimed_indicator: border style 7 in #ee2924, right aligned, il_regular_white bold. */
 .volt-reward-track .volt-reward-track-unclaimed {
     position: absolute;
     top: 77px;
     min-width: 17px;
     height: 18px;
     padding: 0 7px 0 5px;
-    color: #fff;
+    color: #ffffff;
     font-size: 11px;
     font-weight: 700;
     line-height: 16px;
@@ -1026,7 +1026,7 @@
     padding: 6px 7px;
     border: 0;
     background: transparent;
-    color: #444;
+    color: #444444;
     font-size: 12px;
     font-weight: 700;
     line-height: 17px;
@@ -1065,7 +1065,7 @@
 }
 
 .volt-reward-track .volt-reward-track-filter[data-active="true"] {
-    color: #fff;
+    color: #ffffff;
     cursor: default;
 }
 
@@ -1144,7 +1144,7 @@
     padding: 0;
     border: 0;
     background: transparent;
-    color: #000;
+    color: #000000;
     font: inherit;
     text-align: left;
     cursor: pointer;
@@ -1285,7 +1285,7 @@
     top: 1px;
     right: 1px;
     height: 5px;
-    background: linear-gradient(#fff, #000);
+    background: linear-gradient(#ffffff, #000000);
     mix-blend-mode: plus-lighter;
     opacity: 0.3;
 }
@@ -1380,7 +1380,7 @@
     line-height: 14.5px;
 }
 
-/* task_levels (0,127): 582x2 spacer #D6D5D3 under the 13px title on #F0F0F0, white etching. */
+/* task_levels (0,127): 582x2 spacer #d6d5d3 under the 13px title on #f0f0f0, white etching. */
 .volt-reward-track .volt-reward-track-levels-rule {
     position: absolute;
     left: 22px;
@@ -1401,7 +1401,7 @@
     font-size: 13px;
     font-weight: 700;
     line-height: 18px;
-    text-shadow: 1px 1px 0 #fff;
+    text-shadow: 1px 1px 0 #ffffff;
 }
 
 .volt-reward-track .volt-reward-track-levels {
@@ -1492,7 +1492,7 @@
     margin-top: 5px;
 }
 
-/* task_hint_border (16,331,596,74): border style 14, the ubuntu atlas multiplied by #E9E9E9. */
+/* task_hint_border (16,331,596,74): border style 14, the ubuntu atlas multiplied by #e9e9e9. */
 .volt-reward-track .volt-reward-track-hint {
     position: absolute;
     left: 16px;
@@ -1598,7 +1598,7 @@
     padding: 0 8px 1px;
     border: 0;
     background: transparent;
-    color: #000;
+    color: #000000;
     font-size: 12px;
     font-weight: 400;
     line-height: 17px;
@@ -1638,10 +1638,10 @@
     border-image-source: var(--habbo-skin-shiny-disabled);
 }
 
-/* get_premium_btn / confirm_button: the shiny skin multiplied by #B265CE, bold white label. */
+/* get_premium_btn / confirm_button: the shiny skin multiplied by #b265ce, bold white label. */
 .volt-reward-track .volt-reward-track-btn-premium,
 .volt-reward-track-premium .volt-reward-track-btn-premium {
-    color: #fff;
+    color: #ffffff;
     font-weight: 700;
 }
 
@@ -1689,9 +1689,9 @@
     height: calc(352px - var(--rt-shrink, 0px)) !important;
     min-height: calc(352px - var(--rt-shrink, 0px)) !important;
     max-height: calc(352px - var(--rt-shrink, 0px)) !important;
-    color: #000;
+    color: #000000;
     font-family: HabboAirUbuntu, Ubuntu, sans-serif;
-    --volt-card-text: #000;
+    --volt-card-text: #000000;
     --volt-card-frame-3: url("../../assets/images/reward-track/air/frame-premium.png");
     --volt-card-frame-3-title: #7b3fa1;
 }
@@ -1715,7 +1715,7 @@
     padding: 0 !important;
     overflow: visible !important;
     background: transparent;
-    color: #000;
+    color: #000000;
     font-family: HabboAirUbuntu, Ubuntu, sans-serif;
 }
 
@@ -1952,7 +1952,7 @@
     padding: 0;
     border: 0;
     background: transparent;
-    color: #333;
+    color: #333333;
     cursor: pointer;
     isolation: isolate;
 }
@@ -1984,9 +1984,9 @@
     --rta-border-dark: #5f5f59;
     --rta-text: #20201d;
     --rta-muted: #60605a;
-    --rta-blue: #418db0;
-    --rta-blue-dark: #0e3f52;
-    --rta-blue-light: #dcecf5;
+    --rta-blue: #3b7bb6;
+    --rta-blue-dark: #0b3155;
+    --rta-blue-light: #dbe9f6;
     --rta-green: #1a7f2c;
     --rta-danger: #b83b32;
     --rta-premium: #6b3fa0;
@@ -2451,7 +2451,7 @@
     flex-direction: column;
     max-width: calc(100vw - 16px);
     max-height: calc(100vh - 16px);
-    border: 2px solid #1c3f52;
+    border: 2px solid #193855;
     border-radius: 6px;
     background: #ecece4;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
@@ -2465,7 +2465,7 @@
     justify-content: center;
     min-height: 31px;
     padding: 0 30px;
-    background: linear-gradient(180deg, #58a8c5 0%, #418db0 45%, #0e3f52 100%);
+    background: linear-gradient(180deg, #5390ca 0%, #3b7bb6 45%, #0b3155 100%);
     color: #ffffff;
     font-size: 14px;
     font-weight: 700;

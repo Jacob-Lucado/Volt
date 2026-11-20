@@ -382,7 +382,7 @@ export const CatalogLayoutVipBuyView: FC<CatalogLayoutProps> = ({ page = null })
                             <NativeText
                                 align="center"
                                 background={PAGE_BACKGROUND}
-                                overrides={{ color: 0x038ef4, underline: true }}
+                                overrides={{ color: 0x0d8aff, underline: true }}
                                 text={LocalizeText('catalog.vip.buy.link')}
                                 textStyle="u_regular"
                                 width={286}

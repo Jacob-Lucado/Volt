@@ -103,7 +103,7 @@
     position: absolute;
     top: 3px;
     left: 7px;
-    color: #000;
+    color: #000000;
     font-family: UbuntuRegular, Ubuntu, sans-serif;
     font-size: 10px;
     line-height: 11px;
@@ -166,7 +166,7 @@
     border-image: var(--builder-button-default) 5 fill / 5px stretch;
     border-radius: 0;
     background: transparent;
-    color: #fff;
+    color: #ffffff;
     cursor: pointer;
     image-rendering: pixelated;
 }
@@ -197,7 +197,7 @@
 
 /* White over the card text colour that :is(.content-area, .volt-card-content-shell) span sets. */
 .volt-catalog-builder-widget .volt-catalog-builder-button > span {
-    color: #fff;
+    color: #ffffff;
 }
 
 .volt-catalog-builder-button.is-place-one {

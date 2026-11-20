@@ -70,7 +70,7 @@ export const NativeWindowAlertView: FC<NativeWindowAlertViewProps> = ({ title, m
                 <div className="volt-card-header-shell">
                     <span className="volt-card-title">
                         <CenteredField width={278}>
-                            <NativeText background={0x377998} overrides={{ color: 0xffffff }} text={title} textStyle="u_frame_title" />
+                            <NativeText background={0x32699d} overrides={{ color: 0xffffff }} text={title} textStyle="u_frame_title" />
                         </CenteredField>
                     </span>
                     <button aria-label={LocalizeText('generic.close')} className="volt-card-close-button" type="button" onClick={onClose} />

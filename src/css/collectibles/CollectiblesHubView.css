@@ -311,7 +311,7 @@
 
 .volt-collectibles-progress-bar {
     position: absolute;
-    background: #112e31;
+    background: #0f2233;
 }
 
 .volt-collectibles-progress-top {
@@ -351,12 +351,12 @@
 
 .volt-collectibles-nav-highlight-outer {
     position: absolute;
-    background: #82d1ed;
+    background: #7db9f2;
 }
 
 .volt-collectibles-nav-highlight-inner {
     position: absolute;
-    background: #63c5e9;
+    background: #5ca8f0;
 }
 
 .volt-collectibles-nav-title {

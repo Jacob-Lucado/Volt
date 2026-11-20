@@ -31,7 +31,7 @@ const threadColor = (state: number, rowIndex: number): number => {
     if (state === THREAD_HIDDEN_BY_ADMIN) return 0xaaaaaa;
     if (state === THREAD_DELETED_BY_STAFF) return 0xffb0a5;
 
-    return rowIndex % 2 === 1 ? 0xb2e6fa : 0xeefeff;
+    return rowIndex % 2 === 1 ? 0xc1e1fe : 0xcce6ff;
 };
 
 /** ThreadListView.getModerationMessage. */

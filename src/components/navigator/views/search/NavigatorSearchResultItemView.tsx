@@ -106,7 +106,7 @@ export const NavigatorSearchResultItemView: FC<NavigatorSearchResultItemViewProp
         >
             <NavigatorUserCountView userCount={roomData.userCount} maxUserCount={roomData.maxUserCount} />
             <span className="volt-navigator-air__row-name">
-                <NativeText text={title} textStyle="u_regular" background={stripe ? 0xffffff : 0xd6eeff} nativeResolution />
+                <NativeText text={title} textStyle="u_regular" background={stripe ? 0xffffff : 0xcce6ff} nativeResolution />
             </span>
             {roomData.doorMode !== RoomDataParser.OPEN_STATE && <i className={`volt-navigator-air__row-door ${doorClass()}`} />}
             {roomData.habboGroupId > 0 && <i className="volt-navigator-air__row-group volt-navigator-air__group" />}

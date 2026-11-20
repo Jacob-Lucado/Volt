@@ -11,7 +11,7 @@ import { EvidenceChatlogList, useEvidence } from './EvidenceChatlogList';
 import { UserInfoPanel } from './UserInfoPanel';
 
 const rectOf = (node: NativeNode) => ({ x: nativeNumber(node, 'x'), y: nativeNumber(node, 'y'), width: nativeNumber(node, 'width'), height: nativeNumber(node, 'height') });
-const SHADE = 0xa2d6ea;
+const SHADE = 0x9ec7ee;
 const GAP = 3;
 const HANDLER_HEIGHT = 650;
 const SOURCES: Record<number, string> = { 1: 'Normal', 2: 'Normal', 3: 'Automatic', 4: 'Automatic IM', 5: 'Guide System', 6: 'IM', 7: 'Room', 8: 'Panic', 9: 'Guardian', 10: 'Automatic Helper', 11: 'Discussion', 12: 'Selfie', 14: 'Photo', 15: 'Ambassador' };
@@ -200,7 +200,7 @@ export const IssueHandlerView: FC<IssueHandlerProps> = ({
                     onResize(750, h);
                 }}>
                 {/* left column */}
-                <div className="native0-box" style={{ left: left.x, top: left.y, width: left.width, height: Math.min(left.height + stretch, height - 32), backgroundColor: '#418db0' }} />
+                <div className="native0-box" style={{ left: left.x, top: left.y, width: left.width, height: Math.min(left.height + stretch, height - 32), backgroundColor: '#3b7bb6' }} />
                 {/* the column is not clipped: below 515 its content is taller than the window and runs up over the frame's header like the classic client's */}
                 <div style={{ position: 'absolute', left: left.x, top: left.y, width: left.width, height: Math.min(left.height + stretch, height - 32) }}>
                 <div style={{ position: 'absolute', left: 0, top: 0, width: 285, height: 1200, willChange: 'transform', pointerEvents: 'none', clipPath: 'polygon(0 -4px, 100% -4px, 100% 100%, 0 100%)' }}>

@@ -8,7 +8,7 @@
     min-height: 497px !important;
     max-height: 497px !important;
     padding: 0 !important;
-    color: #000;
+    color: #000000;
     font-family: Ubuntu, sans-serif;
     font-size: 13px;
     line-height: 1;
@@ -184,7 +184,7 @@
     border-image: var(--habbo-skin-shiny-thick) 5 fill / 5px stretch;
     border-radius: 0;
     background: transparent;
-    color: #000;
+    color: #000000;
     cursor: pointer;
     image-rendering: pixelated;
     display: flex;
@@ -215,8 +215,8 @@
 .volt-group-native__field {
     position: absolute;
     box-sizing: border-box;
-    border: 1px solid #000;
-    background: #fff;
+    border: 1px solid #000000;
+    background: #ffffff;
     overflow: hidden;
 }
 
@@ -241,8 +241,8 @@
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-    color: #000 !important;
-    caret-color: #000;
+    color: #000000 !important;
+    caret-color: #000000;
     font: 400 13px/16px Ubuntu, sans-serif;
     outline: 0 !important;
     resize: none;

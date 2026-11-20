@@ -24,7 +24,7 @@ input[type=number] {
 
 .btn-primary,
 .btn-success {
-  color: #fff;
+  color: #ffffff;
   padding: 0.25rem 0.5rem;
   font-size: .7875rem;
   font-weight: 700;
@@ -50,7 +50,7 @@ input[type=number] {
 }
 
 .btn-danger{
-  color: #fff;
+  color: #ffffff;
   padding: 0.25rem 0.5rem;
   font-size: .7875rem;
   font-weight: 700;
@@ -98,7 +98,7 @@ input[type=number] {
 }
 
 .btn-dark {
-  color: #fff;
+  color: #ffffff;
   background-color: #212131;
   border: 2px solid #1c1c2a;
   box-shadow: none!important;

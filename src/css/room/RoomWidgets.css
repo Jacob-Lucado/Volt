@@ -405,12 +405,12 @@
 }
 
 .tags {
-    background-color: #1B2834;
-    color: #12597f;
+    background-color: #1b2834;
+    color: #0d4a84;
     font-size: 10px;
 
     &:hover {
-        color: #419AD2;
+        color: #3a8cd9;
     }
 }
 
@@ -888,7 +888,7 @@
     border: 0;
     border-radius: 0;
     background: #2d2a27;
-    color: #fff;
+    color: #ffffff;
     font-size: 11px;
     font-weight: 400;
     line-height: 26px;
@@ -932,7 +932,7 @@
     margin: 0;
     border-radius: 0 0 2px 2px;
     background: #45413d;
-    color: #fff;
+    color: #ffffff;
     cursor: pointer;
 }
 
@@ -1163,7 +1163,7 @@
     box-sizing: border-box;
     width: 12px;
     height: 12px;
-    border: 1px solid #fff;
+    border: 1px solid #ffffff;
     background: #3d3d3d;
 }
 
@@ -1171,7 +1171,7 @@
     position: absolute;
     inset: 2px;
     content: '';
-    background: #fff;
+    background: #ffffff;
 }
 
 .air-avatar-menu-toggle-label {
@@ -1762,7 +1762,7 @@
 
 .volt-camera-viewfinder {
     display: block;
-    background: #000;
+    background: #000000;
     image-rendering: var(--volt-pixel-art, pixelated);
 }
 
@@ -1835,7 +1835,7 @@
     line-height: 1;
     font-family: Ubuntu, sans-serif;
     font-size: 12px;
-    color: #000;
+    color: #000000;
 }
 
 .volt-room-promote-edit .volt-room-promote-edit__title {
@@ -1871,10 +1871,10 @@
     width: 217px;
     margin: 0;
     padding: 1px 3px 0;
-    border: 1px solid #000;
+    border: 1px solid #000000;
     border-radius: 0;
-    background: #fff;
-    color: #000;
+    background: #ffffff;
+    color: #000000;
     font: 400 12px/14px Ubuntu, sans-serif;
     outline: 0;
     resize: none;
@@ -1910,8 +1910,8 @@ textarea.volt-room-promote-edit__input {
     top: -14px;
     max-width: 217px;
     padding: 0 3px;
-    border: 1px solid #000;
-    background: #fff;
+    border: 1px solid #000000;
+    background: #ffffff;
     white-space: nowrap;
 }
 
@@ -1954,7 +1954,7 @@ textarea.volt-room-promote-edit__input {
 .volt-room-promote-edit.is-native-surface .volt-room-promote-edit__input {
     border-color: transparent !important;
     background: transparent !important;
-    caret-color: #000;
+    caret-color: #000000;
 }
 
 /* Furniture context menus: the *_menu layouts (115 wide, 4px content margin) on the shared avatar-menu bubble. Each layout places its own title (--air-menu-title-x), the

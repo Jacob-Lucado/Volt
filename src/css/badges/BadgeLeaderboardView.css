@@ -3,7 +3,7 @@
     position: relative;
     width: 412px;
     height: 650px;
-    color: #000;
+    color: #000000;
     font-family: Ubuntu, sans-serif;
     font-size: 12px;
     line-height: 1;
@@ -124,7 +124,7 @@
     padding: 1px 4px 3px 5px;
     border: 1px solid #a2a2a2;
     border-radius: 3px;
-    background: #fff;
+    background: #ffffff;
 }
 
 .volt-badge-leaderboard__menu-item {

@@ -56,7 +56,7 @@ const FrameTitle: FC<{ text: string; oddOffset?: boolean }> = ({ text, oddOffset
 
     return (
         <NativeText
-            background={0x377998}
+            background={0x32699d}
             className="air-quests-native-title"
             overrides={{ color: 0xffffff }}
             style={oddOffset && fieldWidth !== undefined ? { marginLeft: fieldWidth % 2 === 1 ? -1 : 0 } : undefined}

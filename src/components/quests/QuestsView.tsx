@@ -27,7 +27,7 @@ const LIST_ARROW_STEP = 15;
 const centered = (width: number, height: number) => ({ x: Math.round((window.innerWidth - width) / 2), y: Math.round((window.innerHeight - height) / 2) });
 
 const FrameTitle: FC<{ text: string }> = ({ text }) => (
-    <NativeText background={0x377998} className="air-quests-native-title" overrides={{ color: 0xffffff }} text={text} textStyle="u_frame_title" />
+    <NativeText background={0x32699d} className="air-quests-native-title" overrides={{ color: 0xffffff }} text={text} textStyle="u_frame_title" />
 );
 
 /**

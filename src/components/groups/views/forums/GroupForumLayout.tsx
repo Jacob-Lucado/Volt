@@ -12,7 +12,7 @@ export const stripTags = (text: string) => text.replace(/<[^>]*>/g, '').replace(
 
 // The surface of the forum windows and the dark teal header band (HabboFriendBarCom groupforum_*).
 export const FORUM_SURFACE = 0xe9e9e1;
-export const FORUM_HEADER = 0x0e3f52;
+export const FORUM_HEADER = 0x0b3155;
 
 /** GroupForumView.getAsDaysHoursMinutes: FriendlyTime with the ".ago" texts and a threshold of 1, so a unit rolls over as soon as the next bigger one is exceeded ("90 seconds" is "2 minutes ago"). */
 export const forumAge = (seconds: number): string => FriendlyTime.format(seconds, '.ago', 1);
@@ -142,7 +142,7 @@ export const ForumShortcuts: FC<ForumShortcutsProps> = ({ unreadCount = 0, onOpe
 
 const ForumShortcutLink: FC<{ text: string; onClick: () => void }> = ({ text, onClick }) => (
     <button className="volt-forum__shortcut" type="button" onClick={onClick}>
-        <GroupText background={0xffffff} className="is-static" overrides={flatText(11, { color: 0x1b79ab, underline: true })} text={text} x={0} y={0} />
+        <GroupText background={0xffffff} className="is-static" overrides={flatText(11, { color: 0x1466b2, underline: true })} text={text} x={0} y={0} />
     </button>
 );
 
@@ -159,7 +159,7 @@ interface ForumButtonProps {
     onClick: () => void;
 }
 
-/** container_button: shiny thick skin tinted 0xdddddd (grey) or 0x0a9bc5 (blue). */
+/** container_button: shiny thick skin tinted 0xdddddd (grey) or 0x1b90fe (blue). */
 export const ForumButton: FC<ForumButtonProps> = ({ label, x, right, y = 0, width, height = 30, tint = 'grey', disabled = false, onClick }) => (
     <button className={`volt-forum__button is-${tint}`} disabled={disabled} style={{ left: right === undefined ? x : undefined, right, top: y, width, height }} type="button" onClick={onClick}>
         <GroupText

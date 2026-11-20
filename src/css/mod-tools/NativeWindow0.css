@@ -6,7 +6,7 @@
 .native0-header > .native-skin { position: absolute; left: 0; top: 0; }
 .native0-header__caption { will-change: transform; position: absolute; display: flex; align-items: center; padding: 0 9px 0 10px; pointer-events: none; }
 /* the caption box is drawn apart from its text: text on an opaque background is set with LCD subpixel fringes */
-.native0-header__caption-bg { position: absolute; background: #418db0; pointer-events: none; }
+.native0-header__caption-bg { position: absolute; background: #3b7bb6; pointer-events: none; }
 .native0-header { cursor: move; user-select: none; }
 .native0-close { cursor: pointer; }
 .native0-box > .native-skin { position: absolute; left: 0; top: 0; }
@@ -23,13 +23,13 @@
 .native0-text__line.is-bold { font-weight: 700; }
 .native0-text__line.is-wrap { white-space: normal; overflow-wrap: break-word; display: block; }
 .native0-text__line.is-underline { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 1px; padding: 0 1px; margin: 0 -1px; }
-.native0-header__caption .native0-text__line, .native0-text__line.has-glow { color: #fff; text-shadow: 1px 0 rgba(255, 255, 255, var(--native0-glow, 0.16)), -1px 0 rgba(255, 255, 255, var(--native0-glow, 0.16)), 0 1px rgba(255, 255, 255, var(--native0-glow, 0.16)), 0 -1px rgba(255, 255, 255, var(--native0-glow, 0.16)); }
+.native0-header__caption .native0-text__line, .native0-text__line.has-glow { color: #ffffff; text-shadow: 1px 0 rgba(255, 255, 255, var(--native0-glow, 0.16)), -1px 0 rgba(255, 255, 255, var(--native0-glow, 0.16)), 0 1px rgba(255, 255, 255, var(--native0-glow, 0.16)), 0 -1px rgba(255, 255, 255, var(--native0-glow, 0.16)); }
 .native0-text__line.has-glow { color: inherit; }
 
-.native0-input { position: absolute; margin: 0; padding: 1px 1px 1px 2px; border: 1px solid #000; border-radius: 0; background: transparent; color: #000; font: 400 9px/10px Volter, monospace; resize: none; outline: none; overflow: hidden; caret-color: #000; }
-.native0-input-bg { background: #fff; pointer-events: none; }
+.native0-input { position: absolute; margin: 0; padding: 1px 1px 1px 2px; border: 1px solid #000000; border-radius: 0; background: transparent; color: #000000; font: 400 9px/10px Volter, monospace; resize: none; outline: none; overflow: hidden; caret-color: #000000; }
+.native0-input-bg { background: #ffffff; pointer-events: none; }
 .native0-input { will-change: transform; }
-.native0-input:focus, .native0-input:focus-visible { border-color: #000; box-shadow: none; outline: none; }
+.native0-input:focus, .native0-input:focus-visible { border-color: #000000; box-shadow: none; outline: none; }
 .native0-dropmenu__region { position: absolute; inset: 0; cursor: pointer; }
 .native0-dropmenu__list { position: absolute; left: 0; z-index: 5; }
 .native0-dropmenu__list > .native-skin { position: absolute; left: 0; top: 0; }
@@ -54,4 +54,4 @@
 
 .native0-tab { cursor: pointer; }
 .native0-tab > .native-skin { position: absolute; left: 0; top: 0; }
-.native0-tab__label { position: absolute; display: block; pointer-events: none; color: #000; white-space: nowrap; }
+.native0-tab__label { position: absolute; display: block; pointer-events: none; color: #000000; white-space: nowrap; }

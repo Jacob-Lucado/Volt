@@ -139,7 +139,7 @@ export const WiredSelfDonationView = ({ onClose }: WiredSelfDonationViewProps) =
                                 return (
                                     <tr
                                         key={`${candidate.isWallItem ? 'w' : 'f'}-${candidate.id}`}
-                                        className={`cursor-pointer ${isSelected ? 'bg-[#dbeaf4]' : 'hover:bg-[#f8f6f0]'}`}
+                                        className={`cursor-pointer ${isSelected ? 'bg-[#dae8f5]' : 'hover:bg-[#f8f6f0]'}`}
                                         aria-selected={isSelected}
                                         onClick={() => setSelected(candidate)}
                                     >

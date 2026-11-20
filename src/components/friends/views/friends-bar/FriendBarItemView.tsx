@@ -72,8 +72,8 @@ export const FriendBarItemView: FC<FriendBarItemViewProps> = (props) => {
 
     if (!friend) {
         // add_friends_tab_xml (AddFriendsTab b4e): 127x36 tab that grows to 164px upwards when selected.
-        // Frame colour: the layout's 0x74dbfa until the tab is first exposed or selected, then 0x91e1f9 while
-        // exposed (hover) and 0x7fc8de otherwise; selecting conceals the tab.
+        // Frame colour: the layout's 0x9bcfff until the tab is first exposed or selected, then 0xaed8fe while
+        // exposed (hover) and 0x7ab0e3 otherwise; selecting conceals the tab.
         const frameColor = selected ? '7fc8de' : (exposed ? '91e1f9' : (concealed ? '7fc8de' : '74dbfa'));
 
         return (

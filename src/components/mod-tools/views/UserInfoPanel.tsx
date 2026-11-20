@@ -7,7 +7,7 @@ import { findNativeNode, nativeCaption, nativeNumber, NativeNode, parseNativeLay
 import { Native0Border, Native0Button, Native0Text } from '../native/NativeWindow0';
 
 const rectOf = (node: NativeNode) => ({ x: nativeNumber(node, 'x'), y: nativeNumber(node, 'y'), width: nativeNumber(node, 'width'), height: nativeNumber(node, 'height') });
-const SHADE = 0xa2d6ea;
+const SHADE = 0x9ec7ee;
 
 // Classic UserInfoCtrl (og) time format: seconds below two minutes, minutes below two hours, hours below two days, days below two years, then years.
 const formatTime = (seconds: number): string => {

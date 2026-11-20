@@ -22,7 +22,7 @@
 
 .volt-room-info .volt-room-info__content,
 .volt-room-info .volt-room-info__content :where(div, p, span, label, button, input) {
-    color: #000 !important;
+    color: #000000 !important;
     font: 400 12px/14px HabboAirUbuntu, Ubuntu, sans-serif !important;
     font-kerning: normal;
 }
@@ -42,7 +42,7 @@
 }
 
 .volt-room-info .volt-room-info__content .is-bold { font-weight: 700 !important; }
-.volt-room-info .volt-room-info__content .is-caption { color: #777 !important; }
+.volt-room-info .volt-room-info__content .is-caption { color: #777777 !important; }
 .volt-room-info .volt-room-info__content svg { image-rendering: pixelated; pointer-events: none; }
 .volt-room-info .volt-room-info__content button:focus-visible,
 .volt-room-info .volt-room-info__content input:focus-visible { outline: 1px solid #fff27a; outline-offset: 1px; }
@@ -100,7 +100,7 @@
 
 .volt-room-info__tags { display: flex; width: 225px; margin-left: 5px; flex-wrap: wrap; }
 .volt-room-info .volt-room-info__tag { height: 14px; padding: 0 5px 0 3px !important; }
-.volt-room-info .volt-room-info__tag > span:last-child { position: relative; display: block; padding-top: 2px; color: #0e3139 !important; font: 400 10px/12px HabboAirUbuntu, Ubuntu, sans-serif !important; }
+.volt-room-info .volt-room-info__tag > span:last-child { position: relative; display: block; padding-top: 2px; color: #0c243b !important; font: 400 10px/12px HabboAirUbuntu, Ubuntu, sans-serif !important; }
 .volt-room-info__tag-skin { position: absolute; inset: 0; pointer-events: none; }
 .volt-room-info__tag-skin svg { position: absolute; top: 0; height: 14px; }
 .volt-room-info__tag-skin .is-left { left: 0; width: 4px; }
@@ -120,9 +120,9 @@
     width: 112px !important;
     height: 112px !important;
     overflow: hidden;
-    border: 1px solid #000 !important;
+    border: 1px solid #000000 !important;
     border-radius: 0 !important;
-    background: #000 url("@/assets/images/navigator/air/default-room.png") center no-repeat !important;
+    background: #000000 url("@/assets/images/navigator/air/default-room.png") center no-repeat !important;
 }
 
 .volt-room-info .volt-room-info__camera { position: absolute; top: 89px; left: 144px; width: 24px; height: 26px; }
@@ -136,7 +136,7 @@
 .volt-room-info__embed-toggle img { position: absolute; top: 5px; left: 11px; image-rendering: pixelated; }
 .volt-room-info__embed-toggle span { position: absolute; top: 3px; left: 29px; padding: 2px; text-decoration: underline; }
 .volt-room-info .volt-room-info__embed-info { box-sizing: border-box; width: 216px; margin-left: 9px; padding: 2px 2px 3px; font: 400 10px/11px HabboAirUbuntu, Ubuntu, sans-serif !important; }
-.volt-room-info__embed-source { display: block; box-sizing: border-box; width: 208px; height: 15px; margin: 2px 0 0 11px; padding: 0 2px; border: 1px solid #000; border-radius: 0; background: #fff; }
+.volt-room-info__embed-source { display: block; box-sizing: border-box; width: 208px; height: 15px; margin: 2px 0 0 11px; padding: 0 2px; border: 1px solid #000000; border-radius: 0; background: #ffffff; }
 
 .volt-room-info__actions { display: flex; width: 220px; margin-left: 5px; flex-direction: column; gap: 3px; }
 .volt-room-info .volt-room-info__action {

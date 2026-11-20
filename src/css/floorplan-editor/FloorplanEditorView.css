@@ -365,7 +365,7 @@
 }
 
 .fp-round-btn:hover:not(:disabled) {
-    background: #2a96e6;
+    background: #3093f0;
 }
 
 .fp-round-btn:disabled {
@@ -541,7 +541,7 @@
 }
 
 .fp-btn.is-blue:hover {
-    background: #2a96e6;
+    background: #3093f0;
 }
 
 .fp-btn.is-grey {

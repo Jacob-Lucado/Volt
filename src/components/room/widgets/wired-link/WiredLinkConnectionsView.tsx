@@ -47,7 +47,7 @@ const WiredLinkConnectionsDialogView: FC<{ networkId: string }> = ({ networkId }
     );
     return (
         <VoltCardView frameStyle={3} nativeShadow resizeAxis="vertical" className="volt-wired-link-air volt-wired-link-air--connections" role="dialog" aria-label={title}>
-            <VoltCardHeaderView headerText="" onCloseClick={closeConnections}><NativeText text={title} textStyle="u_frame_title" background={0x367897} overrides={{ color: 0xffffff }} /></VoltCardHeaderView>
+            <VoltCardHeaderView headerText="" onCloseClick={closeConnections}><NativeText text={title} textStyle="u_frame_title" background={0x31689c} overrides={{ color: 0xffffff }} /></VoltCardHeaderView>
             <div className="volt-wired-link-air__client">
                 <WiredLinkTable columns={columns} rows={loading ? [] : rows} rowKey={(connection) => `${connection.roomId}-${connection.furniId}`} cell={cell} />
                 <div className="volt-wired-link-air__rename">

@@ -84,7 +84,7 @@ export const NavigatorSearchResultView: FC<NavigatorSearchResultViewProps> = (pr
                         text={resultTitle}
                         textStyle="u_regular"
                         background={0xffffff}
-                        overrides={{ size: 14, color: 0x0f557b }}
+                        overrides={{ size: 14, color: 0x0a4780 }}
                         maxWidth={270}
                         nativeResolution
                     />

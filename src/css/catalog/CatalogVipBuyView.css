@@ -6,7 +6,7 @@
     margin: 0 auto;
     overflow: hidden;
     background: #f1f1f1;
-    color: #222;
+    color: #222222;
     font-family: HabboAirUbuntu, Ubuntu, sans-serif;
     font-size: 12px;
 }
@@ -79,7 +79,7 @@
     display: block;
     height: 25px;
     background: #969696;
-    color: #fff;
+    color: #ffffff;
 }
 
 .volt-club-offer.is-wide .volt-club-offer-header {
@@ -232,7 +232,7 @@
     border-image-repeat: stretch !important;
     background: transparent !important;
     box-shadow: none !important;
-    color: #fff !important;
+    color: #ffffff !important;
     font-family: HabboAirUbuntu, Ubuntu, sans-serif !important;
     font-size: 12px !important;
     font-weight: 700 !important;
@@ -269,7 +269,7 @@
     height: var(--volt-club-confirm-frame-height) !important;
     min-height: var(--volt-club-confirm-frame-height) !important;
     max-height: var(--volt-club-confirm-frame-height) !important;
-    color: #000;
+    color: #000000;
     font-family: HabboAirUbuntu, Ubuntu, sans-serif;
 }
 
@@ -299,7 +299,7 @@
     border: 0;
     border-radius: 0;
     background: transparent;
-    color: #000;
+    color: #000000;
     font-family: HabboAirUbuntu, Ubuntu, sans-serif;
     font-size: 12px;
     line-height: normal;
@@ -310,7 +310,7 @@
 }
 
 .volt-club-purchase-confirm .volt-club-purchase-confirm-content :where(span, strong, label, input) {
-    color: #000 !important;
+    color: #000000 !important;
 }
 
 .volt-club-purchase-confirm-product {
@@ -538,7 +538,7 @@
 .volt-club-purchase-confirm .volt-club-purchase-confirm-cancel {
     left: 9px;
     border-image-source: var(--habbo-skin-shiny);
-    color: #111;
+    color: #111111;
     font-weight: 400;
 }
 
@@ -553,7 +553,7 @@
 .volt-club-purchase-confirm .volt-club-purchase-confirm-submit {
     left: 235px;
     border-image-source: var(--habbo-skin-shiny-thick-green);
-    color: #fff;
+    color: #ffffff;
     text-shadow: none;
 }
 

@@ -115,7 +115,7 @@
 
 .volt-inventory-badge-slot.is-dragover,
 .volt-inventory-badges-owned.is-drop-remove {
-    outline: 1px solid #418db0;
+    outline: 1px solid #3b7bb6;
 }
 
 /* descriptionArea (0,184) 468x78. */
@@ -178,7 +178,7 @@
     font-size: 9px;
     font-weight: 700;
     line-height: 17px;
-    color: #fff;
+    color: #ffffff;
 }
 
 /* wearBadge_button (282,40) 179x28 right aligned, fitted to its caption. */

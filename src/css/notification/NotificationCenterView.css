@@ -118,7 +118,7 @@
             display: flex;
             flex-direction: column;
             gap: 9px;
-            color: #2b4a63;
+            color: #284866;
             font-size: 12px;
         }
 
@@ -149,7 +149,7 @@
 
         .hotel-event-host {
             font-weight: 700;
-            color: #1b3a52;
+            color: #183855;
         }
 
         .hotel-event-room-label {
@@ -168,7 +168,7 @@
             border: 1px solid #b6c6d8;
             border-radius: 6px;
             background: linear-gradient(180deg, #ffffff 0%, #eef3f9 100%);
-            box-shadow: inset 0 1px 0 #fff;
+            box-shadow: inset 0 1px 0 #ffffff;
             word-break: break-word;
             /* The only part that scrolls, so the window keeps its size. */
             overflow-y: auto;
@@ -182,7 +182,7 @@
                so the footer takes the slack and stays at the bottom of the card. */
             margin-top: auto;
             font-style: italic;
-            color: #4a6880;
+            color: #476683;
             font-size: 11px;
         }
 
@@ -196,8 +196,8 @@
             padding: 7px 26px;
             font-size: 14px;
             font-weight: 700;
-            background: linear-gradient(180deg, #35a3d6 0%, #1f7fb5 100%);
-            border-color: #16597f;
+            background: linear-gradient(180deg, #2d88de 0%, #186dbc 100%);
+            border-color: #114c84;
         }
 
         .hotel-event-countdown {
@@ -281,7 +281,7 @@
         }
 
         .volt-info-version-spark {
-            color: #fff;
+            color: #ffffff;
             text-shadow: 0 0 6px rgba(255, 255, 200, 0.9);
             animation: voltInfoSpin 3s linear infinite;
             display: inline-block;
@@ -363,7 +363,7 @@
         }
 
         .volt-info-section-hotel .volt-info-section-header {
-            background: linear-gradient(180deg, #4fb3ff 0%, #1f6dc7 100%);
+            background: linear-gradient(180deg, #5bafff 0%, #1f6dc7 100%);
         }
 
         .volt-info-section-server .volt-info-section-header {
@@ -567,7 +567,7 @@
         }
 
         .furnidata-section-base .furnidata-section-header {
-            background: linear-gradient(180deg, #4fb3ff 0%, #1f6dc7 100%);
+            background: linear-gradient(180deg, #5bafff 0%, #1f6dc7 100%);
         }
 
         .furnidata-section-room .furnidata-section-header {
@@ -827,7 +827,7 @@
     font-size: 12px;
     line-height: 19px;
     white-space: nowrap;
-    text-shadow: 0 1px 0 #000;
+    text-shadow: 0 1px 0 #000000;
 }
 
 .volt-friendonline-notification__message span {
@@ -900,7 +900,7 @@
 /* The listing names itself on its first line; that line becomes the card header,
    so the body carries no heading of its own. */
 .notification-command-search {
-    --notification-command-search-bg: #fff;
+    --notification-command-search-bg: #ffffff;
     --notification-command-search-border: #a8a8a8;
 
     position: sticky;
@@ -1043,7 +1043,7 @@
     max-width: none;
     max-height: none;
     filter: drop-shadow(2.828px 2.828px 2px rgba(0, 0, 0, 0.349)) !important;
-    color: #000;
+    color: #000000;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 11px;
     font-weight: 400;
@@ -1194,7 +1194,7 @@
     width: 100%;
     height: 2px;
     margin-top: 11px;
-    background: linear-gradient(#ccc 50%, #fff 50%);
+    background: linear-gradient(#cccccc 50%, #ffffff 50%);
 }
 
 .volt-native-button {
@@ -1213,7 +1213,7 @@
     border-image-repeat: stretch;
     border-radius: 0;
     background: transparent;
-    color: #000;
+    color: #000000;
     font-size: 12px;
     line-height: 17px;
     image-rendering: pixelated;
@@ -1232,8 +1232,8 @@
     padding: 0 7px 2px;
     border-image-source: var(--habbo-skin-shiny-thick);
     filter: brightness(0.9373);
-    -webkit-text-stroke: 0.3px #000;
-    color: #000;
+    -webkit-text-stroke: 0.3px #000000;
+    color: #000000;
     font-weight: 400;
 }
 
@@ -1251,7 +1251,7 @@
     padding: 0;
     border: 0;
     background: none;
-    color: #000;
+    color: #000000;
     font-size: 12px;
     line-height: 16px;
     text-align: center;
@@ -1281,7 +1281,7 @@
     right: 2px;
     left: 2px;
     height: 31px;
-    background: linear-gradient(#67a3bf 0 2px, #578ca5 2px);
+    background: linear-gradient(#6395c3 0 2px, #537fa9 2px);
     pointer-events: none;
 }
 
@@ -1430,7 +1430,7 @@
     box-sizing: border-box;
     width: 395px;
     padding: 8px 0 12px 9px;
-    color: #000;
+    color: #000000;
     font: 9px/9px Volter, sans-serif;
     overflow-wrap: break-word;
 }
@@ -1474,7 +1474,7 @@
     min-height: 66px;
     cursor: pointer;
     pointer-events: auto;
-    color: #fff;
+    color: #ffffff;
     font: 700 9px/12px Volter, sans-serif;
     image-rendering: pixelated;
     user-select: none;
@@ -1536,7 +1536,7 @@
     height: 82px;
     margin-left: auto;
     margin-right: -1px;
-    color: #fff;
+    color: #ffffff;
     font-family: Ubuntu, sans-serif;
     font-size: 12px;
     line-height: 14px;
@@ -1590,7 +1590,7 @@
     border-image-repeat: stretch;
     border-radius: 0;
     background: transparent;
-    color: #fff;
+    color: #ffffff;
     font: inherit;
     cursor: pointer;
 }
@@ -1614,7 +1614,7 @@
     padding: 0;
     border: 0;
     background: none;
-    color: #fff;
+    color: #ffffff;
     font: inherit;
     text-align: left;
     text-decoration: underline;
@@ -1622,7 +1622,7 @@
 }
 
 .volt-native-club-gift-later:hover {
-    color: #bae1f9;
+    color: #c0dffc;
 }
 
 .volt-native-motd .volt-native-motd-ok .friends-dialog-button span {
