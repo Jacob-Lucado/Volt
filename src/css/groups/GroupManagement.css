@@ -747,6 +747,18 @@ textarea.volt-group-native__input::-webkit-scrollbar {
     height: 39px;
 }
 
+/* searching_icon: icon 15x15 at x 300, y 18 of header_cont. */
+.volt-group-members__searching {
+    position: absolute;
+    z-index: 1;
+    left: 310px;
+    top: 51px;
+    width: 15px;
+    height: 15px;
+    background-repeat: no-repeat;
+    pointer-events: none;
+}
+
 .volt-group-members__list {
     left: 10px;
     top: 115px;

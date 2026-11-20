@@ -24,6 +24,7 @@ import { FC, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'r
 import { GetUserProfile, LocalizeText, SendMessageComposer } from '../../../api';
 import previousIcon from '../../../assets/images/avatar-menu/air/arrow-left.png';
 import nextIcon from '../../../assets/images/avatar-menu/air/arrow-right.png';
+import habboIcons from '../../../assets/images/catalog/air/habbo-icons.png';
 import adminOnIcon from '../../../assets/images/groups/members/icon_admin_off.png';
 import adminOffIcon from '../../../assets/images/groups/members/icon_admin_over.png';
 import closeIcon from '../../../assets/images/groups/members/icon_close_off.png';
@@ -34,6 +35,24 @@ import { HabboDropMenuView } from '../../../common/dropmenu/HabboDropMenuView';
 import { useGroupMemberRemoval, useMessageEvent, useNotification } from '../../../hooks';
 import { flatText, GroupInput, GroupText, GroupWindowTitle } from './GroupNativeLayout';
 
+const SEARCH_DELAY_MS = 1000;
+
+// AIR's loading icon: icon styles 23 to 26 of habbo_icons_png, one frame every 160 ms.
+const SEARCHING_FRAME_X = [181, 197, 213, 229];
+const SEARCHING_FRAME_MS = 160;
+
+const GroupMembersSearchingIcon: FC<{}> = () => {
+    const [frame, setFrame] = useState(0);
+
+    useEffect(() => {
+        const timer = setInterval(() => setFrame((value) => (value + 1) % SEARCHING_FRAME_X.length), SEARCHING_FRAME_MS);
+
+        return () => clearInterval(timer);
+    }, []);
+
+    return <span aria-hidden="true" className="volt-group-members__searching" style={{ backgroundImage: `url(${habboIcons})`, backgroundPosition: `-${SEARCHING_FRAME_X[frame]}px 0` }} />;
+};
+
 export const GroupMembersView: FC<{}> = (props) => {
     const [groupId, setGroupId] = useState<number>(-1);
     const [levelId, setLevelId] = useState<number>(-1);
@@ -42,6 +61,10 @@ export const GroupMembersView: FC<{}> = (props) => {
     const [pageInput, setPageInput] = useState<string | null>(null);
     const [totalPages, setTotalPages] = useState<number>(0);
     const [searchQuery, setSearchQuery] = useState<string>('');
+    const [searchInput, setSearchInput] = useState<string>('');
+    const [searchRequest, setSearchRequest] = useState<number>(0);
+    const [searching, setSearching] = useState(false);
+    const searchTimer = useRef<ReturnType<typeof setTimeout>>(null);
     const [isOwner, setIsOwner] = useState(false);
     const pendingRemoval = useRef<{ groupId: number; userId: number; name: string }>(null);
     const { showConfirm = null } = useNotification();
@@ -60,7 +83,35 @@ export const GroupMembersView: FC<{}> = (props) => {
         if (groupId === -1 || levelId === -1 || pageId === -1) return;
 
         SendMessageComposer(new GroupMembersComposer(groupId, pageId, searchQuery, levelId));
+        setSearching(true);
     }, [groupId, levelId, pageId, searchQuery]);
+
+    const stopSearchTimer = useCallback(() => {
+        clearTimeout(searchTimer.current);
+        searchTimer.current = null;
+    }, []);
+
+    // Like AIR, the list is searched 1 s after the last key press, always from the first page.
+    const typeSearch = (value: string) => {
+        setSearchInput(value);
+        setSearching(true);
+        stopSearchTimer();
+        searchTimer.current = setTimeout(() => {
+            searchTimer.current = null;
+            setPageId(0);
+            setSearchQuery(value);
+            setSearchRequest((request) => request + 1);
+        }, SEARCH_DELAY_MS);
+    };
+
+    // A page or level change also sends the typed text that is still waiting for its timer.
+    const takeTypedSearch = () => {
+        if (searchTimer.current === null) return;
+
+        stopSearchTimer();
+        setSearchQuery(searchInput);
+        setSearchRequest((request) => request + 1);
+    };
 
     const toggleAdmin = (member: GroupMemberParser) => {
         if (!isOwner || member.rank === GroupRank.OWNER) return;
@@ -114,6 +165,7 @@ export const GroupMembersView: FC<{}> = (props) => {
         if (parser.level !== levelId && !normalizedLevel) return;
 
         setMembersData(parser);
+        setSearching(searchTimer.current !== null);
         setLevelId(parser.level);
         setTotalPages(Math.ceil(parser.totalMembersCount / parser.pageSize));
     });
@@ -193,13 +245,16 @@ export const GroupMembersView: FC<{}> = (props) => {
 
     useEffect(() => {
         setPageId(0);
-    }, [groupId, levelId, searchQuery]);
+    }, [groupId, levelId, searchQuery, searchRequest]);
 
     useEffect(() => {
         if (groupId === -1 || levelId === -1 || pageId === -1) return;
 
         SendMessageComposer(new GroupMembersComposer(groupId, pageId, searchQuery, levelId));
-    }, [groupId, levelId, pageId, searchQuery]);
+        setSearching(true);
+    }, [groupId, levelId, pageId, searchQuery, searchRequest]);
+
+    useEffect(() => stopSearchTimer, [stopSearchTimer]);
 
     useEffect(() => {
         pendingRemoval.current = null;
@@ -210,9 +265,11 @@ export const GroupMembersView: FC<{}> = (props) => {
         setTotalPages(0);
         setPageInput(null);
         setSearchQuery('');
+        setSearchInput('');
+        stopSearchTimer();
         setIsOwner(false);
         SendMessageComposer(new GroupInformationComposer(groupId, false));
-    }, [groupId]);
+    }, [groupId, stopSearchTimer]);
 
     if (groupId === -1 || !membersData) return null;
 
@@ -221,6 +278,7 @@ export const GroupMembersView: FC<{}> = (props) => {
     const submitPage = () => {
         if (pageInput === null) return;
 
+        takeTypedSearch();
         setPageId(Math.min(Math.max(Number(pageInput), 1), pageCount) - 1);
         setPageInput(null);
     };
@@ -245,12 +303,13 @@ export const GroupMembersView: FC<{}> = (props) => {
                 infoText={LocalizeText('group.members.searchinfo')}
                 label={LocalizeText('group.members.searchinfo')}
                 maxLength={32}
-                value={searchQuery}
+                value={searchInput}
                 width={214}
                 x={88}
                 y={47}
-                onChange={setSearchQuery}
+                onChange={typeSearch}
             />
+            {searching && <GroupMembersSearchingIcon />}
             <HabboDropMenuView
                 label={LocalizeText('group.members.search.all')}
                 nativeCaption
@@ -262,7 +321,10 @@ export const GroupMembersView: FC<{}> = (props) => {
                 skinStyle={3}
                 style={{ position: 'absolute', left: 88, top: 81, width: 243, height: 25 }}
                 value={levelId}
-                onSelect={(value) => setLevelId(value)}
+                onSelect={(value) => {
+                    takeTypedSearch();
+                    setLevelId(value);
+                }}
             />
             <div className="volt-group-members__list">
                 {membersData.result.map((member, index) => {
@@ -322,12 +384,12 @@ export const GroupMembersView: FC<{}> = (props) => {
                 })}
             </div>
             {pageId > 0 && (
-                <button aria-label={LocalizeText('generic.previous')} className="volt-group-native__button volt-group-members__pager" style={{ left: 10, top: 396 }} type="button" onClick={() => setPageId((value) => Math.max(0, value - 1))}>
+                <button aria-label={LocalizeText('generic.previous')} className="volt-group-native__button volt-group-members__pager" style={{ left: 10, top: 396 }} type="button" onClick={() => { takeTypedSearch(); setPageId((value) => Math.max(0, value - 1)); }}>
                     <img alt="" draggable={false} src={previousIcon} style={{ left: 16, top: 2 }} />
                 </button>
             )}
             {pageId < pageCount - 1 && (
-                <button aria-label={LocalizeText('generic.next')} className="volt-group-native__button volt-group-members__pager" style={{ left: 293, top: 396 }} type="button" onClick={() => setPageId((value) => Math.min(pageCount - 1, value + 1))}>
+                <button aria-label={LocalizeText('generic.next')} className="volt-group-native__button volt-group-members__pager" style={{ left: 293, top: 396 }} type="button" onClick={() => { takeTypedSearch(); setPageId((value) => Math.min(pageCount - 1, value + 1)); }}>
                     <img alt="" draggable={false} src={nextIcon} style={{ left: 19, top: 2 }} />
                 </button>
             )}
