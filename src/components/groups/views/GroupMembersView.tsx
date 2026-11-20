@@ -39,6 +39,7 @@ export const GroupMembersView: FC<{}> = (props) => {
     const [levelId, setLevelId] = useState<number>(-1);
     const [membersData, setMembersData] = useState<GroupMembersParser>(null);
     const [pageId, setPageId] = useState<number>(-1);
+    const [pageInput, setPageInput] = useState<string | null>(null);
     const [totalPages, setTotalPages] = useState<number>(0);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [isOwner, setIsOwner] = useState(false);
@@ -207,6 +208,7 @@ export const GroupMembersView: FC<{}> = (props) => {
 
         setMembersData(null);
         setTotalPages(0);
+        setPageInput(null);
         setSearchQuery('');
         setIsOwner(false);
         SendMessageComposer(new GroupInformationComposer(groupId, false));
@@ -216,6 +218,12 @@ export const GroupMembersView: FC<{}> = (props) => {
 
     const sessionUserId = GetSessionDataManager().userId;
     const pageCount = Math.max(1, totalPages);
+    const submitPage = () => {
+        if (pageInput === null) return;
+
+        setPageId(Math.min(Math.max(Number(pageInput), 1), pageCount) - 1);
+        setPageInput(null);
+    };
     const [pageTextStart, pageTextEnd] = LocalizeText('group.members.pageinfo', ['amount', 'totalPages'], [membersData.totalMembersCount.toString(), pageCount.toString()]).split('%page%');
 
     return (
@@ -328,11 +336,12 @@ export const GroupMembersView: FC<{}> = (props) => {
                 <input
                     aria-label={LocalizeText('group.members.pageinfo')}
                     className="volt-group-members__page-input"
-                    value={membersData.pageIndex + 1}
-                    onChange={(event) => {
-                        const value = Math.min(Math.max(parseInt(event.target.value) || 1, 1), pageCount);
-
-                        setPageId(value - 1);
+                    inputMode="numeric"
+                    value={pageInput ?? String(pageId + 1)}
+                    onChange={(event) => setPageInput(event.target.value.replace(/[^0-9]/g, ''))}
+                    onBlur={submitPage}
+                    onKeyDown={(event) => {
+                        if (event.key === 'Enter') submitPage();
                     }}
                 />
                 <GroupText className="is-static" text={pageTextEnd ?? ''} x={0} y={0} />
