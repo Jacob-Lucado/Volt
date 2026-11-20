@@ -14,6 +14,7 @@ import {
     HabbiconInfoEvent,
     HabbiconShopDataEvent,
     HabbiconState,
+    NotEnoughBalanceMessageEvent,
     PurchaseErrorMessageEvent,
     PurchaseNotAllowedMessageEvent,
     PurchaseOKMessageEvent,
@@ -218,6 +219,14 @@ const useHabbiconCatalogState = () => {
     useMessageEvent<PurchaseErrorMessageEvent>(PurchaseErrorMessageEvent, (event) => purchaseFailed(event.getParser().code));
 
     useMessageEvent<PurchaseNotAllowedMessageEvent>(PurchaseNotAllowedMessageEvent, (event) => purchaseFailed(event.getParser().code));
+
+    useMessageEvent<NotEnoughBalanceMessageEvent>(NotEnoughBalanceMessageEvent, () => {
+        if (!pendingRef.current) return;
+
+        pendingRef.current = null;
+        setPending(null);
+        setPurchase(null);
+    });
 
     const sets = useMemo<HabbiconSet[]>(
         () =>
