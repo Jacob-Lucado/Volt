@@ -698,12 +698,15 @@ textarea.volt-group-native__input::-webkit-scrollbar {
     z-index: 2;
 }
 
+/* AIR centres the 78px badge in the 85px widget and rounds the offset down. */
 .volt-group-info__badge {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: flex-start;
+    box-sizing: border-box;
     width: 85px;
     height: 85px;
+    padding: 3px;
 }
 
 .volt-group-info__icon {
