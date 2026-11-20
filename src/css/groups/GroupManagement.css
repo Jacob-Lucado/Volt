@@ -828,9 +828,14 @@ textarea.volt-group-native__input::-webkit-scrollbar {
     height: 25px;
 }
 
+.volt-group-members__pager img {
+    position: absolute;
+    filter: brightness(0);
+}
+
 /* itemlist_horizontal with spacing 2: the page text, the page input and the page count. */
 .volt-group-members__pages {
-    left: 86px;
+    left: 87px;
     top: 400px;
     display: flex;
     gap: 2px;
@@ -844,8 +849,8 @@ textarea.volt-group-native__input::-webkit-scrollbar {
 
 .volt-group-members__page-input {
     box-sizing: border-box;
-    width: 22px;
-    height: 18px;
+    width: 21px;
+    height: 17px;
     padding: 0 1px;
     border: 1px solid #000;
     background: #fff;

@@ -21,8 +21,9 @@ import {
     RemoveLinkEventTracker
 } from '@volt/renderer';
 import { FC, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { GetUserProfile, LocalizeText, SendMessageComposer } from '../../../api';
+import previousIcon from '../../../assets/images/avatar-menu/air/arrow-left.png';
+import nextIcon from '../../../assets/images/avatar-menu/air/arrow-right.png';
 import adminOnIcon from '../../../assets/images/groups/members/icon_admin_off.png';
 import adminOffIcon from '../../../assets/images/groups/members/icon_admin_over.png';
 import closeIcon from '../../../assets/images/groups/members/icon_close_off.png';
@@ -261,7 +262,7 @@ export const GroupMembersView: FC<{}> = (props) => {
                     const isOwnerEntry = member.rank === GroupRank.OWNER;
                     const isAdmin = isOwnerEntry || member.rank === GroupRank.ADMIN;
                     const isMember = member.rank !== GroupRank.REQUESTED;
-                    const showAction = !isSelf && membersData.admin;
+                    const showAction = !isSelf && membersData.admin && (isOwnerEntry || !isMember || isOwner);
                     const actionKey = isOwnerEntry ? 'group.members.owner' : isAdmin ? 'group.members.removerights' : isMember ? 'group.members.giverights' : 'group.members.accept';
                     const runAction = () => {
                         if (isOwnerEntry) return;
@@ -293,7 +294,7 @@ export const GroupMembersView: FC<{}> = (props) => {
                                     overrides={{ color: 0x666666, italic: true }}
                                     text={LocalizeText('group.members.since', ['date'], [member.joinedAt])}
                                     textStyle="u_small"
-                                    x={51}
+                                    x={50}
                                     y={15}
                                 />
                             )}
@@ -313,13 +314,13 @@ export const GroupMembersView: FC<{}> = (props) => {
                 })}
             </div>
             {pageId > 0 && (
-                <button className="volt-group-native__button volt-group-members__pager" style={{ left: 10, top: 396 }} type="button" onClick={() => setPageId((value) => Math.max(0, value - 1))}>
-                    <FaChevronLeft />
+                <button aria-label={LocalizeText('generic.previous')} className="volt-group-native__button volt-group-members__pager" style={{ left: 10, top: 396 }} type="button" onClick={() => setPageId((value) => Math.max(0, value - 1))}>
+                    <img alt="" draggable={false} src={previousIcon} style={{ left: 16, top: 2 }} />
                 </button>
             )}
             {pageId < pageCount - 1 && (
-                <button className="volt-group-native__button volt-group-members__pager" style={{ left: 293, top: 396 }} type="button" onClick={() => setPageId((value) => Math.min(pageCount - 1, value + 1))}>
-                    <FaChevronRight />
+                <button aria-label={LocalizeText('generic.next')} className="volt-group-native__button volt-group-members__pager" style={{ left: 293, top: 396 }} type="button" onClick={() => setPageId((value) => Math.min(pageCount - 1, value + 1))}>
+                    <img alt="" draggable={false} src={nextIcon} style={{ left: 19, top: 2 }} />
                 </button>
             )}
             <div className="volt-group-members__pages">
