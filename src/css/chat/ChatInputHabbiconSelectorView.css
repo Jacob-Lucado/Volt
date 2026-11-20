@@ -860,6 +860,21 @@
     white-space: nowrap;
 }
 
+.habbicon-price--rows {
+    flex-direction: column;
+    gap: 2px;
+}
+
+.habbicon-price__row {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.habbicon-purchase-total .habbicon-price--rows {
+    align-items: flex-end;
+}
+
 .habbicon-action {
     height: 28px;
     padding: 0 8px;
