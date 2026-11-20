@@ -23,21 +23,13 @@ export const GroupTabBadgeView: FC<GroupTabBadgeViewProps> = (props) => {
     const { groupCustomize = null } = useGroup();
     const showAlert = useGroupAlert();
 
-    const getModifiedBadgeCode = () => {
-        if (!badgeParts || !badgeParts.length) return '';
-
-        let badgeCode = '';
-
-        badgeParts.forEach((part) => part.previewCode && (badgeCode += part.previewCode));
-
-        return badgeCode;
-    };
+    const getModifiedBadgeCode = () => GroupBadgePart.getBadgeCode(badgeParts, groupCustomize);
 
     const saveBadge = useCallback(() => {
         if (!groupData || !badgeParts || !badgeParts.length) return false;
 
         // A badge needs its base: without one the server would read the first symbol as the base.
-        if (!GroupBadgePart.serialize(badgeParts)) {
+        if (!GroupBadgePart.serialize(badgeParts, groupCustomize)) {
             showAlert({ title: LocalizeText('group.edit.error.title'), message: localizeWithFallback('group.edit.error.no.badge.base', 'Choose a base for the badge.') });
 
             return false;
@@ -58,13 +50,13 @@ export const GroupTabBadgeView: FC<GroupTabBadgeViewProps> = (props) => {
             return true;
         }
 
-        const badge = GroupBadgePart.serialize(badgeParts);
+        const badge = GroupBadgePart.serialize(badgeParts, groupCustomize);
 
         SendMessageComposer(new GroupSaveBadgeComposer(groupData.groupId, badge));
         setGroupData(prevValue => ({ ...prevValue, groupBadgeParts: badgeParts }));
 
         return true;
-    }, [groupData, badgeParts, setGroupData, showAlert]);
+    }, [groupData, badgeParts, groupCustomize, setGroupData, showAlert]);
 
     useEffect(() => {
         if (groupData.groupBadgeParts && groupData.groupBadgeParts.length) return;

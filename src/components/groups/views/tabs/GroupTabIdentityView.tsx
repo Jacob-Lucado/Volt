@@ -1,8 +1,9 @@
 import { CreateLinkEvent, GroupSaveInformationComposer } from '@volt/renderer';
 import { Dispatch, FC, SetStateAction, useCallback, useEffect, useState } from 'react';
-import { GetGroupMembers, IGroupData, LocalizeText, localizeWithFallback, SendMessageComposer } from '../../../../api';
+import { GetGroupMembers, GroupBadgePart, IGroupData, LocalizeText, localizeWithFallback, SendMessageComposer } from '../../../../api';
 import { LayoutBadgeImageView } from '../../../../common';
 import { HabboDropMenuView } from '../../../../common/dropmenu/HabboDropMenuView';
+import { useGroup } from '../../../../hooks';
 import { useGroupAlert } from '../GroupNativeAlertView';
 import { flatText, GroupBox, GroupInput, GroupText } from '../GroupNativeLayout';
 
@@ -23,6 +24,7 @@ export const GroupTabIdentityView: FC<GroupTabIdentityViewProps> = (props) => {
     const [groupDescription, setGroupDescription] = useState<string>('');
     const [groupHomeroomId, setGroupHomeroomId] = useState<number>(-1);
     const showAlert = useGroupAlert();
+    const { groupCustomize = null } = useGroup();
 
     const saveIdentity = useCallback(() => {
         if (!groupData) return false;
@@ -88,7 +90,7 @@ export const GroupTabIdentityView: FC<GroupTabIdentityViewProps> = (props) => {
                     <GroupBox height={94} kind="white" width={94} x={17} y={11}>
                         <GroupBox height={86} kind="tan" width={86} x={4} y={4} />
                         <div className="volt-group-native__badge" style={{ left: 27, top: 27 }}>
-                            <LayoutBadgeImageView badgeCode={groupData.groupBadgeParts.map((part) => part.previewCode || '').join('')} isGroup={true} />
+                            <LayoutBadgeImageView badgeCode={GroupBadgePart.getBadgeCode(groupData.groupBadgeParts, groupCustomize)} isGroup={true} />
                         </div>
                     </GroupBox>
                     <GroupText
