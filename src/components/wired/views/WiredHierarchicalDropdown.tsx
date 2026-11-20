@@ -163,12 +163,19 @@ export const WiredHierarchicalDropdown: FC<WiredHierarchicalDropdownProps> = ({ 
             close();
         };
 
+        const onScroll = (event: Event) =>
+        {
+            if (event.target instanceof Node && event.target.contains(fieldRef.current)) close();
+        };
+
+        document.addEventListener('scroll', onScroll, true);
         document.addEventListener('pointerdown', onPointerDown, true);
         document.addEventListener('keydown', onKeyDown, true);
         window.addEventListener('resize', close);
 
         return () =>
         {
+            document.removeEventListener('scroll', onScroll, true);
             document.removeEventListener('pointerdown', onPointerDown, true);
             document.removeEventListener('keydown', onKeyDown, true);
             window.removeEventListener('resize', close);
