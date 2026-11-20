@@ -106,10 +106,10 @@ import './css/camera/CameraWidget.css';
 import './css/catalog/CatalogGiftView.css';
 import './css/navigator/NavigatorView.css';
 import './css/quests/RewardTrackView.css';
-import './css/common/ClassicScrollbar.css';
-
 import './css/lucadoos/LosPurse.css';
 import './css/lucadoos/LosEventInfo.css';
+import './css/common/ClassicScrollbar.css';
+
 
 // bootstrap.ts mounts the app once the configuration has loaded.
 export const mountApp = () => {
