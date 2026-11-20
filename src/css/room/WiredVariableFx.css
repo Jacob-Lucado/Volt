@@ -170,6 +170,10 @@
     height: auto;
 }
 
+.volt-wired-fx__icon--xmas26_snowman {
+    translate: 0 -1px;
+}
+
 .volt-wired-fx__icon-image {
     display: block;
     image-rendering: pixelated;
