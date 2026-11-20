@@ -55,7 +55,7 @@ describe('WiredVariableFx helpers', () => {
         expect(wiredVariableFxStyles(WIRED_FX_CATEGORY.PROGRESS_BAR)).toHaveLength(5);
         expect(wiredVariableFxStyles(WIRED_FX_CATEGORY.LEVELLING_PROGRESS)).toHaveLength(2);
         expect(wiredVariableFxStyles(WIRED_FX_CATEGORY.STATUS_BAR)).toHaveLength(WIRED_FX_STATUS_BAR_THEMES.length);
-        expect(wiredVariableFxStyles(WIRED_FX_CATEGORY.BOSS_BAR)).toHaveLength(2);
+        expect(wiredVariableFxStyles(WIRED_FX_CATEGORY.BOSS_BAR)).toHaveLength(3);
         expect(wiredVariableFxStyles(WIRED_FX_CATEGORY.NUMBER_DISPLAY)).toHaveLength(3);
         expect(wiredVariableFxStyles(99)).toBe(wiredVariableFxStyles(WIRED_FX_CATEGORY.PROGRESS_BAR));
     });
