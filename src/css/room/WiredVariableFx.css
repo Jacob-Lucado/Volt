@@ -166,6 +166,19 @@
     line-height: 1;
 }
 
+.volt-wired-fx .volt-wired-fx__icon:has(> .volt-wired-fx__icon-image) {
+    height: auto;
+}
+
+.volt-wired-fx__icon--xmas26_snowman {
+    translate: 0 -1px;
+}
+
+.volt-wired-fx__icon-image {
+    display: block;
+    image-rendering: pixelated;
+}
+
 .volt-wired-fx__level {
     display: inline-flex;
     align-items: center;

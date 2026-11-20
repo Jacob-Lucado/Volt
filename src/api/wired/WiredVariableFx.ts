@@ -131,7 +131,9 @@ export const WIRED_FX_STATUS_BAR_THEMES: { icon: string; color: string | null; m
     { icon: 'stealth', color: '#6254a8', metallic: false },
     { icon: 'upgrading', color: '#6bdc34', metallic: false },
     { icon: 'star_power', color: '#ffd900', metallic: true },
-    { icon: 'droplet', color: '#4aabf5', metallic: false }
+    { icon: 'droplet', color: '#4aabf5', metallic: false },
+    { icon: 'xmas26.tree', color: '#368349', metallic: false },
+    { icon: 'xmas26.snowball', color: '#acdafa', metallic: false }
 ];
 
 /** The fixed palette, by the server's colour ids; the hex is the official renderer's own RGB (VariableFxColorType.resolve). */
@@ -179,7 +181,7 @@ export const WIRED_FX_WIDTHS: { id: number; key: string; fallback: string; px: n
     { id: 100, key: 'wiredfurni.params.variablefx.width.huge', fallback: 'Huge', px: 180 }
 ];
 
-/** The icons of the official editor's dropdown (STANDARD_ICON_IDS); the server refuses any other name. */
+/** The icons of the official editor's dropdown (NUMBER_ICON_IDS without "none"); the server refuses any other name. */
 export const WIRED_FX_ICONS = [
     'battery',
     'burning',
@@ -206,7 +208,44 @@ export const WIRED_FX_ICONS = [
     'stealth',
     'timeleft',
     'upgrading',
-    'wooden_logs'
+    'wooden_logs',
+    'ranch.aubergine',
+    'ranch.carrot',
+    'ranch.corn',
+    'ranch.egg',
+    'ranch.grape',
+    'ranch.potato',
+    'ranch.pumpkin',
+    'ranch.sapling',
+    'ranch.tomato',
+    'ranch.wheat',
+    'xmas26.bauble_red',
+    'xmas26.bauble_blue',
+    'xmas26.bauble_green',
+    'xmas26.bauble_gold',
+    'xmas26.bell',
+    'xmas26.candycane',
+    'xmas26.coal',
+    'xmas26.cookie',
+    'xmas26.gingerbreadman',
+    'xmas26.ice_cube',
+    'xmas26.key',
+    'xmas26.list',
+    'xmas26.present_green',
+    'xmas26.present_red',
+    'xmas26.present_blue',
+    'xmas26.present_purple',
+    'xmas26.present_pink',
+    'xmas26.present_orange',
+    'xmas26.present_gold',
+    'xmas26.santahat',
+    'xmas26.snowball',
+    'xmas26.stocking',
+    'xmas26.ticket_red',
+    'xmas26.ticket_blue',
+    'xmas26.ticket_orange',
+    'xmas26.ticket_green',
+    'xmas26.tree'
 ];
 
 export const WIRED_FX_NUMBER_ALIGNMENTS = ['left', 'right', 'double'];
@@ -377,6 +416,16 @@ const STYLES: Record<number, IWiredVariableFxStyle[]> = {
             colors: RED_TO_GREEN_TEAM_COLORS,
             widths: [WIDTH_LARGE, WIDTH_EXTRA_LARGE, WIDTH_HUGE],
             color: COLOR_RED,
+            width: WIDTH_EXTRA_LARGE,
+            renderer: WIRED_FX_RENDERER.BOSS
+        },
+        {
+            key: 'wiredfurni.params.variablefx.style.boss_bar.2',
+            fallback: 'Snowman',
+            renderers: [WIRED_FX_RENDERER.BOSS],
+            colors: [WIRED_FX_COLOR_NOT_APPLICABLE],
+            widths: [WIDTH_LARGE, WIDTH_EXTRA_LARGE, WIDTH_HUGE],
+            color: WIRED_FX_COLOR_NOT_APPLICABLE,
             width: WIDTH_EXTRA_LARGE,
             renderer: WIRED_FX_RENDERER.BOSS
         }
@@ -723,7 +772,7 @@ const progressColor = (config: IWiredVariableFxConfigLike, status: IWiredVariabl
 
 /**
  * The colour a value is drawn in: the holder's team colour or level hue when the box asked for a
- * dynamic one, a palette entry, the status bar's baked colour, or null for "the style's own".
+ * dynamic one, a palette entry, the style's baked colour, or null for "the style's own".
  */
 export const resolveWiredVariableFxColor = (config: IWiredVariableFxConfigLike, status: IWiredVariableFxStatusLike): string | null => {
     if (config.colorId === WIRED_FX_COLOR_DYNAMIC_TEAM) return status.extra?.[WIRED_FX_STATUS_EXTRA.DELEGATED_COLOR] ?? null;
@@ -736,13 +785,11 @@ export const resolveWiredVariableFxColor = (config: IWiredVariableFxConfigLike, 
 
     if (palette) return palette.hex;
 
-    if (config.category === WIRED_FX_CATEGORY.STATUS_BAR) {
-        const baked = config.extra?.[WIRED_FX_CONFIG_EXTRA.COLOR];
+    const baked = config.extra?.[WIRED_FX_CONFIG_EXTRA.COLOR];
 
-        return baked || progressColor(config, status);
-    }
+    if (baked) return baked;
 
-    return null;
+    return config.category === WIRED_FX_CATEGORY.STATUS_BAR ? progressColor(config, status) : null;
 };
 
 export const wiredVariableFxWidthPx = (widthId: number): number => (WIRED_FX_WIDTHS.find((entry) => entry.id === widthId) ?? WIRED_FX_WIDTHS[2]).px;
