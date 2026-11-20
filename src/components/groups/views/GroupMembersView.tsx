@@ -244,10 +244,6 @@ export const GroupMembersView: FC<{}> = (props) => {
     }, []);
 
     useEffect(() => {
-        setPageId(0);
-    }, [groupId, levelId, searchQuery, searchRequest]);
-
-    useEffect(() => {
         if (groupId === -1 || levelId === -1 || pageId === -1) return;
 
         SendMessageComposer(new GroupMembersComposer(groupId, pageId, searchQuery, levelId));
@@ -258,6 +254,7 @@ export const GroupMembersView: FC<{}> = (props) => {
 
     useEffect(() => {
         pendingRemoval.current = null;
+        stopSearchTimer();
 
         if (groupId === -1) return;
 
@@ -266,7 +263,6 @@ export const GroupMembersView: FC<{}> = (props) => {
         setPageInput(null);
         setSearchQuery('');
         setSearchInput('');
-        stopSearchTimer();
         setIsOwner(false);
         SendMessageComposer(new GroupInformationComposer(groupId, false));
     }, [groupId, stopSearchTimer]);
@@ -323,6 +319,7 @@ export const GroupMembersView: FC<{}> = (props) => {
                 value={levelId}
                 onSelect={(value) => {
                     takeTypedSearch();
+                    setPageId(0);
                     setLevelId(value);
                 }}
             />
