@@ -58,6 +58,7 @@ export const WiredVariableFxPreviewView: FC<{ params: IWiredVariableFxParams; ca
     }
     if (category === WIRED_FX_CATEGORY.HEALTH_POINTS && params.styleId === 0) extra.icon = 'misc_heart';
     if (category === WIRED_FX_CATEGORY.BOSS_BAR && params.styleId === 0) Object.assign(extra, { icon: 'misc_skull', icon_alignment: 'double' });
+    if (category === WIRED_FX_CATEGORY.BOSS_BAR && params.styleId === 2) Object.assign(extra, { icon: 'xmas26.snowman', icon_alignment: 'double', color: '#3C5B92', metallic: 'true' });
     if (category === WIRED_FX_CATEGORY.NUMBER_DISPLAY) extra.design = ['freeze_style', 'shalimar', 'blocky'][params.styleId] ?? 'freeze_style';
     const config: IWiredVariableFxConfig = { configId: 0, userFx: params.source === 1, showMode: 0, updateMask: 15, showOnMouseHover: false, showDurationMs: 0,
         category, styleId: params.styleId, colorId: params.colorId, widthId: params.widthId, rendererId: params.rendererId,
