@@ -10,6 +10,8 @@ interface ToolbarProgressionViewProps {
     setExpanded: Dispatch<SetStateAction<boolean>>;
 }
 
+const trackTitle = (id: string) => id.replace(/[_-]+/g, ' ').replace(/([a-z])(\d)/gi, '$1 $2').replace(/^./, (c) => c.toUpperCase());
+
 export const ToolbarProgressionView: FC<ToolbarProgressionViewProps> = ({ achievementCount, dailyTaskCount, rewardTracks, setExpanded }) =>
 {
     const elementRef = useRef<HTMLDivElement>(null);
@@ -75,7 +77,7 @@ export const ToolbarProgressionView: FC<ToolbarProgressionViewProps> = ({ achiev
             {extraTracks.map((track) => (
                 <div key={track.id} className="tbme-item" onClick={() => open(`reward_track/open/${track.id}`)}>
                     <span className="icon-me-rewardtrack" />
-                    <span>{localizeWithFallback(`widget.progmenu.rewardtrack.${track.id}`, `widget.progmenu.rewardtrack.${track.id}`)}</span>
+                    <span>{localizeWithFallback(`widget.progmenu.rewardtrack.${track.id}`, trackTitle(track.id))}</span>
                     {track.claimablePrizeCount > 0 && <LayoutItemCountView count={track.claimablePrizeCount} />}
                 </div>
             ))}
