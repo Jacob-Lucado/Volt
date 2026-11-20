@@ -1,6 +1,7 @@
 import { parseWiredLiteral } from '../../../../api/wired/WiredLiteral';
 import { FC, useEffect, useMemo, useState } from 'react';
 import {
+    groupWiredVariableFxOptions,
     IWiredVariableFxParams,
     localizeWithFallback,
     readWiredVariableFxParams,
@@ -36,6 +37,7 @@ import { useWired } from '../../../../hooks';
 import { WiredSection, WiredSplitter } from '../WiredSection';
 import { WiredCollapsibleSection } from '../WiredCollapsibleSection';
 import { WiredDropdown } from '../WiredDropdown';
+import { WiredHierarchicalDropdown } from '../WiredHierarchicalDropdown';
 import { WiredRadioGroup, WiredCheckboxOption } from '../WiredOptions';
 import { WiredNumberInput } from '../WiredNumberInput';
 import { WiredText } from '../WiredText';
@@ -80,6 +82,8 @@ const SHOW_MODE_OPTIONS: IFxOption[] = [
 ];
 
 /** The bars a segmented renderer or a level badge can be: the labels for the renderer ids the styles offer. */
+const fxBranchLabel = (prefix: string) => localizeWithFallback(`wiredfurni.params.variablefx.icon.${prefix}`, prefix);
+
 const BAR_OPTIONS: Record<number, IFxOption> = {
     [WIRED_FX_RENDERER.CLASSIC_MINI]: { value: WIRED_FX_RENDERER.CLASSIC_MINI, key: 'wiredfurni.params.variablefx.style.classic_mini', fallback: 'Classic mini' },
     [WIRED_FX_RENDERER.BLOCK]: { value: WIRED_FX_RENDERER.BLOCK, key: 'wiredfurni.params.variablefx.style.block', fallback: 'Blocks' },
@@ -292,8 +296,9 @@ export const WiredExtraVariableFxView: FC<WiredExtraVariableFxViewProps> = (prop
                 <WiredText wrap text={localizeWithFallback('wiredfurni.params.variablefx.levelling_progress.info', 'Levels come from the level-up system addon on the same tile; without one the badge shows level 1.')} />
             </WiredSection>}
             <WiredSection title={localizeWithFallback('wiredfurni.params.variablefx.visualization.style', 'Style')}
-                headerOption={<WiredDropdown caption={localizeWithFallback('wiredfurni.params.variablefx.visualization.style', 'Style')} value={params.styleId}
-                    options={styles.map(entry => ({ id: entry.styleId, label: localizeWithFallback(entry.key, entry.fallback) }))} onChange={chooseStyle} />}>
+                headerOption={<WiredHierarchicalDropdown caption={localizeWithFallback('wired.ui.input.select', 'Select')} value={String(params.styleId)}
+                    options={groupWiredVariableFxOptions(styles.map(entry => ({ group: entry.icon, label: localizeWithFallback(entry.key, entry.fallback), value: String(entry.styleId) })), fxBranchLabel)}
+                    onChange={styleId => chooseStyle(parseInt(styleId, 10))} />}>
                 <div className="volt-wired-fx-editor__style-content">
                 <WiredVariableFxPreviewView key={`${trigger?.id}-${category}`} params={params} category={category} icon={icon} />
                 <div className="volt-wired-fx-editor__visualization">
@@ -308,9 +313,12 @@ export const WiredExtraVariableFxView: FC<WiredExtraVariableFxViewProps> = (prop
                     {showsIcon && <>
                         <div className="volt-wired-fx-editor__named-row" data-testid="fx-icon">
                             <WiredText text={localizeWithFallback('wiredfurni.params.variablefx.visualization.icon', 'Icon')} />
-                            <WiredDropdown caption={localizeWithFallback('wiredfurni.params.variablefx.visualization.icon', 'Icon')} value={WIRED_FX_ICONS.indexOf(icon) + 1}
-                                options={[{ id: 0, label: localizeWithFallback('wiredfurni.params.variablefx.icon.none', 'None') }, ...WIRED_FX_ICONS.map((name, index) => ({ id: index + 1, label: localizeWithFallback(`wiredfurni.params.variablefx.icon.${name}`, name.replace(/_/g, ' ')) }))]}
-                                onChange={id => setIcon(id === 0 ? '' : WIRED_FX_ICONS[id - 1])} />
+                            <WiredHierarchicalDropdown caption={localizeWithFallback('wired.ui.input.select', 'Select')} value={WIRED_FX_ICONS.includes(icon) ? icon : ''}
+                                options={groupWiredVariableFxOptions([
+                                    { group: '', label: localizeWithFallback('wiredfurni.params.variablefx.icon.none', 'None'), value: '' },
+                                    ...WIRED_FX_ICONS.map(name => ({ group: name, label: localizeWithFallback(`wiredfurni.params.variablefx.icon.${name}`, name.replace(/^\w+\./, '').replace(/_/g, ' ')), value: name }))
+                                ], fxBranchLabel)}
+                                onChange={setIcon} />
                         </div>
                         {select(localizeWithFallback('wiredfurni.params.variablefx.visualization.icon_alignment', 'Icon alignment'), params.categoryExtra,
                             WIRED_FX_NUMBER_ALIGNMENTS.map((alignment, value) => ({ value, key: `wiredfurni.params.variablefx.icon_alignment.${alignment}`, fallback: alignment })), categoryExtra => patch({ categoryExtra }))}
