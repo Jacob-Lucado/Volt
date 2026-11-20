@@ -24,20 +24,6 @@ const useGroupState = () => {
         parser.colorsA.forEach((color, id) => customize.groupColorsA.push({ id, color }));
         parser.colorsB.forEach((color, id) => customize.groupColorsB.push({ id, color }));
 
-        const CompareId = (a: { id: number }, b: { id: number }) => {
-            if (a.id < b.id) return -1;
-
-            if (a.id > b.id) return 1;
-
-            return 0;
-        };
-
-        customize.badgeBases.sort(CompareId);
-        customize.badgeSymbols.sort(CompareId);
-        customize.badgePartColors.sort(CompareId);
-        customize.groupColorsA.sort(CompareId);
-        customize.groupColorsB.sort(CompareId);
-
         setGroupCustomize(customize);
     });
 
