@@ -55,6 +55,8 @@ export const AvatarInfoWidgetOwnPetView: FC<AvatarInfoWidgetOwnPetViewProps> = (
         return flag;
     }, []);
 
+    const canBreedPlant = !avatarInfo.dead && avatarInfo.level === avatarInfo.maximumLevel && avatarInfo.breedable;
+
     const processAction = (name: string) => {
         let hideMenu = true;
 
@@ -195,7 +197,17 @@ export const AvatarInfoWidgetOwnPetView: FC<AvatarInfoWidgetOwnPetViewProps> = (
                 )}
                 {mode === MODE_MONSTER_PLANT && (
                     <>
+                        {!avatarInfo.dead && (
+                            <ContextMenuListItemView disabled={avatarInfo.energy / avatarInfo.maximumEnergy >= 0.98} onClick={(event) => processAction('treat')}>
+                                {LocalizeText('infostand.button.pettreat')}
+                            </ContextMenuListItemView>
+                        )}
                         <ContextMenuListItemView onClick={(event) => processAction('pick_up')}>{LocalizeText('infostand.button.pickup')}</ContextMenuListItemView>
+                        {canBreedPlant && (
+                            <ContextMenuListItemView onClick={(event) => processAction('breed')}>
+                                {LocalizeText('infostand.button.breed')}
+                            </ContextMenuListItemView>
+                        )}
                         {avatarInfo.dead && (
                             <ContextMenuListItemView onClick={(event) => processAction('revive')}>
                                 {LocalizeText('infostand.button.revive')}
@@ -206,21 +218,11 @@ export const AvatarInfoWidgetOwnPetView: FC<AvatarInfoWidgetOwnPetViewProps> = (
                                 {LocalizeText('infostand.button.compost')}
                             </ContextMenuListItemView>
                         )}
-                        {!avatarInfo.dead && (
-                            <ContextMenuListItemView disabled={avatarInfo.energy / avatarInfo.maximumEnergy >= 0.98} onClick={(event) => processAction('treat')}>
-                                {LocalizeText('infostand.button.pettreat')}
+                        {canBreedPlant && (
+                            <ContextMenuListItemView classNames={['air-avatar-menu-item--toggle']} onClick={(event) => processAction('toggle_breeding_permission')}>
+                                <i className={'air-avatar-menu-checkbox' + (avatarInfo.publiclyBreedable ? ' is-checked' : '')} aria-hidden="true" />
+                                <span className="air-avatar-menu-toggle-label">{LocalizeText('infostand.button.toggle_breeding_permission')}</span>
                             </ContextMenuListItemView>
-                        )}
-                        {!avatarInfo.dead && avatarInfo.level === avatarInfo.maximumLevel && avatarInfo.breedable && (
-                            <>
-                                <ContextMenuListItemView classNames={['air-avatar-menu-item--toggle']} onClick={(event) => processAction('toggle_breeding_permission')}>
-                                    <i className={'air-avatar-menu-checkbox' + (avatarInfo.publiclyBreedable ? ' is-checked' : '')} aria-hidden="true" />
-                                    <span className="air-avatar-menu-toggle-label">{LocalizeText('infostand.button.toggle_breeding_permission')}</span>
-                                </ContextMenuListItemView>
-                                <ContextMenuListItemView onClick={(event) => processAction('breed')}>
-                                    {LocalizeText('infostand.button.breed')}
-                                </ContextMenuListItemView>
-                            </>
                         )}
                     </>
                 )}
