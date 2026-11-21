@@ -27,3 +27,50 @@ export const GroupInvitationText = {
     SCOPE_ROOM: 'group.invitation.scope.room',
     SCOPE_ALL: 'group.invitation.scope.all'
 } as const;
+
+/** Wired codes per family (the code the server sends with the editor data). */
+export const UnreleasedWiredCode = {
+    ACTION_INVITE_TO_GROUP: 9000,
+    ACTION_REMOVE_FROM_GROUP: 9001,
+    TRIGGER_GROUP_MEMBERSHIP: 9000
+} as const;
+
+/** `wf_trg_group_membership` int 0. */
+export const WiredGroupMembershipMode = {
+    ROOM_GROUP: 0,
+    PICKED_GROUP: 1
+} as const;
+
+/** `wf_trg_group_membership` int 2. */
+export const WiredGroupMembershipChange = {
+    JOINS: 0,
+    LEAVES: 1
+} as const;
+
+export const UnreleasedWiredText = {
+    GROUPS_YOU_OWN: 'wiredfurni.params.plus.groups_you_own',
+    CANCEL_GROUP_INVITATION: 'wiredfurni.params.plus.cancel_group_invitation',
+    CHOOSE_GROUP: 'wiredfurni.params.plus.choose_group',
+    CURRENT_GROUP: 'wiredfurni.params.plus.current_group',
+    SELECT_FROM_LIST: 'wiredfurni.params.plus.select_from_list',
+    TRIGGER_WHEN_USER: 'wiredfurni.params.plus.trigger_when_user',
+    JOINS_GROUP: 'wiredfurni.params.plus.joins_group',
+    LEAVES_GROUP: 'wiredfurni.params.plus.leaves_group'
+} as const;
+
+/**
+ * The borrowed furni have placeholder names, so these boxes take their editor title from these keys.
+ * Keyed by the `wiredType` of `WiredBaseView` and the wired code.
+ */
+const UNRELEASED_WIRED_TITLES: Record<string, Record<number, string>> = {
+    action: {
+        [UnreleasedWiredCode.ACTION_INVITE_TO_GROUP]: 'wiredfurni.plus.title.invite_to_group',
+        [UnreleasedWiredCode.ACTION_REMOVE_FROM_GROUP]: 'wiredfurni.plus.title.remove_from_group'
+    },
+    trigger: {
+        [UnreleasedWiredCode.TRIGGER_GROUP_MEMBERSHIP]: 'wiredfurni.plus.title.group_membership'
+    }
+};
+
+export const unreleasedWiredTitleKey = (wiredType: string, code: number | undefined): string | null =>
+    (code === undefined ? null : UNRELEASED_WIRED_TITLES[wiredType]?.[code] ?? null);
