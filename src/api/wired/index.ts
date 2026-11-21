@@ -31,3 +31,4 @@ export * from './WiredUserActionOptions';
 export * from './WiredVariableName';
 export * from './WiredVariableScope';
 export * from './WiredChests';
+export * from './UnreleasedHabboFeatures';
