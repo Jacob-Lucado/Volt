@@ -156,3 +156,14 @@ const unreleasedOfferTitles = new Map([
 ]);
 
 export const unreleasedOfferTitleKey = (offerKey: string) => unreleasedOfferTitles.get(offerKey);
+
+const conditionOffset = 8;
+
+export const WiredContextMenuLayout = {
+    visibilityOffset: conditionOffset,
+    enableOffset: conditionOffset + 2 * WiredContextMenuLimits.CONDITIONS,
+    defaults: [
+        WiredContextMenuTarget.USERS, 1, WiredContextMenuUserScope.EVERYONE_EXCEPT_ME, 0, WiredContextMenuPetScope.ALL_PETS, 0, 0, 0,
+        ...Array.from({ length: 2 * WiredContextMenuLimits.CONDITIONS }, () => [WiredContextMenuOperator.EXISTS, 0]).flat()
+    ]
+} as const;
