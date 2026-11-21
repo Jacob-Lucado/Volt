@@ -1,6 +1,6 @@
-import { AddLinkEventTracker, HabboWebTools, ILinkEventTracker, RemoveFriendComposer, RemoveLinkEventTracker, SendRoomInviteComposer } from '@volt/renderer';
+import { AddLinkEventTracker, ILinkEventTracker, RemoveFriendComposer, RemoveLinkEventTracker, SendRoomInviteComposer } from '@volt/renderer';
 import { CSSProperties, FC, PointerEvent, ReactNode, RefObject, useCallback, useEffect, useEffectEvent, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { GetConfigurationValue, GetOptionalConfigurationValue, LocalizeText, MessengerFriend, MessengerRequest, SendMessageComposer } from '../../../../api';
+import { GetConfigurationValue, GetOptionalConfigurationValue, LocalizeText, MessengerFriend, MessengerRequest, OpenUrl, SendMessageComposer } from '../../../../api';
 import thumbDefault from '../../../../assets/images/habbo-skin/slices/scroll-thumb-v.png';
 import thumbPressed from '../../../../assets/images/habbo-skin/slices/scroll-thumb-v-pressed.png';
 import { DraggableWindow, DraggableWindowPosition } from '../../../../common';
@@ -232,7 +232,7 @@ export const FriendsListView: FC<{}> = (props) => {
         const template = GetOptionalConfigurationValue<string>('link.format.userpage', '');
         if (!friend || !template) return;
         const url = template.replace(/%ID%/g, String(friend.id)).replace(/%username%/g, friend.name);
-        HabboWebTools.openWebPage(url);
+        OpenUrl(new URL(url, window.location.href).href);
     };
     const hoverTip = (key: string) => ({ onMouseEnter: () => setHoverInfo(LocalizeText(key)), onMouseLeave: () => setHoverInfo('') });
     const pendingRequestCount = requests.filter((request) => request.state === MessengerRequest.PENDING).length;
@@ -508,7 +508,7 @@ export const FriendsListView: FC<{}> = (props) => {
                                 {
                                     const url = GetOptionalConfigurationValue<string>('link.format.friendlist.pref', '');
 
-                                    if (url) HabboWebTools.openWebPage(url);
+                                    if (url) OpenUrl(new URL(url, window.location.href).href);
                                 }}
                             >
                                 <i className="hfl-edit-categories-icon" />

@@ -1,5 +1,5 @@
 import { registerSharedHook, useSharedHook } from '@/state/useSharedHook';
-import { isSafeExternalUrl, LocalizeText } from '../api';
+import { isSafeExternalUrl, LocalizeText, OpenUrl } from '../api';
 import { useNotification } from './notification';
 
 const useOnClickChatState = () => {
@@ -20,7 +20,7 @@ const useOnClickChatState = () => {
         showConfirm(
             LocalizeText('chat.confirm.openurl', ['url'], [url]),
             () => {
-                window.open(url, '_blank', 'noopener,noreferrer');
+                OpenUrl(url);
             },
             null,
             null,
