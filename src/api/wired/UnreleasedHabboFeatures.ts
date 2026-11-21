@@ -140,3 +140,13 @@ const UNRELEASED_WIRED_TITLES: Record<string, Record<number, string>> = {
 
 export const unreleasedWiredTitleKey = (wiredType: string, code: number | undefined): string | null =>
     (code === undefined ? null : UNRELEASED_WIRED_TITLES[wiredType]?.[code] ?? null);
+
+const unreleasedOfferTitles = new Map([
+    ['wf_act_invite_to_group', UNRELEASED_WIRED_TITLES.action[UnreleasedWiredCode.ACTION_INVITE_TO_GROUP]],
+    ['wf_act_remove_from_group', UNRELEASED_WIRED_TITLES.action[UnreleasedWiredCode.ACTION_REMOVE_FROM_GROUP]],
+    ['wf_trg_group_membership', UNRELEASED_WIRED_TITLES.trigger[UnreleasedWiredCode.TRIGGER_GROUP_MEMBERSHIP]],
+    ['wf_trg_click_context_menu', UNRELEASED_WIRED_TITLES.trigger[UnreleasedWiredCode.TRIGGER_CLICK_CONTEXT_MENU]],
+    ['wf_xtra_context_menu_item', UNRELEASED_WIRED_TITLES.extra[UnreleasedWiredCode.ADDON_CONTEXT_MENU_ITEM]]
+]);
+
+export const unreleasedOfferTitleKey = (offerKey: string) => unreleasedOfferTitles.get(offerKey);
