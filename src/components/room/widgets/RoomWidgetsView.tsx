@@ -25,6 +25,7 @@ import { FurnitureLabelWidgetView } from './furniture-label/FurnitureLabelWidget
 import { PetPackageWidgetView } from './pet-package/PetPackageWidgetView';
 import { RoomKeybindView } from './RoomKeybindView';
 import { RoomFilterWordsWidgetView } from './room-filter-words/RoomFilterWordsWidgetView';
+import { RoomStreamWidgetView } from './room-stream/RoomStreamWidgetView';
 import { RoomThumbnailWidgetView } from './room-thumbnail/RoomThumbnailWidgetView';
 import { RoomToolsWidgetView } from './room-tools/RoomToolsWidgetView';
 import { applyRoomZoom } from './room-tools/roomZoom.helpers';
@@ -225,6 +226,9 @@ export const RoomWidgetsView: FC<{}> = (props) => {
             </WidgetErrorBoundary>
             <WidgetErrorBoundary name="WordQuizWidget">
                 <WordQuizWidgetView />
+            </WidgetErrorBoundary>
+            <WidgetErrorBoundary name="RoomStreamWidget">
+                <RoomStreamWidgetView />
             </WidgetErrorBoundary>
             <WidgetErrorBoundary name="FriendRequestWidget">
                 <FriendRequestWidgetView />

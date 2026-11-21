@@ -29,6 +29,7 @@ export const CatalogLayoutSoundMachineView: FC<CatalogLayoutProps> = (props) => 
     const [songId, setSongId] = useState(-1);
     const [officialSongId, setOfficialSongId] = useState('');
     const [songLength, setSongLength] = useState<number | null>(null);
+    const [songName, setSongName] = useState('');
     const { currentOffer = null } = useCatalogData();
     const { density = 'standard', showTilePrices = true } = useCatalogDisplayPreferences();
     const gridMetrics = getCatalogGridMetrics(density);
@@ -45,6 +46,7 @@ export const CatalogLayoutSoundMachineView: FC<CatalogLayoutProps> = (props) => 
         }
 
         setSongLength(Math.max(0, Math.floor(songInfo.length / 1000)));
+        setSongName(songInfo.name ?? '');
     }, []);
 
     const previewSong = (previewSongId: number) => {
@@ -73,6 +75,7 @@ export const CatalogLayoutSoundMachineView: FC<CatalogLayoutProps> = (props) => 
 
     useEffect(() => {
         setSongLength(null);
+        setSongName('');
         setSongId(-1);
         setOfficialSongId('');
 
@@ -140,7 +143,7 @@ export const CatalogLayoutSoundMachineView: FC<CatalogLayoutProps> = (props) => 
                         className="volt-catalog-sound-title"
                         maxWidth={175}
                         overrides={{ color: 0x000000 }}
-                        text={currentOffer.localizationName}
+                        text={songName || currentOffer.localizationName}
                         textStyle="u_bold"
                     />
                 )}
