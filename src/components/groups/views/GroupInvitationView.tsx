@@ -59,41 +59,41 @@ export const GroupInvitationView: FC<{}> = () => {
 
     return (
         <VoltCardView className="volt-group-invitation" isResizable={false} uniqueKey="group-invitation">
-            <VoltCardHeaderView headerText={localizeWithFallback(GroupInvitationText.TITLE, 'Group invitation')} onCloseClick={() => answer(GroupInvitationAnswer.DECIDE_LATER)} />
+            <VoltCardHeaderView headerText={localizeWithFallback(...GroupInvitationText.TITLE)} onCloseClick={() => answer(GroupInvitationAnswer.DECIDE_LATER)} />
             <div className="volt-group-invitation__content">
                 <div className="volt-group-invitation__panel">
                     <div className="volt-group-invitation__badge">
                         <LayoutBadgeImageView badgeCode={invitation.badgeCode} isGroup showInfo={false} />
                     </div>
                     <div className="volt-group-invitation__copy">
-                        <span className="volt-group-invitation__question">{localizeWithFallback(GroupInvitationText.QUESTION, 'Would you like to join this group?')}</span>
+                        <span className="volt-group-invitation__question">{localizeWithFallback(...GroupInvitationText.QUESTION)}</span>
                         <span className="volt-group-invitation__name">{invitation.groupName}</span>
                     </div>
                 </div>
                 <div className="volt-group-invitation__buttons">
                     <button className="volt-group-invitation__button volt-group-invitation__button--accept" type="button" onClick={() => answer(GroupInvitationAnswer.ACCEPT)}>
-                        {localizeWithFallback(GroupInvitationText.ACCEPT, 'Accept')}
+                        {localizeWithFallback(...GroupInvitationText.ACCEPT)}
                     </button>
                     <button className="volt-group-invitation__button" type="button" onClick={() => answer(GroupInvitationAnswer.REJECT)}>
-                        {localizeWithFallback(GroupInvitationText.REJECT, 'Reject')}
+                        {localizeWithFallback(...GroupInvitationText.REJECT)}
                     </button>
                     <button className="volt-group-invitation__button volt-group-invitation__button--later" type="button" onClick={() => answer(GroupInvitationAnswer.DECIDE_LATER)}>
-                        {localizeWithFallback(GroupInvitationText.LATER, 'Decide later')}
+                        {localizeWithFallback(...GroupInvitationText.LATER)}
                     </button>
                 </div>
                 <div className="volt-group-invitation__divider" />
                 <div className="volt-group-invitation__footer">
                     <label className="volt-group-invitation__dont-show">
                         <input checked={dontShow} type="checkbox" onChange={(event) => setDontShow(event.target.checked)} />
-                        <span>{localizeWithFallback(GroupInvitationText.DONT_SHOW, 'Do not show again during this session')}</span>
+                        <span>{localizeWithFallback(...GroupInvitationText.DONT_SHOW)}</span>
                     </label>
                     <HabboDropMenuView
                         className="volt-group-invitation__scope"
                         disabled={!dontShow}
-                        label={localizeWithFallback(GroupInvitationText.DONT_SHOW, 'Do not show again during this session')}
+                        label={localizeWithFallback(...GroupInvitationText.DONT_SHOW)}
                         options={[
-                            { value: GroupInvitationMuteScope.ROOM, label: localizeWithFallback(GroupInvitationText.SCOPE_ROOM, 'In this room') },
-                            { value: GroupInvitationMuteScope.ALL_ROOMS, label: localizeWithFallback(GroupInvitationText.SCOPE_ALL, 'In all rooms') }
+                            { value: GroupInvitationMuteScope.ROOM, label: localizeWithFallback(...GroupInvitationText.SCOPE_ROOM) },
+                            { value: GroupInvitationMuteScope.ALL_ROOMS, label: localizeWithFallback(...GroupInvitationText.SCOPE_ALL) }
                         ]}
                         value={muteScope}
                         onSelect={(value) => setMuteScope(Number(value))}

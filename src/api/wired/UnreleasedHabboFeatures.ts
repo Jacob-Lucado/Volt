@@ -18,12 +18,12 @@ export const GroupInvitationMuteScope = {
 } as const;
 
 export const GroupInvitationText = {
-    TITLE: 'group.invitation.title',
-    QUESTION: 'group.invitation.question',
-    ACCEPT: 'group.invitation.accept',
-    REJECT: 'group.invitation.reject',
-    LATER: 'group.invitation.later',
-    DONT_SHOW: 'group.invitation.dont_show',
-    SCOPE_ROOM: 'group.invitation.scope.room',
-    SCOPE_ALL: 'group.invitation.scope.all'
+    TITLE: ['group.invitation.title', 'Group invitation'],
+    QUESTION: ['group.invitation.question', 'Would you like to join this group?'],
+    ACCEPT: ['group.invitation.accept', 'Accept'],
+    REJECT: ['group.invitation.reject', 'Reject'],
+    LATER: ['group.invitation.later', 'Decide later'],
+    DONT_SHOW: ['group.invitation.dont_show', 'Do not show again during this session'],
+    SCOPE_ROOM: ['group.invitation.scope.room', 'In this room'],
+    SCOPE_ALL: ['group.invitation.scope.all', 'In all rooms']
 } as const;
