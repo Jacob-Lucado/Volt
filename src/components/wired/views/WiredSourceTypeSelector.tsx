@@ -43,10 +43,14 @@ interface WiredSourceTypeSelectorProps {
     value: WiredSourceType;
     onChange: (type: WiredSourceType) => void;
     disabled?: boolean;
+    /** Types drawn but not selectable, while the others stay usable. */
+    disabledTypes?: WiredSourceType[];
+    /** Tooltip per type instead of the source type text. */
+    labels?: Partial<Record<WiredSourceType, string>>;
 }
 
 /** Package 25 sourcetype_selector_view: 17px ends, 14px middle buttons, 1px dividers, 19px high. */
-export const WiredSourceTypeSelector = ({ types, value, onChange, disabled = false }: WiredSourceTypeSelectorProps) => {
+export const WiredSourceTypeSelector = ({ types, value, onChange, disabled = false, disabledTypes = [], labels = {} }: WiredSourceTypeSelectorProps) => {
     const [hovered, setHovered] = useState<WiredSourceType | null>(null);
     const activeHover = disabled ? null : hovered;
 
@@ -56,9 +60,10 @@ export const WiredSourceTypeSelector = ({ types, value, onChange, disabled = fal
                 const side = index === 0 ? 'left' : index === types.length - 1 ? 'right' : 'middle';
                 const width = side === 'middle' ? 14 : 17;
                 const selected = value === type;
-                const hovering = activeHover === type;
+                const typeDisabled = disabled || disabledTypes.includes(type);
+                const hovering = !typeDisabled && activeHover === type;
                 const descriptor = TYPES[type];
-                const label = localizeWithFallback(`wiredfurni.params.sourcetype.${descriptor.key}`, descriptor.label);
+                const label = labels[type] ?? localizeWithFallback(`wiredfurni.params.sourcetype.${descriptor.key}`, descriptor.label);
                 const color = wiredSourceTypeColor(type, selected, hovering);
                 return (
                     <Fragment key={type}>
@@ -67,13 +72,13 @@ export const WiredSourceTypeSelector = ({ types, value, onChange, disabled = fal
                             aria-label={label}
                             aria-pressed={selected}
                             title={label}
-                            disabled={disabled}
-                            onMouseEnter={() => { if (!disabled) setHovered(type); }}
+                            disabled={typeDisabled}
+                            onMouseEnter={() => { if (!typeDisabled) setHovered(type); }}
                             onMouseLeave={() => setHovered(null)}
                             onClick={() => onChange(type)}
                             style={{ position: 'relative', display: 'block', width, minWidth: width, height: 19, minHeight: 19, border: 0, borderRadius: 0, margin: 0, padding: 0, background: 'transparent', flexShrink: 0 }}
                         >
-                            <NativeSkinView skin={SKINS[side]} layout={`illumina_light_button_multi_${side}`} state={disabled ? 'disabled' : selected ? 'pressed' : hovering ? 'hovering' : 'default'} atlas={atlas} width={width} height={19} color={color} style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
+                            <NativeSkinView skin={SKINS[side]} layout={`illumina_light_button_multi_${side}`} state={typeDisabled ? 'disabled' : selected ? 'pressed' : hovering ? 'hovering' : 'default'} atlas={atlas} width={width} height={19} color={color} style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
                             <img src={descriptor.icon} alt="" draggable={false} style={{ position: 'absolute', left: side === 'left' ? 6 : side === 'right' ? 4 : 3, top: Math.trunc(10 - (descriptor.height + 1) / 2), maxWidth: 'none', imageRendering: 'pixelated', filter: 'drop-shadow(0 -1px 0 #00000048)', pointerEvents: 'none' }} />
                         </button>
                         {index < types.length - 1 && <span aria-hidden="true" style={{ display: 'block', width: 1, height: 19, flexShrink: 0, background: `linear-gradient(to bottom, ${hex(wiredSourceSplitterColor(type, types[index + 1], value, activeHover))} 0 18px, #f2f2f2 18px 19px)` }} />}

@@ -8,6 +8,7 @@ import { WiredTriggerBotReachedAvatarView } from './WiredTriggerBotReachedAvatar
 import { WiredTriggerBotReachedStuffView } from './WiredTriggerBotReachedStuffView';
 import { WiredTriggerClickFurniView } from './WiredTriggerClickFurniView';
 import { WiredTriggerClickTileView } from './WiredTriggerClickTileView';
+import { WiredTriggerClickContextMenuView } from './WiredTriggerClickContextMenuView';
 import { WiredTriggerClickUserView } from './WiredTriggerClickUserView';
 import { WiredTriggerClockCounterView } from './WiredTriggerClockCounterView';
 import { WiredTriggerCollisionView } from './WiredTriggerCollisionView';
@@ -91,6 +92,8 @@ export const WiredTriggerLayoutView = (code: number) => {
             return <WiredTriggerReceiveLinkDataframeView />;
         case UnreleasedWiredCode.TRIGGER_GROUP_MEMBERSHIP:
             return <WiredTriggerGroupMembershipView />;
+        case UnreleasedWiredCode.TRIGGER_CLICK_CONTEXT_MENU:
+            return <WiredTriggerClickContextMenuView />;
     }
 
     return null;

@@ -118,6 +118,7 @@ import { WiredActionSetFurniHighlightView } from './actions/WiredActionSetFurniH
 import { WiredActionSetFurniTransparencyView } from './actions/WiredActionSetFurniTransparencyView';
 import { WiredExtraAchievementEnablerNativeView } from './extras/WiredExtraAchievementEnablerNativeView';
 import { WiredExtraDailyTaskNativeView } from './extras/WiredExtraDailyTaskNativeView';
+import { WiredExtraContextMenuItemView } from './extras/WiredExtraContextMenuItemView';
 import { WiredExtraGlobalPlaceholderNativeView } from './extras/WiredExtraGlobalPlaceholderNativeView';
 import { WiredExtraLinkSpeakerView } from './extras/WiredExtraLinkSpeakerView';
 import { WiredExtraPointerVariableView } from './extras/WiredExtraPointerVariableView';
@@ -267,6 +268,7 @@ export const NativeWiredAddonLayoutView = (code: number) => {
         case 2001: return <WiredExtraAchievementEnablerNativeView />;  // wf_xtra_achievement_enabler
         case 2002: return <WiredExtraVariablesWebApiNativeView />;  // wf_xtra_var_web_api
         case 2003: return <WiredExtraLinkSpeakerView />;  // wf_xtra_link_speaker
+        case UnreleasedWiredCode.ADDON_CONTEXT_MENU_ITEM: return <WiredExtraContextMenuItemView />;  // wf_xtra_context_menu_item
     }
 
     return null;
