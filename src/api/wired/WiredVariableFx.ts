@@ -427,11 +427,11 @@ const STYLES: Record<number, IWiredVariableFxStyle[]> = {
         }
     ]),
     [WIRED_FX_CATEGORY.STATUS_BAR]: buildStyles(
-        WIRED_FX_STATUS_BAR_THEMES.map((theme) => {
+        WIRED_FX_STATUS_BAR_THEMES.map((theme, styleId) => {
             const dynamic = theme.color === null;
 
             return {
-                key: `wiredfurni.params.variablefx.icon.${theme.icon}`,
+                key: `wiredfurni.params.variablefx.style.status_bar.${styleId}`,
                 fallback: theme.icon.replace(/_/g, ' '),
                 renderers: [WIRED_FX_RENDERER.BLOCK, WIRED_FX_RENDERER.STRIPED, WIRED_FX_RENDERER.ARROW],
                 colors: [dynamic ? WIRED_FX_COLOR_DYNAMIC_RED_TO_GREEN : WIRED_FX_COLOR_NOT_APPLICABLE],
