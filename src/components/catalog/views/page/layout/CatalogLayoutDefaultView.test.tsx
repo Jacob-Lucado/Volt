@@ -31,6 +31,7 @@ vi.mock('../widgets/CatalogPurchaseWidgetView', () => ({ CatalogPurchaseWidgetVi
 vi.mock('../widgets/CatalogSpinnerWidgetView', () => ({ CatalogSpinnerWidgetView: () => null }));
 vi.mock('../widgets/CatalogTotalPriceWidget', () => ({ CatalogTotalPriceWidget: () => null }));
 vi.mock('../widgets/CatalogViewProductWidgetView', () => ({ CatalogViewProductWidgetView: () => null }));
+vi.mock('./CatalogAirPriceDisplayView', () => ({ CatalogAirPriceDisplayView: () => null }));
 
 const page = {
     localization: {

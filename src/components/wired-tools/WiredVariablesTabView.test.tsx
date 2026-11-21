@@ -15,6 +15,8 @@ vi.mock('../../common', () => ({
     Text: ({ children }: PropsWithChildren) => <span>{children}</span>
 }));
 
+vi.mock('../../common/native-text/NativeText', () => ({ NativeText: ({ text }: { text: string }) => <span>{text}</span> }));
+
 vi.mock('./WiredCreatorTools.constants', () => ({
     VARIABLES_ELEMENTS: []
 }));

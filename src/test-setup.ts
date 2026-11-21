@@ -1,4 +1,10 @@
 import '@testing-library/jest-dom/vitest';
+import { cleanup } from '@testing-library/react';
+import { afterEach } from 'vitest';
+
+// Testing Library only unmounts on its own when Vitest globals are on, and they are off here.
+// A component left mounted can set state after its file's jsdom window is gone.
+afterEach(cleanup);
 
 // Set up a container for React portals (used by VoltCardView's DraggableWindow)
 const draggableWindowsContainer = document.createElement('div');

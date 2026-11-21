@@ -276,6 +276,10 @@ export class AchievementEvent extends MessageEvent {}
 export class AchievementsScoreEvent extends MessageEvent {}
 export class WiredEnvironmentEvent extends MessageEvent {}
 export class PurchaseNotAllowedMessageEvent extends MessageEvent {}
+export class ChatStyleNotificationMessageEvent extends MessageEvent {}
+export class RecyclerFinishedMessageEvent extends MessageEvent {
+    public static readonly FINISHED_OK = 1;
+}
 
 export const MessengerMessageType = {
     Habbicon: 4
