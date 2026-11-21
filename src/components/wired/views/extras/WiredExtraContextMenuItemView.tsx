@@ -12,6 +12,7 @@ import {
     variableSlotOf,
     WIRED_VARIABLE_ABSENT,
     WiredContextMenuLimits,
+    WiredContextMenuLayout,
     WiredContextMenuOperator,
     WiredContextMenuPetScope,
     WiredContextMenuTarget,
@@ -38,10 +39,6 @@ interface ContextMenuCondition {
     value: number;
 }
 
-// ints: [targetKind, userOn, userScope, petOn, petScope, botOn, visibilityCount, enableCount, 3 x (op, value) visibility, 3 x (op, value) enable]
-const DEFAULT_INTS = [0, 1, 1, 0, 0, 0, 0, 0, 6, 0, 6, 0, 6, 0, 6, 0, 6, 0, 6, 0];
-const VISIBILITY_OFFSET = 8;
-const ENABLE_OFFSET = 14;
 const INT_MIN = -2147483648;
 const INT_MAX = 2147483647;
 
@@ -167,7 +164,7 @@ const ConditionSection: FC<{ title: string; conditions: ContextMenuCondition[]; 
     );
 };
 
-/** `wf_xtra_context_menu_item`, a global add-on: text = button id TAB button text, 20 ints and 6 variables (see `DEFAULT_INTS`). */
+/** `wf_xtra_context_menu_item`, a global add-on: text = button id TAB button text, 20 ints and 6 variables. */
 export const WiredExtraContextMenuItemView: FC<{}> = () => {
     const { trigger = null, setIntParams = null, setStringParam = null, setVariableIds = null } = useWired();
     const { userVariableDefinitions = [] } = useWiredNativeVariables();
@@ -184,7 +181,7 @@ export const WiredExtraContextMenuItemView: FC<{}> = () => {
     useEffect(() => {
         if (!trigger) return;
 
-        const ints = DEFAULT_INTS.map((value, index) => trigger.intData?.[index] ?? value);
+        const ints = WiredContextMenuLayout.defaults.map((value, index) => trigger.intData?.[index] ?? value);
         const variableIds = trigger.variableIds ?? [];
         const text = trigger.stringData ?? '';
         const tab = text.indexOf('\t');
@@ -196,8 +193,8 @@ export const WiredExtraContextMenuItemView: FC<{}> = () => {
         setPetOn(ints[3] === 1);
         setPetScope(ints[4] === WiredContextMenuPetScope.MY_PETS ? WiredContextMenuPetScope.MY_PETS : WiredContextMenuPetScope.ALL_PETS);
         setBotOn(ints[5] === 1);
-        setVisibility(readConditions(ints, variableIds, ints[6], VISIBILITY_OFFSET, 0));
-        setEnable(readConditions(ints, variableIds, ints[7], ENABLE_OFFSET, WiredContextMenuLimits.CONDITIONS));
+        setVisibility(readConditions(ints, variableIds, ints[6], WiredContextMenuLayout.visibilityOffset, 0));
+        setEnable(readConditions(ints, variableIds, ints[7], WiredContextMenuLayout.enableOffset, WiredContextMenuLimits.CONDITIONS));
     }, [trigger]);
 
     const validate = () =>
@@ -209,7 +206,7 @@ export const WiredExtraContextMenuItemView: FC<{}> = () => {
             ...writeConditions(visibility), ...writeConditions(enable)
         ]);
         setVariableIds([...conditionSlots(visibility), ...conditionSlots(enable)]);
-        setStringParam(`${buttonId}\t${buttonText}`);
+        setStringParam(buttonId ? `${buttonId}\t${buttonText}` : '');
     };
 
     return (
