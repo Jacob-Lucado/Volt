@@ -14,6 +14,7 @@ import { useHasPermission, useRoom, useSessionInfo } from '../../../../../hooks'
 import { ContextMenuHeaderView } from '../../context-menu/ContextMenuHeaderView';
 import { ContextMenuListItemView } from '../../context-menu/ContextMenuListItemView';
 import { ContextMenuView } from '../../context-menu/ContextMenuView';
+import { useWiredContextMenuItems, WiredContextMenuItemsView } from './WiredContextMenuItemsView';
 
 interface AvatarInfoWidgetPetViewProps {
     avatarInfo: AvatarInfoPet;
@@ -27,6 +28,7 @@ const MODE_MONSTER_PLANT: number = 3;
 
 export const AvatarInfoWidgetPetView: FC<AvatarInfoWidgetPetViewProps> = (props) => {
     const { avatarInfo = null, onClose = null } = props;
+    const wiredMenu = useWiredContextMenuItems(avatarInfo);
     const [mode, setMode] = useState(MODE_NORMAL);
     const { roomSession = null } = useRoom();
     const { petRespectRemaining = 0, respectPet = null } = useSessionInfo();
@@ -102,12 +104,14 @@ export const AvatarInfoWidgetPetView: FC<AvatarInfoWidgetPetViewProps> = (props)
             collapsable={true}
             freezePositionOnHover={true}
             objectId={avatarInfo.roomIndex}
+            repositionKey={wiredMenu.items.length}
             showCaretIcon={false}
             userType={RoomObjectType.PET}
             onClose={onClose}
         >
             <ContextMenuHeaderView>{avatarInfo.name}</ContextMenuHeaderView>
             <div className="air-avatar-menu-buttons">
+                <WiredContextMenuItemsView items={wiredMenu.items} onClick={wiredMenu.click} onClose={onClose} />
                 {mode === MODE_NORMAL && petRespectRemaining > 0 && (
                     <ContextMenuListItemView onClick={(event) => processAction('respect')}>
                         {LocalizeText('infostand.button.petrespect', ['count'], [petRespectRemaining.toString()])}
