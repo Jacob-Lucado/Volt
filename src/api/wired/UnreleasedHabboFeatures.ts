@@ -18,14 +18,14 @@ export const GroupInvitationMuteScope = {
 } as const;
 
 export const GroupInvitationText = {
-    TITLE: 'group.invitation.title',
-    QUESTION: 'group.invitation.question',
-    ACCEPT: 'group.invitation.accept',
-    REJECT: 'group.invitation.reject',
-    LATER: 'group.invitation.later',
-    DONT_SHOW: 'group.invitation.dont_show',
-    SCOPE_ROOM: 'group.invitation.scope.room',
-    SCOPE_ALL: 'group.invitation.scope.all'
+    TITLE: ['group.invitation.title', 'Group invitation'],
+    QUESTION: ['group.invitation.question', 'Would you like to join this group?'],
+    ACCEPT: ['group.invitation.accept', 'Accept'],
+    REJECT: ['group.invitation.reject', 'Reject'],
+    LATER: ['group.invitation.later', 'Decide later'],
+    DONT_SHOW: ['group.invitation.dont_show', 'Do not show again during this session'],
+    SCOPE_ROOM: ['group.invitation.scope.room', 'In this room'],
+    SCOPE_ALL: ['group.invitation.scope.all', 'In all rooms']
 } as const;
 
 /** Wired codes per family (the code the server sends with the editor data). */
@@ -146,3 +146,13 @@ const UNRELEASED_WIRED_TITLES: Record<string, Record<number, string>> = {
 
 export const unreleasedWiredTitleKey = (wiredType: string, code: number | undefined): string | null =>
     (code === undefined ? null : UNRELEASED_WIRED_TITLES[wiredType]?.[code] ?? null);
+
+const unreleasedOfferTitles = new Map([
+    ['wf_act_invite_to_group', UNRELEASED_WIRED_TITLES.action[UnreleasedWiredCode.ACTION_INVITE_TO_GROUP]],
+    ['wf_act_remove_from_group', UNRELEASED_WIRED_TITLES.action[UnreleasedWiredCode.ACTION_REMOVE_FROM_GROUP]],
+    ['wf_trg_group_membership', UNRELEASED_WIRED_TITLES.trigger[UnreleasedWiredCode.TRIGGER_GROUP_MEMBERSHIP]],
+    ['wf_trg_click_context_menu', UNRELEASED_WIRED_TITLES.trigger[UnreleasedWiredCode.TRIGGER_CLICK_CONTEXT_MENU]],
+    ['wf_xtra_context_menu_item', UNRELEASED_WIRED_TITLES.extra[UnreleasedWiredCode.ADDON_CONTEXT_MENU_ITEM]]
+]);
+
+export const unreleasedOfferTitleKey = (offerKey: string) => unreleasedOfferTitles.get(offerKey);
