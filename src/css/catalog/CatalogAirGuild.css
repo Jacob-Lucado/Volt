@@ -86,11 +86,19 @@
     left: 1px;
 }
 
-/* find_groups_button (-23, 55, 210x25): button style 3, wider than the box on both sides. */
+/* find_groups_button (-23, 55, 210x25): button style 3, wider than the box on both sides. Here it shares the row with the create group button. */
 .volt-catalog-window .volt-catalog-guild-find-groups {
     top: 49px;
-    left: -29px;
-    width: 210px;
+    left: -86px;
+    width: 140px;
+    height: 25px;
+}
+
+/* The create group button sits to the right of the find groups button, on the same row. */
+.volt-catalog-window .volt-catalog-guild-create-group {
+    top: 49px;
+    left: 58px;
+    width: 196px;
     height: 25px;
 }
 

@@ -1,5 +1,6 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { CreateLinkEvent } from '@volt/renderer';
 import { useCatalogData, useCatalogUiState, useUserGroups } from '../../../../../hooks';
 import { CatalogGuildSelectorWidgetView, filterGuildForumGroups, getInitialGuildIndex } from './CatalogGuildSelectorWidgetView';
 
@@ -137,5 +138,15 @@ describe('CatalogGuildSelectorWidgetView', () => {
 
         expect(screen.getByText('catalog.guild_selector.members_only')).toBeInTheDocument();
         expect(purchaseOptions.extraData).toBeNull();
+    });
+
+    it('lets a player in no group start a new one', () => {
+        withGroups([]);
+        render(<CatalogGuildSelectorWidgetView />);
+
+        fireEvent.click(screen.getByText('catalog.start.guild.purchase.button'));
+
+        expect(CreateLinkEvent).toHaveBeenCalledWith('groups/create');
+        expect(CreateLinkEvent).toHaveBeenCalledWith('catalog/hide');
     });
 });

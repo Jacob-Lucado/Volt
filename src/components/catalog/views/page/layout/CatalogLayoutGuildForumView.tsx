@@ -37,7 +37,7 @@ export const CatalogLayouGuildForumView: FC<CatalogLayoutProps> = (props) => {
             <CatalogFirstProductSelectorWidgetView />
             <CatalogNativeHtmlText background={PAGE_BACKGROUND} className="volt-catalog-guild-forum-text" html={page.localization.getText(1)} width={260} />
             {!!libraryUrl && <img alt="" className="volt-catalog-guild-forum-teaser" src={`${libraryUrl}catalogue/guild_forums_teaser.gif`} />}
-            {!!currentOffer && (
+            {!!currentOffer && hasGroups && (
                 <div className="volt-catalog-guild-forum-price volt-catalog-guild-price">
                     <div className="volt-catalog-preview-price volt-catalog-price-frame">
                         <CatalogTotalPriceWidget />

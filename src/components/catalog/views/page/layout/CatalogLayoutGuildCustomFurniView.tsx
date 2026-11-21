@@ -80,11 +80,13 @@ export const CatalogLayouGuildCustomFurniView: FC<CatalogLayoutProps> = (props) 
                         </div>
                         {!isBundleOffer && <CatalogPreviewControls productType={currentOffer.product.productType} roomPreviewer={roomPreviewer} />}
                         <CatalogViewProductWidgetView height={240} />
-                        <div className="volt-catalog-guild-furni-price volt-catalog-guild-price">
-                            <div className="volt-catalog-preview-price volt-catalog-price-frame">
-                                <CatalogTotalPriceWidget alignItems="end" />
+                        {hasGroups && (
+                            <div className="volt-catalog-guild-furni-price volt-catalog-guild-price">
+                                <div className="volt-catalog-preview-price volt-catalog-price-frame">
+                                    <CatalogTotalPriceWidget alignItems="end" />
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 ) : (
                     <>

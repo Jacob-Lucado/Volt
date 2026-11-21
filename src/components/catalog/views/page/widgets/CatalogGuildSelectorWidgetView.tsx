@@ -104,6 +104,16 @@ export const CatalogGuildSelectorWidgetView: FC<CatalogGuildSelectorWidgetViewPr
                     >
                         <NativeText transparent background={0xffffff} text={LocalizeText('catalog.guild_selector.find_groups')} textStyle="button_shiny_regular" />
                     </button>
+                    <button
+                        className="volt-catalog-guild-shiny-button volt-catalog-guild-create-group"
+                        type="button"
+                        onClick={() => {
+                            CreateLinkEvent('groups/create');
+                            CreateLinkEvent('catalog/hide');
+                        }}
+                    >
+                        <NativeText transparent background={0xffffff} text={LocalizeText('catalog.start.guild.purchase.button')} textStyle="button_shiny_regular" />
+                    </button>
                 </div>
             </div>
         );
