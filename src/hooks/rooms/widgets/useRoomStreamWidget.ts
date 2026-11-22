@@ -16,14 +16,14 @@ const useRoomStreamWidgetState = () => {
 
     useMessageEvent<RoomStreamMessageEvent>(RoomStreamMessageEvent, (event) => {
         const parser = event.getParser();
+        const valid = !!parser.url && (parser.kind === 'stream' || parser.kind === 'soundcloud');
 
-        if (!roomSession || !parser.url || (parser.kind !== 'stream' && parser.kind !== 'soundcloud')) {
-            setStream(null);
+        // A stop only ends the stream of its own room.
+        setStream((current) => {
+            if (!valid) return current && current.roomId === parser.roomId ? null : current;
 
-            return;
-        }
-
-        setStream({ roomId: roomSession.roomId, kind: parser.kind, url: parser.url, setBy: parser.setBy });
+            return { roomId: parser.roomId, kind: parser.kind as RoomStream['kind'], url: parser.url, setBy: parser.setBy };
+        });
     });
 
     // A stream belongs to the room it was sent for, so it stops when the person leaves that room.
