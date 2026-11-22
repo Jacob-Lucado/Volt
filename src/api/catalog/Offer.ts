@@ -1,5 +1,4 @@
 import { GetFurnitureData, GetProductDataForLocalization, LocalizeText, ProductTypeEnum } from '..';
-import { unreleasedOfferTitleKey } from '../wired/UnreleasedHabboFeatures';
 import { ICatalogPage } from './ICatalogPage';
 import { IProduct } from './IProduct';
 import { IPurchasableOffer } from './IPurchasableOffer';
@@ -146,10 +145,6 @@ export class Offer implements IPurchasableOffer {
 
     public get localizationName(): string {
         if (this.usesSharedOfferLocalization) return this.sharedOfferLocalization.name;
-
-        const wiredTitle = unreleasedOfferTitleKey(this._localizationId);
-
-        if (wiredTitle) return LocalizeText(wiredTitle).replace(/:\s*/, ': ');
 
         const furnitureProduct = this.product;
 
