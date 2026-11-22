@@ -1158,5 +1158,16 @@
   "collectibles.currency.emeralds": "Emeralds",
   "collectibles.shop.level_required": "Reach collector level %level% to buy this item.",
   "collectibles.info.hub": "The Collectors Guild is where you view and manage your Collector XP, your collectibles and your Relics.",
-  "collectibles.info.emeralds": "Collectibles are bought with Emeralds in the Shop. Every collectible you own adds Collector XP. A higher collector level unlocks more Shop offers and more rewards. In Relics you can turn furniture from your inventory into a collectible for Emeralds."
+  "collectibles.info.emeralds": "Collectibles are bought with Emeralds in the Shop. Every collectible you own adds Collector XP. A higher collector level unlocks more Shop offers and more rewards. In Relics you can turn furniture from your inventory into a collectible for Emeralds.",
+  "wiredfurni.plus.title.invite_to_group": "WIRED EFFECT:Invite to group",
+  "wiredfurni.plus.title.remove_from_group": "WIRED EFFECT:Remove from group",
+  "wiredfurni.plus.title.group_membership": "WIRED TRIGGER:Group membership changed",
+  "wiredfurni.params.plus.groups_you_own": "Groups you own",
+  "wiredfurni.params.plus.cancel_group_invitation": "Cancel group invitation if it exists",
+  "wiredfurni.params.plus.choose_group": "Choose group:",
+  "wiredfurni.params.plus.current_group": "Current group",
+  "wiredfurni.params.plus.select_from_list": "Select from list",
+  "wiredfurni.params.plus.trigger_when_user": "Trigger when a user:",
+  "wiredfurni.params.plus.joins_group": "Joins the group",
+  "wiredfurni.params.plus.leaves_group": "Leaves the group"
 }

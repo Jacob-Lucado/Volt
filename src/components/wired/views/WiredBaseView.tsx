@@ -5,6 +5,7 @@ import {
     LocalizeText,
     localizeWithFallback,
     resolveWiredStyle,
+    unreleasedWiredTitleKey,
     WiredFurniType,
     WiredSelectionVisualizer,
     wiredStyleClassName,
@@ -100,7 +101,8 @@ export const WiredBaseView: FC<PropsWithChildren<WiredBaseViewProps>> = (props) 
     } = useWired();
     const { roomSettings, activeWiredStyle } = useWiredTools();
     const furniData = trigger ? GetSessionDataManager().getFloorItemData(trigger.spriteId) : null;
-    const wiredName = furniData?.name || `NAME: ${trigger?.spriteId ?? -1}`;
+    const unreleasedTitleKey = unreleasedWiredTitleKey(wiredType, trigger?.code);
+    const wiredName = (unreleasedTitleKey && LocalizeText(unreleasedTitleKey)) || furniData?.name || `NAME: ${trigger?.spriteId ?? -1}`;
     const shellStyle = resolveWiredStyle(activeWiredStyle, furniData?.className);
     const isVolter = isWiredVolterStyle(shellStyle);
     const isNative = shellStyle === 'illumina';
