@@ -46,6 +46,7 @@ import './css/forms/form_select.css';
 import './css/friends/FriendsView.css';
 import './css/groups/GroupView.css';
 import './css/groups/GroupManagement.css';
+import './css/groups/GroupInvitation.css';
 import './css/groups/GroupForum.css';
 
 import './css/game-center/GameCenterView.css';
