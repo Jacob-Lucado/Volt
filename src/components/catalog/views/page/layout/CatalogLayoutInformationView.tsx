@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { GetConfigurationValue, LocalizeText, OpenUrl, SanitizeHtml, localizeWithFallback } from '../../../../../api';
+import { GetConfigurationValue, LocalizeText, OpenUrl, SanitizeHotelHtml, localizeWithFallback } from '../../../../../api';
 import duckatIcon from '../../../../../assets/images/purse-swf/icons/2381_duckat_icon_0_png$7c0915a94ebd1a1746053f94976b8ba1-1879246012.png';
 import { useNotification } from '../../../../../hooks';
 import { CatalogAirHtmlTextView } from './CatalogAirHtmlTextView';
@@ -231,7 +231,7 @@ export const CatalogLayoutInformationView: FC<CatalogLayoutProps> = (props) => {
             )}
             <div className="volt-catalog-information-copy">
                 {texts.map((text, index) => (
-                    <section key={index} dangerouslySetInnerHTML={{ __html: SanitizeHtml(text) }} />
+                    <section key={index} dangerouslySetInnerHTML={{ __html: SanitizeHotelHtml(text) }} />
                 ))}
             </div>
         </article>

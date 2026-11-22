@@ -1,6 +1,6 @@
 import { CreateLinkEvent } from '@volt/renderer';
 import { FC } from 'react';
-import { CatalogType, GetConfigurationValue, LocalizeText, OpenUrl, SanitizeHtml } from '../../../../../api';
+import { CatalogType, GetConfigurationValue, LocalizeText, OpenUrl, SanitizeHotelHtml } from '../../../../../api';
 import { useCatalogData } from '../../../../../hooks';
 import { findNodeByName } from '../../../../../hooks/catalog/useCatalog.helpers';
 import { readCatalogIndex } from '../../../../../hooks/catalog/useCatalogQueries';
@@ -48,7 +48,7 @@ export const CatalogLayoutBuildersClubFrontpageView: FC<CatalogLayoutProps> = ({
 
     return (
         <div className="volt-bc-layout">
-            <div className="volt-bc-description is-frontpage" dangerouslySetInnerHTML={{ __html: SanitizeHtml(description) }} />
+            <div className="volt-bc-description is-frontpage" dangerouslySetInnerHTML={{ __html: SanitizeHotelHtml(description) }} />
             <div className="volt-bc-subscription" data-widget="builderSubscriptionWidget">
                 {showBig && (
                     <BuildersClubButton

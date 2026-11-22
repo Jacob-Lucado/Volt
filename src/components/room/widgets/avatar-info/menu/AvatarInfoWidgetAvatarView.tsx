@@ -23,7 +23,6 @@ import {
     MessengerFriend,
     ReportType,
     RoomWidgetUpdateChatInputContentEvent,
-    SanitizeHtml,
     SendMessageComposer
 } from '../../../../../api';
 import { Permission } from '../../../../../api/permissions';
@@ -279,11 +278,9 @@ export const AvatarInfoWidgetAvatarView: FC<AvatarInfoWidgetAvatarViewProps> = (
             userType={avatarInfo.userType}
             onClose={onClose}
         >
-            <ContextMenuHeaderView
-                className="cursor-pointer"
-                onClick={(event) => GetUserProfile(avatarInfo.webID)}
-                dangerouslySetInnerHTML={{ __html: SanitizeHtml(`${avatarInfo.name}`) }}
-            ></ContextMenuHeaderView>
+            <ContextMenuHeaderView className="cursor-pointer" onClick={(event) => GetUserProfile(avatarInfo.webID)}>
+                {avatarInfo.name}
+            </ContextMenuHeaderView>
             <div className="air-avatar-menu-buttons">
                 {mode === MODE_NORMAL && (
                     <>

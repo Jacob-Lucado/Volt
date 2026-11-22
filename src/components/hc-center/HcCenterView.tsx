@@ -10,7 +10,7 @@ import {
     ScrSendKickbackInfoMessageEvent
 } from '@volt/renderer';
 import { FC, useEffect, useState } from 'react';
-import { CatalogPageName, ClubStatus, FriendlyTime, GetClubBadge, GetConfigurationValue, LocalizeText, SendMessageComposer } from '../../api';
+import { CatalogPageName, ClubStatus, EncodeHtml, FriendlyTime, GetClubBadge, GetConfigurationValue, LocalizeText, SanitizeHtml, SendMessageComposer } from '../../api';
 import benefitsBg from '../../assets/images/hc-center/benefits.png';
 import clockIcon from '../../assets/images/hc-center/clock.png';
 import hcLogo from '../../assets/images/hc-center/hc_logo.gif';
@@ -55,10 +55,10 @@ export const HcCenterView: FC<{}> = (props) => {
                 return LocalizeText(
                     `hccenter.status.${clubStatus}.info`,
                     ['timeleft', 'joindate', 'streakduration'],
-                    [getClubText(), kickbackData?.firstSubscriptionDate, FriendlyTime.shortFormat(kickbackData?.currentHcStreak * 86400)]
+                    [getClubText(), EncodeHtml(kickbackData?.firstSubscriptionDate), FriendlyTime.shortFormat(kickbackData?.currentHcStreak * 86400)]
                 );
             case ClubStatus.EXPIRED:
-                return LocalizeText(`hccenter.status.${clubStatus}.info`, ['joindate'], [kickbackData?.firstSubscriptionDate]);
+                return LocalizeText(`hccenter.status.${clubStatus}.info`, ['joindate'], [EncodeHtml(kickbackData?.firstSubscriptionDate)]);
             default:
                 return LocalizeText(`hccenter.status.${clubStatus}.info`);
         }
@@ -179,7 +179,7 @@ export const HcCenterView: FC<{}> = (props) => {
                     <LayoutBadgeImageView badgeCode={badgeCode} className="shrink-0" />
                     <Column gap={0} className="min-h-[48px] leading-4">
                         <Text bold>{LocalizeText('hccenter.status.' + clubStatus)}</Text>
-                        <Text small className="text-gray-700" dangerouslySetInnerHTML={{ __html: getInfoText() }} />
+                        <Text small className="text-gray-700" dangerouslySetInnerHTML={{ __html: SanitizeHtml(getInfoText()) }} />
                     </Column>
                 </Flex>
                 {kickbackData && purse && GetConfigurationValue('hc.center')['payday.info'] && (
@@ -241,10 +241,11 @@ export const HcCenterView: FC<{}> = (props) => {
                                 small
                                 className="text-white/80"
                                 dangerouslySetInnerHTML={{
-                                    __html:
+                                    __html: SanitizeHtml(
                                         unclaimedGifts > 0
                                             ? LocalizeText('hccenter.unclaimedgifts', ['unclaimedgifts'], [unclaimedGifts.toString()])
                                             : LocalizeText('hccenter.gift.info')
+                                    )
                                 }}
                             />
                         </Column>
@@ -266,7 +267,7 @@ export const HcCenterView: FC<{}> = (props) => {
                         <Text bold variant="primary">
                             {LocalizeText('hccenter.general.title')}
                         </Text>
-                        <Text small className="text-gray-700" dangerouslySetInnerHTML={{ __html: LocalizeText('hccenter.general.info') }} />
+                        <Text small className="text-gray-700" dangerouslySetInnerHTML={{ __html: SanitizeHtml(LocalizeText('hccenter.general.info')) }} />
                         <span
                             className="text-primary text-sm cursor-pointer hover:underline mt-1"
                             onClick={() => CreateLinkEvent('habbopages/' + GetConfigurationValue('hc.center')['benefits.habbopage'])}
