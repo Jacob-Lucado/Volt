@@ -16,7 +16,7 @@ describe('Messenger and Friend List visual CSS', () =>
     it('places compact Telegram-style delivery ticks beside the timestamp', () =>
     {
         expect(css).toMatch(/\.messenger-message-meta\s*\{[^}]*display:\s*flex;[^}]*align-items:\s*center;/s);
-        expect(css).toMatch(/\.messenger-message-status\.read\s*\{[^}]*color:\s*#34b7f1;/s);
+        expect(css).toMatch(/\.messenger-message-status\.read\s*\{[^}]*color:\s*#56abfb;/s);
         expect(css).toMatch(/\.messenger-status-check\s*\{[^}]*position:\s*absolute;/s);
     });
 

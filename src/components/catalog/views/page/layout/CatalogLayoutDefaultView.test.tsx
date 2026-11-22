@@ -11,7 +11,7 @@ vi.mock('../../../../../api', () => ({
     SanitizeHtml: (value: string) => value
 }));
 
-vi.mock('../../../../../common', () => ({ Text: () => null }));
+vi.mock('../../../../../common', () => ({ LayoutActivityPointIcon: () => null, Text: () => null }));
 
 vi.mock('../../../../../hooks', () => ({
     getCatalogGridMetrics: () => ({}),

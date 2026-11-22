@@ -7,7 +7,7 @@ const roomState = vi.hoisted(() => ({ roomSession: null as unknown }));
 
 vi.mock('../useRoom', () => ({ useRoom: () => roomState }));
 vi.mock('../../notification', () => ({ useNotification: () => ({ showVoltAlert: vi.fn(), showConfirm: vi.fn() }) }));
-vi.mock('../../wired-tools', () => ({ useWiredToolsActions: () => ({ openMonitor: vi.fn() }) }));
+vi.mock('../../wired-tools/useWiredToolsActions', () => ({ useWiredToolsActions: () => ({ openMonitor: vi.fn(), togglePlayTestMode: vi.fn() }) }));
 
 const withChooserDisabled = (disabled: boolean) =>
     vi.mocked(GetRoomEngine).mockReturnValue({ activeRoomHasChooserDisabled: disabled } as unknown as ReturnType<typeof GetRoomEngine>);
