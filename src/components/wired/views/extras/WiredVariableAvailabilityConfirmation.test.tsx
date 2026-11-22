@@ -11,7 +11,7 @@ vi.mock('@volt/renderer', () => ({ CreateLinkEvent: vi.fn(), GetRoomEngine: () =
 vi.mock('../../../../api', async () => ({
     ...(await vi.importActual('../../../../api/wired/WiredVariableName')),
     WiredFurniType: { STUFF_SELECTION_OPTION_NONE: 0 }, LocalizeText: (key: string) => key, localizeWithFallback: (key: string) => key,
-    isWiredVolterStyle: () => false, resolveWiredStyle: () => 'illumina', wiredStyleClassName: () => '', wiredStyleWidth: () => 240, wiredWidthMultiplier: () => 1,
+    isWiredVolterStyle: () => false, resolveWiredStyle: () => 'illumina', unreleasedWiredTitleKey: () => null, wiredStyleClassName: () => '', wiredStyleWidth: () => 240, wiredWidthMultiplier: () => 1,
     WiredSelectionVisualizer: { clearAllSelectionShaders: vi.fn(), clearSelectionShaderFromFurni: vi.fn(), applySelectionShaderToFurni: vi.fn() }
 }));
 vi.mock('../../../../hooks', () => ({ useWired: () => state, useWiredTools: () => ({ roomSettings: state.roomSettings, activeWiredStyle: state.activeWiredStyle }), useNotificationActions: () => ({ showConfirm: state.showConfirm }) }));

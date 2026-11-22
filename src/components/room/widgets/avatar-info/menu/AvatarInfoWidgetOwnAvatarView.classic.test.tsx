@@ -41,7 +41,10 @@ vi.mock('@volt/renderer', () => ({
     RoomControllerLevel: { GUEST: 0 },
     RoomObjectCategory: { UNIT: 100 },
     RoomObjectVariable: { FIGURE_EFFECT: 'figure_effect' },
-    RoomUnitDropHandItemComposer: class {}
+    RoomUnitDropHandItemComposer: class {},
+    GetWiredContextMenuComposer: class {},
+    WiredContextMenuClickComposer: class {},
+    WiredContextMenuEvent: class {}
 }));
 
 vi.mock('../../../../../api', () => ({
@@ -57,13 +60,15 @@ vi.mock('../../../../../api', () => ({
     LocalizeText: (key: string) => key,
     localizeWithFallback: (_key: string, fallback: string) => fallback,
     PostureTypeEnum: { POSTURE_SIT: 'sit', POSTURE_STAND: 'stand' },
-    SendMessageComposer: vi.fn()
+    SendMessageComposer: vi.fn(),
+    WiredContextMenuTargetType: { ROOM_UNIT: 0 }
 }));
 
 vi.mock('../../../../../events', () => ({ HelpNameChangeEvent: class {} }));
 
 vi.mock('../../../../../hooks', () => ({
     useAvatarEditor: () => ({ effects: [] }),
+    useMessageEvent: () => {},
     useRoom: () => ({
         roomSession: {
             sendDanceMessage: mocks.sendDanceMessage,
