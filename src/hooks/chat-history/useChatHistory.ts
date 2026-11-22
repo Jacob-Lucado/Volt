@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { registerSharedHook, useSharedHook } from '@/state/useSharedHook';
 import { ChatEntryType, ChatHistoryCurrentDate, IChatEntry, IRoomHistoryEntry, MessengerHistoryCurrentDate } from '../../api';
 import { useMessageEvent, useVoltEvent } from '../events';
-import { useLocalStorage } from '../useLocalStorage';
+import { ClearAccountLocalStorage, useAccountLocalStorage } from '../useLocalStorage';
 
 const ROOM_HISTORY_MAX = 10;
 const CHAT_HISTORY_MAX = 1000;
@@ -12,16 +12,13 @@ const MESSENGER_HISTORY_MAX = 1000;
 let CHAT_HISTORY_COUNTER: number = 0;
 let MESSENGER_HISTORY_COUNTER: number = 0;
 
+const CHAT_HISTORY_STORAGE_KEYS = ['chatHistory', 'roomHistory', 'messengerHistory', 'needsRoomInsert'];
+
 export const ClearStoredChatHistory = () => {
     CHAT_HISTORY_COUNTER = 0;
     MESSENGER_HISTORY_COUNTER = 0;
 
-    try {
-        window.localStorage.removeItem('chatHistory');
-        window.localStorage.removeItem('roomHistory');
-        window.localStorage.removeItem('messengerHistory');
-        window.localStorage.removeItem('needsRoomInsert');
-    } catch {}
+    ClearAccountLocalStorage(CHAT_HISTORY_STORAGE_KEYS);
 };
 
 /**
@@ -39,10 +36,10 @@ export const ClearStoredChatHistory = () => {
 const slimChatEntriesForStorage = (entries: IChatEntry[]): IChatEntry[] => entries.map((entry) => (entry.imageUrl ? { ...entry, imageUrl: undefined } : entry));
 
 const useChatHistoryState = () => {
-    const [chatHistory, setChatHistory] = useLocalStorage<IChatEntry[]>('chatHistory', [], { toStorage: slimChatEntriesForStorage });
-    const [roomHistory, setRoomHistory] = useLocalStorage<IRoomHistoryEntry[]>('roomHistory', []);
-    const [messengerHistory, setMessengerHistory] = useLocalStorage<IChatEntry[]>('messengerHistory', [], { toStorage: slimChatEntriesForStorage });
-    const [needsRoomInsert, setNeedsRoomInsert] = useLocalStorage('needsRoomInsert', false);
+    const [chatHistory, setChatHistory] = useAccountLocalStorage<IChatEntry[]>('chatHistory', [], { toStorage: slimChatEntriesForStorage });
+    const [roomHistory, setRoomHistory] = useAccountLocalStorage<IRoomHistoryEntry[]>('roomHistory', []);
+    const [messengerHistory, setMessengerHistory] = useAccountLocalStorage<IChatEntry[]>('messengerHistory', [], { toStorage: slimChatEntriesForStorage });
+    const [needsRoomInsert, setNeedsRoomInsert] = useAccountLocalStorage('needsRoomInsert', false);
     // Stored entries survive a reload; the module counter does not. Reserve
     // new IDs above the restored range so avatar callbacks target this message.
     const nextChatId = useMemo(() => chatHistory.reduce((next, entry) => Math.max(next, entry.id + 1), 0), [chatHistory]);
