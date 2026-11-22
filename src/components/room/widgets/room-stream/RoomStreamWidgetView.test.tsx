@@ -211,4 +211,48 @@ describe('RoomStreamWidgetView', () =>
 
         expect(queryByText('Show video')).toBeNull();
     });
+
+    it('lets the video be resized with the keyboard and remembers the size', async () =>
+    {
+        const player = {
+            playVideo: vi.fn(),
+            pauseVideo: vi.fn(),
+            setVolume: vi.fn(),
+            seekTo: vi.fn(),
+            getCurrentTime: () => 0,
+            getDuration: () => 100,
+            getPlayerState: () => 1,
+            getVideoData: () => ({ title: 'Song', author: 'Artist' }),
+            destroy: vi.fn()
+        };
+
+        window.localStorage.removeItem('room-stream-video-width');
+        window.YT = { Player: function ()
+        {
+            return player;
+        } as never };
+        state.stream = { roomId: 1, kind: 'youtube', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', setBy: 'Jacob' };
+
+        const { container, getByText, getByLabelText } = render(<RoomStreamWidgetView />);
+
+        await act(async () =>
+        {
+            await Promise.resolve();
+        });
+        fireEvent.click(getByText('Show video'));
+
+        const handle = getByLabelText('Resize the video');
+        const video = () => container.querySelector<HTMLElement>('.room-stream-video');
+
+        fireEvent.keyDown(handle, { key: 'ArrowRight' });
+        fireEvent.keyDown(handle, { key: 'ArrowRight' });
+
+        expect(video().style.width).toBe('400px');
+        expect(container.querySelector<HTMLElement>('.room-stream').style.getPropertyValue('--stream-width')).toBe('400px');
+        expect(window.localStorage.getItem('room-stream-video-width')).toBe('400');
+
+        for (let i = 0; i < 20; i++) fireEvent.keyDown(handle, { key: 'ArrowLeft' });
+
+        expect(video().style.width).toBe('240px');
+    });
 });

@@ -7,14 +7,17 @@
     z-index: 30;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 8px;
-    width: 360px;
+    width: var(--stream-width, 360px);
     max-width: calc(100vw - 24px);
     transform: translateX(-50%);
 }
 
 .room-stream-card {
     position: relative;
+    width: 360px;
+    max-width: 100%;
     display: flex;
     gap: 12px;
     padding: 12px 38px 12px 12px;
@@ -320,7 +323,8 @@
 }
 
 .room-stream-video {
-    width: 100%;
+    position: relative;
+    max-width: 100%;
     aspect-ratio: 16 / 9;
     overflow: hidden;
     background: #000;
@@ -362,4 +366,26 @@
     .room-stream-dot {
         animation: none;
     }
+}
+
+.room-stream-resize {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    cursor: nwse-resize;
+    background: linear-gradient(135deg, transparent 50%, rgba(255, 255, 255, 0.85) 50%, rgba(255, 255, 255, 0.85) 58%, transparent 58%, transparent 70%, rgba(255, 255, 255, 0.85) 70%, rgba(255, 255, 255, 0.85) 78%, transparent 78%);
+    border: 0;
+    border-radius: 0 0 14px 0;
+    opacity: 0;
+    touch-action: none;
+    transition: opacity 0.15s;
+}
+
+.room-stream-video:hover .room-stream-resize,
+.room-stream-resize:focus-visible {
+    opacity: 1;
 }

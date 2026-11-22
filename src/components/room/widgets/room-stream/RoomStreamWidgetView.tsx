@@ -3,6 +3,10 @@ import { useRoomStreamWidget } from '../../../../hooks';
 import './RoomStreamWidgetView.css';
 
 const VOLUME_KEY = 'room-stream-volume';
+const VIDEO_WIDTH_KEY = 'room-stream-video-width';
+const CARD_WIDTH = 360;
+const MIN_VIDEO_WIDTH = 240;
+const MAX_VIDEO_WIDTH = 800;
 const SOUNDCLOUD_API = 'https://w.soundcloud.com/player/api.js';
 const YOUTUBE_API = 'https://www.youtube.com/iframe_api';
 const GENERIC_NAMES = ['live', 'stream', 'radio', 'listen', 'audio', 'play', 'music', 'index'];
@@ -66,6 +70,34 @@ declare global {
         };
     }
 }
+
+const clampVideoWidth = (width: number) => Math.round(Math.min(Math.max(width, MIN_VIDEO_WIDTH), Math.min(MAX_VIDEO_WIDTH, window.innerWidth - 24)));
+
+const readVideoWidth = (): number =>
+{
+    try
+    {
+        const saved = Number(window.localStorage.getItem(VIDEO_WIDTH_KEY));
+
+        return Number.isFinite(saved) && saved > 0 ? clampVideoWidth(saved) : CARD_WIDTH;
+    }
+    catch
+    {
+        return CARD_WIDTH;
+    }
+};
+
+const saveVideoWidth = (width: number) =>
+{
+    try
+    {
+        window.localStorage.setItem(VIDEO_WIDTH_KEY, String(width));
+    }
+    catch
+    {
+        // The size just is not remembered.
+    }
+};
 
 const readVolume = (): number =>
 {
@@ -255,6 +287,8 @@ export const RoomStreamWidgetView: FC<{}> = () =>
     const [duration, setDuration] = useState<number>(null);
     const [ready, setReady] = useState(false);
     const [showVideo, setShowVideo] = useState(false);
+    const [videoWidth, setVideoWidth] = useState<number>(readVideoWidth);
+    const resizeRef = useRef<{ startX: number; startWidth: number }>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
     const frameRef = useRef<HTMLIFrameElement>(null);
     const widgetRef = useRef<ISoundCloudWidget>(null);
@@ -518,7 +552,7 @@ export const RoomStreamWidgetView: FC<{}> = () =>
     const label = live ? 'Live' : isSoundCloud ? 'SoundCloud' : isYouTube ? 'YouTube' : 'Now playing';
 
     return (
-        <div className="room-stream" role="region" aria-label="Room music">
+        <div className="room-stream" role="region" aria-label="Room music" style={{ '--stream-width': `${showVideo && isYouTube ? Math.max(CARD_WIDTH, videoWidth) : CARD_WIDTH}px` } as CSSProperties}>
             <div className="room-stream-card">
                 <div className={`room-stream-art${playing ? ' is-playing' : ''}`}>
                     {track?.artwork ? (
@@ -627,8 +661,50 @@ export const RoomStreamWidgetView: FC<{}> = () =>
                 )}
             </div>
             {isYouTube && (
-                <div className={`room-stream-video${showVideo ? '' : ' is-hidden'}`}>
+                <div className={`room-stream-video${showVideo ? '' : ' is-hidden'}`} style={{ width: videoWidth }}>
                     <div ref={videoHostRef} className="room-stream-video-host" />
+                    {showVideo && (
+                        <button
+                            aria-label="Resize the video"
+                            className="room-stream-resize"
+                            title="Drag to resize"
+                            type="button"
+                            onKeyDown={(event) =>
+                            {
+                                const step = event.key === 'ArrowRight' || event.key === 'ArrowUp' ? 20 : event.key === 'ArrowLeft' || event.key === 'ArrowDown' ? -20 : 0;
+
+                                if (!step) return;
+
+                                event.preventDefault();
+
+                                const next = clampVideoWidth(videoWidth + step);
+
+                                setVideoWidth(next);
+                                saveVideoWidth(next);
+                            }}
+                            onPointerDown={(event) =>
+                            {
+                                event.preventDefault();
+                                event.currentTarget.setPointerCapture(event.pointerId);
+                                resizeRef.current = { startX: event.clientX, startWidth: videoWidth };
+                            }}
+                            onPointerMove={(event) =>
+                            {
+                                if (!resizeRef.current) return;
+
+                                // The player stays centered, so the width grows by twice the pointer distance.
+                                setVideoWidth(clampVideoWidth(resizeRef.current.startWidth + (event.clientX - resizeRef.current.startX) * 2));
+                            }}
+                            onPointerUp={(event) =>
+                            {
+                                if (!resizeRef.current) return;
+
+                                resizeRef.current = null;
+                                event.currentTarget.releasePointerCapture(event.pointerId);
+                                saveVideoWidth(videoWidth);
+                            }}
+                        />
+                    )}
                 </div>
             )}
         </div>
