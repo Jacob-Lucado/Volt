@@ -13,6 +13,7 @@ import { useRoom, useSessionInfo } from '../../../../../hooks';
 import { ContextMenuHeaderView } from '../../context-menu/ContextMenuHeaderView';
 import { ContextMenuListItemView } from '../../context-menu/ContextMenuListItemView';
 import { ContextMenuView } from '../../context-menu/ContextMenuView';
+import { useWiredContextMenuItems, WiredContextMenuItemsView } from './WiredContextMenuItemsView';
 
 interface AvatarInfoWidgetOwnPetViewProps {
     avatarInfo: AvatarInfoPet;
@@ -35,6 +36,7 @@ const BREEDING_CONFIG: Record<number, string> = {
 
 export const AvatarInfoWidgetOwnPetView: FC<AvatarInfoWidgetOwnPetViewProps> = (props) => {
     const { avatarInfo = null, onClose = null, onRequestBreed = null } = props;
+    const wiredMenu = useWiredContextMenuItems(avatarInfo);
     const [mode, setMode] = useState(MODE_NORMAL);
     const { roomSession = null } = useRoom();
     const { petRespectRemaining = 0, respectPet = null, chatStyleId = 0 } = useSessionInfo();
@@ -137,12 +139,14 @@ export const AvatarInfoWidgetOwnPetView: FC<AvatarInfoWidgetOwnPetViewProps> = (
             collapsable={true}
             freezePositionOnHover={true}
             objectId={avatarInfo.roomIndex}
+            repositionKey={wiredMenu.items.length}
             showCaretIcon={false}
             userType={RoomObjectType.PET}
             onClose={onClose}
         >
             <ContextMenuHeaderView>{avatarInfo.name}</ContextMenuHeaderView>
             <div className="air-avatar-menu-buttons">
+                <WiredContextMenuItemsView items={wiredMenu.items} onClick={wiredMenu.click} onClose={onClose} />
                 {mode === MODE_NORMAL && (
                     <>
                         {petRespectRemaining > 0 && (

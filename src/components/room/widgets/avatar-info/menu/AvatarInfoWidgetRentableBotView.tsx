@@ -24,6 +24,7 @@ import { VoltInput } from '../../../../../layout';
 import { ContextMenuHeaderView } from '../../context-menu/ContextMenuHeaderView';
 import { ContextMenuListItemView } from '../../context-menu/ContextMenuListItemView';
 import { ContextMenuView } from '../../context-menu/ContextMenuView';
+import { useWiredContextMenuItems, WiredContextMenuItemsView } from './WiredContextMenuItemsView';
 
 interface AvatarInfoWidgetRentableBotViewProps {
     avatarInfo: AvatarInfoRentableBot;
@@ -36,6 +37,7 @@ const MODE_CHANGE_MOTTO = 2;
 
 export const AvatarInfoWidgetRentableBotView: FC<AvatarInfoWidgetRentableBotViewProps> = (props) => {
     const { avatarInfo = null, onClose = null } = props;
+    const wiredMenu = useWiredContextMenuItems(avatarInfo);
     const [mode, setMode] = useState(MODE_NORMAL);
     const [newName, setNewName] = useState('');
     const [newMotto, setNewMotto] = useState('');
@@ -153,12 +155,14 @@ export const AvatarInfoWidgetRentableBotView: FC<AvatarInfoWidgetRentableBotView
             collapsable={true}
             freezePositionOnHover={true}
             objectId={avatarInfo.roomIndex}
+            repositionKey={wiredMenu.items.length}
             showCaretIcon={false}
             userType={RoomObjectType.RENTABLE_BOT}
             onClose={onClose}
         >
             <ContextMenuHeaderView>{avatarInfo.name}</ContextMenuHeaderView>
             <div className="air-avatar-menu-buttons">
+                {mode === MODE_NORMAL && <WiredContextMenuItemsView items={wiredMenu.items} onClick={wiredMenu.click} onClose={onClose} />}
                 {mode === MODE_NORMAL && canControl && (
                     <>
                         {avatarInfo.botSkills.indexOf(BotSkillsEnum.DONATE_TO_ALL) >= 0 && (

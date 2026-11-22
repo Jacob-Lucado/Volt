@@ -30,6 +30,7 @@ import { useAvatarEditor, useRoom, useWiredTools } from '../../../../../hooks';
 import { ContextMenuHeaderView } from '../../context-menu/ContextMenuHeaderView';
 import { ContextMenuListItemView } from '../../context-menu/ContextMenuListItemView';
 import { ContextMenuView } from '../../context-menu/ContextMenuView';
+import { useWiredContextMenuItems, WiredContextMenuItemsView } from './WiredContextMenuItemsView';
 
 interface AvatarInfoWidgetOwnAvatarViewProps {
     avatarInfo: AvatarInfoUser;
@@ -75,6 +76,7 @@ const SWIM_EFFECTS = [29, 30, 185];
 export const AvatarInfoWidgetOwnAvatarView: FC<AvatarInfoWidgetOwnAvatarViewProps> = (props) =>
 {
     const { avatarInfo = null, isDancing = false, setIsDecorating = null, onClose = null } = props;
+    const wiredMenu = useWiredContextMenuItems(avatarInfo);
     const hasClub = HasHabboClub();
     const hasVip = HasHabboVip();
     const ownPosture = GetOwnPosture();
@@ -208,7 +210,7 @@ export const AvatarInfoWidgetOwnAvatarView: FC<AvatarInfoWidgetOwnAvatarViewProp
             freezePositionOnHover={true}
             maximumVerticalLeadRatio={0.05}
             objectId={avatarInfo.roomIndex}
-            repositionKey={mode}
+            repositionKey={`${mode}-${wiredMenu.items.length}`}
             showCaretIcon={false}
             tallAvatarOffset={25}
             userType={avatarInfo.userType}
@@ -220,6 +222,7 @@ export const AvatarInfoWidgetOwnAvatarView: FC<AvatarInfoWidgetOwnAvatarViewProp
             <div className="air-avatar-menu-buttons">
                 {mode === MODE_NORMAL && (
                     <>
+                        <WiredContextMenuItemsView items={wiredMenu.items} onClick={wiredMenu.click} onClose={onClose} />
                         {avatarInfo.allowNameChange && (
                             <ContextMenuListItemView classNames={['air-avatar-menu-item--link']} onClick={() => processAction('change_name')}>
                                 {LocalizeText('widget.avatar.change_name')}

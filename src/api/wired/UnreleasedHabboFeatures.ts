@@ -79,6 +79,12 @@ export const UnreleasedWiredText = {
     TARGET_FURNI: 'wiredfurni.params.plus.target.furni'
 } as const;
 
+/** The target type of `GetWiredContextMenuComposer`; the target id of a room unit is its room index. */
+export const WiredContextMenuTargetType = {
+    ROOM_UNIT: 0,
+    FLOOR_FURNI: 1
+} as const;
+
 /** What a context menu box works on. Only users exist so far; furni is reserved. */
 export const WiredContextMenuTarget = {
     USERS: 0,
