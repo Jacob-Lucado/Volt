@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import { act, cleanup, fireEvent, render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { RoomStreamWidgetView } from './RoomStreamWidgetView';
 
@@ -13,6 +13,7 @@ beforeEach(() => {
 
 afterEach(() => {
     cleanup();
+    delete window.SC;
     state.stream = null;
 });
 
@@ -62,5 +63,73 @@ describe('RoomStreamWidgetView', () => {
         const { findByText } = render(<RoomStreamWidgetView />);
 
         expect(await findByText('Press play to listen')).toBeTruthy();
+    });
+
+    it('shows the artwork, title and artist of the SoundCloud track', async () => {
+        const handlers: Record<string, (data?: unknown) => void> = {};
+        const widget = {
+            bind: (event: string, callback: (data?: unknown) => void) => {
+                handlers[event] = callback;
+            },
+            play: vi.fn(),
+            pause: vi.fn(),
+            setVolume: vi.fn(),
+            seekTo: vi.fn(),
+            getCurrentSound: (callback: (sound: unknown) => void) =>
+                callback({ title: 'Flickermood', duration: 185000, artwork_url: 'https://i1.sndcdn.com/artworks-abc-large.jpg', user: { username: 'Forss' } })
+        };
+
+        window.SC = Object.assign(() => widget, { Widget: Object.assign(() => widget, { Events: { READY: 'ready', PLAY: 'play', PLAY_PROGRESS: 'progress' } }) }) as never;
+        state.stream = { roomId: 1, kind: 'soundcloud', url: 'https://soundcloud.com/forss/flickermood', setBy: 'Jacob' };
+
+        const { container, findByText, getByLabelText } = render(<RoomStreamWidgetView />);
+
+        await act(async () => {
+            await Promise.resolve();
+        });
+        await act(async () => {
+            handlers.ready();
+            handlers.progress({ currentPosition: 65000 });
+        });
+
+        expect(await findByText('Flickermood')).toBeTruthy();
+        expect(await findByText('Forss')).toBeTruthy();
+        expect(container.querySelector('img').getAttribute('src')).toBe('https://i1.sndcdn.com/artworks-abc-t200x200.jpg');
+        expect(await findByText('1:05')).toBeTruthy();
+        expect(await findByText('3:05')).toBeTruthy();
+
+        fireEvent.change(getByLabelText('Song position'), { target: { value: '100' } });
+
+        expect(widget.seekTo).toHaveBeenCalledWith(100000);
+    });
+
+    it('names a stream file and shows how far along it is', () => {
+        state.stream = { roomId: 1, kind: 'stream', url: 'https://cdn.example.com/music/night-drive.mp3', setBy: 'Jacob' };
+
+        const { container, getByText } = render(<RoomStreamWidgetView />);
+        const audio = container.querySelector('audio');
+
+        Object.defineProperty(audio, 'duration', { configurable: true, value: 200 });
+        Object.defineProperty(audio, 'currentTime', { configurable: true, writable: true, value: 30 });
+        fireEvent.loadedMetadata(audio);
+
+        expect(getByText('night drive')).toBeTruthy();
+        expect(getByText('cdn.example.com')).toBeTruthy();
+        expect(getByText('0:30')).toBeTruthy();
+        expect(getByText('3:20')).toBeTruthy();
+    });
+
+    it('marks an endless stream as live', () => {
+        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob' };
+
+        const { container, getAllByText } = render(<RoomStreamWidgetView />);
+        const audio = container.querySelector('audio');
+
+        Object.defineProperty(audio, 'duration', { configurable: true, value: Infinity });
+        Object.defineProperty(audio, 'currentTime', { configurable: true, writable: true, value: 5 });
+        fireEvent.loadedMetadata(audio);
+
+        expect(getAllByText('Live').length).toBeGreaterThan(0);
+        expect(container.querySelector('.room-stream-seek')).toBeNull();
     });
 });
