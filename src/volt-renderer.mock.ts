@@ -254,6 +254,14 @@ export class GenericErrorEvent extends MessageEvent {}
 export class GetGuestRoomResultEvent extends MessageEvent {}
 export class ThumbnailStatusMessageEvent extends MessageEvent {}
 export class ChatStyleNotificationMessageEvent extends MessageEvent {}
+export class RoomStreamEndedComposer
+{
+    constructor(public roomId: number, public token: number) {}
+
+    public getMessageArray() { return [ this.roomId, this.token ]; }
+
+    public dispose() {}
+}
 export class RecyclerFinishedMessageEvent extends MessageEvent
 {
     public static FINISHED_OK = 1;

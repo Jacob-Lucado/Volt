@@ -2,36 +2,41 @@ import { act, cleanup, fireEvent, render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { RoomStreamWidgetView } from './RoomStreamWidgetView';
 
-const state = vi.hoisted(() => ({ stream: null }));
+const state = vi.hoisted(() => ({
+    stream: null,
+    roomSession: { isRoomOwner: true, controllerLevel: 4 } as { isRoomOwner: boolean; controllerLevel: number } | null,
+    sent: [] as unknown[]
+}));
 
-vi.mock('../../../../hooks', () => ({ useRoomStreamWidget: () => ({ stream: state.stream }) }));
+vi.mock('../../../../hooks', () => ({
+    useRoom: () => ({ roomSession: state.roomSession }),
+    useRoomStreamWidget: () => ({ stream: state.stream })
+}));
+vi.mock('../../../../api', () => ({ SendMessageComposer: (composer: unknown) => state.sent.push(composer) }));
 
-beforeEach(() =>
-{
+beforeEach(() => {
     window.HTMLMediaElement.prototype.play = vi.fn().mockResolvedValue(undefined);
     window.HTMLMediaElement.prototype.pause = vi.fn();
 });
 
-afterEach(() =>
-{
+afterEach(() => {
     cleanup();
     delete window.SC;
     delete window.YT;
     state.stream = null;
+    state.roomSession = { isRoomOwner: true, controllerLevel: 4 };
+    state.sent = [];
 });
 
-describe('RoomStreamWidgetView', () =>
-{
-    it('shows nothing without a stream', () =>
-    {
+describe('RoomStreamWidgetView', () => {
+    it('shows nothing without a stream', () => {
         const { container } = render(<RoomStreamWidgetView />);
 
         expect(container.firstChild).toBeNull();
     });
 
-    it('plays a direct stream through an audio element', () =>
-    {
-        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob' };
+    it('plays a direct stream through an audio element', () => {
+        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob', token: 1, queued: 0 };
 
         const { container, getByText } = render(<RoomStreamWidgetView />);
 
@@ -41,9 +46,8 @@ describe('RoomStreamWidgetView', () =>
         expect(getByText('Started by Jacob')).toBeTruthy();
     });
 
-    it('plays a SoundCloud link in a SoundCloud player', () =>
-    {
-        state.stream = { roomId: 1, kind: 'soundcloud', url: 'https://soundcloud.com/artist/song', setBy: 'Jacob' };
+    it('plays a SoundCloud link in a SoundCloud player', () => {
+        state.stream = { roomId: 1, kind: 'soundcloud', url: 'https://soundcloud.com/artist/song', setBy: 'Jacob', token: 1, queued: 0 };
 
         const { container } = render(<RoomStreamWidgetView />);
         const source = container.querySelector('iframe').getAttribute('src');
@@ -53,9 +57,8 @@ describe('RoomStreamWidgetView', () =>
         expect(container.querySelector('audio')).toBeNull();
     });
 
-    it('lets a person turn the music off for themselves', () =>
-    {
-        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob' };
+    it('lets a person turn the music off for themselves', () => {
+        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob', token: 1, queued: 0 };
 
         const { container, getByLabelText } = render(<RoomStreamWidgetView />);
 
@@ -64,22 +67,19 @@ describe('RoomStreamWidgetView', () =>
         expect(container.firstChild).toBeNull();
     });
 
-    it('asks for a tap when the browser blocks autoplay', async () =>
-    {
+    it('asks for a tap when the browser blocks autoplay', async () => {
         window.HTMLMediaElement.prototype.play = vi.fn().mockRejectedValue(new Error('blocked'));
-        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob' };
+        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob', token: 1, queued: 0 };
 
         const { findByText } = render(<RoomStreamWidgetView />);
 
         expect(await findByText('Press play to listen')).toBeTruthy();
     });
 
-    it('shows the artwork, title and artist of the SoundCloud track', async () =>
-    {
+    it('shows the artwork, title and artist of the SoundCloud track', async () => {
         const handlers: Record<string, (data?: unknown) => void> = {};
         const widget = {
-            bind: (event: string, callback: (data?: unknown) => void) =>
-            {
+            bind: (event: string, callback: (data?: unknown) => void) => {
                 handlers[event] = callback;
             },
             play: vi.fn(),
@@ -91,18 +91,16 @@ describe('RoomStreamWidgetView', () =>
         };
 
         window.SC = Object.assign(() => widget, {
-            Widget: Object.assign(() => widget, { Events: { READY: 'ready', PLAY: 'play', PLAY_PROGRESS: 'progress' } })
+            Widget: Object.assign(() => widget, { Events: { READY: 'ready', PLAY: 'play', PLAY_PROGRESS: 'progress', FINISH: 'finish' } })
         });
-        state.stream = { roomId: 1, kind: 'soundcloud', url: 'https://soundcloud.com/forss/flickermood', setBy: 'Jacob' };
+        state.stream = { roomId: 1, kind: 'soundcloud', url: 'https://soundcloud.com/forss/flickermood', setBy: 'Jacob', token: 1, queued: 0 };
 
         const { container, findByText, getByLabelText } = render(<RoomStreamWidgetView />);
 
-        await act(async () =>
-        {
+        await act(async () => {
             await Promise.resolve();
         });
-        await act(async () =>
-        {
+        await act(async () => {
             handlers.ready();
             handlers.progress({ currentPosition: 65000 });
         });
@@ -118,9 +116,8 @@ describe('RoomStreamWidgetView', () =>
         expect(widget.seekTo).toHaveBeenCalledWith(100000);
     });
 
-    it('names a stream file and shows how far along it is', () =>
-    {
-        state.stream = { roomId: 1, kind: 'stream', url: 'https://cdn.example.com/music/night-drive.mp3', setBy: 'Jacob' };
+    it('names a stream file and shows how far along it is', () => {
+        state.stream = { roomId: 1, kind: 'stream', url: 'https://cdn.example.com/music/night-drive.mp3', setBy: 'Jacob', token: 1, queued: 0 };
 
         const { container, getByText } = render(<RoomStreamWidgetView />);
         const audio = container.querySelector('audio');
@@ -135,9 +132,8 @@ describe('RoomStreamWidgetView', () =>
         expect(getByText('3:20')).toBeTruthy();
     });
 
-    it('marks an endless stream as live', () =>
-    {
-        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob' };
+    it('marks an endless stream as live', () => {
+        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob', token: 1, queued: 0 };
 
         const { container, getAllByText } = render(<RoomStreamWidgetView />);
         const audio = container.querySelector('audio');
@@ -150,8 +146,7 @@ describe('RoomStreamWidgetView', () =>
         expect(container.querySelector('.room-stream-seek')).toBeNull();
     });
 
-    it('plays a YouTube video with its title, author and a button to show the video', async () =>
-    {
+    it('plays a YouTube video with its title, author and a button to show the video', async () => {
         const player = {
             playVideo: vi.fn(),
             pauseVideo: vi.fn(),
@@ -166,23 +161,20 @@ describe('RoomStreamWidgetView', () =>
         const options: { videoId?: string; events?: { onReady: () => void } } = {};
 
         window.YT = {
-            Player: function (_element: HTMLElement, given: typeof options)
-            {
+            Player: function (_element: HTMLElement, given: typeof options) {
                 Object.assign(options, given);
 
                 return player;
             } as never
         };
-        state.stream = { roomId: 1, kind: 'youtube', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', setBy: 'Jacob' };
+        state.stream = { roomId: 1, kind: 'youtube', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', setBy: 'Jacob', token: 1, queued: 0 };
 
         const { container, findByText, getByText, getByLabelText } = render(<RoomStreamWidgetView />);
 
-        await act(async () =>
-        {
+        await act(async () => {
             await Promise.resolve();
         });
-        await act(async () =>
-        {
+        await act(async () => {
             options.events.onReady();
         });
 
@@ -203,17 +195,15 @@ describe('RoomStreamWidgetView', () =>
         expect(player.seekTo).toHaveBeenCalledWith(100, true);
     });
 
-    it('offers no video button for audio links', () =>
-    {
-        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob' };
+    it('offers no video button for audio links', () => {
+        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob', token: 1, queued: 0 };
 
         const { queryByText } = render(<RoomStreamWidgetView />);
 
         expect(queryByText('Show video')).toBeNull();
     });
 
-    it('lets the video be resized with the keyboard and remembers the size', async () =>
-    {
+    it('lets the video be resized with the keyboard and remembers the size', async () => {
         const player = {
             playVideo: vi.fn(),
             pauseVideo: vi.fn(),
@@ -227,16 +217,16 @@ describe('RoomStreamWidgetView', () =>
         };
 
         window.localStorage.removeItem('room-stream-video-width');
-        window.YT = { Player: function ()
-        {
-            return player;
-        } as never };
-        state.stream = { roomId: 1, kind: 'youtube', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', setBy: 'Jacob' };
+        window.YT = {
+            Player: function () {
+                return player;
+            } as never
+        };
+        state.stream = { roomId: 1, kind: 'youtube', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', setBy: 'Jacob', token: 1, queued: 0 };
 
         const { container, getByText, getByLabelText } = render(<RoomStreamWidgetView />);
 
-        await act(async () =>
-        {
+        await act(async () => {
             await Promise.resolve();
         });
         fireEvent.click(getByText('Show video'));
@@ -254,5 +244,67 @@ describe('RoomStreamWidgetView', () =>
         for (let i = 0; i < 20; i++) fireEvent.keyDown(handle, { key: 'ArrowLeft' });
 
         expect(video().style.width).toBe('240px');
+    });
+
+    it('shows how many songs are waiting', () => {
+        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob', token: 4, queued: 3 };
+
+        const { getByText } = render(<RoomStreamWidgetView />);
+
+        expect(getByText('Started by Jacob - 3 up next')).toBeTruthy();
+    });
+
+    it('tells the room a file song ended, once, when the person has rights', () => {
+        state.stream = { roomId: 7, kind: 'stream', url: 'https://cdn.example.com/music/night-drive.mp3', setBy: 'Jacob', token: 5, queued: 1 };
+
+        const { container } = render(<RoomStreamWidgetView />);
+        const audio = container.querySelector('audio');
+
+        fireEvent.ended(audio);
+        fireEvent.ended(audio);
+
+        expect(state.sent).toHaveLength(1);
+        expect(state.sent[0]).toMatchObject({ roomId: 7, token: 5 });
+    });
+
+    it('does not report the end of a song for a visitor without rights', () => {
+        state.roomSession = { isRoomOwner: false, controllerLevel: 0 };
+        state.stream = { roomId: 7, kind: 'stream', url: 'https://cdn.example.com/music/night-drive.mp3', setBy: 'Jacob', token: 5, queued: 1 };
+
+        const { container } = render(<RoomStreamWidgetView />);
+
+        fireEvent.ended(container.querySelector('audio'));
+
+        expect(state.sent).toHaveLength(0);
+    });
+
+    it('reports when a SoundCloud track finishes', async () => {
+        const handlers: Record<string, (data?: unknown) => void> = {};
+        const widget = {
+            bind: (event: string, callback: (data?: unknown) => void) => {
+                handlers[event] = callback;
+            },
+            play: vi.fn(),
+            pause: vi.fn(),
+            setVolume: vi.fn(),
+            seekTo: vi.fn(),
+            getCurrentSound: vi.fn()
+        };
+
+        window.SC = Object.assign(() => widget, {
+            Widget: Object.assign(() => widget, { Events: { READY: 'ready', PLAY: 'play', PLAY_PROGRESS: 'progress', FINISH: 'finish' } })
+        });
+        state.stream = { roomId: 7, kind: 'soundcloud', url: 'https://soundcloud.com/forss/flickermood', setBy: 'Jacob', token: 6, queued: 0 };
+
+        render(<RoomStreamWidgetView />);
+        await act(async () => {
+            await Promise.resolve();
+        });
+        await act(async () => {
+            handlers.finish();
+        });
+
+        expect(state.sent).toHaveLength(1);
+        expect(state.sent[0]).toMatchObject({ roomId: 7, token: 6 });
     });
 });

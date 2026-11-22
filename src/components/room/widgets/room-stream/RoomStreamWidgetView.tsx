@@ -1,5 +1,7 @@
+import { RoomControllerLevel, RoomStreamEndedComposer } from '@volt/renderer';
 import { CSSProperties, FC, useEffect, useRef, useState } from 'react';
-import { useRoomStreamWidget } from '../../../../hooks';
+import { SendMessageComposer } from '../../../../api';
+import { useRoom, useRoomStreamWidget } from '../../../../hooks';
 import './RoomStreamWidgetView.css';
 
 const VOLUME_KEY = 'room-stream-volume';
@@ -65,7 +67,7 @@ declare global {
         onYouTubeIframeAPIReady?: () => void;
         SC?: {
             Widget: ((iframe: HTMLIFrameElement) => ISoundCloudWidget) & {
-                Events: { READY: string; PLAY: string; PLAY_PROGRESS: string };
+                Events: { READY: string; PLAY: string; PLAY_PROGRESS: string; FINISH: string };
             };
         };
     }
@@ -73,72 +75,53 @@ declare global {
 
 const clampVideoWidth = (width: number) => Math.round(Math.min(Math.max(width, MIN_VIDEO_WIDTH), Math.min(MAX_VIDEO_WIDTH, window.innerWidth - 24)));
 
-const readVideoWidth = (): number =>
-{
-    try
-    {
+const readVideoWidth = (): number => {
+    try {
         const saved = Number(window.localStorage.getItem(VIDEO_WIDTH_KEY));
 
         return Number.isFinite(saved) && saved > 0 ? clampVideoWidth(saved) : CARD_WIDTH;
-    }
-    catch
-    {
+    } catch {
         return CARD_WIDTH;
     }
 };
 
-const saveVideoWidth = (width: number) =>
-{
-    try
-    {
+const saveVideoWidth = (width: number) => {
+    try {
         window.localStorage.setItem(VIDEO_WIDTH_KEY, String(width));
-    }
-    catch
-    {
+    } catch {
         // The size just is not remembered.
     }
 };
 
-const readVolume = (): number =>
-{
-    try
-    {
+const readVolume = (): number => {
+    try {
         const saved = Number(window.localStorage.getItem(VOLUME_KEY));
 
         return Number.isFinite(saved) && saved > 0 && saved <= 100 ? saved : 60;
-    }
-    catch
-    {
+    } catch {
         return 60;
     }
 };
 
-const saveVolume = (volume: number) =>
-{
-    try
-    {
+const saveVolume = (volume: number) => {
+    try {
         window.localStorage.setItem(VOLUME_KEY, String(volume));
-    }
-    catch
-    {
+    } catch {
         // The volume just is not remembered.
     }
 };
 
 let soundCloudApi: Promise<void> = null;
 
-const loadSoundCloudApi = (): Promise<void> =>
-{
+const loadSoundCloudApi = (): Promise<void> => {
     if (window.SC) return Promise.resolve();
 
-    soundCloudApi ??= new Promise<void>((resolve, reject) =>
-    {
+    soundCloudApi ??= new Promise<void>((resolve, reject) => {
         const script = document.createElement('script');
 
         script.src = SOUNDCLOUD_API;
         script.onload = () => resolve();
-        script.onerror = () =>
-        {
+        script.onerror = () => {
             soundCloudApi = null;
             reject(new Error('The SoundCloud player could not be loaded.'));
         };
@@ -150,23 +133,19 @@ const loadSoundCloudApi = (): Promise<void> =>
 
 let youTubeApi: Promise<void> = null;
 
-const loadYouTubeApi = (): Promise<void> =>
-{
+const loadYouTubeApi = (): Promise<void> => {
     if (window.YT?.Player) return Promise.resolve();
 
-    youTubeApi ??= new Promise<void>((resolve, reject) =>
-    {
+    youTubeApi ??= new Promise<void>((resolve, reject) => {
         const previous = window.onYouTubeIframeAPIReady;
         const script = document.createElement('script');
 
-        window.onYouTubeIframeAPIReady = () =>
-        {
+        window.onYouTubeIframeAPIReady = () => {
             previous?.();
             resolve();
         };
         script.src = YOUTUBE_API;
-        script.onerror = () =>
-        {
+        script.onerror = () => {
             youTubeApi = null;
             reject(new Error('The YouTube player could not be loaded.'));
         };
@@ -176,14 +155,10 @@ const loadYouTubeApi = (): Promise<void> =>
     return youTubeApi;
 };
 
-const youTubeVideoId = (url: string): string | null =>
-{
-    try
-    {
+const youTubeVideoId = (url: string): string | null => {
+    try {
         return new URL(url).searchParams.get('v');
-    }
-    catch
-    {
+    } catch {
         return null;
     }
 };
@@ -191,24 +166,18 @@ const youTubeVideoId = (url: string): string | null =>
 const soundCloudSource = (url: string) =>
     `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&auto_play=true&visual=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false`;
 
-const hostOf = (url: string) =>
-{
-    try
-    {
+const hostOf = (url: string) => {
+    try {
         return new URL(url).hostname.replace(/^www\./, '');
-    }
-    catch
-    {
+    } catch {
         return url;
     }
 };
 
-const streamTrack = (url: string): TrackInfo =>
-{
+const streamTrack = (url: string): TrackInfo => {
     const host = hostOf(url);
 
-    try
-    {
+    try {
         const segment = decodeURIComponent(new URL(url).pathname.split('/').filter(Boolean).pop() ?? '');
         const name = segment
             .replace(/\.[a-z0-9]{2,4}$/i, '')
@@ -216,9 +185,7 @@ const streamTrack = (url: string): TrackInfo =>
             .trim();
 
         if (name.length > 0 && !GENERIC_NAMES.includes(name.toLowerCase())) return { title: name, artist: host, artwork: null };
-    }
-    catch
-    {
+    } catch {
         // The host alone is shown.
     }
 
@@ -227,8 +194,7 @@ const streamTrack = (url: string): TrackInfo =>
 
 const biggerArtwork = (url: string | null | undefined) => (url ? url.replace('-large.', '-t200x200.') : null);
 
-const formatTime = (seconds: number) =>
-{
+const formatTime = (seconds: number) => {
     const total = Math.max(0, Math.floor(seconds));
     const hours = Math.floor(total / 3600);
     const minutes = Math.floor((total % 3600) / 60);
@@ -275,9 +241,9 @@ const VolumeIcon: FC<{ level: number }> = ({ level }) => (
     </svg>
 );
 
-export const RoomStreamWidgetView: FC<{}> = () =>
-{
+export const RoomStreamWidgetView: FC<{}> = () => {
     const { stream = null } = useRoomStreamWidget();
+    const { roomSession = null } = useRoom();
     const [volume, setVolume] = useState<number>(readVolume);
     const [paused, setPaused] = useState(false);
     const [blocked, setBlocked] = useState(false);
@@ -296,10 +262,24 @@ export const RoomStreamWidgetView: FC<{}> = () =>
     const youTubeRef = useRef<IYouTubePlayer>(null);
     const url = stream?.url ?? null;
     const kind = stream?.kind ?? null;
+    const token = stream?.token ?? 0;
+    const roomId = stream?.roomId ?? 0;
+    const canEndSongs = !!roomSession && (roomSession.isRoomOwner || roomSession.controllerLevel >= RoomControllerLevel.GUEST);
+    const endedTokenRef = useRef<number>(null);
+
+    // Someone with rights tells the room a song ended, so it moves on to the next one. The server ignores anyone else.
+    const reportEnded = () => {
+        if (!canEndSongs || !token || endedTokenRef.current === token) return;
+
+        endedTokenRef.current = token;
+        SendMessageComposer(new RoomStreamEndedComposer(roomId, token));
+    };
+    const reportEndedRef = useRef(reportEnded);
+
+    reportEndedRef.current = reportEnded;
 
     // A new link starts playing again, even when the person closed the last one.
-    useEffect(() =>
-    {
+    useEffect(() => {
         setPaused(false);
         setBlocked(false);
         setClosedUrl(null);
@@ -310,24 +290,21 @@ export const RoomStreamWidgetView: FC<{}> = () =>
         setTrack(url && kind === 'stream' ? streamTrack(url) : null);
         widgetRef.current = null;
         youTubeRef.current = null;
-    }, [url, kind]);
+    }, [url, kind, token]);
 
-    useEffect(() =>
-    {
+    useEffect(() => {
         if (audioRef.current) audioRef.current.volume = volume / 100;
 
         widgetRef.current?.setVolume(volume);
         youTubeRef.current?.setVolume(volume);
-    }, [volume, url]);
+    }, [volume, url, token]);
 
-    useEffect(() =>
-    {
+    useEffect(() => {
         const audio = audioRef.current;
 
         if (!audio) return;
 
-        if (paused)
-        {
+        if (paused) {
             audio.pause();
 
             return;
@@ -337,25 +314,22 @@ export const RoomStreamWidgetView: FC<{}> = () =>
             .play()
             .then(() => setBlocked(false))
             .catch(() => setBlocked(true));
-    }, [paused, url]);
+    }, [paused, url, token]);
 
-    useEffect(() =>
-    {
+    useEffect(() => {
         if (kind !== 'soundcloud' || !frameRef.current) return;
 
         let active = true;
 
         loadSoundCloudApi()
-            .then(() =>
-            {
+            .then(() => {
                 if (!active || !frameRef.current || !window.SC) return;
 
                 const widget = window.SC.Widget(frameRef.current);
                 const { Events } = window.SC.Widget;
 
                 const loadSound = () =>
-                    widget.getCurrentSound((sound) =>
-                    {
+                    widget.getCurrentSound((sound) => {
                         if (!active || !sound) return;
 
                         setTrack({
@@ -367,15 +341,14 @@ export const RoomStreamWidgetView: FC<{}> = () =>
                         setReady(true);
                     });
 
-                widget.bind(Events.READY, () =>
-                {
+                widget.bind(Events.READY, () => {
                     widgetRef.current = widget;
                     widget.setVolume(readVolume());
                     loadSound();
                 });
                 widget.bind(Events.PLAY, loadSound);
-                widget.bind(Events.PLAY_PROGRESS, (data) =>
-                {
+                widget.bind(Events.FINISH, () => reportEndedRef.current());
+                widget.bind(Events.PLAY_PROGRESS, (data) => {
                     const seconds = Math.floor((data?.currentPosition ?? 0) / 1000);
 
                     setPosition((current) => (current === seconds ? current : seconds));
@@ -383,14 +356,12 @@ export const RoomStreamWidgetView: FC<{}> = () =>
             })
             .catch(() => undefined);
 
-        return () =>
-        {
+        return () => {
             active = false;
         };
-    }, [kind, url]);
+    }, [kind, url, token]);
 
-    useEffect(() =>
-    {
+    useEffect(() => {
         const videoId = kind === 'youtube' && url ? youTubeVideoId(url) : null;
         const host = videoHostRef.current;
 
@@ -408,12 +379,10 @@ export const RoomStreamWidgetView: FC<{}> = () =>
             artwork: `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`
         });
 
-        const refresh = () =>
-        {
+        const refresh = () => {
             if (!player || !active) return;
 
-            try
-            {
+            try {
                 const data = player.getVideoData();
                 const length = player.getDuration();
 
@@ -427,16 +396,14 @@ export const RoomStreamWidgetView: FC<{}> = () =>
                 setReady(true);
 
                 if (player.getPlayerState() === 1) setBlocked(false);
-            }
-            catch
-            {
+                if (player.getPlayerState() === 0) reportEndedRef.current();
+            } catch {
                 // The player is not ready to answer yet.
             }
         };
 
         loadYouTubeApi()
-            .then(() =>
-            {
+            .then(() => {
                 if (!active || !window.YT) return;
 
                 player = new window.YT.Player(target, {
@@ -451,8 +418,7 @@ export const RoomStreamWidgetView: FC<{}> = () =>
                         origin: window.location.origin
                     },
                     events: {
-                        onReady: () =>
-                        {
+                        onReady: () => {
                             youTubeRef.current = player;
                             player.setVolume(readVolume());
                             refresh();
@@ -465,34 +431,26 @@ export const RoomStreamWidgetView: FC<{}> = () =>
             })
             .catch(() => undefined);
 
-        return () =>
-        {
+        return () => {
             active = false;
             window.clearInterval(timer);
             youTubeRef.current = null;
 
-            try
-            {
+            try {
                 player?.destroy();
-            }
-            catch
-            {
+            } catch {
                 // The frame is already gone.
             }
 
             host.replaceChildren();
         };
-    }, [kind, url]);
+    }, [kind, url, token]);
 
-    useEffect(() =>
-    {
-        if (paused)
-        {
+    useEffect(() => {
+        if (paused) {
             widgetRef.current?.pause();
             youTubeRef.current?.pauseVideo();
-        }
-        else
-        {
+        } else {
             widgetRef.current?.play();
             youTubeRef.current?.playVideo();
         }
@@ -500,14 +458,12 @@ export const RoomStreamWidgetView: FC<{}> = () =>
 
     if (!stream || closedUrl === stream.url) return null;
 
-    const changeVolume = (value: number) =>
-    {
+    const changeVolume = (value: number) => {
         setVolume(value);
         saveVolume(value);
     };
 
-    const seek = (seconds: number) =>
-    {
+    const seek = (seconds: number) => {
         setPosition(seconds);
 
         if (audioRef.current) audioRef.current.currentTime = seconds;
@@ -516,10 +472,8 @@ export const RoomStreamWidgetView: FC<{}> = () =>
         youTubeRef.current?.seekTo(seconds, true);
     };
 
-    const togglePlay = () =>
-    {
-        if (!blocked)
-        {
+    const togglePlay = () => {
+        if (!blocked) {
             setPaused((value) => !value);
 
             return;
@@ -532,8 +486,7 @@ export const RoomStreamWidgetView: FC<{}> = () =>
         audioRef.current?.play().catch(() => setBlocked(true));
     };
 
-    const syncAudio = () =>
-    {
+    const syncAudio = () => {
         const audio = audioRef.current;
 
         if (!audio) return;
@@ -552,7 +505,12 @@ export const RoomStreamWidgetView: FC<{}> = () =>
     const label = live ? 'Live' : isSoundCloud ? 'SoundCloud' : isYouTube ? 'YouTube' : 'Now playing';
 
     return (
-        <div className="room-stream" role="region" aria-label="Room music" style={{ '--stream-width': `${showVideo && isYouTube ? Math.max(CARD_WIDTH, videoWidth) : CARD_WIDTH}px` } as CSSProperties}>
+        <div
+            className="room-stream"
+            role="region"
+            aria-label="Room music"
+            style={{ '--stream-width': `${showVideo && isYouTube ? Math.max(CARD_WIDTH, videoWidth) : CARD_WIDTH}px` } as CSSProperties}
+        >
             <div className="room-stream-card">
                 <div className={`room-stream-art${playing ? ' is-playing' : ''}`}>
                     {track?.artwork ? (
@@ -574,7 +532,9 @@ export const RoomStreamWidgetView: FC<{}> = () =>
                             {live && <span className="room-stream-dot" />}
                             {label}
                         </span>
-                        <span className="room-stream-by">{blocked ? 'Press play to listen' : `Started by ${stream.setBy}`}</span>
+                        <span className="room-stream-by">
+                            {blocked ? 'Press play to listen' : `Started by ${stream.setBy}${stream.queued > 0 ? ` - ${stream.queued} up next` : ''}`}
+                        </span>
                     </div>
                     <span className="room-stream-title" title={title}>
                         {title}
@@ -635,23 +595,23 @@ export const RoomStreamWidgetView: FC<{}> = () =>
                 </button>
                 {stream.kind === 'stream' && (
                     <audio
-                        key={stream.url}
+                        key={`${stream.token}:${stream.url}`}
                         ref={audioRef}
                         loop={false}
                         preload="none"
                         src={stream.url}
                         onDurationChange={syncAudio}
-                        onLoadedMetadata={() =>
-                        {
+                        onLoadedMetadata={() => {
                             syncAudio();
                             setReady(true);
                         }}
                         onTimeUpdate={syncAudio}
+                        onEnded={() => reportEndedRef.current()}
                     />
                 )}
                 {isSoundCloud && (
                     <iframe
-                        key={stream.url}
+                        key={`${stream.token}:${stream.url}`}
                         ref={frameRef}
                         allow="autoplay"
                         className="room-stream-frame"
@@ -669,9 +629,13 @@ export const RoomStreamWidgetView: FC<{}> = () =>
                             className="room-stream-resize"
                             title="Drag to resize"
                             type="button"
-                            onKeyDown={(event) =>
-                            {
-                                const step = event.key === 'ArrowRight' || event.key === 'ArrowUp' ? 20 : event.key === 'ArrowLeft' || event.key === 'ArrowDown' ? -20 : 0;
+                            onKeyDown={(event) => {
+                                const step =
+                                    event.key === 'ArrowRight' || event.key === 'ArrowUp'
+                                        ? 20
+                                        : event.key === 'ArrowLeft' || event.key === 'ArrowDown'
+                                          ? -20
+                                          : 0;
 
                                 if (!step) return;
 
@@ -682,21 +646,18 @@ export const RoomStreamWidgetView: FC<{}> = () =>
                                 setVideoWidth(next);
                                 saveVideoWidth(next);
                             }}
-                            onPointerDown={(event) =>
-                            {
+                            onPointerDown={(event) => {
                                 event.preventDefault();
                                 event.currentTarget.setPointerCapture(event.pointerId);
                                 resizeRef.current = { startX: event.clientX, startWidth: videoWidth };
                             }}
-                            onPointerMove={(event) =>
-                            {
+                            onPointerMove={(event) => {
                                 if (!resizeRef.current) return;
 
                                 // The player stays centered, so the width grows by twice the pointer distance.
                                 setVideoWidth(clampVideoWidth(resizeRef.current.startWidth + (event.clientX - resizeRef.current.startX) * 2));
                             }}
-                            onPointerUp={(event) =>
-                            {
+                            onPointerUp={(event) => {
                                 if (!resizeRef.current) return;
 
                                 resizeRef.current = null;
