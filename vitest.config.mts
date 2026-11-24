@@ -22,6 +22,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@volt/renderer': resolve(__dirname, 'src/volt-renderer.mock.ts'),
+            'pixi.js/browser': resolve(__dirname, 'src/pixi.mock.ts'),
             'pixi.js': resolve(__dirname, 'src/pixi.mock.ts'),
             '@': resolve(__dirname, 'src'),
             '@layout': resolve(__dirname, 'src/layout')

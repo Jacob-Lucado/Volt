@@ -1,8 +1,11 @@
-import { FC } from 'react';
+import { FC, lazy, Suspense } from 'react';
 import { GetCollectibleRarityColor, LocalizeText, NotificationBubbleItem } from '../../../../api';
-import { CollectibleProductIconView } from '../../../collectibles/CollectibleProductImageView';
 import { at, ShinyButton, SkinBorder } from '../../../collectibles/CollectiblesSkinView';
 import { BUBBLE_FADE_IN_MS, useNativeBubbleLife } from '../native/useNativeBubbleLife';
+
+const LazyCollectibleProductIconView = lazy(() =>
+    import('../../../collectibles/CollectibleProductImageView').then((module) => ({ default: module.CollectibleProductIconView }))
+);
 
 interface NotificationNftOpeningBubbleViewProps {
     item: NotificationBubbleItem;
@@ -29,7 +32,11 @@ export const NotificationNftOpeningBubbleView: FC<NotificationNftOpeningBubbleVi
                     {LocalizeText('collectibles.reward_box.notif.title')}
                 </div>
                 <div className="volt-collectibles-nft-opening-icon" style={at(9, 31, 40, 40)}>
-                    {opening && <CollectibleProductIconView product={opening.product} variant="widget" />}
+                    {opening && (
+                        <Suspense fallback={null}>
+                            <LazyCollectibleProductIconView product={opening.product} variant="widget" />
+                        </Suspense>
+                    )}
                 </div>
                 <div className="volt-collectibles-nft-opening-text" style={at(65, 29, 115, 50)}>
                     {item.message}

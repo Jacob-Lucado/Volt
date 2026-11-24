@@ -1,3 +1,4 @@
+import 'pixi.js/browser';
 import { matteOnTransparent } from './avatarMatte';
 import { cullOpaqueSprites } from './opaqueCull';
 import { buildAvatarEffectLibraries, avatarEffectsReady } from './effectLibraries';
@@ -1621,7 +1622,8 @@ async function start(): Promise<void>
         resolution: 1,
         backgroundAlpha: 0,
         preference: 'webgl',
-        autoDensity: false
+        autoDensity: false,
+        skipExtensionImports: true
     });
 
     // Single-texture batches avoid the large sampler-selection shader. In SwiftShader that

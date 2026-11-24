@@ -81,31 +81,59 @@ const preloadAppBundle = () =>
                 if(!ctx.path?.endsWith('/index.html')) return html;
 
                 const bundle = ctx.bundle;
-                const app = bundle && Object.values(bundle).find(chunk => (chunk.type === 'chunk') && chunk.facadeModuleId?.replace(/\\/g, '/').endsWith('/src/index.tsx'));
+                const targets = bundle ? Object.values(bundle).filter(chunk =>
+                {
+                    if(chunk.type !== 'chunk') return false;
+                    const facade = chunk.facadeModuleId?.replace(/\\/g, '/');
+                    return facade?.endsWith('/src/index.tsx') || facade?.endsWith('/src/boot/HotelRuntime.ts');
+                }) : [];
 
-                if(!app) return html;
+                if(!targets.length) return html;
 
-                const scripts = new Set();
+                const runtimeScripts = new Set();
+                const uiScripts = new Set();
                 const styles = new Set();
-                const visit = fileName =>
+                const visit = (fileName, bucket) =>
                 {
                     const chunk = bundle[fileName];
 
-                    if(!chunk || (chunk.type !== 'chunk') || scripts.has(fileName)) return;
+                    if(!chunk || (chunk.type !== 'chunk') || runtimeScripts.has(fileName) || uiScripts.has(fileName)) return;
 
-                    scripts.add(fileName);
+                    bucket.add(fileName);
                     chunk.viteMetadata?.importedCss?.forEach(file => styles.add(file));
-                    chunk.imports.forEach(visit);
+                    chunk.imports.forEach(dep => visit(dep, bucket));
                 };
 
-                visit(app.fileName);
+                targets
+                    .filter(chunk => chunk.facadeModuleId?.replace(/\\/g, '/').endsWith('/src/boot/HotelRuntime.ts'))
+                    .forEach(chunk => visit(chunk.fileName, runtimeScripts));
+                targets
+                    .filter(chunk => chunk.facadeModuleId?.replace(/\\/g, '/').endsWith('/src/index.tsx'))
+                    .forEach(chunk => visit(chunk.fileName, uiScripts));
 
+                let nextHtml = html.replace(
+                    /<script type="module" crossorigin src="([^"]+)"><\/script>/,
+                    '<script type="module" crossorigin fetchpriority="high" src="$1"></script>'
+                );
+                // Promote runtime engine modulepreloads emitted by Vite ahead of UI chunks.
+                for(const file of runtimeScripts)
+                {
+                    const href = `${ base }${ file }`;
+                    nextHtml = nextHtml.replace(
+                        `<link rel="modulepreload" crossorigin href="${ href }">`,
+                        `<link rel="modulepreload" crossorigin fetchpriority="high" href="${ href }">`
+                    );
+                }
+                // Preload all runtime engine chunks at high priority, plus substantial UI chunks (>= 12 KB) and CSS,
+                // without flooding <head> with dozens of tiny <5 KB shared helpers.
+                const isSubstantialUi = file => (bundle[file]?.code?.length ?? 0) >= 12288 || file.includes('src-');
                 const tags = [
-                    ...[ ...scripts ].filter(file => !html.includes(file)).map(file => ({ tag: 'link', attrs: { rel: 'modulepreload', crossorigin: true, href: base + file }, injectTo: 'head' })),
+                    ...[ ...runtimeScripts ].filter(file => !nextHtml.includes(file)).map(file => ({ tag: 'link', attrs: { rel: 'modulepreload', crossorigin: true, fetchpriority: 'high', href: base + file }, injectTo: 'head' })),
+                    ...[ ...uiScripts ].filter(file => !nextHtml.includes(file) && isSubstantialUi(file)).map(file => ({ tag: 'link', attrs: { rel: 'modulepreload', crossorigin: true, href: base + file }, injectTo: 'head' })),
                     ...[ ...styles ].map(file => ({ tag: 'link', attrs: { rel: 'preload', as: 'style', crossorigin: true, href: base + file }, injectTo: 'head' }))
                 ];
 
-                return { html, tags };
+                return { html: nextHtml, tags };
             }
         }
     };
@@ -310,14 +338,15 @@ export default defineConfig({
             // package-directory alias, which would otherwise swallow this
             // subpath and resolve it to a directory that does not exist.
             'pixi.js/advanced-blend-modes': resolve(rendererRoot, 'node_modules/pixi.js/lib/advanced-blend-modes/init.mjs'),
+            'pixi.js/browser': resolve(rendererRoot, 'node_modules/pixi.js/lib/environment-browser/browserAll.mjs'),
             'pixi.js': resolve(rendererRoot, 'node_modules/pixi.js'),
             'pixi-filters': resolve(rendererRoot, 'node_modules/pixi-filters'),
             'howler': resolve(rendererRoot, 'node_modules/howler'),
         }
     },
     build: {
-        // Keep tiny icons inline; larger artwork should not inflate every cold boot.
-        assetsInlineLimit: 4096,
+        // Keep only tiny icons inline; over HTTP/2-3 inlining thousands of 1-4 KB PNGs bloats the initial CSS/JS.
+        assetsInlineLimit: 512,
         chunkSizeWarningLimit: 200000,
         manifest: true,
         rollupOptions: {
@@ -354,28 +383,30 @@ export default defineConfig({
                     if(norm.includes('howler')) return 'vendor-audio';
                     if(norm.includes('@emoji-mart')) return 'vendor-emoji';
                     if(norm.includes('jodit') || norm.includes('@react-page')) return 'vendor-editor';
+                    if(norm.includes('@thumbmarkjs')) return 'vendor-thumbmark';
+                    if(norm.includes('dompurify')) return 'vendor-dompurify';
 
-                    if(id.includes('Volt-Renderer') || id.includes(`${ rendererRoot }`))
+                    if(norm.includes('Volt-Renderer') || norm.includes(rendererRoot.replace(/\\/g, '/')))
                     {
-                        // Heaviest renderer packages get their own chunks so
-                        // pages that don't touch them (login flow, very early
-                        // boot) don't have to pay for them upfront.
-                        if(id.includes('/packages/avatar/')) return 'volt-renderer-avatar';
-                        if(id.includes('/packages/communication/')) return 'volt-renderer-comm';
-                        if(id.includes('/packages/room/')) return 'volt-renderer-room';
-                        if(id.includes('/packages/assets/')) return 'volt-renderer-assets';
+                        // Keep lazy renderer asset collections in their own chunks so boot never downloads them.
+                        if(norm.includes('/packages/assets/src/assets/group_badge/')) return 'volt-assets-group-badge';
+                        if(norm.includes('/packages/assets/src/assets/floor_editor/')) return 'volt-assets-floor-editor';
+                        if(norm.includes('/packages/avatar/')) return 'volt-renderer-avatar';
+                        if(norm.includes('/packages/communication/')) return 'volt-renderer-comm';
+                        if(norm.includes('/packages/room/')) return 'volt-renderer-room';
+                        if(norm.includes('/packages/assets/')) return 'volt-renderer-assets';
                         return 'volt-renderer';
                     }
 
-                    if(id.includes('node_modules'))
+                    if(norm.includes('node_modules'))
                     {
-                        if(id.includes('@volt/renderer') || id.includes('renderer3')) return 'volt-renderer';
-                        if(id.match(/\/react(-dom)?\/|\/scheduler\//) || id.includes('react-error-boundary')) return 'vendor-react';
-                        if(id.includes('framer-motion')) return 'vendor-motion';
-                        if(id.includes('@tanstack')) return 'vendor-query';
-                        if(id.includes('zustand')) return 'vendor-state';
-                        if(id.includes('react-icons')) return 'vendor-icons';
-                        if(id.includes('strip-json-comments')) return 'vendor-jsonc';
+                        if(norm.includes('@volt/renderer') || norm.includes('renderer3')) return 'volt-renderer';
+                        if(norm.match(/\/react(-dom)?\/|\/scheduler\//) || norm.includes('react-error-boundary')) return 'vendor-react';
+                        if(norm.includes('framer-motion')) return 'vendor-motion';
+                        if(norm.includes('@tanstack')) return 'vendor-query';
+                        if(norm.includes('zustand')) return 'vendor-state';
+                        if(norm.includes('react-icons')) return 'vendor-icons';
+                        if(norm.includes('strip-json-comments')) return 'vendor-jsonc';
                         return 'vendor';
                     }
                 }

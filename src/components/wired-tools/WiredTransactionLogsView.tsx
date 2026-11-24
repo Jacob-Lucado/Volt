@@ -1,7 +1,19 @@
-import { WiredTransactionLogListEvent } from '@volt/renderer';
-import { FC, useState } from 'react';
+import { IWiredTransactionInfo, WiredTransactionLogListEvent } from '@volt/renderer';
+import { FC, lazy, Suspense, useState } from 'react';
 import { useMessageEvent } from '../../hooks';
-import { WIRED_TRANSACTION_LOGS_PAGE_SIZE, WiredTransactionLogsPage, WiredTransactionLogsWindow } from './WiredTransactionLogsWindow';
+import { WIRED_TRANSACTION_LOGS_PAGE_SIZE } from './WiredTransactionLogs.constants';
+
+interface WiredTransactionLogsPage {
+    listType: number;
+    listId: number;
+    totalLogs: number;
+    page: number;
+    logs: IWiredTransactionInfo[];
+}
+
+const LazyWiredTransactionLogsWindow = lazy(() =>
+    import('./WiredTransactionLogsWindow').then((module) => ({ default: module.WiredTransactionLogsWindow }))
+);
 
 export const WiredTransactionLogsView: FC = () => {
     const [data, setData] = useState<WiredTransactionLogsPage | null>(null);
@@ -13,5 +25,11 @@ export const WiredTransactionLogsView: FC = () => {
         setData({ listType: page.listType, listId: page.listId, totalLogs: page.totalLogs, page: page.page, logs: [...page.logs] });
     });
 
-    return data && <WiredTransactionLogsWindow data={data} onClose={() => setData(null)} />;
+    if (!data) return null;
+
+    return (
+        <Suspense fallback={null}>
+            <LazyWiredTransactionLogsWindow data={data} onClose={() => setData(null)} />
+        </Suspense>
+    );
 };

@@ -69,7 +69,7 @@ function stretchSkin(url: string, cap: number, height: number): Promise<string> 
                 image.onload = () => {
                     const middle = image.height - cap * 2;
                     const target = height - cap * 2;
-                    if (middle <= 1 || target <= 0) return resolve(url);
+                    if (middle <= 1 || target <= 0 || middle === target) return resolve(url);
                     const canvas = document.createElement('canvas');
                     canvas.width = image.width;
                     canvas.height = height;
@@ -98,12 +98,33 @@ function useStretchedSkin(kind: AirButtonKind, height: number) {
 
     useEffect(() => {
         let disposed = false;
-        const states = Object.keys(kind.skin) as SkinState[];
-        Promise.all(states.map((state) => stretchSkin(kind.skin[state], kind.cap, height)))
-            .then((list) => !disposed && setUrls(Object.fromEntries(states.map((state, index) => [state, list[index]])) as Record<SkinState, string>))
+        let idleTimer: number | null = null;
+        // Stretch the visible default state right away; warm interactive states shortly after so initial mount stays fast.
+        stretchSkin(kind.skin.default, kind.cap, height)
+            .then((defaultUrl) => {
+                if (disposed) return;
+                setUrls((prev) => ({ ...(prev ?? kind.skin), default: defaultUrl }));
+                const secondaryStates: SkinState[] = ['hover', 'pressed', 'disabled'];
+                idleTimer = window.setTimeout(() => {
+                    if (disposed) return;
+                    Promise.all(secondaryStates.map((state) => stretchSkin(kind.skin[state], kind.cap, height)))
+                        .then((list) => {
+                            if (disposed) return;
+                            setUrls((prev) => ({
+                                ...(prev ?? kind.skin),
+                                default: defaultUrl,
+                                hover: list[0],
+                                pressed: list[1],
+                                disabled: list[2]
+                            }));
+                        })
+                        .catch(() => {});
+                }, 80);
+            })
             .catch(() => !disposed && setUrls(null));
         return () => {
             disposed = true;
+            if (idleTimer !== null) window.clearTimeout(idleTimer);
         };
     }, [kind, height]);
 

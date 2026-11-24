@@ -1,9 +1,14 @@
-import { FC, useState } from 'react';
+import { FC, lazy, Suspense, useState } from 'react';
 import { ExplorerConnection, WebApiVariable } from '../../api';
 import { WidgetErrorBoundary } from '../../common/error-boundary/WidgetErrorBoundary';
 import { useVariablesExplorerStore } from '../../state/variablesExplorer';
-import { VariablesExplorerConnectView } from './VariablesExplorerConnectView';
-import { VariablesExplorerMainView } from './VariablesExplorerMainView';
+
+const LazyVariablesExplorerConnectView = lazy(() =>
+    import('./VariablesExplorerConnectView').then((module) => ({ default: module.VariablesExplorerConnectView }))
+);
+const LazyVariablesExplorerMainView = lazy(() =>
+    import('./VariablesExplorerMainView').then((module) => ({ default: module.VariablesExplorerMainView }))
+);
 
 interface ExplorerSession {
     connection: ExplorerConnection;
@@ -31,24 +36,26 @@ export const VariablesExplorerView: FC = () => {
 
     return (
         <WidgetErrorBoundary name="VariablesExplorer">
-            {activeSession ? (
-                <VariablesExplorerMainView
-                    connection={activeSession.connection}
-                    initialVariables={activeSession.variables}
-                    onDisconnect={() => {
-                        setDisconnected({ roomId: activeSession.connection.roomId, openCount });
-                        setSession(null);
-                    }}
-                    onClose={closeExplorer}
-                />
-            ) : (
-                <VariablesExplorerConnectView
-                    key={openCount}
-                    prefill={disconnected?.openCount === openCount ? { roomId: disconnected.roomId } : prefill}
-                    onConnected={(connection, variables) => setSession({ connection, variables, openCount })}
-                    onClose={closeExplorer}
-                />
-            )}
+            <Suspense fallback={null}>
+                {activeSession ? (
+                    <LazyVariablesExplorerMainView
+                        connection={activeSession.connection}
+                        initialVariables={activeSession.variables}
+                        onDisconnect={() => {
+                            setDisconnected({ roomId: activeSession.connection.roomId, openCount });
+                            setSession(null);
+                        }}
+                        onClose={closeExplorer}
+                    />
+                ) : (
+                    <LazyVariablesExplorerConnectView
+                        key={openCount}
+                        prefill={disconnected?.openCount === openCount ? { roomId: disconnected.roomId } : prefill}
+                        onConnected={(connection, variables) => setSession({ connection, variables, openCount })}
+                        onClose={closeExplorer}
+                    />
+                )}
+            </Suspense>
         </WidgetErrorBoundary>
     );
 };

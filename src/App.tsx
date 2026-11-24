@@ -177,7 +177,7 @@ export const App: FC<{}> = (props) => {
                 }
 
                 const [renderer] = await Promise.all([
-                    startHotelRuntime(width, height),
+                    startHotelRuntime(width, height, bumpProgress),
                     communicationInitRef.current
                 ]);
                 bumpProgress(98);

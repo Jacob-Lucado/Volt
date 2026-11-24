@@ -35,6 +35,223 @@
     <script type="application/json" id="volt-boot-furnidata-version"><!--# include virtual="configuration/furnidata-version.json" --></script>
     <!-- {"files": {"ExternalTexts.json": "<version>", ...}}: gamedata the client then requests by version, cacheable until it changes. -->
     <script type="application/json" id="volt-boot-gamedata-versions"><!--# include virtual="configuration/gamedata-versions.json" --></script>
+    <script>
+    (function () {
+        // Start preconnects, WebSocket, and gamedata fetches as soon as HTML arrives while module chunks download.
+        var stripComments = function (src) {
+            var out = '';
+            var inStr = false;
+            var esc = false;
+            for (var i = 0; i < src.length; i++) {
+                var c = src[i];
+                var n = src[i + 1];
+                if (inStr) {
+                    out += c;
+                    if (esc) { esc = false; }
+                    else if (c === '\\') { esc = true; }
+                    else if (c === '"') { inStr = false; }
+                    continue;
+                }
+                if (c === '"') { inStr = true; out += c; continue; }
+                if (c === '/' && n === '/') {
+                    i += 2;
+                    while (i < src.length && src[i] !== '\n' && src[i] !== '\r') i++;
+                    i--;
+                    continue;
+                }
+                if (c === '/' && n === '*') {
+                    i += 2;
+                    while (i < src.length && !(src[i] === '*' && src[i + 1] === '/')) i++;
+                    i++;
+                    continue;
+                }
+                out += c;
+            }
+            return out.replace(/,\s*([}\]])/g, '$1');
+        };
+        var readDoc = function (name) {
+            var el = document.getElementById('volt-boot-' + name);
+            var txt = el && el.textContent ? el.textContent.trim() : '';
+            if (!txt || txt.indexOf('<!--') === 0) return null;
+            try { return JSON.parse(txt); }
+            catch (_) {
+                try { return JSON.parse(stripComments(txt)); }
+                catch (__) { return null; }
+            }
+        };
+        var parsed = {};
+        ['client-mode', 'renderer-config', 'ui-config', 'pets', 'furnidata-version', 'gamedata-versions'].forEach(function (k) {
+            parsed[k] = readDoc(k);
+        });
+        window.__voltBootParsed = parsed;
+
+        var sso = window.__voltLaunchCredentials && window.__voltLaunchCredentials.ssoTicket;
+        if (sso === undefined) {
+            try {
+                var loc = new URL(window.location.href);
+                if (loc.searchParams.has('sso')) {
+                    sso = loc.searchParams.get('sso') || '';
+                    loc.searchParams.delete('sso');
+                    window.history.replaceState(window.history.state, '', loc.toString());
+                    window.__voltLaunchCredentials = { ssoTicket: sso };
+                }
+            } catch (_) {}
+        }
+
+        var mode = parsed['client-mode'];
+        if (mode && (mode.secureAssetsEnabled || mode.mode === 'secure')) return;
+        var rc = parsed['renderer-config'];
+        if (!rc || typeof rc !== 'object') return;
+        var uc = parsed['ui-config'];
+        var defs = Object.assign({}, uc && typeof uc === 'object' ? uc : {}, rc);
+        var gd = parsed['gamedata-versions'];
+        var gdFiles = gd && gd.files && typeof gd.files === 'object' ? gd.files : null;
+        var fv = parsed['furnidata-version'];
+        var furniVer = fv && typeof fv.version === 'string' && /^[0-9a-f]{8,64}$/i.test(fv.version) ? fv.version : null;
+
+        var interp = function (val) {
+            var res = val.replace(/\$\{(.*?)\}/g, function (m, k) {
+                return typeof defs[k] === 'string' && defs[k].length ? defs[k] : m;
+            });
+            if (res.indexOf('%timestamp%') >= 0 && gdFiles) {
+                var file = res.split(/[?#]/, 1)[0].split('/').pop();
+                var ver = file ? gdFiles[file] : null;
+                if (typeof ver === 'string' && ver.length) {
+                    res = res.replace(/([?&])t=%timestamp%/i, '$1v=' + encodeURIComponent(ver));
+                }
+            }
+            return res;
+        };
+        for (var pass = 0; pass < 2; pass++) {
+            for (var key in defs) {
+                if (typeof defs[key] === 'string' && defs[key].indexOf('${') >= 0) defs[key] = interp(defs[key]);
+            }
+        }
+
+        var origins = {};
+        ['asset.url', 'gamedata.url', 'image.library.url', 'images.url', 'furnidata.url', 'api.url'].forEach(function (k) {
+            if (typeof defs[k] !== 'string' || !defs[k]) return;
+            try {
+                var o = new URL(defs[k], window.location.href).origin;
+                if (o && o !== window.location.origin && o.indexOf('http') === 0 && !origins[o]) {
+                    origins[o] = 1;
+                    var l = document.createElement('link');
+                    l.rel = 'preconnect';
+                    l.href = o;
+                    l.crossOrigin = 'anonymous';
+                    document.head.appendChild(l);
+                }
+            } catch (_) {}
+        });
+
+        if (sso && !defs['crypto.ws.enabled'] && typeof defs['socket.url'] === 'string' && /^wss?:\/\//i.test(defs['socket.url'])) {
+            try {
+                var ws = new WebSocket(defs['socket.url']);
+                ws.binaryType = 'arraybuffer';
+                var early = { url: defs['socket.url'], socket: ws, opened: false, closed: null, errored: false, messages: [], detach: function () {} };
+                var onOpen = function () { early.opened = true; };
+                var onClose = function (ev) { early.closed = ev; };
+                var onError = function () { early.errored = true; };
+                var onMsg = function (ev) { if (ev.data instanceof ArrayBuffer) early.messages.push(ev.data); };
+                ws.addEventListener('open', onOpen);
+                ws.addEventListener('close', onClose);
+                ws.addEventListener('error', onError);
+                ws.addEventListener('message', onMsg);
+                early.detach = function () {
+                    ws.removeEventListener('open', onOpen);
+                    ws.removeEventListener('close', onClose);
+                    ws.removeEventListener('error', onError);
+                    ws.removeEventListener('message', onMsg);
+                };
+                window.__voltEarlySocket = early;
+            } catch (_) {}
+        }
+
+        var cache = new Map();
+        var dataCache = new Map();
+        window.__voltPrefetchCache = cache;
+        window.__voltPrefetchData = dataCache;
+        var warm = function (u, kind) {
+            if (!u || u.indexOf('%timestamp%') >= 0 || u.indexOf('${') >= 0 || cache.has(u) || dataCache.has(u)) return;
+            var k = kind || (/\.(?:hab|nitro)(?:$|[?#])/i.test(u) ? 'bin' : (/\.jsonc?(?:$|[?#])/i.test(u) ? 'json' : 'raw'));
+            if (k === 'json') {
+                var jp = fetch(u).then(function (r) {
+                    var ct = (r.headers && r.headers.get('content-type')) || '';
+                    if (r.status !== 200) return { ok: false, status: r.status, contentType: ct, url: r.url || u };
+                    // Stream text during module download without blocking DCL/WebSocket auth with synchronous JSON.parse.
+                    return r.text().then(function (text) {
+                        return { ok: true, status: r.status, contentType: ct, url: r.url || u, text: text };
+                    });
+                });
+                jp.catch(function () { dataCache.delete(u); });
+                dataCache.set(u, jp);
+                return;
+            }
+            if (k === 'bin') {
+                var bp = fetch(u).then(function (r) {
+                    if (!r.ok) return { ok: false, status: r.status, url: r.url || u };
+                    return r.arrayBuffer().then(function (buffer) {
+                        return { ok: true, status: r.status, url: r.url || u, buffer: buffer };
+                    });
+                });
+                bp.catch(function () { dataCache.delete(u); });
+                dataCache.set(u, bp);
+                return;
+            }
+            var p = fetch(u);
+            p.catch(function () { cache.delete(u); });
+            cache.set(u, p);
+        };
+
+        if (typeof defs['furnidata.url'] === 'string') {
+            var fu = interp(defs['furnidata.url']);
+            if (furniVer) {
+                try {
+                    var parsedUrl = new URL(fu, window.location.href);
+                    parsedUrl.searchParams.delete('t');
+                    parsedUrl.searchParams.set('v', furniVer);
+                    fu = parsedUrl.toString();
+                } catch (_) {}
+            }
+            warm(fu, 'json');
+        }
+
+        ['productdata.url', 'avatar.actions.url', 'avatar.figuredata.url', 'avatar.figuremap.url', 'avatar.effectmap.url'].forEach(function (k) {
+            if (typeof defs[k] === 'string') warm(interp(defs[k]), 'json');
+        });
+
+        var texts = defs['external.texts.url'];
+        if (Array.isArray(texts)) {
+            for (var ti = 0; ti < texts.length; ti++) {
+                if (typeof texts[ti] !== 'string' || !texts[ti]) break;
+                warm(interp(texts[ti]), 'json');
+            }
+        }
+
+        var preloads = defs['preload.assets.urls'];
+        (Array.isArray(preloads) ? preloads : [preloads]).forEach(function (entry) {
+            if (typeof entry === 'string' && entry) warm(interp(entry));
+        });
+
+        try { warm(new URL('configuration/marketplace-texts.json', document.baseURI).toString(), 'json'); } catch (_) {}
+
+        var fmt = String(defs['asset.bundle.format'] || 'hab').trim().toLowerCase() === 'nitro' ? 'nitro' : 'hab';
+        var toFmt = function (u) { return u.replace(/\.(?:hab|nitro)(?=$|[?#])/i, '.' + fmt); };
+        var warmedAvatars = false;
+        try {
+            var saved = JSON.parse(window.localStorage.getItem('volt.boot.mandatoryAvatarUrls') || 'null');
+            if (Array.isArray(saved) && saved.length) {
+                saved.forEach(function (u) { if (typeof u === 'string' && /^https?:\/\//i.test(u)) { warm(toFmt(u), 'bin'); warmedAvatars = true; } });
+            }
+        } catch (_) {}
+        if (!warmedAvatars && typeof defs['avatar.asset.url'] === 'string') {
+            var tpl = interp(defs['avatar.asset.url']);
+            ['hh_human_body', 'hh_human_item'].forEach(function (lib) {
+                warm(toFmt(tpl.replace(/%libname%/gi, lib)), 'bin');
+            });
+        }
+    })();
+    </script>
     <script type="module" src="/src/bootstrap.ts"></script>
 </body>
 </html>

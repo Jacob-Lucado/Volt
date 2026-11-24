@@ -1,10 +1,15 @@
 import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
-import { useEffect, useEffectEvent, useState } from 'react';
+import { lazy, Suspense, useEffect, useEffectEvent, useState } from 'react';
 import { CreateLinkEvent, GetConfigurationValue, GetGroupInformation, GetSessionDataManager, GetUserProfile } from '../../api';
 import { buySnowWarTokens, SnowWarEngineState, SnowWarHookState } from '../../api/snowwar';
 import { useNotificationActions, useSnowWar } from '../../hooks';
-import { SnowWarGamesMainView } from './views/snowwar/SnowWarGamesMainView';
-import { SnowWarLeaderboardView } from './views/snowwar/SnowWarLeaderboardView';
+
+const LazySnowWarGamesMainView = lazy(() =>
+    import('./views/snowwar/SnowWarGamesMainView').then((module) => ({ default: module.SnowWarGamesMainView }))
+);
+const LazySnowWarLeaderboardView = lazy(() =>
+    import('./views/snowwar/SnowWarLeaderboardView').then((module) => ({ default: module.SnowWarLeaderboardView }))
+);
 
 /**
  * Toolbar games entry: AIR opens the SnowStorm `games_main` window (GamesMainViewController)
@@ -74,29 +79,33 @@ export const GameCenterView = () =>
     return (
         <>
             {mainVisible && !inGame && (
-                <SnowWarGamesMainView
-                    blockLength={blockLength}
-                    freeGamesLeft={account?.freeGamesLeft ?? -1}
-                    hasUnlimitedGames={account?.hasUnlimitedGames ?? false}
-                    leaderboardEnabled={GetConfigurationValue<boolean>('games.highscores.enabled', true)}
-                    lobby={lobbyVisible ? { players: lobby.players, maxPlayers: lobby.data.maximumPlayers, queuePosition: lobby.queuePosition, countdownDeadline: lobby.countdownDeadline } : null}
-                    onBuyTokens={offer => buySnowWarTokens(snowWar, showConfirm, offer)}
-                    onCancelLobby={leaveLobby}
-                    onClose={closeMain}
-                    onOpenClubCenter={() => CreateLinkEvent('habboUI/open/hccenter')}
-                    onPlay={play}
-                    onShowLeaderboard={() => setLeaderboardVisible(true)}
-                />
+                <Suspense fallback={null}>
+                    <LazySnowWarGamesMainView
+                        blockLength={blockLength}
+                        freeGamesLeft={account?.freeGamesLeft ?? -1}
+                        hasUnlimitedGames={account?.hasUnlimitedGames ?? false}
+                        leaderboardEnabled={GetConfigurationValue<boolean>('games.highscores.enabled', true)}
+                        lobby={lobbyVisible ? { players: lobby.players, maxPlayers: lobby.data.maximumPlayers, queuePosition: lobby.queuePosition, countdownDeadline: lobby.countdownDeadline } : null}
+                        onBuyTokens={offer => buySnowWarTokens(snowWar, showConfirm, offer)}
+                        onCancelLobby={leaveLobby}
+                        onClose={closeMain}
+                        onOpenClubCenter={() => CreateLinkEvent('habboUI/open/hccenter')}
+                        onPlay={play}
+                        onShowLeaderboard={() => setLeaderboardVisible(true)}
+                    />
+                </Suspense>
             )}
             {leaderboardVisible && (
-                <SnowWarLeaderboardView
-                    leaderboard={leaderboard}
-                    ownUserId={GetSessionDataManager().userId}
-                    onClose={closeLeaderboardWindow}
-                    onOpenGroup={GetGroupInformation}
-                    onOpenProfile={GetUserProfile}
-                    onRequest={requestLeaderboard}
-                />
+                <Suspense fallback={null}>
+                    <LazySnowWarLeaderboardView
+                        leaderboard={leaderboard}
+                        ownUserId={GetSessionDataManager().userId}
+                        onClose={closeLeaderboardWindow}
+                        onOpenGroup={GetGroupInformation}
+                        onOpenProfile={GetUserProfile}
+                        onRequest={requestLeaderboard}
+                    />
+                </Suspense>
             )}
         </>
     );

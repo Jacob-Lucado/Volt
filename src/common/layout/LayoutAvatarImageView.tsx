@@ -8,6 +8,7 @@ const AVATAR_CACHE_MAX_SIZE = 200;
 // Holds the encoded PNG bytes; every mounted view makes (and revokes) its own
 // object url, so evicting an entry never breaks an image still on screen.
 const AVATAR_IMAGE_CACHE: Map<string, Blob> = new Map();
+const AVATAR_IMAGE_INFLIGHT: Map<string, Promise<Blob | null>> = new Map();
 
 export interface LayoutAvatarImageViewProps extends BaseProps<HTMLDivElement> {
     figure: string;
@@ -95,6 +96,15 @@ export const LayoutAvatarImageView: FC<LayoutAvatarImageViewProps> = (props) => 
     useEffect(() => {
         if (!isReady) return;
 
+        if (!figure || !figure.length) {
+            if (objectUrlRef.current) {
+                URL.revokeObjectURL(objectUrlRef.current);
+                objectUrlRef.current = null;
+            }
+            setAvatarUrl(null);
+            return;
+        }
+
         const requestId = ++requestIdRef.current;
         const listener: IAvatarImageListener = {
             resetFigure: () => {},
@@ -117,8 +127,32 @@ export const LayoutAvatarImageView: FC<LayoutAvatarImageViewProps> = (props) => 
             const resetFigure = async (_figure: string) => {
                 if (isDisposed.current || requestIdRef.current !== requestId) return;
 
+                const inflight = AVATAR_IMAGE_INFLIGHT.get(figureKey);
+                if (inflight) {
+                    const shared = await inflight;
+                    if (shared && !isDisposed.current && requestIdRef.current === requestId) {
+                        applyImage(shared);
+                        return;
+                    }
+                    if (isDisposed.current || requestIdRef.current !== requestId) return;
+                }
+
+                let resolveInflight: (blob: Blob | null) => void = null;
+                if (!AVATAR_IMAGE_INFLIGHT.has(figureKey)) {
+                    const promise = new Promise<Blob | null>((resolve) => { resolveInflight = resolve; });
+                    AVATAR_IMAGE_INFLIGHT.set(figureKey, promise);
+                }
+
                 const avatarImage = GetAvatarRenderManager().createAvatarImage(_figure, AvatarScaleType.LARGE, gender, listener);
-                if (!avatarImage) return;
+                if (!avatarImage) {
+                    if (resolveInflight) {
+                        AVATAR_IMAGE_INFLIGHT.delete(figureKey);
+                        resolveInflight(null);
+                    }
+                    return;
+                }
+
+                let resolvedBlob: Blob | null = null;
 
                 try {
                     let setType = AvatarSetType.FULL;
@@ -143,10 +177,11 @@ export const LayoutAvatarImageView: FC<LayoutAvatarImageViewProps> = (props) => 
 
                     if (imageUrl && nativeCroppedHead && trimmed) imageUrl = await cropOpaqueBoundsImageUrl(imageUrl, 0);
 
-                    if (imageUrl && !isDisposed.current && requestIdRef.current === requestId) {
+                    if (imageUrl) {
                         const blob = dataUrlToBlob(imageUrl);
 
                         if (blob && !avatarImage.isPlaceholder()) {
+                            resolvedBlob = blob;
                             if (AVATAR_IMAGE_CACHE.size >= AVATAR_CACHE_MAX_SIZE) {
                                 const firstKey = AVATAR_IMAGE_CACHE.keys().next().value;
                                 AVATAR_IMAGE_CACHE.delete(firstKey);
@@ -155,10 +190,16 @@ export const LayoutAvatarImageView: FC<LayoutAvatarImageViewProps> = (props) => 
                             AVATAR_IMAGE_CACHE.set(figureKey, blob);
                         }
 
-                        applyImage(blob ?? imageUrl);
+                        if (!isDisposed.current && requestIdRef.current === requestId) {
+                            applyImage(blob ?? imageUrl);
+                        }
                     }
 
                 } finally {
+                    if (resolveInflight) {
+                        AVATAR_IMAGE_INFLIGHT.delete(figureKey);
+                        resolveInflight(resolvedBlob);
+                    }
                     avatarImage.dispose();
                 }
             };

@@ -18,12 +18,13 @@ vi.mock('@volt/renderer', () => ({
     GetSessionDataManager: () => ({ init: boot.session }),
     GetAvatarRenderManager: () => ({ init: boot.avatars }),
     GetAssetManager: () => ({ downloadAssets: boot.assets }),
+    GetRoomContentLoader: () => ({ preloadMandatoryLibraries: async () => {} }),
     GetRoomSessionManager: () => ({ init: boot.roomSession }),
     GetRoomEngine: () => ({ init: boot.rooms }),
     GetSoundManager: () => ({ init: async () => {} })
 }));
-vi.mock('../api/catalog/loadMarketplaceTexts', () => ({ loadMarketplaceTexts: async () => {} }));
-vi.mock('../api/wired/loadWiredTexts', () => ({ loadWiredTexts: async () => {} }));
+vi.mock('../api/catalog/loadMarketplaceTexts', () => ({ fetchMarketplaceTexts: async () => null, applyMarketplaceTexts: () => {}, loadMarketplaceTexts: async () => {} }));
+vi.mock('../api/wired/loadWiredTexts', () => ({ ensureWiredTextsLoaded: async () => {}, loadWiredTexts: async () => {} }));
 
 describe('hotel boot dependencies', () => {
     beforeEach(() => { vi.resetModules(); vi.resetAllMocks(); });

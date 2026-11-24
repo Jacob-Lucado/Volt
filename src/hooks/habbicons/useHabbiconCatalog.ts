@@ -91,15 +91,42 @@ const useHabbiconCatalogState = () => {
         if (!enabled || !baseUrl) return;
 
         let disposed = false;
-        void assetManager.preload().then(() => {
-            if (!disposed) setAssetsLoaded(true);
-        });
-        refresh();
+        let delayHandle: number | null = null;
+        let idleHandle: number | null = null;
+
+        const preloadAssets = () => {
+            idleHandle = null;
+            void assetManager.preload().then(() => {
+                if (!disposed) setAssetsLoaded(true);
+            });
+        };
+
+        if (bookVisible) {
+            preloadAssets();
+        } else {
+            delayHandle = window.setTimeout(() => {
+                delayHandle = null;
+                idleHandle = window.requestIdleCallback
+                    ? window.requestIdleCallback(preloadAssets, { timeout: 5000 })
+                    : window.setTimeout(preloadAssets, 0);
+            }, 3000);
+        }
 
         return () => {
             disposed = true;
+            if (delayHandle !== null) window.clearTimeout(delayHandle);
+            if (idleHandle !== null) {
+                if (window.cancelIdleCallback) window.cancelIdleCallback(idleHandle);
+                else window.clearTimeout(idleHandle);
+            }
         };
-    }, [enabled, baseUrl, assetManager]);
+    }, [enabled, baseUrl, assetManager, bookVisible]);
+
+    useEffect(() => {
+        if (!enabled || !baseUrl) return;
+
+        refresh();
+    }, [enabled, baseUrl]);
 
     useEffect(() => {
         const tracker = {

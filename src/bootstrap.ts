@@ -1,5 +1,3 @@
-import { GetCommunication, GetConfiguration } from '@volt/renderer';
-import { startHotelRuntime } from './boot/HotelRuntime';
 import { derivePetConfig, DerivedPetConfig, PetDefinition } from './api/volt/PetData';
 import { parseJsonDocument, UiJsonMode } from './json/JsonDocumentParser';
 import { configFileUrl, getClientMode, installSecureFetch } from './secure-assets';
@@ -85,19 +83,20 @@ const deployBaseUrl = (): string => {
     return `${window.location.origin}/`;
 };
 
-// The entry HTML can carry the boot configuration (nginx SSI includes it into the
-// <script type="application/json" id="volt-boot-*"> blocks of index.html), which saves
-// the round trips to fetch it. Without SSI the blocks still hold the include comment.
-// A missing file makes nginx include its error page, so only a block that parses counts.
-const readBootDocument = (name: string): string | null => {
+// Reuse documents already parsed by index.html's inline prefetcher, or parse the SSI block once.
+const readBootDocument = <T = unknown>(name: string): T | null => {
+    const preParsed = (window as any).__voltBootParsed as Record<string, unknown> | undefined;
+
+    if (preParsed && Object.prototype.hasOwnProperty.call(preParsed, name)) {
+        return (preParsed[name] ?? null) as T | null;
+    }
+
     const text = document.getElementById(`volt-boot-${name}`)?.textContent?.trim();
 
     if (!text || text.startsWith('<!--')) return null;
 
     try {
-        parseJsonDocument(text, resolveJsonMode(), `${name}.json`);
-
-        return text;
+        return parseJsonDocument(text, resolveJsonMode(), `${name}.json`) as T;
     } catch {
         setBootDebug(`boot: inline ${name} unusable, fetching it`);
 
@@ -109,10 +108,10 @@ const loadClientMode = async () => {
     try {
         if ((window as any).__voltClientMode) return;
 
-        const inline = readBootDocument('client-mode');
+        const inline = readBootDocument<Record<string, unknown>>('client-mode');
 
-        if (inline) {
-            (window as any).__voltClientMode = parseJsonDocument(inline, resolveJsonMode(), 'client-mode.json');
+        if (inline && typeof inline === 'object') {
+            (window as any).__voltClientMode = inline;
             setBootDebug('boot: client-mode inline');
 
             return;
@@ -136,21 +135,22 @@ const loadClientMode = async () => {
 };
 
 // Boot documents are plain files; a secure-assets deploy serves its configuration encrypted instead.
-const inlineConfigDocument = (name: string): string | null => (getClientMode().secureAssetsEnabled ? null : readBootDocument(name));
+const inlineConfigDocument = <T = unknown>(name: string): T | null =>
+    (getClientMode().secureAssetsEnabled ? null : readBootDocument<T>(name));
 
 const loadPetConfig = async (): Promise<DerivedPetConfig | null> => {
     try {
         const url = configFileUrl('pets.json', true);
-        let text = inlineConfigDocument('pets');
+        let parsed = inlineConfigDocument<{ pets?: unknown } | unknown[]>('pets');
 
-        if (text === null) {
+        if (parsed === null) {
             const response = await fetch(url);
 
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-            text = await response.text();
+            const text = await response.text();
+            parsed = parseJsonDocument(text, resolveJsonMode(), url) as { pets?: unknown } | unknown[];
         }
-        const parsed = parseJsonDocument(text, resolveJsonMode(), url) as { pets?: unknown } | unknown[];
         const list = Array.isArray(parsed) ? parsed : (parsed as { pets?: unknown })?.pets;
         const derived = derivePetConfig(list as PetDefinition[]);
 
@@ -164,55 +164,221 @@ const loadPetConfig = async (): Promise<DerivedPetConfig | null> => {
     }
 };
 
+const preconnectUrls = (values: string[]) => {
+    const origins = new Set<string>();
+
+    for (const value of values) {
+        try {
+            const origin = value ? new URL(value, window.location.href).origin : '';
+
+            if (origin && origin !== window.location.origin && origin.startsWith('http')) origins.add(origin);
+        } catch {}
+    }
+
+    for (const origin of origins) {
+        if (document.head.querySelector(`link[rel="preconnect"][href="${origin}"]`)) continue;
+
+        const link = document.createElement('link');
+
+        link.rel = 'preconnect';
+        link.href = origin;
+        link.crossOrigin = 'anonymous';
+        document.head.appendChild(link);
+    }
+};
+
+const interpolateRawConfig = (
+    value: string,
+    defs: Record<string, unknown>,
+    gamedataVersions: Record<string, string> | null
+): string => {
+    let resolved = value.replace(/\$\{(.*?)\}/g, (match, key) => {
+        const entry = defs[key];
+
+        return typeof entry === 'string' && entry.length ? entry : match;
+    });
+
+    if (resolved.includes('%timestamp%') && gamedataVersions) {
+        const file = resolved.split(/[?#]/, 1)[0].split('/').pop();
+        const version = file ? gamedataVersions[file] : null;
+
+        if (typeof version === 'string' && version.length) {
+            resolved = resolved.replace(/([?&])t=%timestamp%/i, `$1v=${encodeURIComponent(version)}`);
+        }
+    }
+
+    return resolved;
+};
+
+const startEarlySocket = (socketUrl: string) => {
+    if (!socketUrl || !/^wss?:\/\//i.test(socketUrl)) return;
+
+    try {
+        const socket = new WebSocket(socketUrl);
+        socket.binaryType = 'arraybuffer';
+
+        const early = {
+            url: socketUrl,
+            socket,
+            opened: false,
+            closed: null as CloseEvent | null,
+            errored: false,
+            messages: [] as ArrayBuffer[],
+            detach: () => {}
+        };
+        const onOpen = () => { early.opened = true; };
+        const onClose = (event: CloseEvent) => { early.closed = event; };
+        const onError = () => { early.errored = true; };
+        const onMessage = (event: MessageEvent) => {
+            if (event.data instanceof ArrayBuffer) early.messages.push(event.data);
+        };
+
+        socket.addEventListener('open', onOpen);
+        socket.addEventListener('close', onClose);
+        socket.addEventListener('error', onError);
+        socket.addEventListener('message', onMessage);
+
+        early.detach = () => {
+            socket.removeEventListener('open', onOpen);
+            socket.removeEventListener('close', onClose);
+            socket.removeEventListener('error', onError);
+            socket.removeEventListener('message', onMessage);
+        };
+
+        (globalThis as any).__voltEarlySocket = early;
+    } catch {}
+};
+
+const prefetchBootResources = (
+    rendererConfig: Record<string, unknown>,
+    uiConfig: Record<string, unknown> | null,
+    furnidataVersion: string | null,
+    gamedataVersions: Record<string, string> | null
+) => {
+    // Resolve flat base strings once so nested ${asset.url} / ${gamedata.url} references expand cleanly.
+    const defs: Record<string, unknown> = { ...(uiConfig || {}), ...rendererConfig };
+
+    for (let pass = 0; pass < 2; pass++) {
+        for (const [key, val] of Object.entries(defs)) {
+            if (typeof val === 'string' && val.includes('${')) {
+                defs[key] = interpolateRawConfig(val, defs, gamedataVersions);
+            }
+        }
+    }
+
+    preconnectUrls(
+        ['asset.url', 'gamedata.url', 'image.library.url', 'images.url', 'furnidata.url', 'api.url']
+            .map((key) => (typeof defs[key] === 'string' ? (defs[key] as string) : ''))
+    );
+
+    if (ssoTicket && !defs['crypto.ws.enabled'] && typeof defs['socket.url'] === 'string' && !(globalThis as any).__voltEarlySocket) {
+        startEarlySocket(defs['socket.url']);
+    }
+
+    const cache: Map<string, Promise<Response>> = (globalThis as any).__voltPrefetchCache ?? new Map<string, Promise<Response>>();
+    (globalThis as any).__voltPrefetchCache = cache;
+    const dataCache: Map<string, Promise<unknown>> | undefined = (globalThis as any).__voltPrefetchData;
+
+    const warm = (url: string) => {
+        if (!url || url.includes('%timestamp%') || url.includes('${') || cache.has(url) || dataCache?.has(url)) return;
+
+        const pending = fetch(url);
+        pending.catch(() => cache.delete(url));
+        cache.set(url, pending);
+    };
+
+    // Furnidata with version hash matches GetFurnitureDataUrl(true).
+    if (typeof defs['furnidata.url'] === 'string') {
+        let furniUrl = interpolateRawConfig(defs['furnidata.url'], defs, gamedataVersions);
+
+        if (furnidataVersion) {
+            try {
+                const u = new URL(furniUrl, window.location.href);
+                u.searchParams.delete('t');
+                u.searchParams.set('v', furnidataVersion);
+                furniUrl = u.toString();
+            } catch {}
+        }
+
+        warm(furniUrl);
+    }
+
+    for (const key of ['productdata.url', 'avatar.actions.url', 'avatar.figuredata.url', 'avatar.figuremap.url', 'avatar.effectmap.url']) {
+        if (typeof defs[key] === 'string') warm(interpolateRawConfig(defs[key] as string, defs, gamedataVersions));
+    }
+
+    const externalTexts = defs['external.texts.url'];
+    if (Array.isArray(externalTexts)) {
+        for (const entry of externalTexts) {
+            if (typeof entry !== 'string' || !entry) break;
+            warm(interpolateRawConfig(entry, defs, gamedataVersions));
+        }
+    }
+
+    const preloadAssets = defs['preload.assets.urls'];
+    for (const entry of (Array.isArray(preloadAssets) ? preloadAssets : [preloadAssets])) {
+        if (typeof entry === 'string' && entry) warm(interpolateRawConfig(entry, defs, gamedataVersions));
+    }
+
+    warm(new URL('configuration/marketplace-texts.json', document.baseURI).toString());
+
+    // Pre-fetch mandatory avatar bundles in the configured bundle format alongside FigureMap.json.
+    const bundleFormat = String(defs['asset.bundle.format'] || 'hab').trim().toLowerCase() === 'nitro' ? 'nitro' : 'hab';
+    const withBundleFormat = (url: string) => url.replace(/\.(?:hab|nitro)(?=$|[?#])/i, `.${bundleFormat}`);
+    let warmedAvatars = false;
+    try {
+        const cachedAvatarUrls = JSON.parse(window.localStorage?.getItem('volt.boot.mandatoryAvatarUrls') || 'null');
+        if (Array.isArray(cachedAvatarUrls)) {
+            for (const url of cachedAvatarUrls) {
+                if (typeof url === 'string' && /^https?:\/\//i.test(url)) {
+                    warm(withBundleFormat(url));
+                    warmedAvatars = true;
+                }
+            }
+        }
+    } catch {}
+    if (!warmedAvatars && typeof defs['avatar.asset.url'] === 'string') {
+        const template = interpolateRawConfig(defs['avatar.asset.url'] as string, defs, gamedataVersions);
+        for (const lib of ['hh_human_body', 'hh_human_item']) {
+            warm(withBundleFormat(template.replace(/%libname%/gi, lib)));
+        }
+    }
+};
+
 await loadClientMode();
 
 installSecureFetch();
 setBootDebug('boot: secure fetch installed');
 
-// Download and evaluate the app bundle while the configuration loads; it only mounts once that is done.
-const appModule = import('./index');
-// Don't let a failed import surface as an unhandled rejection before it is awaited below.
-appModule.catch(() => {});
-
 const search = new URLSearchParams(window.location.search);
 const clientMode = getClientMode();
-const petConfigLoad = loadPetConfig();
 
 (window as any).VoltSecureApiUrl = clientMode.apiBaseUrl || window.location.origin;
 (window as any).VoltClientMode = clientMode;
 const rendererConfigUrl = configFileUrl('renderer-config.json', true);
 const uiConfigUrl = configFileUrl('ui-config.json', true);
 
-for (const [name, url] of [['renderer-config', rendererConfigUrl], ['ui-config', uiConfigUrl]]) {
-    const inline = inlineConfigDocument(name);
+const inlineRendererConfig = inlineConfigDocument<Record<string, unknown>>('renderer-config');
+const inlineUiConfig = inlineConfigDocument<Record<string, unknown>>('ui-config');
 
-    if (inline !== null) GetConfiguration().preloadDocument(url, inline);
-}
-
-// The furnidata version (when the entry page carries it) lets the boot load ask for exactly that
-// furnidata, which browsers and the edge then cache for good.
 const furnidataVersion = (() => {
-    const text = inlineConfigDocument('furnidata-version');
-
-    if (text === null) return null;
-
-    const version = (parseJsonDocument(text, resolveJsonMode(), 'furnidata-version.json') as { version?: unknown })?.version;
+    const parsed = inlineConfigDocument<{ version?: unknown }>('furnidata-version');
+    const version = parsed?.version;
 
     return typeof version === 'string' && /^[0-9a-f]{8,64}$/i.test(version) ? version : null;
 })();
 
-// Gamedata versions (file name -> version) from the entry page: those files are requested by version instead
-// of with a new timestamp per load (see the renderer's configuration interpolation).
 const gamedataVersions = (() => {
-    const text = inlineConfigDocument('gamedata-versions');
-
-    if (text === null) return null;
-
-    const files = (parseJsonDocument(text, resolveJsonMode(), 'gamedata-versions.json') as { files?: unknown })?.files;
+    const parsed = inlineConfigDocument<{ files?: unknown }>('gamedata-versions');
+    const files = parsed?.files;
 
     if (!files || typeof files !== 'object') return null;
 
-    const versions = Object.fromEntries(Object.entries(files).filter(([file, version]) => file && typeof version === 'string' && /^[A-Za-z0-9_-]{1,64}$/.test(version)));
+    const versions = Object.fromEntries(
+        Object.entries(files as Record<string, unknown>).filter(
+            ([file, version]) => file && typeof version === 'string' && /^[A-Za-z0-9_-]{1,64}$/.test(version)
+        )
+    ) as Record<string, string>;
 
     return Object.keys(versions).length ? versions : null;
 })();
@@ -234,64 +400,32 @@ const gamedataVersions = (() => {
 
 setBootDebug('boot: VoltConfig assigned');
 
-// Load renderer-config.json + ui-config.json BEFORE rendering React. Otherwise
-// the first paint triggers a flood of "Missing configuration key" warnings for
-// every key components read synchronously (asset.url, login.endpoint, …) until
-// prepare()'s deferred init() finally lands. Doing it here makes the config
-// already populated by the time index.tsx mounts <App/>.
-const configurationLoad = GetConfiguration().init().then(
-    () => setBootDebug('boot: configuration init done'),
-    (error) => setBootDebug(`boot: configuration init failed ${error?.message || error}`)
-);
-
-const [petConfig] = await Promise.all([petConfigLoad, configurationLoad]);
-
-// Open the connections to the asset and gamedata hosts now, so the first gamedata requests
-// don't each wait for DNS + TLS once the app starts loading.
-const preconnectOrigins = () => {
-    const origins = new Set<string>();
-
-    for (const key of ['asset.url', 'gamedata.url', 'image.library.url', 'images.url', 'furnidata.url', 'api.url']) {
-        try {
-            const value = GetConfiguration().getValue<string>(key, '');
-            const origin = value ? new URL(GetConfiguration().interpolate(value), window.location.href).origin : '';
-
-            if (origin && origin !== window.location.origin && origin.startsWith('http')) origins.add(origin);
-        } catch {}
-    }
-
-    for (const origin of origins) {
-        const link = document.createElement('link');
-
-        link.rel = 'preconnect';
-        link.href = origin;
-        link.crossOrigin = 'anonymous';
-        document.head.appendChild(link);
-    }
-};
-
-preconnectOrigins();
-
-// With a hand-off ticket, log in now: the socket opens and authenticates while the app bundle
-// evaluates. The connection holds incoming messages until MainView calls ready(), and App takes
-// over this init (see takeEarlyCommunicationInit) instead of starting its own.
-if (ssoTicket) {
-    const communicationInit = GetCommunication().init();
-
-    communicationInit.catch(() => {});
-    (window as any).__voltEarlyCommunicationInit = communicationInit;
-    setBootDebug('boot: socket started');
+// Open preconnects, WebSocket, and gamedata fetches immediately before the renderer and React chunks finish evaluating.
+if (inlineRendererConfig && !clientMode.secureAssetsEnabled) {
+    prefetchBootResources(inlineRendererConfig, inlineUiConfig, furnidataVersion, gamedataVersions);
 }
 
-// pets.json loads alongside the configuration. Its keys override the config files, as the
-// VoltConfig defaults do, and stay on VoltConfig for any later configuration reload.
-if (petConfig) {
-    Object.assign((window as any).VoltConfig, petConfig);
-    GetConfiguration().parseConfiguration(petConfig, true);
-}
+// Download and evaluate the runtime and React bundles in parallel while gamedata and the WebSocket are already in flight.
+const runtimeModule = import('./boot/HotelRuntime');
+const appModule = import('./index');
+runtimeModule.catch(() => {});
+appModule.catch(() => {});
 
-// Start the engine while React and the UI bundle are still loading. App joins
-// this same promise; incoming login packets remain queued until MainView is ready.
+const petConfigLoad = loadPetConfig();
+
+const [{ bootstrapHotelConfiguration, startHotelRuntime }, petConfig] = await Promise.all([runtimeModule, petConfigLoad]);
+
+await bootstrapHotelConfiguration({
+    rendererConfigUrl,
+    uiConfigUrl,
+    inlineRendererConfig,
+    inlineUiConfig,
+    petConfig,
+    ssoTicket,
+    preconnectUrls,
+    setBootDebug
+});
+
 if (ssoTicket) {
     const viewport = window.visualViewport;
     startHotelRuntime(viewport?.width ?? window.innerWidth, viewport?.height ?? window.innerHeight).catch(() => {});
