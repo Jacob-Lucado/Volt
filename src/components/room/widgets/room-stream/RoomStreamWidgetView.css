@@ -407,6 +407,10 @@
     border-radius: 50%;
 }
 
+.room-stream-copy {
+    right: 36px;
+}
+
 .room-stream-heart:hover {
     background: rgba(255, 255, 255, 0.24);
 }

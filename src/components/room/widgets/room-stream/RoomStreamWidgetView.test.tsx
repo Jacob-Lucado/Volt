@@ -396,4 +396,17 @@ describe('RoomStreamWidgetView', () => {
 
         expect(state.chat[1]).toBe(':music suggest https://example.com/a');
     });
+
+    it('copies the song link from the copy button', async () => {
+        const writeText = vi.fn().mockResolvedValue(undefined);
+        Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob', token: 1, queued: 0 };
+
+        const view = render(<RoomStreamWidgetView />);
+
+        fireEvent.click(view.getByLabelText('Copy the song link'));
+
+        expect(writeText).toHaveBeenCalledWith('https://radio.example.com/live.mp3');
+        expect(await view.findByLabelText('Link copied')).toBeTruthy();
+    });
 });

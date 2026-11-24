@@ -249,6 +249,29 @@ const VideoIcon: FC<{}> = () => (
     </svg>
 );
 
+const CopyIcon: FC<{ done: boolean }> = ({ done }) => (
+    <svg
+        aria-hidden="true"
+        fill="none"
+        height="12"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        width="12"
+    >
+        {done ? (
+            <path d="M5 13l4 4L19 7" />
+        ) : (
+            <>
+                <rect height="13" rx="2" width="13" x="9" y="9" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </>
+        )}
+    </svg>
+);
+
 const VolumeIcon: FC<{ level: number }> = ({ level }) => (
     <svg aria-hidden="true" fill="currentColor" height="14" viewBox="0 0 24 24" width="14">
         <path d="M3 9.5v5h4l5 4.5V5L7 9.5H3z" />
@@ -272,6 +295,7 @@ export const RoomStreamWidgetView: FC<{}> = () => {
     const [videoWidth, setVideoWidth] = useState<number>(readVideoWidth);
     const [favorites, setFavorites] = useState<FavoriteSong[]>(readFavorites);
     const [showFavorites, setShowFavorites] = useState(false);
+    const [copied, setCopied] = useState(false);
     const resizeRef = useRef<{ startX: number; startWidth: number }>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
     const frameRef = useRef<HTMLIFrameElement>(null);
@@ -496,16 +520,38 @@ export const RoomStreamWidgetView: FC<{}> = () => {
         saveFavorites(next);
     };
 
+    const copyLink = () => {
+        navigator.clipboard
+            ?.writeText(stream.url)
+            .then(() => {
+                setCopied(true);
+                window.setTimeout(() => setCopied(false), 1500);
+            })
+            .catch(() => undefined);
+    };
+
     const heartButton = (
-        <button
-            aria-label={saved ? 'Remove this song from my favorites' : 'Save this song to my favorites'}
-            aria-pressed={saved}
-            className="room-stream-heart"
-            type="button"
-            onClick={toggleSaved}
-        >
-            <HeartIcon filled={saved} />
-        </button>
+        <>
+            <button
+                aria-label={saved ? 'Remove this song from my favorites' : 'Save this song to my favorites'}
+                aria-pressed={saved}
+                className="room-stream-heart"
+                type="button"
+                onClick={toggleSaved}
+            >
+                <HeartIcon filled={saved} />
+            </button>
+            {safeLink(stream.url) && (
+                <button
+                    aria-label={copied ? 'Link copied' : 'Copy the song link'}
+                    className="room-stream-heart room-stream-copy"
+                    type="button"
+                    onClick={copyLink}
+                >
+                    <CopyIcon done={copied} />
+                </button>
+            )}
+        </>
     );
 
     const favoritesButton = (
