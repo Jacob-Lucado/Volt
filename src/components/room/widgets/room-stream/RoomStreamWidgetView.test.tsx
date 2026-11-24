@@ -15,6 +15,7 @@ vi.mock('../../../../hooks', () => ({
 vi.mock('../../../../api', () => ({ SendMessageComposer: (composer: unknown) => state.sent.push(composer) }));
 
 beforeEach(() => {
+    window.localStorage.clear();
     window.HTMLMediaElement.prototype.play = vi.fn().mockResolvedValue(undefined);
     window.HTMLMediaElement.prototype.pause = vi.fn();
 });
@@ -57,14 +58,74 @@ describe('RoomStreamWidgetView', () => {
         expect(container.querySelector('audio')).toBeNull();
     });
 
-    it('lets a person turn the music off for themselves', () => {
+    it('lets a person turn the music off for themselves and back on', () => {
         state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob', token: 1, queued: 0 };
 
-        const { container, getByLabelText } = render(<RoomStreamWidgetView />);
+        const { container, getByLabelText, getByText, queryByLabelText } = render(<RoomStreamWidgetView />);
 
         fireEvent.click(getByLabelText('Turn the room music off for me'));
 
-        expect(container.firstChild).toBeNull();
+        expect(container.querySelector('audio')).toBeNull();
+        expect(getByText('Music is off for you')).toBeTruthy();
+        expect(getByText('radio.example.com')).toBeTruthy();
+        expect(queryByLabelText('Song position')).toBeNull();
+
+        fireEvent.click(getByText('Turn on'));
+
+        expect(container.querySelector('audio')).not.toBeNull();
+    });
+
+    it('saves the song to the favorites with the heart and keeps it for next time', () => {
+        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob', token: 1, queued: 0 };
+
+        const first = render(<RoomStreamWidgetView />);
+
+        fireEvent.click(first.getByLabelText('Save this song to my favorites'));
+
+        expect(first.getByLabelText('Remove this song from my favorites').getAttribute('aria-pressed')).toBe('true');
+        expect(first.getByText('Favorites (1)')).toBeTruthy();
+
+        first.unmount();
+
+        const second = render(<RoomStreamWidgetView />);
+
+        expect(second.getByText('Favorites (1)')).toBeTruthy();
+        expect(second.getByLabelText('Remove this song from my favorites')).toBeTruthy();
+    });
+
+    it('lists the favorites with a link and lets a person remove one', () => {
+        window.localStorage.setItem(
+            'room-stream-favorites',
+            JSON.stringify([
+                { url: 'https://example.com/a', kind: 'stream', title: 'Song A', artist: 'Band' },
+                { url: 'javascript:alert(1)', kind: 'stream', title: 'Bad', artist: '' }
+            ])
+        );
+        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob', token: 1, queued: 0 };
+
+        const { getByText, getByLabelText, queryByText, getAllByText } = render(<RoomStreamWidgetView />);
+
+        fireEvent.click(getByText('Favorites (2)'));
+
+        expect(getByText('Song A')).toBeTruthy();
+        expect(getAllByText('Open')).toHaveLength(1);
+        expect(getAllByText('Open')[0].getAttribute('href')).toBe('https://example.com/a');
+
+        fireEvent.click(getByLabelText('Remove Song A from my favorites'));
+
+        expect(queryByText('Song A')).toBeNull();
+        expect(getByText('Favorites (1)')).toBeTruthy();
+    });
+
+    it('can save the song from the chip while the music is off', () => {
+        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob', token: 1, queued: 0 };
+
+        const { getByLabelText, getByText } = render(<RoomStreamWidgetView />);
+
+        fireEvent.click(getByLabelText('Turn the room music off for me'));
+        fireEvent.click(getByLabelText('Save this song to my favorites'));
+
+        expect(getByText('Favorites (1)')).toBeTruthy();
     });
 
     it('asks for a tap when the browser blocks autoplay', async () => {

@@ -2,6 +2,7 @@ import { RoomControllerLevel, RoomStreamEndedComposer } from '@volt/renderer';
 import { CSSProperties, FC, useEffect, useRef, useState } from 'react';
 import { SendMessageComposer } from '../../../../api';
 import { useRoom, useRoomStreamWidget } from '../../../../hooks';
+import { FavoriteSong, isFavorite, readFavorites, safeLink, saveFavorites, toggleFavorite } from './roomStreamFavorites';
 import './RoomStreamWidgetView.css';
 
 const VOLUME_KEY = 'room-stream-volume';
@@ -221,6 +222,21 @@ const PauseIcon: FC<{}> = () => (
     </svg>
 );
 
+const HeartIcon: FC<{ filled: boolean }> = ({ filled }) => (
+    <svg
+        aria-hidden="true"
+        fill={filled ? 'currentColor' : 'none'}
+        height="12"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="2.2"
+        viewBox="0 0 24 24"
+        width="12"
+    >
+        <path d="M12 20.5s-7.5-4.6-9.3-9.4C1.5 7.7 3.6 4.5 6.9 4.5c2 0 3.5 1.1 5.1 3 1.6-1.9 3.1-3 5.1-3 3.3 0 5.4 3.2 4.2 6.6-1.8 4.8-9.3 9.4-9.3 9.4z" />
+    </svg>
+);
+
 const CloseIcon: FC<{}> = () => (
     <svg aria-hidden="true" fill="none" height="12" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" viewBox="0 0 24 24" width="12">
         <path d="M5 5l14 14M19 5L5 19" />
@@ -254,6 +270,8 @@ export const RoomStreamWidgetView: FC<{}> = () => {
     const [ready, setReady] = useState(false);
     const [showVideo, setShowVideo] = useState(false);
     const [videoWidth, setVideoWidth] = useState<number>(readVideoWidth);
+    const [favorites, setFavorites] = useState<FavoriteSong[]>(readFavorites);
+    const [showFavorites, setShowFavorites] = useState(false);
     const resizeRef = useRef<{ startX: number; startWidth: number }>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
     const frameRef = useRef<HTMLIFrameElement>(null);
@@ -456,7 +474,100 @@ export const RoomStreamWidgetView: FC<{}> = () => {
         }
     }, [paused]);
 
-    if (!stream || closedUrl === stream.url) return null;
+    if (!stream) return null;
+
+    const knownTitle = track?.title && !track.title.startsWith('Loading') ? track.title : null;
+    const saved = isFavorite(favorites, stream.url);
+
+    const toggleSaved = () => {
+        const next = toggleFavorite(favorites, { url: stream.url, kind: stream.kind, title: knownTitle ?? hostOf(stream.url), artist: track?.artist ?? '' });
+
+        setFavorites(next);
+        saveFavorites(next);
+    };
+
+    const removeSaved = (songUrl: string) => {
+        const next = favorites.filter((song) => song.url !== songUrl);
+
+        setFavorites(next);
+        saveFavorites(next);
+    };
+
+    const heartButton = (
+        <button
+            aria-label={saved ? 'Remove this song from my favorites' : 'Save this song to my favorites'}
+            aria-pressed={saved}
+            className="room-stream-heart"
+            type="button"
+            onClick={toggleSaved}
+        >
+            <HeartIcon filled={saved} />
+        </button>
+    );
+
+    const favoritesButton = (
+        <button aria-expanded={showFavorites} className="room-stream-favorites-toggle" type="button" onClick={() => setShowFavorites((value) => !value)}>
+            <HeartIcon filled={false} />
+            {`Favorites (${favorites.length})`}
+        </button>
+    );
+
+    const favoritesPanel = showFavorites && (
+        <div aria-label="Favorite songs" className="room-stream-favorites" role="list">
+            {favorites.length === 0 ? (
+                <span className="room-stream-favorites-empty">Tap the heart on a song to save it here.</span>
+            ) : (
+                favorites.map((song) => (
+                    <div key={song.url} className="room-stream-favorite" role="listitem">
+                        <span className="room-stream-favorite-text">
+                            <span className="room-stream-favorite-title" title={song.title}>
+                                {song.title}
+                            </span>
+                            {!!song.artist && <span className="room-stream-favorite-artist">{song.artist}</span>}
+                        </span>
+                        {safeLink(song.url) && (
+                            <a className="room-stream-favorite-open" href={safeLink(song.url)} rel="noopener noreferrer" target="_blank">
+                                Open
+                            </a>
+                        )}
+                        <button
+                            aria-label={`Remove ${song.title} from my favorites`}
+                            className="room-stream-favorite-remove"
+                            type="button"
+                            onClick={() => removeSaved(song.url)}
+                        >
+                            <CloseIcon />
+                        </button>
+                    </div>
+                ))
+            )}
+        </div>
+    );
+
+    // With the music off for this person, a small chip keeps the song in view and lets them turn it back on.
+    if (closedUrl === stream.url) {
+        return (
+            <div className="room-stream" role="region" aria-label="Room music" style={{ '--stream-width': `${CARD_WIDTH}px` } as CSSProperties}>
+                <div className="room-stream-chip">
+                    <span className="room-stream-chip-note">
+                        <NoteIcon />
+                    </span>
+                    <span className="room-stream-chip-text">
+                        <span className="room-stream-chip-state">Music is off for you</span>
+                        <span className="room-stream-chip-title" title={knownTitle ?? hostOf(stream.url)}>
+                            {knownTitle ?? hostOf(stream.url)}
+                        </span>
+                    </span>
+                    {heartButton}
+                    <button className="room-stream-chip-on" type="button" onClick={() => setClosedUrl(null)}>
+                        Turn on
+                    </button>
+                </div>
+                {favoritesButton}
+                {favoritesPanel}
+            </div>
+        );
+    }
 
     const changeVolume = (value: number) => {
         setVolume(value);
@@ -593,6 +704,7 @@ export const RoomStreamWidgetView: FC<{}> = () => {
                 <button aria-label="Turn the room music off for me" className="room-stream-close" type="button" onClick={() => setClosedUrl(stream.url)}>
                     <CloseIcon />
                 </button>
+                {heartButton}
                 {stream.kind === 'stream' && (
                     <audio
                         key={`${stream.token}:${stream.url}`}
@@ -620,6 +732,8 @@ export const RoomStreamWidgetView: FC<{}> = () => {
                     />
                 )}
             </div>
+            {favoritesButton}
+            {favoritesPanel}
             {isYouTube && (
                 <div className={`room-stream-video${showVideo ? '' : ' is-hidden'}`} style={{ width: videoWidth }}>
                     <div ref={videoHostRef} className="room-stream-video-host" />
