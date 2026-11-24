@@ -409,4 +409,18 @@ describe('RoomStreamWidgetView', () => {
         expect(writeText).toHaveBeenCalledWith('https://radio.example.com/live.mp3');
         expect(await view.findByLabelText('Link copied')).toBeTruthy();
     });
+
+    it('mutes from the speaker icon and brings the volume back', () => {
+        window.localStorage.setItem('room-stream-volume', '70');
+        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob', token: 1, queued: 0 };
+
+        const view = render(<RoomStreamWidgetView />);
+        const slider = () => view.getByLabelText('Room music volume') as HTMLInputElement;
+
+        fireEvent.click(view.getByLabelText('Mute the room music'));
+        expect(slider().value).toBe('0');
+
+        fireEvent.click(view.getByLabelText('Unmute the room music'));
+        expect(slider().value).toBe('70');
+    });
 });

@@ -296,6 +296,7 @@ export const RoomStreamWidgetView: FC<{}> = () => {
     const [favorites, setFavorites] = useState<FavoriteSong[]>(readFavorites);
     const [showFavorites, setShowFavorites] = useState(false);
     const [copied, setCopied] = useState(false);
+    const volumeBeforeMute = useRef(50);
     const resizeRef = useRef<{ startX: number; startWidth: number }>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
     const frameRef = useRef<HTMLIFrameElement>(null);
@@ -628,6 +629,15 @@ export const RoomStreamWidgetView: FC<{}> = () => {
         saveVolume(value);
     };
 
+    const toggleMute = () => {
+        if (volume > 0) {
+            volumeBeforeMute.current = volume;
+            changeVolume(0);
+        } else {
+            changeVolume(volumeBeforeMute.current);
+        }
+    };
+
     const seek = (seconds: number) => {
         setPosition(seconds);
 
@@ -736,7 +746,14 @@ export const RoomStreamWidgetView: FC<{}> = () => {
                         <span className="room-stream-time">{duration ? formatTime(duration) : live ? 'Live' : '--:--'}</span>
                     </div>
                     <div className="room-stream-volume-row">
-                        <VolumeIcon level={volume} />
+                        <button
+                            aria-label={volume > 0 ? 'Mute the room music' : 'Unmute the room music'}
+                            className="room-stream-mute"
+                            type="button"
+                            onClick={toggleMute}
+                        >
+                            <VolumeIcon level={volume} />
+                        </button>
                         <input
                             aria-label="Room music volume"
                             className="room-stream-volume"

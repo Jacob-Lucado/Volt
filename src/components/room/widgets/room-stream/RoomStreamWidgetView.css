@@ -203,6 +203,15 @@
 }
 
 .room-stream-seek,
+.room-stream-mute {
+    display: flex;
+    padding: 0;
+    color: inherit;
+    cursor: pointer;
+    background: none;
+    border: 0;
+}
+
 .room-stream-volume {
     flex: 1;
     min-width: 0;
