@@ -4,7 +4,12 @@ import { RoomStreamWidgetView } from './RoomStreamWidgetView';
 
 const state = vi.hoisted(() => ({
     stream: null,
-    roomSession: { isRoomOwner: true, controllerLevel: 4 } as { isRoomOwner: boolean; controllerLevel: number } | null,
+    roomSession: { isRoomOwner: true, controllerLevel: 4, sendChatMessage: (text: string) => state.chat.push(text) } as {
+        isRoomOwner: boolean;
+        controllerLevel: number;
+        sendChatMessage: (text: string) => void;
+    } | null,
+    chat: [] as string[],
     sent: [] as unknown[]
 }));
 
@@ -25,7 +30,8 @@ afterEach(() => {
     delete window.SC;
     delete window.YT;
     state.stream = null;
-    state.roomSession = { isRoomOwner: true, controllerLevel: 4 };
+    state.roomSession = { isRoomOwner: true, controllerLevel: 4, sendChatMessage: (text: string) => state.chat.push(text) };
+    state.chat = [];
     state.sent = [];
 });
 
@@ -329,7 +335,7 @@ describe('RoomStreamWidgetView', () => {
     });
 
     it('does not report the end of a song for a visitor without rights', () => {
-        state.roomSession = { isRoomOwner: false, controllerLevel: 0 };
+        state.roomSession = { isRoomOwner: false, controllerLevel: 0, sendChatMessage: (text: string) => state.chat.push(text) };
         state.stream = { roomId: 7, kind: 'stream', url: 'https://cdn.example.com/music/night-drive.mp3', setBy: 'Jacob', token: 5, queued: 1 };
 
         const { container } = render(<RoomStreamWidgetView />);
@@ -367,5 +373,27 @@ describe('RoomStreamWidgetView', () => {
 
         expect(state.sent).toHaveLength(1);
         expect(state.sent[0]).toMatchObject({ roomId: 7, token: 6 });
+    });
+
+    it('adds a favorite to the song line for people with rights and suggests it for everyone else', () => {
+        window.localStorage.setItem('room-stream-favorites', JSON.stringify([{ url: 'https://example.com/a', kind: 'stream', title: 'Song A', artist: '' }]));
+        state.stream = { roomId: 1, kind: 'stream', url: 'https://radio.example.com/live.mp3', setBy: 'Jacob', token: 1, queued: 0 };
+
+        const owner = render(<RoomStreamWidgetView />);
+
+        fireEvent.click(owner.getByText('Favorites (1)'));
+        fireEvent.click(owner.getByText('Add to line'));
+
+        expect(state.chat).toEqual([':music add https://example.com/a']);
+
+        owner.unmount();
+        state.roomSession = { isRoomOwner: false, controllerLevel: 0, sendChatMessage: (text: string) => state.chat.push(text) };
+
+        const guest = render(<RoomStreamWidgetView />);
+
+        fireEvent.click(guest.getByText('Favorites (1)'));
+        fireEvent.click(guest.getByText('Suggest'));
+
+        expect(state.chat[1]).toBe(':music suggest https://example.com/a');
     });
 });

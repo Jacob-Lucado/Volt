@@ -486,6 +486,9 @@ export const RoomStreamWidgetView: FC<{}> = () => {
         saveFavorites(next);
     };
 
+    // People with rights put the song in the room's song line, and everyone else offers it to them.
+    const sendToRoom = (songUrl: string) => roomSession?.sendChatMessage(`:music ${canEndSongs ? 'add' : 'suggest'} ${songUrl}`, 0);
+
     const removeSaved = (songUrl: string) => {
         const next = favorites.filter((song) => song.url !== songUrl);
 
@@ -525,6 +528,11 @@ export const RoomStreamWidgetView: FC<{}> = () => {
                             </span>
                             {!!song.artist && <span className="room-stream-favorite-artist">{song.artist}</span>}
                         </span>
+                        {safeLink(song.url) && (
+                            <button className="room-stream-favorite-play" type="button" onClick={() => sendToRoom(song.url)}>
+                                {canEndSongs ? 'Add to line' : 'Suggest'}
+                            </button>
+                        )}
                         {safeLink(song.url) && (
                             <a className="room-stream-favorite-open" href={safeLink(song.url)} rel="noopener noreferrer" target="_blank">
                                 Open
