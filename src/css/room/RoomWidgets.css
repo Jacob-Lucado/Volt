@@ -1960,14 +1960,13 @@ textarea.volt-room-promote-edit__input {
 }
 
 /* Furniture context menus: the *_menu layouts (115 wide, 4px content margin) on the shared avatar-menu bubble. Each layout places its own title (--air-menu-title-x), the
-   items are 101 wide on 107 wide buttons and the minimize control sits one pixel below a single item (guild_furni_menu keeps a fixed 3 item list). */
+   items are 101 wide on 107 wide buttons and the minimize control sits one pixel below a single item. guild_furni_menu resizes to its visible buttons (27px each). */
 .volt-avatar-action-menu--furni:not(.menu-hidden) {
-    height: 86px;
+    height: calc(59px + 27px * var(--air-menu-button-count, 1));
     padding-bottom: 9px;
 }
 
 .volt-avatar-action-menu--furni-guild:not(.menu-hidden) {
-    height: 140px;
     padding-bottom: 10px;
 }
 
@@ -1988,15 +1987,13 @@ textarea.volt-room-promote-edit__input {
     margin-left: 6px;
 }
 
-.volt-avatar-action-menu--furni-guild .air-avatar-menu-buttons {
-    min-height: 80px;
-}
-
 .volt-avatar-action-menu--furni .air-avatar-menu-buttons > .volt-context-menu-item {
     width: 101px;
     min-width: 101px;
     max-width: 101px;
+    padding: 0;
     font-size: 11px;
+    white-space: nowrap;
 }
 
 .volt-avatar-action-menu--furni .air-avatar-menu-buttons > .volt-context-menu-item::before {
