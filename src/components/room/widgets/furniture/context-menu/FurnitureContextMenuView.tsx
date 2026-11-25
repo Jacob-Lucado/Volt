@@ -135,12 +135,12 @@ export const FurnitureContextMenuView: FC<{}> = (props) => {
                     freezePositionOnHover={true}
                     objectId={objectId}
                     showCaretIcon={false}
-                    style={{ '--air-menu-title-x': isGuildMenu ? '22px' : `${titleX}px`, '--air-menu-button-count': buttonCount } as CSSProperties}
+                    style={{ '--air-menu-title-x': `${titleX}px`, '--air-menu-button-count': buttonCount } as CSSProperties}
                     onClose={onClose}
                 >
                     {mode === GROUP_FURNITURE && groupData ? (
                         <ContextMenuHeaderView className="cursor-pointer" onClick={() => GetGroupInformation(groupData.guildId)}>
-                            {groupData.guildName}
+                            <span>{groupData.guildName}</span>
                         </ContextMenuHeaderView>
                     ) : (
                         <ContextMenuHeaderView>{title}</ContextMenuHeaderView>
