@@ -1978,6 +1978,19 @@ textarea.volt-room-promote-edit__input {
     text-overflow: clip;
 }
 
+.volt-avatar-action-menu--furni-guild .volt-context-menu-header {
+    padding: 0;
+    justify-content: center !important;
+    text-align: center;
+}
+
+/* Long group names are cut 4px inside the bubble fill. */
+.volt-avatar-action-menu--furni-guild .volt-context-menu-header > span {
+    max-width: 95px;
+    overflow: hidden;
+    text-align: left;
+}
+
 .volt-avatar-action-menu--furni:not(.volt-avatar-action-menu--furni-guild) .volt-context-menu-header:hover {
     color: #ffffff;
 }
