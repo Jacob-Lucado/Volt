@@ -2,14 +2,10 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
-      - Dev
-      - dev
-      - 'feat/**'
-      - 'bugfix/**'
-      - 'feature/**'
+    branches: [main]
+    paths-ignore: ['**.md']
   pull_request:
+    paths-ignore: ['**.md']
   workflow_dispatch:
     inputs:
       renderer_repo:
@@ -34,10 +30,15 @@ env:
   # Variables) or, for one-off runs, via the workflow_dispatch inputs.
   UPSTREAM_RENDERER_REPO: 'duckietm/Octane-Renderer'
 
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check:
     name: Type check + tests
-    runs-on: ubuntu-latest
+    # Pull requests from forks never run on the self-hosted runners.
+    runs-on: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && 'ubuntu-latest' || 'plus-ci' }}
     steps:
       # The build/dev/typecheck setup expects the Volt renderer SDK to
       # live as a sibling of this repo (see README.md).
