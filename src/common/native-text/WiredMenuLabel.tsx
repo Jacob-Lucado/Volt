@@ -41,7 +41,9 @@ const useFittedText = (text: string, textStyle: NativeTextStyleName, size: numbe
                 }
                 setFitted({ text: shown, width: measure(shown) });
             })
-            .catch(() => setFitted({ text, width: 0 }));
+            .catch(() => {
+                if (!disposed) setFitted({ text, width: 0 });
+            });
         return () => {
             disposed = true;
         };
