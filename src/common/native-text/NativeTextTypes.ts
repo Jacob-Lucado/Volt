@@ -35,6 +35,8 @@ export interface TextPixelTarget {
     height: number;
     offsetX?: number | undefined;
     offsetY?: number | undefined;
+    /** Rows to move the underline by, for a wrapped line whose underline does not sit one row under its rounded baseline. */
+    underlineShift?: number | undefined;
 }
 export interface RasterPoint {
     x: number;
