@@ -1,8 +1,13 @@
 import { PurchaseFromCatalogComposer } from '@volt/renderer';
 import { FC, useCallback, useEffect } from 'react';
 import { CatalogType, GetConfigurationValue, LocalizeText, SendMessageComposer } from '../../../api';
+import { lazyWindow } from '../../../common/lazyWindow';
 import { claimPlacedOfferPurchase, useCatalogActions, useCatalogPlacedOffer, useCatalogSkipPurchaseConfirmation, useNotification, usePurse } from '../../../hooks';
-import { CatalogPurchaseConfirmView } from './CatalogPurchaseConfirmView';
+
+const LazyCatalogPurchaseConfirmView = lazyWindow(
+    () => import('./CatalogPurchaseConfirmView').then((module) => ({ default: module.CatalogPurchaseConfirmView })),
+    'CatalogPurchaseConfirm'
+);
 
 /**
  * HabboCatalog.onObjectPlacedInRoom -> showPurchaseConfirmation: an offer dropped in the room
@@ -72,13 +77,14 @@ export const CatalogPlacedOfferConfirmView: FC = () => {
     if (!isOpen) return null;
 
     return (
-        <CatalogPurchaseConfirmView
+        <LazyCatalogPurchaseConfirmView
             isSubmitting={isSubmitting}
             offer={offer}
+            onCancel={rollBack}
+            onChunkError={rollBack}
+            onConfirm={confirm}
             quantity={1}
             stuffData={placedObjectPurchaseData.purchaseOptions?.previewStuffData}
-            onCancel={rollBack}
-            onConfirm={confirm}
         />
     );
 };

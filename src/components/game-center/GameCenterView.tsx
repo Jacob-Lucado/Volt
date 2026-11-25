@@ -2,9 +2,17 @@ import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '
 import { useEffect, useEffectEvent, useState } from 'react';
 import { CreateLinkEvent, GetConfigurationValue, GetGroupInformation, GetSessionDataManager, GetUserProfile } from '../../api';
 import { buySnowWarTokens, SnowWarEngineState, SnowWarHookState } from '../../api/snowwar';
+import { lazyWindow } from '../../common/lazyWindow';
 import { useNotificationActions, useSnowWar } from '../../hooks';
-import { SnowWarGamesMainView } from './views/snowwar/SnowWarGamesMainView';
-import { SnowWarLeaderboardView } from './views/snowwar/SnowWarLeaderboardView';
+
+const LazySnowWarGamesMainView = lazyWindow(
+    () => import('./views/snowwar/SnowWarGamesMainView').then((module) => ({ default: module.SnowWarGamesMainView })),
+    'SnowWarGamesMain'
+);
+const LazySnowWarLeaderboardView = lazyWindow(
+    () => import('./views/snowwar/SnowWarLeaderboardView').then((module) => ({ default: module.SnowWarLeaderboardView })),
+    'SnowWarLeaderboard'
+);
 
 /**
  * Toolbar games entry: AIR opens the SnowStorm `games_main` window (GamesMainViewController)
@@ -74,7 +82,7 @@ export const GameCenterView = () =>
     return (
         <>
             {mainVisible && !inGame && (
-                <SnowWarGamesMainView
+                <LazySnowWarGamesMainView
                     blockLength={blockLength}
                     freeGamesLeft={account?.freeGamesLeft ?? -1}
                     hasUnlimitedGames={account?.hasUnlimitedGames ?? false}
@@ -82,6 +90,7 @@ export const GameCenterView = () =>
                     lobby={lobbyVisible ? { players: lobby.players, maxPlayers: lobby.data.maximumPlayers, queuePosition: lobby.queuePosition, countdownDeadline: lobby.countdownDeadline } : null}
                     onBuyTokens={offer => buySnowWarTokens(snowWar, showConfirm, offer)}
                     onCancelLobby={leaveLobby}
+                    onChunkError={closeMain}
                     onClose={closeMain}
                     onOpenClubCenter={() => CreateLinkEvent('habboUI/open/hccenter')}
                     onPlay={play}
@@ -89,13 +98,14 @@ export const GameCenterView = () =>
                 />
             )}
             {leaderboardVisible && (
-                <SnowWarLeaderboardView
+                <LazySnowWarLeaderboardView
                     leaderboard={leaderboard}
-                    ownUserId={GetSessionDataManager().userId}
+                    onChunkError={closeLeaderboardWindow}
                     onClose={closeLeaderboardWindow}
                     onOpenGroup={GetGroupInformation}
                     onOpenProfile={GetUserProfile}
                     onRequest={requestLeaderboard}
+                    ownUserId={GetSessionDataManager().userId}
                 />
             )}
         </>

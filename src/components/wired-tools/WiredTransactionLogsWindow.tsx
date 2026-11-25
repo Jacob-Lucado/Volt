@@ -1,3 +1,4 @@
+import '../../css/WiredView.css';
 import { IWiredTransactionInfo, WIRED_TRANSACTION_LIST_CHEST, WiredTransactionGetChestLogsComposer, WiredTransactionGetRoomLogsComposer } from '@volt/renderer';
 import { FC, useEffect, useState } from 'react';
 import { GetUserProfile, localizeWithFallback, SendMessageComposer } from '../../api';
@@ -11,9 +12,9 @@ import { WiredMenuButton, WiredMenuTable, WiredMenuTableColumn, WiredMenuTableRo
 import { useTextWindowWidths } from '../../common/native-text/useTextWindowWidths';
 import { resizeCentred, startCentred } from './nativeTextWindow';
 import { calculateLastPage, clampInputPage, NO_PAGE, parseInputPage, restrictPageInput } from './WiredPaging.helpers';
+import { WIRED_TRANSACTION_LOGS_PAGE_SIZE } from './WiredTransactionLogs.constants';
 
-/** Rows per page of the detailed list. */
-export const WIRED_TRANSACTION_LOGS_PAGE_SIZE = 25;
+export { WIRED_TRANSACTION_LOGS_PAGE_SIZE };
 /** Two page requests are never closer than this, and the page in flight is not asked again for two seconds. */
 const REQUEST_PAGE_RATELIMIT = 280;
 

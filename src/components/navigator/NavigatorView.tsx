@@ -197,6 +197,8 @@ export const NavigatorView: FC<{}> = () => {
     }, [isVisible]);
 
     useEffect(() => {
+        if (!isVisible || tabFont) return;
+
         let disposed = false;
 
         loadNativeFont(nativeTextStyles.button_shiny_regular).then((loaded) => {
@@ -206,7 +208,7 @@ export const NavigatorView: FC<{}> = () => {
         return () => {
             disposed = true;
         };
-    }, []);
+    }, [isVisible, tabFont]);
 
     useLayoutEffect(() => {
         const tabs = tabsRef.current;

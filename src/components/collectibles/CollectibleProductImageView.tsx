@@ -1,3 +1,4 @@
+import '../../css/collectibles/CollectiblesHubView.css';
 import { GetAvatarRenderManager, GetRoomEngine, GetSessionDataManager, RoomPreviewer } from '@volt/renderer';
 import { Point } from 'pixi.js';
 import { FC, ReactNode, useCallback, useEffect, useState } from 'react';

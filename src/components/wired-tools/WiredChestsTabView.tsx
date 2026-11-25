@@ -11,7 +11,7 @@ import { GetUserProfile, LocalizeText, localizeWithFallback, SendMessageComposer
 import { useMessageEvent, useNotification, useRoom } from '../../hooks';
 import { summarizeTransactionCounts } from './WiredChestTransactionCounts';
 import { WiredMenuButton, WiredMenuPanel, WiredMenuTable, WiredMenuText, WiredMenuTitle } from './WiredMenuParts';
-import { WIRED_TRANSACTION_LOGS_PAGE_SIZE } from './WiredTransactionLogsWindow';
+import { WIRED_TRANSACTION_LOGS_PAGE_SIZE } from './WiredTransactionLogs.constants';
 
 /** The preview asks for the 10 most recent transactions and refreshes on its own while the tab is open. */
 const PREVIEW_AMOUNT = 10;

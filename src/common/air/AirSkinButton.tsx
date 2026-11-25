@@ -66,24 +66,30 @@ function stretchSkin(url: string, cap: number, height: number): Promise<string> 
             key,
             new Promise<string>((resolve, reject) => {
                 const image = new Image();
+                image.crossOrigin = 'anonymous';
                 image.onload = () => {
-                    const middle = image.height - cap * 2;
-                    const target = height - cap * 2;
-                    if (middle <= 1 || target <= 0) return resolve(url);
-                    const canvas = document.createElement('canvas');
-                    canvas.width = image.width;
-                    canvas.height = height;
-                    const context = canvas.getContext('2d');
-                    context.drawImage(image, 0, 0, image.width, cap, 0, 0, image.width, cap);
-                    const unit = 65536;
-                    const step = roundTiesEven(middle * unit / target);
-                    const first = roundTiesEven(step / 2);
-                    for (let row = 0; row < target; row++) {
-                        const source = cap + Math.floor((first + row * step) / unit);
-                        context.drawImage(image, 0, source, image.width, 1, 0, cap + row, image.width, 1);
+                    try {
+                        const middle = image.height - cap * 2;
+                        const target = height - cap * 2;
+                        if (middle <= 1 || target <= 0 || middle === target) return resolve(url);
+                        const canvas = document.createElement('canvas');
+                        canvas.width = image.width;
+                        canvas.height = height;
+                        const context = canvas.getContext('2d');
+                        if (!context) return resolve(url);
+                        context.drawImage(image, 0, 0, image.width, cap, 0, 0, image.width, cap);
+                        const unit = 65536;
+                        const step = roundTiesEven(middle * unit / target);
+                        const first = roundTiesEven(step / 2);
+                        for (let row = 0; row < target; row++) {
+                            const source = cap + Math.floor((first + row * step) / unit);
+                            context.drawImage(image, 0, source, image.width, 1, 0, cap + row, image.width, 1);
+                        }
+                        context.drawImage(image, 0, image.height - cap, image.width, cap, 0, height - cap, image.width, cap);
+                        canvas.toBlob((blob) => resolve(blob ? URL.createObjectURL(blob) : url));
+                    } catch {
+                        resolve(url);
                     }
-                    context.drawImage(image, 0, image.height - cap, image.width, cap, 0, height - cap, image.width, cap);
-                    canvas.toBlob((blob) => resolve(blob ? URL.createObjectURL(blob) : url));
                 };
                 image.onerror = reject;
                 image.src = url;
@@ -98,12 +104,33 @@ function useStretchedSkin(kind: AirButtonKind, height: number) {
 
     useEffect(() => {
         let disposed = false;
-        const states = Object.keys(kind.skin) as SkinState[];
-        Promise.all(states.map((state) => stretchSkin(kind.skin[state], kind.cap, height)))
-            .then((list) => !disposed && setUrls(Object.fromEntries(states.map((state, index) => [state, list[index]])) as Record<SkinState, string>))
+        let idleTimer: number | null = null;
+        // Stretch the visible default state right away; warm interactive states shortly after so initial mount stays fast.
+        stretchSkin(kind.skin.default, kind.cap, height)
+            .then((defaultUrl) => {
+                if (disposed) return;
+                setUrls({ ...kind.skin, default: defaultUrl });
+                const secondaryStates: SkinState[] = ['hover', 'pressed', 'disabled'];
+                idleTimer = window.setTimeout(() => {
+                    if (disposed) return;
+                    Promise.all(secondaryStates.map((state) => stretchSkin(kind.skin[state], kind.cap, height)))
+                        .then((list) => {
+                            if (disposed) return;
+                            setUrls({
+                                ...kind.skin,
+                                default: defaultUrl,
+                                hover: list[0],
+                                pressed: list[1],
+                                disabled: list[2]
+                            });
+                        })
+                        .catch(() => {});
+                }, 80);
+            })
             .catch(() => !disposed && setUrls(null));
         return () => {
             disposed = true;
+            if (idleTimer !== null) window.clearTimeout(idleTimer);
         };
     }, [kind, height]);
 

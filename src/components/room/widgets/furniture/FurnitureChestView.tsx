@@ -56,7 +56,7 @@ import { useMessageEvent, useNotification, usePurse } from '../../../../hooks';
 import { useWiredToolsState } from '../../../../hooks/wired-tools/useWiredToolsState';
 import { ChestButton } from './ChestButton';
 import { ChestFurniGroup, chestFurniDisplayName, groupStoredFurni } from './chestFurniGrouping';
-import { WIRED_TRANSACTION_LOGS_PAGE_SIZE } from '../../../wired-tools/WiredTransactionLogsWindow';
+import { WIRED_TRANSACTION_LOGS_PAGE_SIZE } from '../../../wired-tools/WiredTransactionLogs.constants';
 import { ChestCheckbox, ChestIconButton, ChestShinyButton, ChestText, ChestTitle } from './chest/ChestAirParts';
 import { ChestLockInfoBubble } from './chest/ChestLockInfoBubble';
 import { ChestNotificationsWindow, ChestSettingsWindow } from './chest/ChestPresetWindows';

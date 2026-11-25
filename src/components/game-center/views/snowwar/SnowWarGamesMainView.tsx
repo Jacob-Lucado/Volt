@@ -1,3 +1,4 @@
+import '../../../../css/game-center/GameCenterView.css';
 import { FC, useEffect, useState } from 'react';
 import { LocalizeText } from '../../../../api';
 import { VoltCardHeaderView, VoltCardView } from '../../../../common';
