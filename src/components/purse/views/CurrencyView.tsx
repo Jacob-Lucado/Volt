@@ -1,6 +1,6 @@
 import { CreateLinkEvent } from '@volt/renderer';
 import { FC, useCallback, useMemo } from 'react';
-import { CatalogPageName, GetConfigurationValue, LocalizeFormattedNumber, LocalizeShortNumber, localizeWithFallback } from '../../../api';
+import { CatalogPageName, GetConfigurationValue, LocalizeFormattedNumber, LocalizeShortNumber, localizeWithFallback, OpenUrl } from '../../../api';
 import creditsIcon from '../../../assets/images/purse/air/credits.png';
 import diamondIcon from '../../../assets/images/purse/air/diamond.png';
 import ducketsIcon from '../../../assets/images/purse/air/duckets.png';
@@ -38,7 +38,7 @@ export const CurrencyView: FC<CurrencyViewProps> = (props) => {
             case -1: {
                 const url = GetConfigurationValue<string>('web.shop.relative.url', '');
 
-                if (url) window.open(url, '_blank');
+                if (url) OpenUrl(new URL(url, window.location.href).href);
 
                 return;
             }

@@ -17,7 +17,7 @@ import {
     RemoveLinkEventTracker
 } from '@volt/renderer';
 import { FC, useCallback, useEffect, useState } from 'react';
-import { GetConfigurationValue, GuideSessionState, GuideToolMessage, GuideToolMessageGroup, LocalizeText, SendMessageComposer } from '../../api';
+import { GetConfigurationValue, GuideSessionState, GuideToolMessage, GuideToolMessageGroup, LocalizeText, OpenUrl, SendMessageComposer } from '../../api';
 import { VoltCardContentView, VoltCardHeaderView, VoltCardView } from '../../common';
 import { GuideToolEvent } from '../../events';
 import { useMessageEvent, useNotification, useUiEvent } from '../../hooks';
@@ -322,7 +322,7 @@ export const GuideToolView: FC<{}> = (props) => {
                         '%groupid%',
                         GetConfigurationValue<string>('guide.help.alpha.groupid', '0')
                     );
-                    window.open(url, '_blank', 'noopener,noreferrer');
+                    if (url) OpenUrl(new URL(url, window.location.href).href);
                     return;
             }
         },
