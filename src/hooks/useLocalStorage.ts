@@ -1,8 +1,7 @@
-import { VoltLogger } from '@volt/renderer';
+import { GetSessionDataManager, VoltLogger } from '@volt/renderer';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { GetLocalStorage, SetLocalStorage } from '../api';
-
-const userId = new URLSearchParams(window.location.search).get('userid') || 0;
+import { useUserDataSnapshot } from './session/useSessionSnapshots';
 
 const STORAGE_WRITE_DEBOUNCE_MS = 250;
 const QUOTA_TRIM_FACTOR = 0.5; // on quota error, keep the newest 50%.
@@ -34,31 +33,71 @@ interface UseLocalStorageOptions<T> {
     toStorage?: (value: T) => unknown;
 }
 
-const useLocalStorageState = <T>(key: string, initialValue: T, options: UseLocalStorageOptions<T> = {}): [T, Dispatch<SetStateAction<T>>] => {
-    key = userId ? `${key}.${userId}` : key;
+interface StoredState<T> {
+    key: string | null;
+    value: T;
+}
 
-    const [storedValue, setStoredValue] = useState<T>(() => {
-        try {
-            const item = typeof window !== 'undefined' ? GetLocalStorage<T>(key) : undefined;
-            return item ?? initialValue;
-        } catch (error) {
-            return initialValue;
-        }
-    });
+let accountStorageOpen = true;
+
+// Older clients stored `key` or `key.<id from the URL>`. The `#` separator keeps
+// those apart from values that belong to the logged-in account.
+const toAccountStorageKey = (key: string, userId: number) => `${key}#${userId}`;
+
+// Null until the session knows the user id, and after ClearAccountLocalStorage.
+const getAccountStorageKey = (key: string): string | null => {
+    const userId = GetSessionDataManager()?.userId ?? 0;
+
+    return accountStorageOpen && userId > 0 ? toAccountStorageKey(key, userId) : null;
+};
+
+/** Removes the stored values of `keys` for every account except `keepUserId`, including the keys of older clients. */
+const RemoveAccountLocalStorage = (keys: string[], keepUserId = 0) => {
+    try {
+        const storage = window.localStorage;
+        const isStale = (storageKey: string) =>
+            keys.some(
+                (key) =>
+                    storageKey === key ||
+                    storageKey.startsWith(`${key}.`) ||
+                    (storageKey.startsWith(`${key}#`) && storageKey !== toAccountStorageKey(key, keepUserId))
+            );
+        const stale = Array.from({ length: storage.length }, (_, index) => storage.key(index)).filter((storageKey) => storageKey && isStale(storageKey));
+
+        stale.forEach((storageKey) => storage.removeItem(storageKey));
+    } catch {}
+};
+
+/** Removes every account's values for `keys` and stops per-account storage for the rest of this page. */
+export const ClearAccountLocalStorage = (keys: string[]) => {
+    accountStorageOpen = false;
+    RemoveAccountLocalStorage(keys);
+};
+
+const useStoredState = <T>(resolveKey: () => string | null, initialValue: T, options: UseLocalStorageOptions<T>): [T, Dispatch<SetStateAction<T>>] => {
+    const readValue = (key: string | null): T => (key ? (GetLocalStorage<T>(key) ?? initialValue) : initialValue);
+
+    const key = resolveKey();
+    const [state, setState] = useState<StoredState<T>>(() => ({ key, value: readValue(key) }));
 
     // Event bursts and async avatar callbacks can retain a setter from an
     // earlier render. Resolve every update against the latest value, including
     // updates React has not rendered yet, so they cannot erase newer entries.
-    const storedValueRef = useRef(storedValue);
-    const pendingWriteRef = useRef<T | null>(null);
+    const stateRef = useRef(state);
+    const pendingWriteRef = useRef<StoredState<T> | null>(null);
     const writeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const optionsRef = useRef(options);
 
     // Keep the latest toStorage projection without re-running effects.
     optionsRef.current = options;
 
-    const flushWrite = (value: T) => {
-        if (typeof window === 'undefined') return;
+    if (stateRef.current.key !== key) {
+        stateRef.current = { key, value: readValue(key) };
+        setState(stateRef.current);
+    }
+
+    const flushWrite = ({ key, value }: StoredState<T>) => {
+        if (typeof window === 'undefined' || key !== resolveKey()) return;
 
         const project = optionsRef.current.toStorage;
         const projected = project ? project(value) : value;
@@ -93,7 +132,7 @@ const useLocalStorageState = <T>(key: string, initialValue: T, options: UseLocal
     // Debounce: high-frequency chat would otherwise trigger one full
     // JSON.stringify + setItem per message. We coalesce bursts into one
     // write per STORAGE_WRITE_DEBOUNCE_MS window with the latest value.
-    const scheduleWrite = (value: T) => {
+    const scheduleWrite = (value: StoredState<T>) => {
         pendingWriteRef.current = value;
         if (writeTimerRef.current) clearTimeout(writeTimerRef.current);
         writeTimerRef.current = setTimeout(() => {
@@ -127,18 +166,35 @@ const useLocalStorageState = <T>(key: string, initialValue: T, options: UseLocal
 
     const setValue: Dispatch<SetStateAction<T>> = (value) => {
         try {
-            const valueToStore = value instanceof Function ? value(storedValueRef.current) : value;
+            const key = resolveKey();
+            const current = stateRef.current.key === key ? stateRef.current.value : readValue(key);
+            const next = { key, value: value instanceof Function ? value(current) : value };
 
-            storedValueRef.current = valueToStore;
-            setStoredValue(valueToStore);
+            stateRef.current = next;
+            setState(next);
 
-            scheduleWrite(valueToStore);
+            if (key) scheduleWrite(next);
         } catch (error) {
             VoltLogger.error(error);
         }
     };
 
-    return [storedValue, setValue];
+    return [state.value, setValue];
 };
 
-export const useLocalStorage = useLocalStorageState;
+/** A value shared by everyone who uses this browser, such as a window or catalog preference. */
+export const useLocalStorage = <T>(key: string, initialValue: T, options: UseLocalStorageOptions<T> = {}) => useStoredState(() => key, initialValue, options);
+
+/**
+ * A value that belongs to the logged-in account. It stays in memory only until the
+ * session knows the user id, and stored values of other accounts are removed.
+ */
+export const useAccountLocalStorage = <T>(key: string, initialValue: T, options: UseLocalStorageOptions<T> = {}) => {
+    const { userId } = useUserDataSnapshot();
+
+    useEffect(() => {
+        if (userId > 0) RemoveAccountLocalStorage([key], userId);
+    }, [key, userId]);
+
+    return useStoredState(() => getAccountStorageKey(key), initialValue, options);
+};

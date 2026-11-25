@@ -3,7 +3,7 @@ import bgStar from '../../assets/images/collectibles/bg-star-300x300.png';
 import scoreBackground from '../../assets/images/collectibles/collectables-score-background.png';
 import scoreBackgroundGradient2 from '../../assets/images/collectibles/collectables-score-background-gradient2.png';
 import scoreBackgroundRight from '../../assets/images/collectibles/collectables-score-background-right.png';
-import { SanitizeHtml } from '../../api';
+import { SanitizeHotelHtml } from '../../api';
 import { at, SlotBorder, TintedBitmap, toCssColor } from './CollectiblesSkinView';
 
 /** collection_preview_bg: the dark style-3 panel behind every product preview, with the star turning 20 degrees a second. */
@@ -66,7 +66,7 @@ export const CollectiblesNavigationNodeView: FC<CollectiblesNavigationNodeViewPr
 
 /** AIR html text windows: <font color> becomes a coloured span before the usual sanitizing. */
 export const CollectiblesHtmlText: FC<{ html: string; className?: string; style?: CSSProperties; onLinkClick?: (href: string) => void }> = ({ html, className = '', style, onLinkClick = null }) => {
-    const markup = SanitizeHtml((html ?? '').replace(/<font\s+color=["']?(#[0-9a-fA-F]{6})["']?\s*>/g, '<span style="color:$1">').replace(/<\/font>/g, '</span>'));
+    const markup = SanitizeHotelHtml((html ?? '').replace(/<font\s+color=["']?(#[0-9a-fA-F]{6})["']?\s*>/g, '<span style="color:$1">').replace(/<\/font>/g, '</span>'));
 
     return (
         <div

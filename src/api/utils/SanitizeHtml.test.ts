@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { SanitizeHtml } from './SanitizeHtml';
+import { SanitizeChatHtml, SanitizeHtml } from './SanitizeHtml';
 
 /**
  * SanitizeHtml is the project's shared HTML sanitiser (DOMPurify with a fixed
@@ -21,11 +21,9 @@ describe('SanitizeHtml — neutralises dangerous markup', () => {
         expect(parse('<script>alert(1)</script>').querySelector('script')).toBeNull();
     });
 
-    it('strips inline event handlers (onerror) from allowed tags', () => {
+    it('removes images and their inline event handlers', () => {
         const div = parse('<img src=x onerror=alert(1)>');
-        const img = div.querySelector('img');
-        // img tag itself is allow-listed, but the handler must be gone
-        expect(img?.getAttribute('onerror')).toBeNull();
+        expect(div.querySelector('img')).toBeNull();
         expect(div.innerHTML.toLowerCase()).not.toContain('onerror');
     });
 
@@ -62,8 +60,9 @@ describe('SanitizeHtml — preserves the markup the chat/profile UI relies on', 
         expect(div.querySelector('em')).not.toBeNull();
     });
 
-    it('keeps a coloured span (RoomChatFormatter output)', () => {
-        const div = parse('<span style="color:red">hi</span>');
+    it('keeps a coloured span in chat HTML (RoomChatFormatter output)', () => {
+        const div = document.createElement('div');
+        div.innerHTML = SanitizeChatHtml('<span style="color:red">hi</span>');
         const span = div.querySelector('span');
         expect(span).not.toBeNull();
         expect((span as HTMLElement).style.color).toBe('red');

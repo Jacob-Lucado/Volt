@@ -1,5 +1,5 @@
 import { FC, useEffect, useMemo, useState } from 'react';
-import { ChatBubbleMessage, ChatBubbleUtilities, IChatEntry, SanitizeHtml } from '../../api';
+import { ChatBubbleMessage, ChatBubbleUtilities, IChatEntry, SanitizeChatHtml } from '../../api';
 import { ChatWidgetMessageView } from '../room/widgets/chat/ChatWidgetMessageView';
 
 export const ChatHistoryBubbleView: FC<{ entry: IChatEntry }> = ({ entry }) => {
@@ -22,7 +22,7 @@ export const ChatHistoryBubbleView: FC<{ entry: IChatEntry }> = ({ entry }) => {
 
     const chat = useMemo(() => {
         const message = new ChatBubbleMessage(
-            entry.entityId, 100, entry.roomId, entry.message ?? '', SanitizeHtml(entry.message ?? ''), entry.name,
+            entry.entityId, 100, entry.roomId, entry.message ?? '', SanitizeChatHtml(entry.message ?? ''), entry.name,
             null, entry.chatType ?? 0, entry.style ?? 0, storedImage || restoredImage, entry.color
         );
         message.imageScale = 2;

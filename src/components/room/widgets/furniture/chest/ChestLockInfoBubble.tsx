@@ -1,24 +1,15 @@
-import { FC, MouseEvent, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { CreateLinkEvent, LocalizeText, SanitizeHtml } from '../../../../../api';
+import { LocalizeText, SanitizeHotelHtml } from '../../../../../api';
 import { ChestText } from './ChestAirParts';
 
 const LOCK_RULES = [1, 2, 3, 4, 5, 6, 7].map((n) => `wiredchests.lock_info.rule_${n}`);
 const CAPACITY_RULES = [1, 2, 3, 4].map((n) => `wiredchests.capacity_info.rule_${n}`);
 
 /** An html text window: AIR follows `event:` links through the link handler. */
-const HtmlRule: FC<{ textKey: string }> = ({ textKey }) => {
-    const onClick = (event: MouseEvent<HTMLDivElement>) => {
-        const link = (event.target as HTMLElement).closest('a');
-        const href = link?.getAttribute('href') ?? '';
-        if (!href.startsWith('event:')) return;
-
-        event.preventDefault();
-        CreateLinkEvent(href.slice('event:'.length));
-    };
-
-    return <div className="volt-chest-air__bubble-rule" dangerouslySetInnerHTML={{ __html: SanitizeHtml(LocalizeText(textKey)) }} onClick={onClick} />;
-};
+const HtmlRule: FC<{ textKey: string }> = ({ textKey }) => (
+    <div className="volt-chest-air__bubble-rule" dangerouslySetInnerHTML={{ __html: SanitizeHotelHtml(LocalizeText(textKey)) }} />
+);
 
 interface ChestLockInfoBubbleProps {
     /** The info button the bubble points at. */

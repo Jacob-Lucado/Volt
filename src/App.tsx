@@ -12,13 +12,23 @@ import {
     VoltLogger
 } from '@volt/renderer';
 import { FC, useCallback, useEffect, useEffectEvent, useRef, useState } from 'react';
+import { HOTEL_SESSION_CHANNEL } from './api/user/LogOut';
 import { startHotelRuntime } from './boot/HotelRuntime';
 import { Base } from './common';
 import { LoadingView } from './components/loading/LoadingView';
 import { MainView } from './components/MainView';
 import { ReconnectView } from './components/reconnect/ReconnectView';
 import { clearRoomToolsHistory } from './components/room/widgets/room-tools/roomToolsHistoryStore';
-import { ClearStoredChatHistory, getConnectionFailureAction, shouldClearLoginAfterDisconnect, useConnectionState, useDevicePixelRatio, useMessageEvent, useVoltEvent } from './hooks';
+import {
+    ClearStoredChatHistory,
+    getConnectionFailureAction,
+    getDisconnectReasonKey,
+    shouldClearLoginAfterDisconnect,
+    useConnectionState,
+    useDevicePixelRatio,
+    useMessageEvent,
+    useVoltEvent
+} from './hooks';
 import { listenForWiredLabels } from './hooks/rooms/widgets/useWiredLabelsState';
 import { clearBuildersClubStatus, listenForBuildersClubStatus } from './state/buildersClubStore';
 import { clearPerkAllowances, listenForPerkAllowances } from './state/perkAllowancesStore';
@@ -110,10 +120,24 @@ export const App: FC<{}> = (props) => {
         if (action === 'kicked') {
             // ReconnectView shows the reason over the hotel; only a ban forgets the stored login.
             if (shouldClearLoginAfterDisconnect(connectionState.disconnectReason)) clearStoredCredentials();
+            else if (getDisconnectReasonKey(connectionState.disconnectReason) === 'logged_out') ClearStoredChatHistory();
         } else if (action === 'login' || action === 'expired') {
             showSessionExpired();
         }
     }, [connectionState.phase, connectionState.disconnectReason, clearStoredCredentials, isReady, showSessionExpired]);
+
+    useEffect(() => {
+        if (typeof BroadcastChannel === 'undefined') return;
+
+        // The hotel website posts this when the account logs out in any tab.
+        const channel = new BroadcastChannel(HOTEL_SESSION_CHANNEL);
+
+        channel.onmessage = (event: MessageEvent<{ type?: string }>) => {
+            if (event.data?.type === 'logged-out') ClearStoredChatHistory();
+        };
+
+        return () => channel.close();
+    }, []);
 
     useMessageEvent<LoadGameUrlEvent>(LoadGameUrlEvent, (event) => {
         const parser = event.getParser();
