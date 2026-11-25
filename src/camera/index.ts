@@ -1649,6 +1649,7 @@ async function start(): Promise<void>
 
     effectLibraries = libraries;
     requireMandatoryLibraries();
+    await GetAssetManager().whenRoomAssetsReady?.();
 
     const engine = GetRoomEngine();
 

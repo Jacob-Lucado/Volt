@@ -1,9 +1,11 @@
-import { FC, lazy, Suspense } from 'react';
+import { FC } from 'react';
 import { SnowWarEngineState, SnowWarHookState } from '../../../../api/snowwar';
+import { lazyWindow } from '../../../../common/lazyWindow';
 import { useSnowWar } from '../../../../hooks';
 
-const LazySnowWarOverlayContent = lazy(() =>
-    import('./SnowWarOverlayContent').then((module) => ({ default: module.SnowWarOverlayContent }))
+const LazySnowWarOverlayContent = lazyWindow(
+    () => import('./SnowWarOverlayContent').then((module) => ({ default: module.SnowWarOverlayContent })),
+    'SnowWarOverlay'
 );
 
 export const SnowWarView: FC = () =>
@@ -14,9 +16,5 @@ export const SnowWarView: FC = () =>
 
     if(!isActive) return null;
 
-    return (
-        <Suspense fallback={null}>
-            <LazySnowWarOverlayContent />
-        </Suspense>
-    );
+    return <LazySnowWarOverlayContent />;
 };

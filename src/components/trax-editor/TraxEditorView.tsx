@@ -1,12 +1,15 @@
 import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
-import { FC, lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
+import { lazyWindow } from '../../common/lazyWindow';
 
-const LazyTraxEditorWindow = lazy(() =>
-    import('./TraxEditorWindow').then((module) => ({ default: module.TraxEditorWindow }))
+const LazyTraxEditorWindow = lazyWindow(
+    () => import('./TraxEditorWindow').then((module) => ({ default: module.TraxEditorWindow })),
+    'TraxEditor'
 );
 
 export const TraxEditorView: FC<{}> = () =>
 {
+    const [hasOpened, setHasOpened] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() =>
@@ -20,6 +23,7 @@ export const TraxEditorView: FC<{}> = () =>
                 switch (parts[1])
                 {
                     case 'show':
+                        setHasOpened(true);
                         setIsVisible(true);
                         return;
                     case 'hide':
@@ -37,11 +41,13 @@ export const TraxEditorView: FC<{}> = () =>
 
     const closeEditor = useCallback(() => setIsVisible(false), []);
 
-    if (!isVisible) return null;
+    const handleChunkError = useCallback(() =>
+    {
+        setIsVisible(false);
+        setHasOpened(false);
+    }, []);
 
-    return (
-        <Suspense fallback={null}>
-            <LazyTraxEditorWindow onClose={closeEditor} />
-        </Suspense>
-    );
+    if (!hasOpened) return null;
+
+    return <LazyTraxEditorWindow isVisible={isVisible} onChunkError={handleChunkError} onClose={closeEditor} />;
 };

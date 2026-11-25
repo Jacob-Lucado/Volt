@@ -65,9 +65,29 @@
                     i++;
                     continue;
                 }
+                if (c === ',') {
+                    var j = i + 1;
+                    while (j < src.length) {
+                        var ch = src[j];
+                        if (ch === ' ' || ch === '\t' || ch === '\n' || ch === '\r') { j++; continue; }
+                        if (ch === '/' && src[j + 1] === '/') {
+                            j += 2;
+                            while (j < src.length && src[j] !== '\n' && src[j] !== '\r') j++;
+                            continue;
+                        }
+                        if (ch === '/' && src[j + 1] === '*') {
+                            j += 2;
+                            while (j < src.length && !(src[j] === '*' && src[j + 1] === '/')) j++;
+                            j += 2;
+                            continue;
+                        }
+                        break;
+                    }
+                    if (src[j] === '}' || src[j] === ']') continue;
+                }
                 out += c;
             }
-            return out.replace(/,\s*([}\]])/g, '$1');
+            return out;
         };
         var readDoc = function (name) {
             var el = document.getElementById('volt-boot-' + name);
@@ -98,8 +118,9 @@
             } catch (_) {}
         }
 
-        var mode = parsed['client-mode'];
-        if (mode && (mode.secureAssetsEnabled || mode.mode === 'secure')) return;
+        // Match secure-assets.ts: only prefetch with plain fetch when client-mode explicitly disables secure assets.
+        var mode = window.__voltClientMode || parsed['client-mode'];
+        if (!mode || mode.secureAssetsEnabled !== false) return;
         var rc = parsed['renderer-config'];
         if (!rc || typeof rc !== 'object') return;
         var uc = parsed['ui-config'];
@@ -172,7 +193,7 @@
         window.__voltPrefetchCache = cache;
         window.__voltPrefetchData = dataCache;
         var warm = function (u, kind) {
-            if (!u || u.indexOf('%timestamp%') >= 0 || u.indexOf('${') >= 0 || cache.has(u) || dataCache.has(u)) return;
+            if (!u || u.indexOf('%timestamp%') >= 0 || u.indexOf('${') >= 0 || u.indexOf('/nitro-sec/') >= 0 || cache.has(u) || dataCache.has(u)) return;
             var k = kind || (/\.(?:hab|nitro)(?:$|[?#])/i.test(u) ? 'bin' : (/\.jsonc?(?:$|[?#])/i.test(u) ? 'json' : 'raw'));
             if (k === 'json') {
                 var jp = fetch(u).then(function (r) {
@@ -237,18 +258,29 @@
 
         var fmt = String(defs['asset.bundle.format'] || 'hab').trim().toLowerCase() === 'nitro' ? 'nitro' : 'hab';
         var toFmt = function (u) { return u.replace(/\.(?:hab|nitro)(?=$|[?#])/i, '.' + fmt); };
-        var warmedAvatars = false;
-        try {
-            var saved = JSON.parse(window.localStorage.getItem('volt.boot.mandatoryAvatarUrls') || 'null');
-            if (Array.isArray(saved) && saved.length) {
-                saved.forEach(function (u) { if (typeof u === 'string' && /^https?:\/\//i.test(u)) { warm(toFmt(u), 'bin'); warmedAvatars = true; } });
-            }
-        } catch (_) {}
-        if (!warmedAvatars && typeof defs['avatar.asset.url'] === 'string') {
+        if (typeof defs['avatar.asset.url'] === 'string') {
             var tpl = interp(defs['avatar.asset.url']);
-            ['hh_human_body', 'hh_human_item'].forEach(function (lib) {
-                warm(toFmt(tpl.replace(/%libname%/gi, lib)), 'bin');
-            });
+            if (tpl.indexOf('%revision%') < 0) {
+                var avatarLibs = [];
+                try {
+                    var saved = JSON.parse(window.localStorage.getItem('volt.boot.mandatoryAvatarLibs') || 'null');
+                    if (Array.isArray(saved)) {
+                        for (var li = 0; li < saved.length; li++) {
+                            if (typeof saved[li] === 'string' && /^[A-Za-z0-9_-]{1,64}$/.test(saved[li])) avatarLibs.push(saved[li]);
+                        }
+                    }
+                } catch (_) {}
+                if (!avatarLibs.length) avatarLibs = ['hh_human_body', 'hh_human_item'];
+                for (var ai = 0; ai < avatarLibs.length; ai++) {
+                    warm(toFmt(tpl.replace(/%libname%/gi, avatarLibs[ai])), 'bin');
+                }
+            }
+        }
+        if (typeof defs['furni.asset.url'] === 'string') {
+            var furniTpl = interp(defs['furni.asset.url']);
+            if (furniTpl.indexOf('%revision%') < 0) {
+                warm(toFmt(furniTpl.replace(/%libname%/gi, 'landscape')), 'bin');
+            }
         }
     })();
     </script>

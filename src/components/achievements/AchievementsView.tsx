@@ -1,9 +1,11 @@
 import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
-import { FC, lazy, Suspense, useEffect } from 'react';
+import { FC, useEffect } from 'react';
+import { lazyWindow } from '../../common/lazyWindow';
 import { useAchievements } from '../../hooks';
 
-const LazyAchievementsWindow = lazy(() =>
-    import('./AchievementsWindow').then((module) => ({ default: module.AchievementsWindow }))
+const LazyAchievementsWindow = lazyWindow(
+    () => import('./AchievementsWindow').then((module) => ({ default: module.AchievementsWindow })),
+    'Achievements'
 );
 
 export const AchievementsView: FC = () => {
@@ -52,9 +54,5 @@ export const AchievementsView: FC = () => {
 
     if (!isVisible || !isLoaded) return null;
 
-    return (
-        <Suspense fallback={null}>
-            <LazyAchievementsWindow />
-        </Suspense>
-    );
+    return <LazyAchievementsWindow onChunkError={close} />;
 };

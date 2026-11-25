@@ -1,5 +1,5 @@
 import { AddLinkEventTracker, CreateLinkEvent, ILinkEventTracker, RemoveLinkEventTracker, RoomEngineEvent, RoomId, RoomObjectCategory, RoomObjectType, UserClassificationMessageEvent } from '@volt/renderer';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { GetRoomSession, ISelectedUser, LocalizeText } from '../../api';
 import { Permission } from '../../api/permissions';
 import { MOD_WINDOW_SIZE, useHasPermission, useIssueManager, useModTools, useMessageEvent, useModWindowTrackerStore, useObjectSelectedEvent, useVoltEvent } from '../../hooks';
@@ -16,11 +16,29 @@ import { UserClassificationEntry, UserClassificationView } from './views/UserCla
 import { UserInfoView } from './views/UserInfoView';
 
 
+export interface ModToolsInitialRoomState {
+    roomId: number;
+    enteredAfterSettings: boolean;
+}
+
+export interface ModToolsContentProps {
+    initialRoom?: ModToolsInitialRoomState | null;
+    initialLinks?: string[];
+    onReady?: () => void;
+    onInitialLinksHandled?: () => void;
+}
+
 // Classic v75 ModerationManager / StartPanelCtrl (fme): the panel opens when the moderator init message arrives, the room and chatlog buttons follow the
 // room entered / left events, the user button follows the last selected avatar and stays enabled after the room is left.
-export const ModToolsContent: FC<{}> = () => {
+export const ModToolsContent: FC<ModToolsContentProps> = ({
+    initialRoom = null,
+    initialLinks = undefined,
+    onReady = undefined,
+    onInitialLinksHandled = undefined
+}) => {
+    const initialRoomRef = useRef<ModToolsInitialRoomState | null>(initialRoom);
     const [isVisible, setIsVisible] = useState(false);
-    const [currentRoomId, setCurrentRoomId] = useState<number>(-1);
+    const [currentRoomId, setCurrentRoomId] = useState<number>(() => initialRoom?.roomId ?? -1);
     // fme._r835c944dce1cfb / _rd920c7b97e4ea7: the room buttons are enabled by the room entered event and disabled by the room left event; a panel created
     // while a room is already open starts with them disabled.
     const [roomEntered, setRoomEntered] = useState(false);
@@ -42,7 +60,7 @@ export const ModToolsContent: FC<{}> = () => {
     // the toolbar's moderator button (and anything else linking `mod-tools/show|hide|toggle`) only reaches the start panel for a moderator. The button links `show`: the panel opens by
     // itself when the init message arrives (classic fme.show), so a toggle would close it on the first click of a moderator who has not closed it yet.
     const canUseModTools = useHasPermission(Permission.ModerationTool);
-    const canUseModToolsRef = useRef(false);
+    const canUseModToolsRef = useRef(canUseModTools);
 
     useEffect(() => {
         canUseModToolsRef.current = canUseModTools;
@@ -57,8 +75,9 @@ export const ModToolsContent: FC<{}> = () => {
         // permission); every later init message only makes the existing frame visible again.
         if (!panelCreatedRef.current) {
             panelCreatedRef.current = true;
-            setRoomEntered(false);
-            setChatlogEnabled(false);
+            const enteredBeforeMount = !!initialRoomRef.current?.enteredAfterSettings && (initialRoomRef.current?.roomId ?? -1) > 0;
+            setRoomEntered(enteredBeforeMount);
+            setChatlogEnabled(enteredBeforeMount && !!settings.chatlogsPermission);
             setTicketQueueEnabled(settings.cfhPermission);
         }
 
@@ -67,6 +86,8 @@ export const ModToolsContent: FC<{}> = () => {
 
     useVoltEvent<RoomEngineEvent>([RoomEngineEvent.INITIALIZED, RoomEngineEvent.DISPOSED], (event) => {
         if (RoomId.isRoomPreviewerId(event.roomId)) return;
+
+        initialRoomRef.current = null;
 
         const entered = event.type === RoomEngineEvent.INITIALIZED;
 
@@ -104,63 +125,80 @@ export const ModToolsContent: FC<{}> = () => {
         setSelectedUser({ userId: userData.webID, username: userData.name });
     });
 
+    const handleLink = useCallback(
+        (url: string) => {
+            const parts = url.split('/');
+
+            if (parts.length < 2) return;
+
+            switch (parts[1]) {
+                case 'show':
+                    if (canUseModToolsRef.current) setIsVisible(true);
+
+                    return;
+                case 'hide':
+                    if (canUseModToolsRef.current) setIsVisible(false);
+
+                    return;
+                case 'toggle':
+                    if (canUseModToolsRef.current) setIsVisible((visible) => !visible);
+
+                    return;
+                case 'open-room-info':
+                case 'toggle-room-info':
+                    showWindow({ type: 'roomTool', key: parts[2], ...MOD_WINDOW_SIZE.roomTool, parent: useModWindowTrackerStore.getState().startPanel, toggle: parts[1] === 'toggle-room-info' });
+                    return;
+                case 'close-room-info':
+                    closeWindow('roomTool', parts[2]);
+                    return;
+                case 'open-room-chatlog':
+                case 'toggle-room-chatlog':
+                    showWindow({ type: 'roomChatlog', key: parts[2], ...MOD_WINDOW_SIZE.roomChatlog, parent: useModWindowTrackerStore.getState().startPanel, toggle: parts[1] === 'toggle-room-chatlog' });
+                    return;
+                case 'close-room-chatlog':
+                    closeWindow('roomChatlog', parts[2]);
+                    return;
+                case 'open-user-info':
+                case 'toggle-user-info':
+                    showWindow({ type: 'userInfo', key: parts[2], ...MOD_WINDOW_SIZE.userInfo, parent: useModWindowTrackerStore.getState().startPanel, toggle: parts[1] === 'toggle-user-info' });
+                    return;
+                case 'close-user-info':
+                    closeWindow('userInfo', parts[2]);
+                    return;
+                case 'open-user-chatlog':
+                case 'toggle-user-chatlog':
+                    showWindow({ type: 'userChatlog', key: parts[2], ...MOD_WINDOW_SIZE.userChatlog, parent: useModWindowTrackerStore.getState().startPanel, toggle: parts[1] === 'toggle-user-chatlog' });
+                    return;
+                case 'close-user-chatlog':
+                    closeWindow('userChatlog', parts[2]);
+                    return;
+            }
+        },
+        [showWindow, closeWindow]
+    );
+
     useEffect(() => {
         const linkTracker: ILinkEventTracker = {
-            linkReceived: (url: string) => {
-                const parts = url.split('/');
-
-                if (parts.length < 2) return;
-
-                switch (parts[1]) {
-                    case 'show':
-                        if (canUseModToolsRef.current) setIsVisible(true);
-
-                        return;
-                    case 'hide':
-                        if (canUseModToolsRef.current) setIsVisible(false);
-
-                        return;
-                    case 'toggle':
-                        if (canUseModToolsRef.current) setIsVisible((visible) => !visible);
-
-                        return;
-                    case 'open-room-info':
-                    case 'toggle-room-info':
-                        showWindow({ type: 'roomTool', key: parts[2], ...MOD_WINDOW_SIZE.roomTool, parent: useModWindowTrackerStore.getState().startPanel, toggle: parts[1] === 'toggle-room-info' });
-                        return;
-                    case 'close-room-info':
-                        closeWindow('roomTool', parts[2]);
-                        return;
-                    case 'open-room-chatlog':
-                    case 'toggle-room-chatlog':
-                        showWindow({ type: 'roomChatlog', key: parts[2], ...MOD_WINDOW_SIZE.roomChatlog, parent: useModWindowTrackerStore.getState().startPanel, toggle: parts[1] === 'toggle-room-chatlog' });
-                        return;
-                    case 'close-room-chatlog':
-                        closeWindow('roomChatlog', parts[2]);
-                        return;
-                    case 'open-user-info':
-                    case 'toggle-user-info':
-                        showWindow({ type: 'userInfo', key: parts[2], ...MOD_WINDOW_SIZE.userInfo, parent: useModWindowTrackerStore.getState().startPanel, toggle: parts[1] === 'toggle-user-info' });
-                        return;
-                    case 'close-user-info':
-                        closeWindow('userInfo', parts[2]);
-                        return;
-                    case 'open-user-chatlog':
-                    case 'toggle-user-chatlog':
-                        showWindow({ type: 'userChatlog', key: parts[2], ...MOD_WINDOW_SIZE.userChatlog, parent: useModWindowTrackerStore.getState().startPanel, toggle: parts[1] === 'toggle-user-chatlog' });
-                        return;
-                    case 'close-user-chatlog':
-                        closeWindow('userChatlog', parts[2]);
-                        return;
-                }
-            },
+            linkReceived: handleLink,
             eventUrlPrefix: 'mod-tools/'
         };
 
         AddLinkEventTracker(linkTracker);
 
         return () => RemoveLinkEventTracker(linkTracker);
-    }, [showWindow, closeWindow]);
+    }, [handleLink]);
+
+    useEffect(() => {
+        onReady?.();
+    }, [onReady]);
+
+    useEffect(() => {
+        if (!initialLinks?.length) return;
+
+        for (const url of initialLinks) handleLink(url);
+
+        onInitialLinksHandled?.();
+    }, [initialLinks, handleLink, onInitialLinksHandled]);
 
     const isInRoom = currentRoomId > 0 && roomEntered;
 

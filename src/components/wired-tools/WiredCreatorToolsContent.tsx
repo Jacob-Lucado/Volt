@@ -111,7 +111,11 @@ const MENU_HEADER_TITLES: Record<WiredToolsTab, string> = {
     settings: 'Settings'
 };
 
-export const WiredCreatorToolsContent: FC<{ initialLink?: string | null; onInitialLinkHandled?: () => void }> = ({ initialLink = null, onInitialLinkHandled }) => {
+export const WiredCreatorToolsContent: FC<{ initialLink?: string | null; onInitialLinkHandled?: () => void; onReady?: () => void }> = ({
+    initialLink = null,
+    onInitialLinkHandled,
+    onReady
+}) => {
     const openVariablesExplorer = useVariablesExplorerStore((s) => s.open);
     const isVisible = useWiredCreatorToolsUiStore((s) => s.isVisible);
     const setIsVisible = useWiredCreatorToolsUiStore((s) => s.setIsVisible);
@@ -687,11 +691,16 @@ export const WiredCreatorToolsContent: FC<{ initialLink?: string | null; onIniti
     }, [variableNamesByType, variableCatalog.ready, roomSettings.canInspect, simpleAlert]);
 
     useEffect(() => {
+        onReady?.();
+    }, [onReady]);
+
+    useEffect(() => {
         if (!initialLink) return;
 
+        onReady?.();
         CreateLinkEvent(initialLink);
         onInitialLinkHandled?.();
-    }, [initialLink, onInitialLinkHandled]);
+    }, [initialLink, onInitialLinkHandled, onReady]);
 
 
     useEffect(() => {

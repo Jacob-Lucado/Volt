@@ -1,19 +1,23 @@
 import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
-import { FC, lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { ensureWiredTextsLoaded } from '../../api/wired/loadWiredTexts';
+import { lazyWindow } from '../../common/lazyWindow';
 import { useWiredMenuErrors } from '../../hooks';
 import { useWiredCreatorToolsUiStore } from './wiredCreatorToolsUiStore';
 
-const LazyWiredCreatorToolsContent = lazy(async () => {
+const LazyWiredCreatorToolsContent = lazyWindow(async () => {
     const [, module] = await Promise.all([ensureWiredTextsLoaded(), import('./WiredCreatorToolsContent')]);
 
     return { default: module.WiredCreatorToolsContent };
-});
+}, 'WiredCreatorTools');
 
 export const WiredCreatorToolsView: FC<{}> = () => {
     const isVisible = useWiredCreatorToolsUiStore((s) => s.isVisible);
+    const setIsVisible = useWiredCreatorToolsUiStore((s) => s.setIsVisible);
     const [hasMounted, setHasMounted] = useState(false);
+    const [isContentReady, setIsContentReady] = useState(false);
     const [initialLink, setInitialLink] = useState<string | null>(null);
+    const isContentReadyRef = useRef(false);
 
     useWiredMenuErrors();
 
@@ -22,9 +26,11 @@ export const WiredCreatorToolsView: FC<{}> = () => {
     }, [isVisible]);
 
     useEffect(() => {
-        if (hasMounted) return;
+        if (isContentReady) return;
 
         const handleDeferredLink = (url: string) => {
+            if (isContentReadyRef.current) return;
+
             setInitialLink(url);
             setHasMounted(true);
         };
@@ -45,15 +51,31 @@ export const WiredCreatorToolsView: FC<{}> = () => {
             RemoveLinkEventTracker(toolsTracker);
             RemoveLinkEventTracker(menuTracker);
         };
-    }, [hasMounted]);
+    }, [isContentReady]);
+
+    const handleReady = useCallback(() => {
+        isContentReadyRef.current = true;
+        setIsContentReady(true);
+    }, []);
 
     const clearInitialLink = useCallback(() => setInitialLink(null), []);
+
+    const handleChunkError = useCallback(() => {
+        isContentReadyRef.current = false;
+        setIsContentReady(false);
+        setHasMounted(false);
+        setInitialLink(null);
+        setIsVisible(false);
+    }, [setIsVisible]);
 
     if (!hasMounted) return null;
 
     return (
-        <Suspense fallback={null}>
-            <LazyWiredCreatorToolsContent initialLink={initialLink} onInitialLinkHandled={clearInitialLink} />
-        </Suspense>
+        <LazyWiredCreatorToolsContent
+            initialLink={initialLink}
+            onChunkError={handleChunkError}
+            onInitialLinkHandled={clearInitialLink}
+            onReady={handleReady}
+        />
     );
 };

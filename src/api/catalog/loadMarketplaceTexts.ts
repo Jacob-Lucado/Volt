@@ -17,11 +17,17 @@ export const fetchMarketplaceTexts = async (): Promise<Record<string, unknown> |
         {
             dataCache.delete(url);
 
-            const entry = await prefetchedData;
+            try
+            {
+                const entry = await prefetchedData;
 
-            if (!entry?.ok) throw new Error(`HTTP ${entry?.status ?? 'no response'}`);
-            if (entry.json !== undefined) return entry.json as Record<string, unknown>;
-            if (typeof entry.text === 'string') return JSON.parse(entry.text) as Record<string, unknown>;
+                if (entry?.ok)
+                {
+                    if (entry.json !== undefined) return entry.json as Record<string, unknown>;
+                    if (typeof entry.text === 'string') return JSON.parse(entry.text) as Record<string, unknown>;
+                }
+            }
+            catch {}
         }
 
         const cache = (globalThis as { __voltPrefetchCache?: Map<string, Promise<Response>> }).__voltPrefetchCache;

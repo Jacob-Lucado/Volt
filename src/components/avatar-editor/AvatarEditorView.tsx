@@ -1,11 +1,13 @@
 import { AddLinkEventTracker, AvatarFigurePartType, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
-import { FC, lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
+import { lazyWindow } from '../../common/lazyWindow';
 import { useAvatarEditor } from '../../hooks';
 
 const INITIAL_EDITOR_POSITION = { x: 100, y: 30 };
 
-const LazyAvatarEditorWindow = lazy(() =>
-    import('./AvatarEditorWindow').then((module) => ({ default: module.AvatarEditorWindow }))
+const LazyAvatarEditorWindow = lazyWindow(
+    () => import('./AvatarEditorWindow').then((module) => ({ default: module.AvatarEditorWindow })),
+    'AvatarEditor'
 );
 
 export const AvatarEditorView: FC<{}> = () => {
@@ -83,14 +85,13 @@ export const AvatarEditorView: FC<{}> = () => {
     if (!isVisible) return null;
 
     return (
-        <Suspense fallback={null}>
-            <LazyAvatarEditorWindow
-                editorPosition={editorPosition}
-                setEditorPosition={setEditorPosition}
-                isWardrobeOpen={isWardrobeOpen}
-                setIsWardrobeOpen={setIsWardrobeOpen}
-                onClose={onClose}
-            />
-        </Suspense>
+        <LazyAvatarEditorWindow
+            editorPosition={editorPosition}
+            isWardrobeOpen={isWardrobeOpen}
+            onChunkError={onClose}
+            onClose={onClose}
+            setEditorPosition={setEditorPosition}
+            setIsWardrobeOpen={setIsWardrobeOpen}
+        />
     );
 };

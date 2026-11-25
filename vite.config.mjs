@@ -127,11 +127,22 @@ const preloadAppBundle = () =>
                 // Preload all runtime engine chunks at high priority, plus substantial UI chunks (>= 12 KB) and CSS,
                 // without flooding <head> with dozens of tiny <5 KB shared helpers.
                 const isSubstantialUi = file => (bundle[file]?.code?.length ?? 0) >= 12288 || file.includes('src-');
+                const thumbmarkChunk = Object.values(bundle).find(chunk => chunk.type === 'chunk' && chunk.name === 'vendor-thumbmark');
                 const tags = [
                     ...[ ...runtimeScripts ].filter(file => !nextHtml.includes(file)).map(file => ({ tag: 'link', attrs: { rel: 'modulepreload', crossorigin: true, fetchpriority: 'high', href: base + file }, injectTo: 'head' })),
                     ...[ ...uiScripts ].filter(file => !nextHtml.includes(file) && isSubstantialUi(file)).map(file => ({ tag: 'link', attrs: { rel: 'modulepreload', crossorigin: true, href: base + file }, injectTo: 'head' })),
                     ...[ ...styles ].map(file => ({ tag: 'link', attrs: { rel: 'preload', as: 'style', crossorigin: true, href: base + file }, injectTo: 'head' }))
                 ];
+
+                if(thumbmarkChunk && !runtimeScripts.has(thumbmarkChunk.fileName))
+                {
+                    const href = JSON.stringify(base + thumbmarkChunk.fileName);
+                    tags.push({
+                        tag: 'script',
+                        children: `try{if(!localStorage.getItem('volt.machineId')){var l=document.createElement('link');l.rel='modulepreload';l.crossOrigin='';l.fetchPriority='high';l.href=${ href };document.head.appendChild(l);}}catch(_){}`,
+                        injectTo: 'head-prepend'
+                    });
+                }
 
                 return { html: nextHtml, tags };
             }

@@ -110,13 +110,16 @@ const prepareHotelRuntime = async (width: number, height: number) => {
     }, 15);
 
     const session = phase('session-data', () => GetSessionDataManager().init(localization), 20);
+    const landscapePreload = session
+        .then(() => typeof GetRoomContentLoader().preloadLandscape === 'function' ? GetRoomContentLoader().preloadLandscape() : Promise.resolve())
+        .catch(() => {});
     const avatars = phase('avatars', () => GetAvatarRenderManager().init(), 15);
     // Built-in images and mandatory room libraries decode in parallel with renderer and session data.
     const assets = phase('assets', () => GetAssetManager().downloadAssets(assetUrls), 10);
     const mandatoryRoomAssets = typeof GetRoomContentLoader().preloadMandatoryLibraries === 'function'
         ? GetRoomContentLoader().preloadMandatoryLibraries()
         : Promise.resolve();
-    const rooms = Promise.all([renderer, session, mandatoryRoomAssets]).then(() => phase('rooms', async () => {
+    const rooms = Promise.all([renderer, session, mandatoryRoomAssets, landscapePreload]).then(() => phase('rooms', async () => {
         await GetRoomSessionManager().init();
         await GetRoomEngine().init();
     }, 15));
@@ -124,9 +127,23 @@ const prepareHotelRuntime = async (width: number, height: number) => {
     // All handlers and mandatory assets must exist before App mounts MainView,
     // which releases the connection's queued login packets.
     const [readyRenderer] = await Promise.all([renderer, localization, session, avatars, assets, rooms, GetSoundManager().init()]);
+    clearUnusedPrefetches();
     reportProgress(95);
     performance.mark('volt:runtime-ready');
     return readyRenderer;
+};
+
+const clearUnusedPrefetches = () => {
+    const rawCache = (globalThis as { __voltPrefetchCache?: Map<string, Promise<Response>> }).__voltPrefetchCache;
+    if (rawCache) {
+        for (const pending of rawCache.values()) {
+            void pending.then((res) => res?.body?.cancel?.()).catch(() => {});
+        }
+        rawCache.clear();
+    }
+
+    const dataCache = (globalThis as { __voltPrefetchData?: Map<string, Promise<unknown>> }).__voltPrefetchData;
+    dataCache?.clear();
 };
 
 /** Bootstrap and React (including StrictMode) share one engine initialization. */
@@ -139,7 +156,7 @@ export const startHotelRuntime = (width: number, height: number, onProgress?: Pr
     const promise = (runtime ??= prepareHotelRuntime(width, height));
 
     if (onProgress) {
-        promise.finally(() => progressListeners.delete(onProgress));
+        promise.finally(() => progressListeners.delete(onProgress)).catch(() => {});
     }
 
     return promise;

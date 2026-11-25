@@ -9,8 +9,9 @@ import {
     RoomEngineObjectPlacedEvent,
     RoomSessionEvent
 } from '@volt/renderer';
-import { FC, lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { isObjectMoverRequested, setObjectMoverRequested } from '../../api';
+import { lazyWindow } from '../../common/lazyWindow';
 import { useInventoryTrade, useMessageEvent, useVoltEvent, useWiredTrading } from '../../hooks';
 
 const TAB_FURNITURE = 'inventory.furni';
@@ -26,8 +27,9 @@ const TAB_BY_CODE: Record<string, string> = {
     bots: TAB_BOTS
 };
 
-const LazyInventoryWindow = lazy(() =>
-    import('./InventoryWindow').then((module) => ({ default: module.InventoryWindow }))
+const LazyInventoryWindow = lazyWindow(
+    () => import('./InventoryWindow').then((module) => ({ default: module.InventoryWindow })),
+    'Inventory'
 );
 
 export const InventoryView: FC<{}> = () => {
@@ -105,9 +107,5 @@ export const InventoryView: FC<{}> = () => {
 
     if (!isVisible) return null;
 
-    return (
-        <Suspense fallback={null}>
-            <LazyInventoryWindow currentTab={currentTab} setCurrentTab={setCurrentTab} roomSession={roomSession} onClose={onClose} />
-        </Suspense>
-    );
+    return <LazyInventoryWindow currentTab={currentTab} onChunkError={onClose} onClose={onClose} roomSession={roomSession} setCurrentTab={setCurrentTab} />;
 };

@@ -1,19 +1,22 @@
 import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
-import { FC, lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { ReportState, ReportType } from '../../api';
+import { lazyWindow } from '../../common/lazyWindow';
 import { useHelp } from '../../hooks';
 import { NameChangeView } from './views/name-change/NameChangeView';
 
-const LazyHelpWindow = lazy(() =>
-    import('./HelpWindow').then((module) => ({ default: module.HelpWindow }))
+const LazyHelpWindow = lazyWindow(
+    () => import('./HelpWindow').then((module) => ({ default: module.HelpWindow })),
+    'Help'
 );
-const LazySanctionSatusView = lazy(() =>
-    import('./views/SanctionStatusView').then((module) => ({ default: module.SanctionSatusView }))
+const LazySanctionSatusView = lazyWindow(
+    () => import('./views/SanctionStatusView').then((module) => ({ default: module.SanctionSatusView })),
+    'SanctionStatus'
 );
 
 export const HelpView: FC = () => {
     const [isVisible, setIsVisible] = useState(false);
-    const { activeReport, setActiveReport, sanctionInfo = null } = useHelp();
+    const { activeReport, setActiveReport, sanctionInfo = null, setSanctionInfo = null } = useHelp();
     const hasActiveReport = activeReport !== null;
     const isOpen = isVisible || hasActiveReport;
 
@@ -68,18 +71,12 @@ export const HelpView: FC = () => {
         return () => RemoveLinkEventTracker(linkTracker);
     }, [hasActiveReport, onClose, setActiveReport]);
 
+    const closeSanctionStatus = useCallback(() => setSanctionInfo?.(null), [setSanctionInfo]);
+
     return (
         <>
-            {isOpen && (
-                <Suspense fallback={null}>
-                    <LazyHelpWindow isVisible={isVisible} setIsVisible={setIsVisible} onClose={onClose} />
-                </Suspense>
-            )}
-            {sanctionInfo && (
-                <Suspense fallback={null}>
-                    <LazySanctionSatusView />
-                </Suspense>
-            )}
+            {isOpen && <LazyHelpWindow isVisible={isVisible} onChunkError={onClose} onClose={onClose} setIsVisible={setIsVisible} />}
+            {sanctionInfo && <LazySanctionSatusView onChunkError={closeSanctionStatus} />}
             <NameChangeView />
         </>
     );

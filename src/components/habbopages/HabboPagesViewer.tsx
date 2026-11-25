@@ -1,12 +1,14 @@
 import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker, VoltLogger } from '@volt/renderer';
-import { FC, lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { GetConfigurationValue } from '../../api';
+import { lazyWindow } from '../../common/lazyWindow';
 import type { HabboPageContent } from './HabboPagesWindow';
 
 const NEW_LINE_REGEX = /\n\r|\n|\r/gm;
 
-const LazyHabboPagesWindow = lazy(() =>
-    import('./HabboPagesWindow').then((module) => ({ default: module.HabboPagesWindow }))
+const LazyHabboPagesWindow = lazyWindow(
+    () => import('./HabboPagesWindow').then((module) => ({ default: module.HabboPagesWindow })),
+    'HabboPages'
 );
 
 export const HabboPagesViewer: FC<{}> = () => {
@@ -70,9 +72,5 @@ export const HabboPagesViewer: FC<{}> = () => {
 
     if (!page) return null;
 
-    return (
-        <Suspense fallback={null}>
-            <LazyHabboPagesWindow page={page} onClose={closePage} />
-        </Suspense>
-    );
+    return <LazyHabboPagesWindow onChunkError={closePage} onClose={closePage} page={page} />;
 };

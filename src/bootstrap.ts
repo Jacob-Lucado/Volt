@@ -280,7 +280,7 @@ const prefetchBootResources = (
     const dataCache: Map<string, Promise<unknown>> | undefined = (globalThis as any).__voltPrefetchData;
 
     const warm = (url: string) => {
-        if (!url || url.includes('%timestamp%') || url.includes('${') || cache.has(url) || dataCache?.has(url)) return;
+        if (!url || url.includes('%timestamp%') || url.includes('${') || url.includes('/nitro-sec/') || cache.has(url) || dataCache?.has(url)) return;
 
         const pending = fetch(url);
         pending.catch(() => cache.delete(url));
@@ -325,22 +325,49 @@ const prefetchBootResources = (
     // Pre-fetch mandatory avatar bundles in the configured bundle format alongside FigureMap.json.
     const bundleFormat = String(defs['asset.bundle.format'] || 'hab').trim().toLowerCase() === 'nitro' ? 'nitro' : 'hab';
     const withBundleFormat = (url: string) => url.replace(/\.(?:hab|nitro)(?=$|[?#])/i, `.${bundleFormat}`);
-    let warmedAvatars = false;
-    try {
-        const cachedAvatarUrls = JSON.parse(window.localStorage?.getItem('volt.boot.mandatoryAvatarUrls') || 'null');
-        if (Array.isArray(cachedAvatarUrls)) {
-            for (const url of cachedAvatarUrls) {
-                if (typeof url === 'string' && /^https?:\/\//i.test(url)) {
-                    warm(withBundleFormat(url));
-                    warmedAvatars = true;
+    if (typeof defs['avatar.asset.url'] === 'string') {
+        const template = interpolateRawConfig(defs['avatar.asset.url'] as string, defs, gamedataVersions);
+        if (!/%revision%/i.test(template)) {
+            const avatarLibs: string[] = [];
+            try {
+                const cachedLibs = JSON.parse(window.localStorage?.getItem('volt.boot.mandatoryAvatarLibs') || 'null');
+                if (Array.isArray(cachedLibs)) {
+                    for (const lib of cachedLibs) {
+                        if (typeof lib === 'string' && /^[A-Za-z0-9_-]{1,64}$/.test(lib)) avatarLibs.push(lib);
+                    }
                 }
+            } catch {}
+            for (const lib of (avatarLibs.length ? avatarLibs : ['hh_human_body', 'hh_human_item'])) {
+                warm(withBundleFormat(template.replace(/%libname%/gi, lib)));
             }
         }
-    } catch {}
-    if (!warmedAvatars && typeof defs['avatar.asset.url'] === 'string') {
-        const template = interpolateRawConfig(defs['avatar.asset.url'] as string, defs, gamedataVersions);
-        for (const lib of ['hh_human_body', 'hh_human_item']) {
-            warm(withBundleFormat(template.replace(/%libname%/gi, lib)));
+    }
+
+    if (typeof defs['furni.asset.url'] === 'string') {
+        const furniTemplate = interpolateRawConfig(defs['furni.asset.url'] as string, defs, gamedataVersions);
+        if (!/%revision%/i.test(furniTemplate)) {
+            warm(withBundleFormat(furniTemplate.replace(/%libname%/gi, 'landscape')));
+        }
+    }
+};
+
+const clearEarlyBootCaches = (closeEarlySocket: boolean) => {
+    const rawCache = (globalThis as { __voltPrefetchCache?: Map<string, Promise<Response>> }).__voltPrefetchCache;
+    if (rawCache) {
+        for (const pending of rawCache.values()) {
+            void pending.then((res) => res?.body?.cancel?.()).catch(() => {});
+        }
+        rawCache.clear();
+    }
+
+    const dataCache = (globalThis as { __voltPrefetchData?: Map<string, Promise<unknown>> }).__voltPrefetchData;
+    dataCache?.clear();
+
+    if (closeEarlySocket) {
+        const early = (globalThis as { __voltEarlySocket?: { detach?: () => void; socket?: WebSocket } }).__voltEarlySocket;
+        delete (globalThis as { __voltEarlySocket?: unknown }).__voltEarlySocket;
+        if (early) {
+            try { early.detach?.(); early.socket?.close(); } catch {}
         }
     }
 };
@@ -352,6 +379,10 @@ setBootDebug('boot: secure fetch installed');
 
 const search = new URLSearchParams(window.location.search);
 const clientMode = getClientMode();
+
+if (clientMode.secureAssetsEnabled) {
+    clearEarlyBootCaches(true);
+}
 
 (window as any).VoltSecureApiUrl = clientMode.apiBaseUrl || window.location.origin;
 (window as any).VoltClientMode = clientMode;

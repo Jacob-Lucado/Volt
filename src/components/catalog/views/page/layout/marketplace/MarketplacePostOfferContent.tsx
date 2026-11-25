@@ -17,9 +17,10 @@ interface MarketplaceItemStats {
     suggestedPrice: number;
 }
 
-export const MarketplacePostOfferContent: FC<{ initialEvent?: CatalogPostMarketplaceOfferEvent | null; onInitialEventHandled?: () => void }> = ({
+export const MarketplacePostOfferContent: FC<{ initialEvent?: CatalogPostMarketplaceOfferEvent | null; onInitialEventHandled?: () => void; onReady?: () => void }> = ({
     initialEvent = null,
-    onInitialEventHandled
+    onInitialEventHandled,
+    onReady
 }) =>
 {
     const [item, setItem] = useState<FurnitureItem>(initialEvent?.item ?? null);
@@ -29,6 +30,11 @@ export const MarketplacePostOfferContent: FC<{ initialEvent?: CatalogPostMarketp
     const [itemStats, setItemStats] = useState<MarketplaceItemStats>(null);
     const { data: marketplaceConfiguration = null } = useMarketplaceConfiguration({ enabled: !!item });
     const { showConfirm = null } = useNotification();
+
+    useEffect(() =>
+    {
+        onReady?.();
+    }, [onReady]);
 
     useEffect(() =>
     {

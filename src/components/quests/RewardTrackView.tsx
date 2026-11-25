@@ -1,9 +1,11 @@
 import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
-import { FC, lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
+import { lazyWindow } from '../../common/lazyWindow';
 import { useRewardTracks } from '../../hooks';
 
-const LazyRewardTrackWindow = lazy(() =>
-    import('./RewardTrackWindow').then((module) => ({ default: module.RewardTrackWindow }))
+const LazyRewardTrackWindow = lazyWindow(
+    () => import('./RewardTrackWindow').then((module) => ({ default: module.RewardTrackWindow })),
+    'RewardTrack'
 );
 
 export const RewardTrackView: FC<{}> = () => {
@@ -50,9 +52,5 @@ export const RewardTrackView: FC<{}> = () => {
 
     if (!trackId) return null;
 
-    return (
-        <Suspense fallback={null}>
-            <LazyRewardTrackWindow trackId={trackId} onClose={close} onSelectTrack={open} />
-        </Suspense>
-    );
+    return <LazyRewardTrackWindow onChunkError={close} onClose={close} onSelectTrack={open} trackId={trackId} />;
 };

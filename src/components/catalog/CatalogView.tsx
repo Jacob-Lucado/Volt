@@ -1,13 +1,15 @@
 import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
-import { FC, lazy, Suspense, useEffect } from 'react';
+import { FC, useCallback, useEffect } from 'react';
 import { CatalogType, GetConfigurationValue } from '../../api';
+import { lazyWindow } from '../../common/lazyWindow';
 import { CatalogEffectsHost, useCatalogActions, useCatalogData, useCatalogUiState } from '../../hooks';
 import { CatalogPlacedOfferConfirmView } from './views/CatalogPlacedOfferConfirmView';
 import { CatalogGiftView } from './views/gift/CatalogGiftView';
 import { MarketplacePostOfferView } from './views/page/layout/marketplace/MarketplacePostOfferView';
 
-const LazyCatalogWindowContent = lazy(() =>
-    import('./CatalogWindowContent').then((module) => ({ default: module.CatalogWindowContent }))
+const LazyCatalogWindowContent = lazyWindow(
+    () => import('./CatalogWindowContent').then((module) => ({ default: module.CatalogWindowContent })),
+    'Catalog'
 );
 
 const isBuildersClubEnabled = () => GetConfigurationValue<boolean>('builders.club.enabled', true);
@@ -112,13 +114,11 @@ const CatalogViewInner: FC<{}> = () => {
         return () => RemoveLinkEventTracker(linkTracker);
     }, [setIsVisible, openPageById, openPageByOfferId, openPageByName, openCatalogByType, toggleCatalogByType]);
 
+    const handleChunkError = useCallback(() => setIsVisible(false), [setIsVisible]);
+
     return (
         <>
-            {isVisible && (
-                <Suspense fallback={null}>
-                    <LazyCatalogWindowContent />
-                </Suspense>
-            )}
+            {isVisible && <LazyCatalogWindowContent onChunkError={handleChunkError} />}
             <CatalogGiftView />
             <CatalogPlacedOfferConfirmView />
             <MarketplacePostOfferView />

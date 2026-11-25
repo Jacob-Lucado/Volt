@@ -8,8 +8,9 @@ import {
     RoomGeometry,
     RoomSessionEvent
 } from '@volt/renderer';
-import { FC, lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { CameraEffectSelection, deleteTrustedCamera, GetConfigurationValue, LocalizeText, NotificationAlertType } from '../../api';
+import { lazyWindow } from '../../common/lazyWindow';
 import { useAchievements, useCamera, useNotification, useRoom, useVoltEvent } from '../../hooks';
 import { getCameraAchievementLevel } from './CameraAirUtilities';
 
@@ -21,8 +22,9 @@ const CAMERA_CANVAS_ID = 1;
 const DEFAULT_ROOM_ZOOM = 1;
 const ROOM_ZOOM_EPSILON = 0.001;
 
-const LazyCameraWidgetContent = lazy(() =>
-    import('./CameraWidgetContent').then((module) => ({ default: module.CameraWidgetContent }))
+const LazyCameraWidgetContent = lazyWindow(
+    () => import('./CameraWidgetContent').then((module) => ({ default: module.CameraWidgetContent })),
+    'CameraWidget'
 );
 
 const getLogicalRoomZoom = (roomId: number): number => {
@@ -71,6 +73,11 @@ export const CameraWidgetView: FC<{}> = () => {
         setMode(MODE_CAPTURE);
     }, [roomSession, setSelectedPictureIndex, simpleAlert]);
 
+    const closeCamera = useCallback(() => {
+        setSelectedPictureIndex(-1);
+        setMode(MODE_NONE);
+    }, [setSelectedPictureIndex]);
+
     const checkoutPictureUrl = (pictureUrl: string, effects: CameraEffectSelection[] = [], zoom = false) => {
         if (GetSessionDataManager().isSafetyLocked) {
             simpleAlert(LocalizeText('notifications.text.safety_locked'), null, null, null, LocalizeText('generic.alert.title'));
@@ -91,8 +98,7 @@ export const CameraWidgetView: FC<{}> = () => {
     const processAction = (type: string) => {
         switch (type) {
             case 'close':
-                setSelectedPictureIndex(-1);
-                setMode(MODE_NONE);
+                closeCamera();
                 return;
             case 'edit':
                 if (selectedPictureIndex < 0 || !cameraRoll[selectedPictureIndex]?.draftId) return;
@@ -120,15 +126,13 @@ export const CameraWidgetView: FC<{}> = () => {
     };
 
     useVoltEvent<RoomSessionEvent>(RoomSessionEvent.ENDED, () => {
-        setSelectedPictureIndex(-1);
-        setMode(MODE_NONE);
+        closeCamera();
     });
 
     useVoltEvent<RoomEngineEvent>(RoomEngineEvent.ROOM_ZOOMED, (event) => {
         if (!roomSession || event.roomId !== roomSession.roomId || isDefaultRoomZoom(event.roomId)) return;
 
-        setSelectedPictureIndex(-1);
-        setMode(MODE_NONE);
+        closeCamera();
     });
 
     useEffect(() => {
@@ -143,8 +147,7 @@ export const CameraWidgetView: FC<{}> = () => {
                         openCamera();
                         return;
                     case 'hide':
-                        setSelectedPictureIndex(-1);
-                        setMode(MODE_NONE);
+                        closeCamera();
                         return;
                     case 'toggle':
                         setSelectedPictureIndex(-1);
@@ -160,23 +163,22 @@ export const CameraWidgetView: FC<{}> = () => {
         AddLinkEventTracker(linkTracker);
 
         return () => RemoveLinkEventTracker(linkTracker);
-    }, [mode, openCamera, setSelectedPictureIndex]);
+    }, [mode, openCamera, closeCamera, setSelectedPictureIndex]);
 
     if (mode === MODE_NONE) return null;
 
     return (
-        <Suspense fallback={null}>
-            <LazyCameraWidgetContent
-                mode={mode}
-                availableEffects={availableEffects}
-                myLevel={myLevel}
-                selectedPicture={cameraRoll[selectedPictureIndex] ?? null}
-                checkoutEffects={checkoutEffects}
-                checkoutZoom={checkoutZoom}
-                price={price}
-                onAction={processAction}
-                onCheckout={checkoutPictureUrl}
-            />
-        </Suspense>
+        <LazyCameraWidgetContent
+            availableEffects={availableEffects}
+            checkoutEffects={checkoutEffects}
+            checkoutZoom={checkoutZoom}
+            mode={mode}
+            myLevel={myLevel}
+            onAction={processAction}
+            onCheckout={checkoutPictureUrl}
+            onChunkError={closeCamera}
+            price={price}
+            selectedPicture={cameraRoll[selectedPictureIndex] ?? null}
+        />
     );
 };

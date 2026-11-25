@@ -1,10 +1,12 @@
 import { PurchaseFromCatalogComposer } from '@volt/renderer';
-import { FC, lazy, Suspense, useCallback, useEffect } from 'react';
+import { FC, useCallback, useEffect } from 'react';
 import { CatalogType, GetConfigurationValue, LocalizeText, SendMessageComposer } from '../../../api';
+import { lazyWindow } from '../../../common/lazyWindow';
 import { claimPlacedOfferPurchase, useCatalogActions, useCatalogPlacedOffer, useCatalogSkipPurchaseConfirmation, useNotification, usePurse } from '../../../hooks';
 
-const LazyCatalogPurchaseConfirmView = lazy(() =>
-    import('./CatalogPurchaseConfirmView').then((module) => ({ default: module.CatalogPurchaseConfirmView }))
+const LazyCatalogPurchaseConfirmView = lazyWindow(
+    () => import('./CatalogPurchaseConfirmView').then((module) => ({ default: module.CatalogPurchaseConfirmView })),
+    'CatalogPurchaseConfirm'
 );
 
 /**
@@ -75,15 +77,14 @@ export const CatalogPlacedOfferConfirmView: FC = () => {
     if (!isOpen) return null;
 
     return (
-        <Suspense fallback={null}>
-            <LazyCatalogPurchaseConfirmView
-                isSubmitting={isSubmitting}
-                offer={offer}
-                quantity={1}
-                stuffData={placedObjectPurchaseData.purchaseOptions?.previewStuffData}
-                onCancel={rollBack}
-                onConfirm={confirm}
-            />
-        </Suspense>
+        <LazyCatalogPurchaseConfirmView
+            isSubmitting={isSubmitting}
+            offer={offer}
+            onCancel={rollBack}
+            onChunkError={rollBack}
+            onConfirm={confirm}
+            quantity={1}
+            stuffData={placedObjectPurchaseData.purchaseOptions?.previewStuffData}
+        />
     );
 };

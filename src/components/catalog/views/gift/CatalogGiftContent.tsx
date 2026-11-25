@@ -54,9 +54,10 @@ interface GiftPaletteColor {
 
 const getValentineRibbonIndex = (configuration: GiftWrappingConfiguration): number => (configuration.ribbonTypes.length > 10 ? 10 : 0);
 
-export const CatalogGiftContent: FC<{ initialGiftEvent?: CatalogInitGiftEvent | null; onInitialGiftHandled?: () => void }> = ({
+export const CatalogGiftContent: FC<{ initialGiftEvent?: CatalogInitGiftEvent | null; onInitialGiftHandled?: () => void; onReady?: () => void }> = ({
     initialGiftEvent = null,
-    onInitialGiftHandled
+    onInitialGiftHandled,
+    onReady
 }) => {
     const [isVisible, setIsVisible] = useState(false);
     const [initializationSequence, setInitializationSequence] = useState(0);
@@ -461,6 +462,10 @@ export const CatalogGiftContent: FC<{ initialGiftEvent?: CatalogInitGiftEvent | 
         ],
         onCatalogEvent
     );
+
+    useEffect(() => {
+        onReady?.();
+    }, [onReady]);
 
     useEffect(() => {
         if (!initialGiftEvent) return;

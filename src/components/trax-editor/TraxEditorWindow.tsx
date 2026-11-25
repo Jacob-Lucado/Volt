@@ -55,7 +55,7 @@ const MachineButton: FC<MachineButtonProps> = ({ title = undefined, disabled = f
     </button>
 );
 
-export const TraxEditorWindow: FC<{ onClose: () => void }> = ({ onClose }) =>
+export const TraxEditorWindow: FC<{ isVisible?: boolean; onClose: () => void }> = ({ isVisible = true, onClose }) =>
 {
     const [editingSongId, setEditingSongId] = useState(-1);
     const [songName, setSongName] = useState('');
@@ -174,8 +174,16 @@ export const TraxEditorWindow: FC<{ onClose: () => void }> = ({ onClose }) =>
 
     useEffect(() =>
     {
-        requestSongs();
-    }, [requestSongs]);
+        if (isVisible)
+        {
+            requestSongs();
+        }
+        else
+        {
+            stopAudition();
+            stopPreview();
+        }
+    }, [isVisible, requestSongs, stopAudition, stopPreview]);
 
     useEffect(() => () =>
     {
@@ -433,6 +441,8 @@ export const TraxEditorWindow: FC<{ onClose: () => void }> = ({ onClose }) =>
         pendingBuyRef.current = true;
         buySong(localizeWithFallback('trax.editor.new.song.name', 'My new song'));
     }, [buySong]);
+
+    if (!isVisible) return null;
 
     const emptySlots = Math.max(0, maxSongs - songs.length);
     const rackCartridges = TraxSoundSets.slice(rackPage * CARTRIDGES_PER_PAGE, (rackPage + 1) * CARTRIDGES_PER_PAGE);

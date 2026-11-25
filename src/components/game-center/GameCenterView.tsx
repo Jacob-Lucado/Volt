@@ -1,14 +1,17 @@
 import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
-import { lazy, Suspense, useEffect, useEffectEvent, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import { CreateLinkEvent, GetConfigurationValue, GetGroupInformation, GetSessionDataManager, GetUserProfile } from '../../api';
 import { buySnowWarTokens, SnowWarEngineState, SnowWarHookState } from '../../api/snowwar';
+import { lazyWindow } from '../../common/lazyWindow';
 import { useNotificationActions, useSnowWar } from '../../hooks';
 
-const LazySnowWarGamesMainView = lazy(() =>
-    import('./views/snowwar/SnowWarGamesMainView').then((module) => ({ default: module.SnowWarGamesMainView }))
+const LazySnowWarGamesMainView = lazyWindow(
+    () => import('./views/snowwar/SnowWarGamesMainView').then((module) => ({ default: module.SnowWarGamesMainView })),
+    'SnowWarGamesMain'
 );
-const LazySnowWarLeaderboardView = lazy(() =>
-    import('./views/snowwar/SnowWarLeaderboardView').then((module) => ({ default: module.SnowWarLeaderboardView }))
+const LazySnowWarLeaderboardView = lazyWindow(
+    () => import('./views/snowwar/SnowWarLeaderboardView').then((module) => ({ default: module.SnowWarLeaderboardView })),
+    'SnowWarLeaderboard'
 );
 
 /**
@@ -79,33 +82,31 @@ export const GameCenterView = () =>
     return (
         <>
             {mainVisible && !inGame && (
-                <Suspense fallback={null}>
-                    <LazySnowWarGamesMainView
-                        blockLength={blockLength}
-                        freeGamesLeft={account?.freeGamesLeft ?? -1}
-                        hasUnlimitedGames={account?.hasUnlimitedGames ?? false}
-                        leaderboardEnabled={GetConfigurationValue<boolean>('games.highscores.enabled', true)}
-                        lobby={lobbyVisible ? { players: lobby.players, maxPlayers: lobby.data.maximumPlayers, queuePosition: lobby.queuePosition, countdownDeadline: lobby.countdownDeadline } : null}
-                        onBuyTokens={offer => buySnowWarTokens(snowWar, showConfirm, offer)}
-                        onCancelLobby={leaveLobby}
-                        onClose={closeMain}
-                        onOpenClubCenter={() => CreateLinkEvent('habboUI/open/hccenter')}
-                        onPlay={play}
-                        onShowLeaderboard={() => setLeaderboardVisible(true)}
-                    />
-                </Suspense>
+                <LazySnowWarGamesMainView
+                    blockLength={blockLength}
+                    freeGamesLeft={account?.freeGamesLeft ?? -1}
+                    hasUnlimitedGames={account?.hasUnlimitedGames ?? false}
+                    leaderboardEnabled={GetConfigurationValue<boolean>('games.highscores.enabled', true)}
+                    lobby={lobbyVisible ? { players: lobby.players, maxPlayers: lobby.data.maximumPlayers, queuePosition: lobby.queuePosition, countdownDeadline: lobby.countdownDeadline } : null}
+                    onBuyTokens={offer => buySnowWarTokens(snowWar, showConfirm, offer)}
+                    onCancelLobby={leaveLobby}
+                    onChunkError={closeMain}
+                    onClose={closeMain}
+                    onOpenClubCenter={() => CreateLinkEvent('habboUI/open/hccenter')}
+                    onPlay={play}
+                    onShowLeaderboard={() => setLeaderboardVisible(true)}
+                />
             )}
             {leaderboardVisible && (
-                <Suspense fallback={null}>
-                    <LazySnowWarLeaderboardView
-                        leaderboard={leaderboard}
-                        ownUserId={GetSessionDataManager().userId}
-                        onClose={closeLeaderboardWindow}
-                        onOpenGroup={GetGroupInformation}
-                        onOpenProfile={GetUserProfile}
-                        onRequest={requestLeaderboard}
-                    />
-                </Suspense>
+                <LazySnowWarLeaderboardView
+                    leaderboard={leaderboard}
+                    onChunkError={closeLeaderboardWindow}
+                    onClose={closeLeaderboardWindow}
+                    onOpenGroup={GetGroupInformation}
+                    onOpenProfile={GetUserProfile}
+                    onRequest={requestLeaderboard}
+                    ownUserId={GetSessionDataManager().userId}
+                />
             )}
         </>
     );

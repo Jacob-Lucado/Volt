@@ -143,18 +143,13 @@ export const LayoutAvatarImageView: FC<LayoutAvatarImageViewProps> = (props) => 
                     AVATAR_IMAGE_INFLIGHT.set(figureKey, promise);
                 }
 
-                const avatarImage = GetAvatarRenderManager().createAvatarImage(_figure, AvatarScaleType.LARGE, gender, listener);
-                if (!avatarImage) {
-                    if (resolveInflight) {
-                        AVATAR_IMAGE_INFLIGHT.delete(figureKey);
-                        resolveInflight(null);
-                    }
-                    return;
-                }
-
+                let avatarImage: ReturnType<ReturnType<typeof GetAvatarRenderManager>['createAvatarImage']> = null;
                 let resolvedBlob: Blob | null = null;
 
                 try {
+                    avatarImage = GetAvatarRenderManager().createAvatarImage(_figure, AvatarScaleType.LARGE, gender, listener);
+                    if (!avatarImage) return;
+
                     let setType = AvatarSetType.FULL;
 
                     if (headOnly && !airMeMenu) setType = AvatarSetType.HEAD;
@@ -200,7 +195,7 @@ export const LayoutAvatarImageView: FC<LayoutAvatarImageViewProps> = (props) => 
                         AVATAR_IMAGE_INFLIGHT.delete(figureKey);
                         resolveInflight(resolvedBlob);
                     }
-                    avatarImage.dispose();
+                    avatarImage?.dispose();
                 }
             };
 

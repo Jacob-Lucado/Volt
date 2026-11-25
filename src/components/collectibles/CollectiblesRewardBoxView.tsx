@@ -1,18 +1,16 @@
-import { FC, lazy, Suspense } from 'react';
+import { FC } from 'react';
+import { lazyWindow } from '../../common/lazyWindow';
 import { useCollectiblesRewardBox } from '../../hooks/collectibles/useCollectiblesRewardBox';
 
-const LazyCollectiblesRewardBoxWindow = lazy(() =>
-    import('./CollectiblesRewardBoxWindow').then((module) => ({ default: module.CollectiblesRewardBoxWindow }))
+const LazyCollectiblesRewardBoxWindow = lazyWindow(
+    () => import('./CollectiblesRewardBoxWindow').then((module) => ({ default: module.CollectiblesRewardBoxWindow })),
+    'CollectiblesRewardBox'
 );
 
 export const CollectiblesRewardBoxView: FC<{}> = () => {
-    const { reward } = useCollectiblesRewardBox();
+    const { reward, showNext } = useCollectiblesRewardBox();
 
     if (!reward) return null;
 
-    return (
-        <Suspense fallback={null}>
-            <LazyCollectiblesRewardBoxWindow />
-        </Suspense>
-    );
+    return <LazyCollectiblesRewardBoxWindow onChunkError={showNext} />;
 };
