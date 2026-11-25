@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes, CSSProperties, FC, ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { resolveLineMetrics } from '../native-text/Air32NativeTextRenderer';
+import { resolveLineMetrics, roundTiesEven } from '../native-text/Air32NativeTextRenderer';
 import { loadNativeFont, measureNativeText, NativeFontStyle } from '../native-text/NativeFont';
 import { NativeText } from '../native-text/NativeText';
 import { NativeTextStyleName, nativeTextStyles } from '../native-text/NativeTextStyles';
@@ -58,10 +58,7 @@ export type AirButtonKindName = keyof typeof AIR_BUTTONS;
 
 const stretched = new Map<string, Promise<string>>();
 
-/**
- * The skin bitmap at the button's height. AIR scales a stretched entity with BitmapData.draw and no smoothing, which takes
- * source row floor(row * source / target); the browser samples pixel centres, so odd heights would split the shine one row off.
- */
+/** Stretch the middle rows with the 16.16 fixed-point sampling used by AIR's BitmapData.draw. */
 function stretchSkin(url: string, cap: number, height: number): Promise<string> {
     const key = `${url}|${cap}|${height}`;
     if (!stretched.has(key)) {
@@ -69,21 +66,30 @@ function stretchSkin(url: string, cap: number, height: number): Promise<string> 
             key,
             new Promise<string>((resolve, reject) => {
                 const image = new Image();
+                image.crossOrigin = 'anonymous';
                 image.onload = () => {
-                    const middle = image.height - cap * 2;
-                    const target = height - cap * 2;
-                    if (middle <= 1 || target <= 0) return resolve(url);
-                    const canvas = document.createElement('canvas');
-                    canvas.width = image.width;
-                    canvas.height = height;
-                    const context = canvas.getContext('2d');
-                    context.drawImage(image, 0, 0, image.width, cap, 0, 0, image.width, cap);
-                    for (let row = 0; row < target; row++) {
-                        const source = cap + Math.floor((row * middle) / target);
-                        context.drawImage(image, 0, source, image.width, 1, 0, cap + row, image.width, 1);
+                    try {
+                        const middle = image.height - cap * 2;
+                        const target = height - cap * 2;
+                        if (middle <= 1 || target <= 0 || middle === target) return resolve(url);
+                        const canvas = document.createElement('canvas');
+                        canvas.width = image.width;
+                        canvas.height = height;
+                        const context = canvas.getContext('2d');
+                        if (!context) return resolve(url);
+                        context.drawImage(image, 0, 0, image.width, cap, 0, 0, image.width, cap);
+                        const unit = 65536;
+                        const step = roundTiesEven(middle * unit / target);
+                        const first = roundTiesEven(step / 2);
+                        for (let row = 0; row < target; row++) {
+                            const source = cap + Math.floor((first + row * step) / unit);
+                            context.drawImage(image, 0, source, image.width, 1, 0, cap + row, image.width, 1);
+                        }
+                        context.drawImage(image, 0, image.height - cap, image.width, cap, 0, height - cap, image.width, cap);
+                        canvas.toBlob((blob) => resolve(blob ? URL.createObjectURL(blob) : url));
+                    } catch {
+                        resolve(url);
                     }
-                    context.drawImage(image, 0, image.height - cap, image.width, cap, 0, height - cap, image.width, cap);
-                    canvas.toBlob((blob) => resolve(blob ? URL.createObjectURL(blob) : url));
                 };
                 image.onerror = reject;
                 image.src = url;
@@ -98,12 +104,33 @@ function useStretchedSkin(kind: AirButtonKind, height: number) {
 
     useEffect(() => {
         let disposed = false;
-        const states = Object.keys(kind.skin) as SkinState[];
-        Promise.all(states.map((state) => stretchSkin(kind.skin[state], kind.cap, height)))
-            .then((list) => !disposed && setUrls(Object.fromEntries(states.map((state, index) => [state, list[index]])) as Record<SkinState, string>))
+        let idleTimer: number | null = null;
+        // Stretch the visible default state right away; warm interactive states shortly after so initial mount stays fast.
+        stretchSkin(kind.skin.default, kind.cap, height)
+            .then((defaultUrl) => {
+                if (disposed) return;
+                setUrls({ ...kind.skin, default: defaultUrl });
+                const secondaryStates: SkinState[] = ['hover', 'pressed', 'disabled'];
+                idleTimer = window.setTimeout(() => {
+                    if (disposed) return;
+                    Promise.all(secondaryStates.map((state) => stretchSkin(kind.skin[state], kind.cap, height)))
+                        .then((list) => {
+                            if (disposed) return;
+                            setUrls({
+                                ...kind.skin,
+                                default: defaultUrl,
+                                hover: list[0],
+                                pressed: list[1],
+                                disabled: list[2]
+                            });
+                        })
+                        .catch(() => {});
+                }, 80);
+            })
             .catch(() => !disposed && setUrls(null));
         return () => {
             disposed = true;
+            if (idleTimer !== null) window.clearTimeout(idleTimer);
         };
     }, [kind, height]);
 
@@ -261,6 +288,24 @@ export const AirSkinButton: FC<AirSkinButtonProps> = ({
         </button>
     );
 };
+
+/**
+ * The x of a button with on_resize_align_center after it went through the given widths. WindowController.setRectangle moves
+ * the window by half of each width change and carries the odd pixel into the next change.
+ */
+export function centredResizeX(x: number, widths: number[]): number {
+    let remainder = 0;
+
+    for (let index = 1; index < widths.length; index++) {
+        const change = remainder - (widths[index] - widths[index - 1]);
+        const half = Math.trunc(change / 2);
+
+        x += half;
+        remainder = change - half * 2;
+    }
+
+    return x;
+}
 
 /** The caption when a button's children are only text, so it can be drawn as an AIR label. */
 export function textCaption(children: ReactNode): string | null {

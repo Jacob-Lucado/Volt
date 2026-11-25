@@ -21,7 +21,8 @@ const useFurnitureExchangeWidgetState = () => {
     useVoltEvent<RoomEngineTriggerWidgetEvent>(RoomEngineTriggerWidgetEvent.REQUEST_CREDITFURNI, (event) => {
         const roomObject = GetRoomEngine().getRoomObject(event.roomId, event.objectId, event.category);
 
-        if (!roomObject || !IsOwnerOfFurniture(roomObject)) return;
+        // CFC_ credit furni are "Non-redeemable" on Habbo, so the server refuses to exchange them.
+        if (!roomObject || !IsOwnerOfFurniture(roomObject) || roomObject.type.toUpperCase().startsWith('CFC_')) return;
 
         setObjectId(event.objectId);
         setValue(roomObject.model.getValue<number>(RoomObjectVariable.FURNITURE_CREDIT_VALUE) || 0);

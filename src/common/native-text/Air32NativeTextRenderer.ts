@@ -1706,8 +1706,8 @@ export function renderAdvancedRetainedPass(
             width,
             height,
             options.padding + 2 + offsetX,
-            options.padding + metrics.baseline + 1 + offsetY,
-            font.swfFont.alignmentZones == null ? Math.floor(layout.rawTextWidth * 4) / 4 : Math.ceil(layout.rawTextWidth),
+            options.padding + metrics.baseline + 1 + offsetY + (options.target?.underlineShift ?? 0),
+            font.swfFont.alignmentZones == null ? Math.floor(layout.rawTextWidth * 4) / 4 : quarterSampledLength(layout.textWidth),
             lineColor
         );
     for (let placement of layout.placements) {
@@ -1756,6 +1756,11 @@ export function renderAdvancedRetainedPass(
         }
         compositeRetainedNativeGlyph(occurrence, pixels, width, height, occurrence.originX + offsetX, occurrence.originY + offsetY, premultiplied);
     }
+}
+// AIR draws the underline with four horizontal samples per pixel: the last pixel is covered by the samples whose centre lies inside the line.
+function quarterSampledLength(length: number) {
+    const whole = Math.floor(length);
+    return whole + Math.max(0, Math.ceil((length - whole) * 4 - 0.5)) / 4;
 }
 export function compositeRetainedUnderline(pixels: BytePixels, width: number, height: number, x: number, y: number, length: number, color: ColorChannels) {
     if (y < 0 || y >= height || length <= 0) return;

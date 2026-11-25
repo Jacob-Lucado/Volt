@@ -7,6 +7,8 @@ export interface WiredTriggerBaseViewProps {
     requiresFurni: number;
     save: () => void;
     footer?: ReactNode;
+    /** Source-type controls placed beside the AIR summary header. */
+    headerControls?: ReactNode;
     footerCollapsible?: boolean;
     /** AIR advancedAlwaysVisible: the footer is the expanded advanced wrapper with no toggle. */
     advancedAlwaysVisible?: boolean;
@@ -23,6 +25,7 @@ export const WiredTriggerBaseView: FC<PropsWithChildren<WiredTriggerBaseViewProp
         hasSpecialInput = false,
         children = null,
         footer = null,
+        headerControls = null,
         footerCollapsible = true,
         advancedAlwaysVisible = false,
         selectionPreview = null,
@@ -39,6 +42,7 @@ export const WiredTriggerBaseView: FC<PropsWithChildren<WiredTriggerBaseViewProp
             save={onSave}
             wiredType="trigger"
             footer={footer}
+            headerControls={headerControls}
             footerCollapsible={footerCollapsible}
             advancedAlwaysVisible={advancedAlwaysVisible}
             selectionPreview={selectionPreview}

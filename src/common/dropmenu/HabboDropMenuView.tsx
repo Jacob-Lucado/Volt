@@ -111,7 +111,6 @@ export const HabboDropMenuView = <T extends string | number,>({ label, options: 
     const [popup, setPopup] = useState<PopupBounds>(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const [keyboardActive, setKeyboardActive] = useState(false);
-    const [hoverIndex, setHoverIndex] = useState(-1);
     const [scrollTop, setScrollTop] = useState(0);
     const [dragging, setDragging] = useState(false);
     const selectedIndex = options.findIndex((option) => !option.expandsAdvanced && option.value === value);
@@ -161,7 +160,6 @@ export const HabboDropMenuView = <T extends string | number,>({ label, options: 
         openingPointerRef.current = pointerId;
         committedRef.current = false;
         setKeyboardActive(false);
-        setHoverIndex(-1);
         setScrollTop(0);
         setActiveIndex(Math.max(0, selectedIndex));
         setPopup(measurePopup());
@@ -225,7 +223,6 @@ export const HabboDropMenuView = <T extends string | number,>({ label, options: 
             setPopup(measurePopup());
             setActiveIndex(Math.max(0, selectedIndex));
             setKeyboardActive(false);
-            setHoverIndex(-1);
             setScrollTop(0);
             return;
         }
@@ -340,7 +337,6 @@ export const HabboDropMenuView = <T extends string | number,>({ label, options: 
                         aria-label={label}
                         className={'habbo-dropmenu-list' + (metrics.overflow ? ' has-scrollbar' : '')}
                         onScroll={(event) => setScrollTop(event.currentTarget.scrollTop)}
-                        onPointerLeave={() => setHoverIndex(-1)}
                     >
                         {options.map((option, index) => (
                             <div
@@ -351,13 +347,11 @@ export const HabboDropMenuView = <T extends string | number,>({ label, options: 
                                 className={'habbo-dropmenu-item' + (index === selectedIndex ? ' is-selected' : '') + (keyboardActive && index === activeIndex ? ' is-active' : '') + (isNativeUbuntuCaption ? ' is-native' : '')}
                                 onPointerDown={(event) => { if (event.button === 0) select(index, true); }}
                                 onPointerUp={(event) => { if (expansionPointerRef.current) { expansionPointerRef.current = false; return; } if (event.button === 0 && openingPointerRef.current === null) select(index); }}
-                                onPointerMove={() => setHoverIndex(index)}
                             >
-                                <span>{skinStyle === 100 ? <NativeText text={menuCaption(option.label)} textStyle="il_regular"
-                                    background={hoverIndex === index || (keyboardActive && index === activeIndex) ? 0xebebeb : index === selectedIndex ? 0xdddddd : 0xffffff} />
-                                    : isNativeUbuntuCaption ? <NativeText text={menuCaption(option.label)} textStyle="u_regular"
-                                        background={index === selectedIndex ? 0xdddddd : hoverIndex === index || (keyboardActive && index === activeIndex) ? 0xebebeb : 0xffffff} />
-                                        : menuCaption(option.label)}</span>
+                                {/* The row draws the hover and selection colour, so the text stays transparent over it. */}
+                                <span>{skinStyle === 100 || isNativeUbuntuCaption
+                                    ? <NativeText transparent background={0xffffff} text={menuCaption(option.label)} textStyle={skinStyle === 100 ? 'il_regular' : 'u_regular'} />
+                                    : menuCaption(option.label)}</span>
                             </div>
                         ))}
                         <div className="habbo-dropmenu-padding" />

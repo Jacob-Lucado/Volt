@@ -114,6 +114,7 @@ export const FurnitureContextMenuView: FC<{}> = (props) => {
     const { title = '', titleX = 23, action = null } = menus[mode] ?? {};
     // GuildFurnitureContextMenuView clears ContextInfoView's fade flag (var_231), so the group furniture menu stays until it is closed; the other menus fade after 3000ms.
     const isGuildMenu = mode === GROUP_FURNITURE && !!groupData;
+    const buttonCount = isGuildMenu ? 1 + Number(!isGroupMember) + Number(groupData.guildHasReadableForum) : 1;
 
     return (
         <>
@@ -134,12 +135,12 @@ export const FurnitureContextMenuView: FC<{}> = (props) => {
                     freezePositionOnHover={true}
                     objectId={objectId}
                     showCaretIcon={false}
-                    style={{ '--air-menu-title-x': isGuildMenu ? '22px' : `${titleX}px` } as CSSProperties}
+                    style={{ '--air-menu-title-x': `${titleX}px`, '--air-menu-button-count': buttonCount } as CSSProperties}
                     onClose={onClose}
                 >
                     {mode === GROUP_FURNITURE && groupData ? (
                         <ContextMenuHeaderView className="cursor-pointer" onClick={() => GetGroupInformation(groupData.guildId)}>
-                            {groupData.guildName}
+                            <span>{groupData.guildName}</span>
                         </ContextMenuHeaderView>
                     ) : (
                         <ContextMenuHeaderView>{title}</ContextMenuHeaderView>

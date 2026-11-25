@@ -1,5 +1,5 @@
 import { CSSProperties, FC } from 'react';
-import { SanitizeHtml } from '../../../../../api';
+import { SanitizeHotelHtml } from '../../../../../api';
 import { NativeFontStyle } from '../../../../../common/native-text/NativeFont';
 import { NativeText } from '../../../../../common/native-text/NativeText';
 import { NativeTextStyleName } from '../../../../../common/native-text/NativeTextStyles';
@@ -126,7 +126,7 @@ export const CatalogAirHtmlTextView: FC<CatalogAirHtmlTextViewProps> = (props) =
         return (
             <div
                 className={`volt-catalog-air-html is-dom ${className}`.trim()}
-                dangerouslySetInnerHTML={{ __html: SanitizeHtml(toSanitizableHtml(html)) }}
+                dangerouslySetInnerHTML={{ __html: SanitizeHotelHtml(toSanitizableHtml(html)) }}
                 style={{ width, height, color: `#${color.toString(16).padStart(6, '0')}`, fontWeight: bold ? 700 : undefined, ...style }}
             />
         );

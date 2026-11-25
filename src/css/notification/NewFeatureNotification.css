@@ -1,7 +1,7 @@
 /* new_feature_notification_promo_xml (AIR WIN63-202610151745-318700621): a 192x34 region with the dynamic style
    brightness_and_shadow_under_gentle (core/window/dynamicstyle/class_2922.as:91-109) around a style-9 border coloured with
    notifications.new_feature.color.<key>. The icon (8,7 20x20, centred) and the underlined text (30,7) are tagged #icon. */
-/* The wrapped desc grows the bar; the layout keeps 7px above it and 10px below (7 + 17 + 10 = 34 for one line). */
+/* The wrapped desc grows the bar; the layout keeps 7px above it and 10px below (7 + 17 + 10 = 34 for one line, 7 + 30 + 10 = 47 for two). */
 .volt-new-feature-promo {
     position: relative;
     display: flow-root;
@@ -10,10 +10,6 @@
     min-height: 34px;
     margin-left: auto;
     margin-right: -1px;
-    color: #ffffff;
-    font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
-    font-size: 12px;
-    line-height: 13px;
     cursor: pointer;
     pointer-events: auto;
     image-rendering: pixelated;
@@ -45,12 +41,10 @@
     top: 7px;
     width: 20px;
     height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .volt-new-feature-promo-icon img {
+    position: absolute;
     display: block;
 }
 
@@ -69,6 +63,7 @@
     color: #c0dffc;
 }
 
+/* #icon hover adds colorTransform 1.1 + 30. */
 .volt-new-feature-promo:hover :is(.volt-new-feature-promo-icon, .volt-new-feature-promo-desc) {
     filter: url("#volt-new-feature-hover") drop-shadow(0 1px 0 rgba(0, 0, 0, 0.282));
 }

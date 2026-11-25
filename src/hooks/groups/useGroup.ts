@@ -18,25 +18,11 @@ const useGroupState = () => {
             groupColorsB: []
         };
 
-        parser.bases.forEach((images, id) => customize.badgeBases.push({ id, images }));
-        parser.symbols.forEach((images, id) => customize.badgeSymbols.push({ id, images }));
+        parser.bases.forEach((images, id) => customize.badgeBases.push({ id, code: parser.baseCodeIds.get(id) ?? id, images }));
+        parser.symbols.forEach((images, id) => customize.badgeSymbols.push({ id, code: parser.symbolCodeIds.get(id) ?? id, images }));
         parser.partColors.forEach((color, id) => customize.badgePartColors.push({ id, color }));
         parser.colorsA.forEach((color, id) => customize.groupColorsA.push({ id, color }));
         parser.colorsB.forEach((color, id) => customize.groupColorsB.push({ id, color }));
-
-        const CompareId = (a: { id: number }, b: { id: number }) => {
-            if (a.id < b.id) return -1;
-
-            if (a.id > b.id) return 1;
-
-            return 0;
-        };
-
-        customize.badgeBases.sort(CompareId);
-        customize.badgeSymbols.sort(CompareId);
-        customize.badgePartColors.sort(CompareId);
-        customize.groupColorsA.sort(CompareId);
-        customize.groupColorsB.sort(CompareId);
 
         setGroupCustomize(customize);
     });

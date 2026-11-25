@@ -160,6 +160,8 @@ interface GroupInputProps {
     plain?: boolean;
     fontSize?: number;
     inset?: number;
+    /** AIR InfoText: shown as the field's own text while the field is empty and not focused. */
+    infoText?: string;
     onChange: (value: string) => void;
 }
 
@@ -168,7 +170,7 @@ interface GroupInputProps {
  * sit inside the field (overflow, unsupported glyphs), so caret, selection, scrolling and IME stay the browser's; at rest the
  * v75 raster is drawn over the input.
  */
-export const GroupInput: FC<GroupInputProps> = ({ label, value, maxLength, x, y, width, height, multiline = false, plain = false, fontSize = 13, inset = 1, onChange }) =>
+export const GroupInput: FC<GroupInputProps> = ({ label, value, maxLength, x, y, width, height, multiline = false, plain = false, fontSize = 13, inset = 1, infoText = '', onChange }) =>
 {
     const overlayRef = useRef<HTMLDivElement>(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -200,9 +202,10 @@ export const GroupInput: FC<GroupInputProps> = ({ label, value, maxLength, x, y,
             observer.disconnect();
             mutations.disconnect();
         };
-    }, [value, width, height, multiline]);
+    }, [value, infoText, isEditing, width, height, multiline]);
 
-    const showRaster = !isEditing && rasterFits && value.length > 0;
+    const shownText = value.length > 0 || isEditing ? value : infoText;
+    const showRaster = !isEditing && rasterFits && shownText.length > 0;
     const inputProps = {
         'aria-label': label,
         className: 'volt-group-native__input' + (showRaster ? ' is-raster' : ''),
@@ -221,7 +224,7 @@ export const GroupInput: FC<GroupInputProps> = ({ label, value, maxLength, x, y,
                 <input {...inputProps} type="text" onChange={(event) => onChange(event.target.value)} />
             )}
             <div ref={overlayRef} aria-hidden="true" className={`volt-group-native__field-text${showRaster ? '' : ' is-hidden'}`} style={plain ? { top: 0, left: inset - 1 } : undefined}>
-                <NativeText background={0xffffff} maxWidth={multiline ? width - (plain ? 2 * (inset - 1) : 0) : undefined} overrides={flatText(fontSize)} text={value} textStyle="u_regular" />
+                <NativeText background={0xffffff} maxWidth={multiline ? width - (plain ? 2 * (inset - 1) : 0) : undefined} overrides={flatText(fontSize)} text={shownText} textStyle="u_regular" />
             </div>
         </div>
     );

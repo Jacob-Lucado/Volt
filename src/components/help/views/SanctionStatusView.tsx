@@ -1,3 +1,4 @@
+import '../../../css/help/HelpView.css';
 import { ISanctionStatusType } from '@volt/renderer';
 import { FC } from 'react';
 import { FaArrowCircleRight } from 'react-icons/fa';

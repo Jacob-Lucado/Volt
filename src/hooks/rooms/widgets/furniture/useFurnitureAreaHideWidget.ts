@@ -39,6 +39,8 @@ const useFurnitureAreaHideWidgetState = () => {
     const [invisibility, setInvisibility] = useState<boolean>(false);
     const [wallItems, setWallItems] = useState<boolean>(false);
     const [inverted, setInverted] = useState<boolean>(false);
+    // AIR keeps Select Area disabled from its click until the area is chosen.
+    const [selecting, setSelecting] = useState<boolean>(false);
     const { roomSession = null } = useRoom();
 
     const onClose = () => {
@@ -52,6 +54,7 @@ const useFurnitureAreaHideWidgetState = () => {
         setInvisibility(false);
         setWallItems(false);
         setInverted(false);
+        setSelecting(false);
 
         GetRoomEngine().areaSelectionManager.deactivate();
     };
@@ -88,6 +91,14 @@ const useFurnitureAreaHideWidgetState = () => {
         SendMessageComposer(new SetAreaHideComposer(objectIdRef.current, next.rootX, next.rootY, next.width, next.length, next.invisibility, next.wallItems, next.inverted));
     }, []);
 
+    const startSelecting = useCallback(() => {
+        setSelecting(true);
+        GetRoomEngine().areaSelectionManager.startSelecting();
+    }, []);
+
+    // The selection manager reports the cleared area through the callback, which saves it.
+    const clearArea = useCallback(() => GetRoomEngine().areaSelectionManager.clearHighlight(), []);
+
     // AIR onClickOnOff: the normal use furniture packet.
     const toggleOnOff = useCallback(() => {
         if (objectIdRef.current === -1) return;
@@ -101,6 +112,7 @@ const useFurnitureAreaHideWidgetState = () => {
 
         setObjectId(event.objectId);
         setCategory(event.category);
+        setSelecting(false);
 
         const roomObject = GetRoomEngine().getRoomObject(event.roomId, event.objectId, event.category);
 
@@ -129,6 +141,7 @@ const useFurnitureAreaHideWidgetState = () => {
 
         if (!isOn) {
             const callback = (selectedX: number, selectedY: number, selectedWidth: number, selectedLength: number) => {
+                setSelecting(false);
                 save({ rootX: selectedX, rootY: selectedY, width: selectedWidth, length: selectedLength });
             };
 
@@ -153,7 +166,10 @@ const useFurnitureAreaHideWidgetState = () => {
         invisibility,
         wallItems,
         inverted,
+        selecting,
         save,
+        startSelecting,
+        clearArea,
         toggleOnOff,
         onClose
     };

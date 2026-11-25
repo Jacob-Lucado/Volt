@@ -1,30 +1,15 @@
 import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
-import { FC, useEffect, useState } from 'react';
-import { AchievementUtilities, LocalizeText } from '../../api';
-import { VoltCardHeaderView, VoltCardView } from '../../common';
-import { NativeText } from '../../common/native-text/NativeText';
+import { FC, useEffect } from 'react';
+import { lazyWindow } from '../../common/lazyWindow';
 import { useAchievements } from '../../hooks';
-import { AchievementCategoryView } from './AchievementCategoryView';
-import { AchievementText } from './AchievementText';
-import { AirAchievementProgressBar } from './AirAchievementProgressBar';
-import { AchievementsCategoryListView } from './category-list';
+
+const LazyAchievementsWindow = lazyWindow(
+    () => import('./AchievementsWindow').then((module) => ({ default: module.AchievementsWindow })),
+    'Achievements'
+);
 
 export const AchievementsView: FC = () => {
-    const [windowPosition, setWindowPosition] = useState<{ x: number; y: number } | null>(null);
-    const {
-        isVisible,
-        isLoaded,
-        show,
-        close,
-        goBack,
-        achievementCategories = [],
-        setSelectedCategoryCode = null,
-        unseenAchievements,
-        achievementScore = 0,
-        getProgress = 0,
-        getMaxProgress = 0,
-        selectedCategory = null
-    } = useAchievements();
+    const { isVisible, isLoaded, show, close } = useAchievements();
 
     useEffect(() => {
         const linkTracker: ILinkEventTracker = {
@@ -51,7 +36,6 @@ export const AchievementsView: FC = () => {
 
         const questTracker: ILinkEventTracker = {
             eventUrlPrefix: 'questengine/achievements',
-            // HabboQuestEngine.linkReceived: questengine/achievements/<category> shows the window and selects the category.
             linkReceived: (url) => {
                 const parts = url.split('/');
                 if (parts.length === 3) show(parts[2]);
@@ -68,8 +52,7 @@ export const AchievementsView: FC = () => {
         };
     }, [close, isVisible, show]);
 
-    useEffect(() => {
-        if (!isVisible || !isLoaded || windowPosition) return;
+    if (!isVisible || !isLoaded) return null;
 
         setWindowPosition({ x: Math.round((window.innerWidth - 389) / 2), y: 20 });
     }, [isLoaded, isVisible, windowPosition]);

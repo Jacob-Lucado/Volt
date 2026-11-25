@@ -1861,6 +1861,27 @@
     right: 3px !important;
 }
 
+.volt-floorplan-window.volt-card-shell.volt-card-frame-3 > .volt-card-header-shell .volt-card-header-info-habbopages {
+    position: absolute;
+    top: 2px;
+    right: 27px;
+    width: 19px;
+    height: 20px;
+    padding: 0;
+    border: 0;
+    background: url('@/assets/images/habbo-skin/slices/help-3-default.png') 0 0 / 19px 20px no-repeat;
+    image-rendering: var(--volt-pixel-art, pixelated);
+    cursor: pointer;
+}
+
+.volt-floorplan-window.volt-card-shell.volt-card-frame-3 > .volt-card-header-shell .volt-card-header-info-habbopages:hover {
+    background-image: url('@/assets/images/habbo-skin/slices/help-3-hover.png');
+}
+
+.volt-floorplan-window.volt-card-shell.volt-card-frame-3 > .volt-card-header-shell .volt-card-header-info-habbopages:active {
+    background-image: url('@/assets/images/habbo-skin/slices/help-3-pressed.png');
+}
+
 .volt-floorplan-window .fp-bc-logo {
     left: 12px;
     top: 7px;

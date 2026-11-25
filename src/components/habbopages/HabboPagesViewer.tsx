@@ -1,29 +1,18 @@
-import { AddLinkEventTracker, ILinkEventTracker, VoltLogger, RemoveLinkEventTracker } from '@volt/renderer';
-import DOMPurify from 'dompurify';
-import { FC, MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { CreateLinkEvent, GetConfigurationValue, OpenUrl } from '../../api';
-import { ClassicScrollAreaView, VoltCardHeaderView, VoltCardView } from '../../common';
-import { NativeText } from '../../common/native-text/NativeText';
-import { NativeHabbopageContent } from './NativeHabbopageContent';
+import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker, VoltLogger } from '@volt/renderer';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { GetConfigurationValue } from '../../api';
+import { lazyWindow } from '../../common/lazyWindow';
+import type { HabboPageContent } from './HabboPagesWindow';
 
 const NEW_LINE_REGEX = /\n\r|\n|\r/gm;
-const INTERNAL_LINK_PREFIX = '#habbopages/';
 
-interface PageContent {
-    dimensions: { width: number; height: number } | null;
-    header: string;
-    markup: string;
-}
-
-const sanitizePageMarkup = (markup: string) =>
-    DOMPurify.sanitize(markup.replaceAll('event:habbopages/', INTERNAL_LINK_PREFIX), {
-        ALLOWED_TAGS: ['a', 'b', 'br', 'div', 'em', 'font', 'h1', 'h2', 'h3', 'i', 'img', 'p', 'span', 'strong', 'u'],
-        ALLOWED_ATTR: ['align', 'alt', 'class', 'height', 'href', 'hspace', 'rel', 'size', 'src', 'style', 'target', 'vspace', 'width'],
-        ALLOW_DATA_ATTR: false
-    });
+const LazyHabboPagesWindow = lazyWindow(
+    () => import('./HabboPagesWindow').then((module) => ({ default: module.HabboPagesWindow })),
+    'HabboPages'
+);
 
 export const HabboPagesViewer: FC<{}> = () => {
-    const [page, setPage] = useState<PageContent>(null);
+    const [page, setPage] = useState<HabboPageContent>(null);
     const requestRef = useRef<AbortController>(null);
 
     const openPage = useCallback(async (path: string) => {
@@ -39,7 +28,7 @@ export const HabboPagesViewer: FC<{}> = () => {
 
             const splitData = (await response.text()).split(NEW_LINE_REGEX);
             const line = (splitData.shift() ?? '').split('|');
-            let dimensions: PageContent['dimensions'] = null;
+            let dimensions: HabboPageContent['dimensions'] = null;
 
             if (line[1] && line[1].split(';').length === 2) {
                 const [width, height] = line[1].split(';').map((value) => parseInt(value, 10));
@@ -74,27 +63,6 @@ export const HabboPagesViewer: FC<{}> = () => {
             RemoveLinkEventTracker(linkTracker);
         };
     }, [openPage]);
-
-    const markup = useMemo(() => (page ? sanitizePageMarkup(page.markup) : ''), [page]);
-    const fieldWidth = Math.max(1, (page?.dimensions?.width ?? 418) - 34);
-
-    const handleContentClick = (event: MouseEvent<HTMLDivElement>) => {
-        const link = (event.target as HTMLElement).closest('a');
-
-        if (!link || !event.currentTarget.contains(link)) return;
-
-        event.preventDefault();
-
-        const href = link.getAttribute('href') ?? '';
-
-        if (href.startsWith(INTERNAL_LINK_PREFIX)) CreateLinkEvent(href.slice(1));
-        else if (href) OpenUrl(link.href);
-    };
-
-    const openMarkupLink = (href: string) => {
-        if (href.startsWith(INTERNAL_LINK_PREFIX)) CreateLinkEvent(href.slice(1));
-        else if (href) OpenUrl(new URL(href, window.location.href).href);
-    };
 
     const closePage = () => {
         requestRef.current?.abort();

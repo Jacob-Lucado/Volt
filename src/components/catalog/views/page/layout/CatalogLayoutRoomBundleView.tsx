@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { SanitizeHtml } from '../../../../../api';
+import { SanitizeHotelHtml } from '../../../../../api';
 import { Column, Flex, Grid, Text } from '../../../../../common';
 import { CatalogAddOnBadgeWidgetView } from '../widgets/CatalogAddOnBadgeWidgetView';
 import { CatalogBundleGridWidgetView } from '../widgets/CatalogBundleGridWidgetView';
@@ -27,12 +27,12 @@ export const CatalogLayoutRoomBundleView: FC<CatalogLayoutProps> = (props) => {
                             <Text
                                 aria-hidden
                                 className="volt-catalog-bundle-header-spacer"
-                                dangerouslySetInnerHTML={{ __html: SanitizeHtml(page.localization.getText(2)) }}
+                                dangerouslySetInnerHTML={{ __html: SanitizeHotelHtml(page.localization.getText(2)) }}
                             />
                             <Text
                                 aria-hidden
                                 className="volt-catalog-bundle-header-spacer"
-                                dangerouslySetInnerHTML={{ __html: SanitizeHtml(page.localization.getText(2)) }}
+                                dangerouslySetInnerHTML={{ __html: SanitizeHotelHtml(page.localization.getText(2)) }}
                             />
                         </>
                     )}
@@ -51,10 +51,10 @@ export const CatalogLayoutRoomBundleView: FC<CatalogLayoutProps> = (props) => {
                         <Text
                             aria-hidden
                             className="volt-catalog-bundle-header-spacer"
-                            dangerouslySetInnerHTML={{ __html: SanitizeHtml(page.localization.getText(2)) }}
+                            dangerouslySetInnerHTML={{ __html: SanitizeHotelHtml(page.localization.getText(2)) }}
                         />
                     )}
-                    {!!page.localization.getText(2) && <Text dangerouslySetInnerHTML={{ __html: SanitizeHtml(page.localization.getText(2)) }} />}
+                    {!!page.localization.getText(2) && <Text dangerouslySetInnerHTML={{ __html: SanitizeHotelHtml(page.localization.getText(2)) }} />}
                     <Column className="volt-catalog-bundle-frame has-classic-scrollbar" overflow="hidden">
                         <CatalogBundleGridWidgetView fullWidth className="volt-catalog-layout-bundle-grid" columnCount={4} />
                     </Column>

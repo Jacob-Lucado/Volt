@@ -1,3 +1,4 @@
+import '../../css/WiredView.css';
 import { FC, useMemo, useState } from 'react';
 import { createVariablesWebApiClient, ExplorerConnection, explorerErrorMessage, GetWebApiHotels, localizeWithFallback, WebApiVariable } from '../../api';
 import { Button, DraggableWindowPosition, VoltCardContentView, VoltCardHeaderView, VoltCardView, Text } from '../../common';

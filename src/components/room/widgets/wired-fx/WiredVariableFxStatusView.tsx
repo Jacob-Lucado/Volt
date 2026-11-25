@@ -24,12 +24,16 @@ export interface WiredVariableFxStatusViewProps {
     hovered?: boolean;
 }
 
+const ICON_IMAGES = import.meta.glob('../../../../assets/images/wired/fx/icon_*.png', { eager: true, import: 'default' }) as Record<string, string>;
+
 const Icon: FC<{ icon: string }> = ({ icon }) => {
     if (!icon) return null;
 
+    const image = ICON_IMAGES[`../../../../assets/images/wired/fx/icon_${icon.replace('.', '_')}.png`];
+
     return (
-        <span className={`volt-wired-fx__icon volt-wired-fx__icon--${icon}`} title={icon.replace(/_/g, ' ')}>
-            {wiredVariableFxIconGlyph(icon)}
+        <span className={`volt-wired-fx__icon volt-wired-fx__icon--${icon.replace('.', '_')}`} title={icon.replace(/^\w+\./, '').replace(/_/g, ' ')}>
+            {image ? <img alt="" className="volt-wired-fx__icon-image" src={image} /> : wiredVariableFxIconGlyph(icon)}
         </span>
     );
 };
@@ -139,7 +143,7 @@ export const WiredVariableFxStatusView: FC<WiredVariableFxStatusViewProps> = (pr
                 <div className={classNames(rootClass, 'volt-wired-fx--boss')} style={{ ['--fx-color' as string]: color ?? undefined } as CSSProperties} data-testid="fx-status">
                     {(alignment === 'left' || alignment === 'double') && <Icon icon={icon} />}
                     <div className="volt-wired-fx__boss-body">
-                        <Bar rendererId={WIRED_FX_RENDERER.PLAIN} progress={progress} segments={0} color={color ?? '#e04b4b'} widthPx={Math.max(widthPx * 3, 220)} />
+                        <Bar rendererId={WIRED_FX_RENDERER.PLAIN} progress={progress} segments={0} color={color ?? '#e04b4b'} widthPx={Math.max(widthPx * 3, 220)} metallic={metallic} />
                         <span className="volt-wired-fx__boss-text">
                             {formatWiredVariableFxValue(status.value)} / {formatWiredVariableFxValue(range.max)}
                         </span>

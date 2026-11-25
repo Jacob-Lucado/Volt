@@ -35,6 +35,7 @@ import { InfoStandWidgetPetView } from './infostand/InfoStandWidgetPetView';
 import { InfoStandWidgetRentableBotView } from './infostand/InfoStandWidgetRentableBotView';
 import { InfoStandWidgetUserView } from './infostand/InfoStandWidgetUserView';
 import { AvatarInfoWidgetAvatarView } from './menu/AvatarInfoWidgetAvatarView';
+import { AvatarInfoWidgetBotView } from './menu/AvatarInfoWidgetBotView';
 import { AvatarInfoWidgetDecorateView } from './menu/AvatarInfoWidgetDecorateView';
 import { AvatarInfoWidgetNameView } from './menu/AvatarInfoWidgetNameView';
 import { AvatarInfoWidgetOwnAvatarView } from './menu/AvatarInfoWidgetOwnAvatarView';
@@ -210,6 +211,8 @@ export const AvatarInfoWidgetView: FC<{}> = (props) => {
                 case AvatarInfoRentableBot.RENTABLE_BOT: {
                     return <AvatarInfoWidgetRentableBotView avatarInfo={avatarInfo as AvatarInfoRentableBot} onClose={() => setAvatarInfo(null)} />;
                 }
+                case AvatarInfoUser.BOT:
+                    return <AvatarInfoWidgetBotView avatarInfo={avatarInfo as AvatarInfoUser} onClose={() => setAvatarInfo(null)} />;
             }
         }
 

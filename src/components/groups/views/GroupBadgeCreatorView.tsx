@@ -34,11 +34,18 @@ export const GroupBadgeCreatorView: FC<GroupBadgeCreatorViewProps> = (props) => 
     const [selectedIndex, setSelectedIndex] = useState<number>(-1);
     const { groupCustomize = null } = useGroup();
 
+    // AIR selects the first colour for a layer whose colour is not in the palette, such as an empty layer.
+    const getColorId = (part: GroupBadgePart) => {
+        const colors = groupCustomize?.badgePartColors ?? [];
+
+        return !colors.length || colors.some((color) => color.id === part.color) ? part.color : colors[0].id;
+    };
+
     const setPartProperty = (partIndex: number, property: string, value: number) => {
         const newBadgeParts = [...badgeParts];
 
         const part = newBadgeParts[partIndex];
-        newBadgeParts[partIndex] = new GroupBadgePart(part.type, part.key, part.color, part.position);
+        newBadgeParts[partIndex] = new GroupBadgePart(part.type, part.key, getColorId(part), part.position);
         newBadgeParts[partIndex][property] = value;
 
         setBadgeParts(newBadgeParts);
@@ -73,9 +80,9 @@ export const GroupBadgeCreatorView: FC<GroupBadgeCreatorViewProps> = (props) => 
             <div key={partIndex} className="volt-group-native__layer" style={{ left: EDIT_X, top: y }}>
                 <GroupBox height={49} kind="dark" width={247} x={0} y={0} />
                 <button className="volt-group-native__layer-part" type="button" onClick={() => setSelectedIndex(partIndex)}>
-                    {part.previewCode ? (
+                    {part.getPreviewCode(groupCustomize) ? (
                         <div className="volt-group-native__badge">
-                            <LayoutBadgeImageView badgeCode={part.previewCode} isGroup={true} />
+                            <LayoutBadgeImageView badgeCode={part.getPreviewCode(groupCustomize)} isGroup={true} />
                         </div>
                     ) : (
                         <img alt="" className="volt-group-native__badge" draggable={false} src={badgePartAdd} />
@@ -94,7 +101,7 @@ export const GroupBadgeCreatorView: FC<GroupBadgeCreatorViewProps> = (props) => 
                 )}
                 <div className="volt-group-native__layer-colors">
                     {groupCustomize.badgePartColors.map((item) => (
-                        <GroupColorChip key={item.id} color={item.color} selected={part.color === item.id} onSelect={() => setPartProperty(partIndex, 'color', item.id)} />
+                        <GroupColorChip key={item.id} color={item.color} selected={getColorId(part) === item.id} onSelect={() => setPartProperty(partIndex, 'color', item.id)} />
                     ))}
                 </div>
             </div>
@@ -125,7 +132,7 @@ export const GroupBadgeCreatorView: FC<GroupBadgeCreatorViewProps> = (props) => 
                                         <GroupBox height={41} kind="tan" width={41} x={0} y={0} />
                                         <div className="volt-group-native__part-clip">
                                             <div className="volt-group-native__badge">
-                                                <LayoutBadgeImageView badgeCode={GroupBadgePart.getCode(selected.type, item.id, selected.color, selected.position)} isGroup={true} />
+                                                <LayoutBadgeImageView badgeCode={GroupBadgePart.getCode(selected.type, item.code, getColorId(selected), selected.position)} isGroup={true} />
                                             </div>
                                         </div>
                                         {selected.key === item.id && <img alt="" className="volt-group-native__part-selected" src={badgePartPicker} />}

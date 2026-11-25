@@ -32,6 +32,7 @@ declare module '*.webp' {
 declare module '*.css';
 declare module '*.scss';
 declare module '*.sass';
+declare module 'pixi.js/browser';
 
 interface Window {
     VoltConfig?: Record<string, unknown>;
@@ -40,5 +41,5 @@ interface Window {
 }
 
 interface ImportMeta {
-    glob: (pattern: string, options?: { eager?: boolean; import?: string }) => Record<string, string>;
+    glob: (pattern: string, options?: { eager?: boolean; import?: string; query?: string }) => Record<string, string>;
 }

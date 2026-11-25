@@ -1,65 +1,18 @@
 import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
-import { FC, useCallback, useEffect, useRef } from 'react';
-import { CatalogType, GetConfigurationValue, LocalizeShortNumber, LocalizeText } from '../../api';
-import { LayoutCurrencyIcon, VoltCardContentView, VoltCardHeaderView, VoltCardTabsItemView, VoltCardTabsView, VoltCardView } from '../../common';
-import { NativeCenteredField } from '../../common/native-text/NativeCenteredField';
-import { NativeText } from '../../common/native-text/NativeText';
-import { CatalogEffectsHost, useCatalogActions, useCatalogData, useCatalogUiState, usePurse } from '../../hooks';
-import { useCatalogPageQuery } from '../../hooks/catalog/useCatalogQueries';
-import { getCatalogHeaderDescription, getCatalogPlainText } from './catalogLocalization.helpers';
-import { parseCatalogTabLabel } from './catalogTabLabel';
-import { CatalogLoadingStateView } from './views/CatalogLoadingStateView';
-import { CatalogBuilderHeaderView } from './views/catalog-header/CatalogBuilderHeaderView';
-import { CatalogIconView } from './views/catalog-icon/CatalogIconView';
-import { CatalogGiftView } from './views/gift/CatalogGiftView';
+import { FC, useCallback, useEffect } from 'react';
+import { CatalogType, GetConfigurationValue } from '../../api';
+import { lazyWindow } from '../../common/lazyWindow';
+import { CatalogEffectsHost, useCatalogActions, useCatalogData, useCatalogUiState } from '../../hooks';
 import { CatalogPlacedOfferConfirmView } from './views/CatalogPlacedOfferConfirmView';
-import { CatalogBreadcrumbView } from './views/navigation/CatalogBreadcrumbView';
-import { CatalogNavigationView } from './views/navigation/CatalogNavigationView';
-import { CatalogSearchView } from './views/page/common/CatalogSearchView';
-import { GetCatalogLayout } from './views/page/layout/GetCatalogLayout';
-import { catalogPageHidesLeftPane } from './views/page/layout/catalogLayoutRegistry';
+import { CatalogGiftView } from './views/gift/CatalogGiftView';
 import { MarketplacePostOfferView } from './views/page/layout/marketplace/MarketplacePostOfferView';
 
-// The Builders Club page icon (LocalizationCatalogWidget: builder pages show icon_193 in the header).
-const BUILDER_HEADER_ICON = 193;
-
-/** catalog_ubuntu catalog.header.image: AIR keeps this default until a page sets a header image of its own. */
-const DEFAULT_HEADER_IMAGE = 'catalog_header_roombuilder';
-
-/** AIR HabboCatalog.toggleCatalog: the Builders Club catalogue is only there while builders.club.enabled is on. */
-const isBuildersClubEnabled = () => GetConfigurationValue<boolean>('builders.club.enabled', true);
-
-/** catalog.header.description is a 475px window; its TextField wraps like a 479px field (the AIR wrap matches from 478 up). */
-const HEADER_DESCRIPTION_FIELD_WIDTH = 479;
-
-/** HabboCatalog DEFAULT_VIEW_LOCATION_LARGE: both catalogues open here and share the spot the player last dragged the window to. */
-const catalogWindowPosition = { x: 100, y: 5 };
-
-const TAB_WIDTH = 110;
-const TAB_STRIP_WIDTH = 560;
-
-/** The tab caption (u_regular, black), centred on the tab and drawn for the inactive, hovered and selected skins it can sit on. */
-const CatalogTabLabel: FC<{ text: string; width: number }> = ({ text, width }) => (
-    <NativeCenteredField className="volt-catalog-tab-label" width={width}>
-        {(
-            [
-                ['default', 0xc3c2b8],
-                ['hover', 0xf6f5f0],
-                ['selected', 0xeceae0]
-            ] as const
-        ).map(([state, background]) => (
-            <NativeText
-                key={state}
-                ariaHidden={state !== 'default'}
-                nativeResolution
-                background={background}
-                className={`volt-catalog-tab-label-${state}`}
-                text={text}
-                textStyle="u_regular"
-            />
-        ))}
-    </NativeCenteredField>
+const LazyCatalogWindowContent = lazyWindow(
+    () => import('./CatalogWindowContent').then((module) => ({ default: module.CatalogWindowContent })),
+    'Catalog'
 );
+
+const isBuildersClubEnabled = () => GetConfigurationValue<boolean>('builders.club.enabled', true);
 
 const getCatalogTypeFromLink = (type?: string) => {
     switch ((type || '').toLowerCase()) {
@@ -75,70 +28,14 @@ const getCatalogTypeFromLink = (type?: string) => {
 };
 
 const CatalogViewInner: FC<{}> = () => {
-    const { rootNode = null, currentPage = null, searchResult = null, isBusy = false, catalogLoadError = null } = useCatalogData();
-    const {
-        isVisible = false,
-        setIsVisible = null,
-        setNavigationHidden = null,
-        currentTab = null,
-        activeNodes = [],
-        setSearchResult = null,
-        pageId: openPageId = -1,
-        currentType = null
-    } = useCatalogUiState();
-    const loadedPage = useCatalogPageQuery(currentType || CatalogType.NORMAL, openPageId, isVisible).data?.page ?? null;
-    const isBuilder = currentType === CatalogType.BUILDER;
+    const { isVisible = false, setIsVisible = null } = useCatalogUiState();
     const {
         openPageById = null,
         openPageByName = null,
         openPageByOfferId = null,
-        showTab = null,
-        getNodeById = null,
         openCatalogByType = null,
-        toggleCatalogByType = null,
-        retryCurrentPage = null
+        toggleCatalogByType = null
     } = useCatalogActions();
-    const { purse = null } = usePurse();
-    const displayedCurrencies = GetConfigurationValue<number[]>('system.currency.types', []);
-    // The header belongs to the open page: a folder (pageId -1) can be active without opening one.
-    const pageId = currentPage?.pageId ?? -1;
-    // LocalizationCatalogWidget.initLocalizables only replaces catalog.header.image when a page names an image, so a page
-    // without one keeps the previous picture of its catalogue window (the XML default until a page names one).
-    const lastHeaderImages = useRef<Record<string, string>>({});
-    const headerImageKey = isBuilder ? CatalogType.BUILDER : CatalogType.NORMAL;
-    const pageHeaderImage = currentPage?.localization?.getImage(0);
-
-    if (pageHeaderImage) lastHeaderImages.current[headerImageKey] = pageHeaderImage;
-
-    const headerImage =
-        lastHeaderImages.current[headerImageKey] || GetConfigurationValue<string>('catalog.asset.image.url', '').replace('%name%', DEFAULT_HEADER_IMAGE);
-    const activeCatalogNode =
-        (pageId > -1 && (activeNodes.findLast((node) => node.pageId === pageId) ?? getNodeById(pageId, rootNode))) || activeNodes.at(-1) || null;
-    // Keep technical suffixes and numeric page hints out of the tab captions.
-    const stripSwfTabSuffix = (label: string) => (label || '').replace(/\s*\(\D[^)]*\)\s*$/g, '').trim();
-    const getSwfTabLabel = (label: string) => stripSwfTabSuffix(parseCatalogTabLabel(label).name);
-
-    const initialPosition = useRef({ ...catalogWindowPosition });
-
-    useEffect(() => {
-        if (!isVisible) initialPosition.current = { ...catalogWindowPosition };
-    }, [isVisible]);
-
-    const onPositionChange = useCallback((position: { x: number; y: number }) => {
-        catalogWindowPosition.x = position.x;
-        catalogWindowPosition.y = position.y;
-    }, []);
-
-    const hideCatalogNavigation = useCallback(() => setNavigationHidden(true), [setNavigationHidden]);
-
-    const visibleTabs = rootNode?.children.filter((child) => child.isVisible) ?? [];
-    // tab_button is 110px; when more tabs than fit the 560px strip they share it on whole pixels.
-    const tabWidth = Math.min(TAB_WIDTH, Math.floor(TAB_STRIP_WIDTH / Math.max(1, visibleTabs.length)));
-
-    // Search draws into the page already open. The result page is synthetic, so the pane follows the page that stayed open.
-    const searchKeepsOpenPane = !!searchResult && currentPage?.pageId === -1;
-    const paneLayoutCode = searchKeepsOpenPane ? loadedPage?.layoutCode : currentPage?.layoutCode;
-    const sidebarHidden = catalogPageHidesLeftPane(paneLayoutCode);
 
     useEffect(() => {
         const linkTracker: ILinkEventTracker = {
@@ -169,7 +66,6 @@ const CatalogViewInner: FC<{}> = () => {
 
                         setIsVisible((prevValue) => !prevValue);
                         return;
-                    // HabboCatalog.linkReceived: catalog/warehouse opens the Builders Club catalogue, at a page when one is named.
                     case 'warehouse':
                         openCatalogByType(getCatalogTypeFromLink('warehouse'));
 
@@ -188,7 +84,6 @@ const CatalogViewInner: FC<{}> = () => {
 
                         return;
                     case 'open':
-                        // catalog/open names a page of the normal catalogue.
                         if (parts.length > 2) openCatalogByType(CatalogType.NORMAL);
 
                         if (parts.length > 2) {
@@ -218,6 +113,8 @@ const CatalogViewInner: FC<{}> = () => {
 
         return () => RemoveLinkEventTracker(linkTracker);
     }, [setIsVisible, openPageById, openPageByOfferId, openPageByName, openCatalogByType, toggleCatalogByType]);
+
+    const handleChunkError = useCallback(() => setIsVisible(false), [setIsVisible]);
 
     return (
         <>

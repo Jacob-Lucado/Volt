@@ -111,17 +111,39 @@
     pointer-events: none;
 }
 
+/*
+ * settings_button: border style 1 (habbo_skin_border_black) tinted with its colour 0x000000. It keeps its right edge and fits its
+ * label: the text at x 17 plus its 3px right margin.
+ */
 .volt-forum__settings {
     right: 1px;
     top: 60px;
-    width: 65px;
+    display: flex;
+    align-items: flex-start;
+    box-sizing: border-box;
+    width: auto;
     height: 18px;
     margin: 0;
-    padding: 0;
+    padding: 1px 3px 0 17px;
     border: 0;
     border-radius: 5px;
     background: #000000;
     cursor: pointer;
+}
+
+.volt-forum__settings::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 6px solid transparent;
+    border-image: url('../../assets/images/reward-track/air/border-black.png') 6 fill / 6px stretch;
+    filter: brightness(0);
+    image-rendering: pixelated;
+    pointer-events: none;
+}
+
+.volt-forum__settings > .volt-group-native__text.is-static {
+    position: static;
 }
 
 .volt-forum__settings > img {
@@ -136,26 +158,23 @@
     top: 88px;
     width: calc(100% + 10px);
     height: 25px;
-    display: flex;
-    align-items: flex-start;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    justify-content: start;
+    align-items: start;
     gap: 5px;
-    padding-top: 3px;
+    padding: 3px 0 0 5px;
     box-sizing: border-box;
     background: #ffffff;
 }
 
 .volt-forum__shortcuts > .volt-group-native__text {
     position: static;
-    margin-left: 5px;
-}
-
-.volt-forum__shortcut:first-of-type {
-    margin-left: -3px;
 }
 
 .volt-forum__shortcut {
     position: static;
-    margin-left: -1px;
     margin: 0;
     padding: 0;
     border: 0;
@@ -204,7 +223,7 @@
 .volt-forum__forum {
     position: relative;
     flex: none;
-    width: 532px;
+    width: calc(100% - 2px);
     height: 40px;
 }
 
@@ -408,6 +427,18 @@
     height: 30px;
 }
 
+/* Forum settings: the buttons sit 12px above the bottom of the 520px client area. */
+.volt-forum__footer.is-settings {
+    bottom: 12px;
+}
+
+/* Measures the client area of a resizable dialog. */
+.volt-forum__client-size {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
 .volt-forum__footer > * {
     position: absolute;
 }
@@ -435,13 +466,8 @@
 }
 
 .volt-forum__status.is-list {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-}
-
-.volt-forum__status.is-list > .volt-group-native__text {
-    position: static;
+    left: 183px;
+    bottom: 2px;
 }
 
 /* container_button: the shiny thick skin tinted 0xdddddd (grey) or 0x0a9bc5 (blue), or untinted for the pager. The skin sits on a pseudo-element under the label; the disabled skins carry their own 79% alpha. */
@@ -528,6 +554,15 @@
     border-image-source: var(--habbo-skin-shiny-thick-disabled);
 }
 
+/* GroupWindowTitle centers the caption within the opening width. */
+.volt-group-forum-compose > .is-title {
+    margin-left: calc((100% - var(--forum-width)) / 2);
+}
+
+.volt-group-forum-settings .volt-forum__client {
+    clip-path: inset(0 -5px 2px);
+}
+
 /* compose window */
 .volt-forum__compose-bar {
     left: 0;
@@ -544,19 +579,11 @@
     background: #ffffff;
 }
 
+/* formatting_help: a 197px wide auto size "right" html window at (243, 4); it keeps its place when the editor grows. */
 .volt-forum__help-link {
     position: absolute;
-    right: 4px;
+    left: 243px;
     top: 4px;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: none;
-    cursor: pointer;
-}
-
-.volt-forum__help-link > .volt-group-native__text.is-static {
-    position: static;
 }
 
 /* settings window */

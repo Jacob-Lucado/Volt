@@ -253,6 +253,14 @@
     "group.forum.enable.caption": "Abilita/disabilita forum di gruppo",
     "group.forum.enable.help": "I membri possono aprire il forum del gruppo mentre questa opzione è abilitata.",
     "group.forum.disable.confirm": "Disabilitare il forum di questo gruppo?",
+    "group.invitation.title": "Invito al gruppo",
+    "group.invitation.question": "Vuoi unirti a questo gruppo?",
+    "group.invitation.accept": "Accetta",
+    "group.invitation.reject": "Rifiuta",
+    "group.invitation.later": "Decidi più tardi",
+    "group.invitation.dont_show": "Non mostrare più durante questa sessione",
+    "group.invitation.scope.room": "In questa stanza",
+    "group.invitation.scope.all": "In tutte le stanze",
     "groupforum.view.no_threads": "Al momento non ci sono argomenti attivi",
 
     // ------------------------------------------------------------------------

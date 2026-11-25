@@ -1,6 +1,7 @@
 import { CreateLinkEvent } from '@volt/renderer';
 import { FC } from 'react';
 import { LocalizeText } from '../../../../../api';
+import { centredResizeX, useAirButton } from '../../../../../common/air/AirSkinButton';
 import { NativeText } from '../../../../../common/native-text/NativeText';
 import { getCatalogPlainText } from '../../../catalogLocalization.helpers';
 import { CatalogCentredImageView } from '../widgets/CatalogCentredImageView';
@@ -17,6 +18,9 @@ export const CatalogLayouGuildFrontpageView: FC<CatalogLayoutProps> = (props) =>
     const title = getCatalogPlainText(page.localization.getText(2));
     const description = getCatalogPlainText(page.localization.getText(1));
     const teaserImage = page.localization.getImage(1);
+    const button = useAirButton<HTMLButtonElement>({ kind: 'shiny', caption: LocalizeText('catalog.start.guild.purchase.button'), height: 28, widthMin: 190, heightMax: 50 });
+    // start_guild_purchase (19, 2, 213 wide) in buyGuildWidget (49, 231): ButtonController shrinks it to width_min, then grows it to its label.
+    const buttonLeft = 49 + centredResizeX(19, [213, 190, button.style.minWidth as number]);
 
     // BuyGuildWidget.onButtonClicked: start the group purchase and close the catalog.
     const startGuildPurchase = () => {
@@ -31,8 +35,15 @@ export const CatalogLayouGuildFrontpageView: FC<CatalogLayoutProps> = (props) =>
             {!!description && (
                 <NativeText background={PAGE_BACKGROUND} className="volt-catalog-guild-frontpage-description" maxWidth={335} text={description} textStyle="u_regular" />
             )}
-            <button className="volt-catalog-guild-shiny-button volt-catalog-guild-frontpage-button" type="button" onClick={startGuildPurchase}>
-                <NativeText transparent background={0xffffff} text={LocalizeText('catalog.start.guild.purchase.button')} textStyle="button_shiny_regular" />
+            <button
+                ref={button.ref}
+                className="air-skin-button volt-catalog-guild-frontpage-button"
+                data-air-kind={button.kind}
+                style={{ ...button.style, left: buttonLeft }}
+                type="button"
+                onClick={startGuildPurchase}
+            >
+                {button.caption}
             </button>
         </div>
     );

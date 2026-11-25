@@ -1,177 +1,16 @@
-import { AddLinkEventTracker, GetSoundManager, ILinkEventTracker, ITraxEditorSong, RemoveLinkEventTracker, SoundManagerEvent } from '@volt/renderer';
-import { FC, MouseEvent, PointerEvent, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
-import { GetDiskColor, localizeWithFallback } from '../../api';
-import { GetTraxCartridgeUrl } from '../../assets/images/trax';
-import { Button, Column, Flex, LayoutCurrencyIcon, Text } from '../../common';
-import { useVoltEvent, usePurse, useTraxEditor } from '../../hooks';
-import { VoltCard, VoltInput } from '../../layout';
-import { CreateEmptyChannels, ITraxPlacement, ParseTraxSong, SerializeTraxSong, TRAX_CHANNEL_COUNT, TRAX_DEFAULT_UNITS, TRAX_MAX_UNITS, TRAX_MIN_UNITS, TraxChannels } from './TraxSongData';
-import { GetTraxSampleId, GetTraxSoundSetForSample, TraxSoundSets } from './TraxSoundSets';
+import { AddLinkEventTracker, ILinkEventTracker, RemoveLinkEventTracker } from '@volt/renderer';
+import { FC, useCallback, useEffect, useState } from 'react';
+import { lazyWindow } from '../../common/lazyWindow';
 
-const CELL_WIDTH = 22;
-const CARTRIDGES_PER_PAGE = 8;
-const RACK_PAGES = Math.ceil(TraxSoundSets.length / CARTRIDGES_PER_PAGE);
-
-const CHANNEL_COLORS = ['#e0433c', '#3f8fe0', '#43c243', '#e0c23c'];
-const DEFAULT_SLOT_SETS = [1, 2, 3, 4];
-const ERROR_TEXTS: Record<number, [string, string]> = {
-    1: ['trax.editor.error.disabled', 'The song editor is disabled on this hotel.'],
-    2: ['trax.editor.error.limit', 'You already own the maximum number of songs.'],
-    3: ['trax.editor.error.currency', 'You can not afford a new song.'],
-    4: ['trax.editor.error.invalid', 'This song could not be saved. Try shortening it.'],
-    5: ['trax.editor.error.notfound', 'This song no longer exists.']
-};
-
-const formatStamp = (seconds: number): string => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
-
-interface MachineButtonProps {
-    title?: string;
-    disabled?: boolean;
-    accent?: string;
-    onClick: () => void;
-    children?: ReactNode;
-}
-
-const MachineButton: FC<MachineButtonProps> = ({ title = undefined, disabled = false, accent = undefined, onClick, children = null }) => (
-    <button
-        title={title}
-        disabled={disabled}
-        onClick={onClick}
-        className="flex h-9 w-10 shrink-0 items-center justify-center rounded-[5px] border font-bold"
-        style={{
-            cursor: disabled ? 'default' : 'pointer',
-            opacity: disabled ? 0.35 : 1,
-            color: '#ffffff',
-            fontSize: 15,
-            borderColor: 'rgba(0, 0, 0, 0.55)',
-            background: accent
-                ? `linear-gradient(rgba(255, 255, 255, 0.22), rgba(0, 0, 0, 0.25)), ${accent}`
-                : 'linear-gradient(#66798a, #46545e)',
-            boxShadow: 'inset 0 1px rgba(255, 255, 255, 0.35), 0 1px 2px rgba(0, 0, 0, 0.45)',
-            textShadow: '0 1px 2px rgba(0, 0, 0, 0.7)'
-        }}
-    >
-        {children}
-    </button>
+const LazyTraxEditorWindow = lazyWindow(
+    () => import('./TraxEditorWindow').then((module) => ({ default: module.TraxEditorWindow })),
+    'TraxEditor'
 );
 
 export const TraxEditorView: FC<{}> = () =>
 {
+    const [hasOpened, setHasOpened] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
-    const [editingSongId, setEditingSongId] = useState(-1);
-    const [songName, setSongName] = useState('');
-    const [channels, setChannels] = useState<TraxChannels>(CreateEmptyChannels);
-    const [songLength, setSongLength] = useState(TRAX_DEFAULT_UNITS);
-    const [slotSets, setSlotSets] = useState<number[]>(DEFAULT_SLOT_SETS);
-    const [slotSamples, setSlotSamples] = useState<number[]>([0, 0, 0, 0]);
-    const [activeSlot, setActiveSlot] = useState(0);
-    const [rackPage, setRackPage] = useState(0);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [isDirty, setIsDirty] = useState(false);
-    const [hoverCell, setHoverCell] = useState<{ channel: number; unit: number } | null>(null);
-    const [playheadUnit, setPlayheadUnit] = useState(0);
-    const pendingBuyRef = useRef(false);
-    const { songs, maxSongs, costCurrency, costAmount, lastError, loaded, requestSongs, buySong, saveSong, deleteSong, clearError } = useTraxEditor();
-    const { getCurrencyAmount } = usePurse();
-
-    const canAfford = costAmount <= 0 || getCurrencyAmount(costCurrency) >= costAmount;
-
-    const isPlayingRef = useRef(false);
-    const playheadRef = useRef<HTMLDivElement | null>(null);
-    const playheadRafRef = useRef(0);
-    const playheadUnitRef = useRef(0);
-    const previewTokenRef = useRef(0);
-
-    const movePlayhead = useCallback((unit: number) =>
-    {
-        playheadUnitRef.current = unit;
-        setPlayheadUnit(unit);
-
-        if (playheadRef.current) playheadRef.current.style.left = `${unit * CELL_WIDTH}px`;
-    }, []);
-
-    const stopPlayhead = useCallback(() =>
-    {
-        cancelAnimationFrame(playheadRafRef.current);
-
-        if (playheadRef.current) playheadRef.current.style.left = `${playheadUnitRef.current * CELL_WIDTH}px`;
-    }, []);
-
-    const startPlayhead = useCallback((startUnit: number, totalUnits: number) =>
-    {
-        const startedAt = performance.now();
-
-        const step = () =>
-        {
-            const units = startUnit + ((performance.now() - startedAt) / 2000);
-            const node = playheadRef.current;
-
-            if (node) node.style.left = `${Math.min(units, totalUnits) * CELL_WIDTH}px`;
-
-            if (units < totalUnits) playheadRafRef.current = requestAnimationFrame(step);
-        };
-
-        cancelAnimationFrame(playheadRafRef.current);
-        playheadRafRef.current = requestAnimationFrame(step);
-    }, []);
-
-    const stopAudition = useCallback(() =>
-    {
-        GetSoundManager().musicController?.stopSamplePreview();
-    }, []);
-
-    const stopPreview = useCallback(() =>
-    {
-        previewTokenRef.current++;
-
-        if (isPlayingRef.current) GetSoundManager().musicController?.stopPreview();
-
-        isPlayingRef.current = false;
-        setIsPlaying(false);
-        stopPlayhead();
-    }, [stopPlayhead]);
-
-    const hideEditor = useCallback(() =>
-    {
-        stopAudition();
-        stopPreview();
-        setIsVisible(false);
-    }, [stopAudition, stopPreview]);
-
-    const openSong = useCallback(
-        (song: ITraxEditorSong) =>
-        {
-            stopPreview();
-            clearError();
-
-            const parsed = ParseTraxSong(song.data);
-            const nextSets = [...DEFAULT_SLOT_SETS];
-
-            parsed.channels.forEach((placements, index) =>
-            {
-                if (placements.length) nextSets[index] = GetTraxSoundSetForSample(placements[0].sampleId);
-            });
-
-            setEditingSongId(song.id);
-            setSongName(song.name);
-            setChannels(parsed.channels);
-            setSongLength(parsed.songLength);
-            setSlotSets(nextSets);
-            setSlotSamples([0, 0, 0, 0]);
-            setActiveSlot(0);
-            setIsDirty(false);
-            movePlayhead(0);
-        },
-        [stopPreview, clearError, movePlayhead]
-    );
-
-    useEffect(() =>
-    {
-        if (!pendingBuyRef.current || !songs.length) return;
-
-        pendingBuyRef.current = false;
-        openSong(songs[songs.length - 1]);
-    }, [songs, openSong]);
 
     useEffect(() =>
     {
@@ -184,10 +23,11 @@ export const TraxEditorView: FC<{}> = () =>
                 switch (parts[1])
                 {
                     case 'show':
+                        setHasOpened(true);
                         setIsVisible(true);
                         return;
                     case 'hide':
-                        hideEditor();
+                        setIsVisible(false);
                         return;
                 }
             },
@@ -197,40 +37,17 @@ export const TraxEditorView: FC<{}> = () =>
         AddLinkEventTracker(linkTracker);
 
         return () => RemoveLinkEventTracker(linkTracker);
-    }, [hideEditor]);
-
-    useEffect(() =>
-    {
-        if (isVisible) requestSongs();
-    }, [isVisible, requestSongs]);
-
-    useEffect(() => () =>
-    {
-        cancelAnimationFrame(playheadRafRef.current);
-
-        if (isPlayingRef.current) GetSoundManager().musicController?.stopPreview();
-
-        GetSoundManager().musicController?.stopSamplePreview();
     }, []);
 
-    useVoltEvent<SoundManagerEvent>(SoundManagerEvent.TRAX_SONG_COMPLETE, () =>
-    {
-        isPlayingRef.current = false;
-        setIsPlaying(false);
-        stopPlayhead();
-    });
+    const closeEditor = useCallback(() => setIsVisible(false), []);
 
-    const auditionSample = useCallback((sampleId: number) =>
+    const handleChunkError = useCallback(() =>
     {
-        void GetSoundManager().musicController?.previewSample(sampleId).catch(() =>
-        {});
+        setIsVisible(false);
+        setHasOpened(false);
     }, []);
 
-    const loadCartridge = useCallback((cd: number) =>
-    {
-        setSlotSets((prev) =>
-        {
-            const next = [...prev];
+    if (!hasOpened) return null;
 
             next[activeSlot] = cd;
 

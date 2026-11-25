@@ -3,7 +3,7 @@
  * (the registry native code), and opens its editor window. Codes absent here open nothing.
  * Generated from the registry and the Volt editor windows; a card without a matching window is not listed.
  */
-import { WIRED_FX_CATEGORY } from '../../../api';
+import { UnreleasedWiredCode, WIRED_FX_CATEGORY } from '../../../api';
 import { WiredActionAdjustClockView } from './actions/WiredActionAdjustClockView';
 import { WiredActionSetFurniStateToView } from './actions/WiredActionSetFurniStateToView';
 import { WiredExtraProjectileView } from './extras/WiredExtraProjectileView';
@@ -107,6 +107,7 @@ import { WiredSelectorUsersSignalView } from './selectors/WiredSelectorUsersSign
 import { WiredSelectorUsersTeamView } from './selectors/WiredSelectorUsersTeamView';
 import { WiredSelectorUsersWithVariableView } from './selectors/WiredSelectorUsersWithVariableView';
 import { WiredActionGiveEffectView } from './actions/WiredActionGiveEffectView';
+import { WiredActionInviteToGroupView, WiredActionRemoveFromGroupView } from './actions/WiredActionGroupMembershipViews';
 import { WiredActionOverrideHeightNativeView } from './actions/WiredActionOverrideHeightNativeView';
 import { WiredActionProgressAchievementNativeView } from './actions/WiredActionProgressAchievementNativeView';
 import { WiredActionProgressRewardTrackNativeView } from './actions/WiredActionProgressRewardTrackNativeView';
@@ -117,6 +118,7 @@ import { WiredActionSetFurniHighlightView } from './actions/WiredActionSetFurniH
 import { WiredActionSetFurniTransparencyView } from './actions/WiredActionSetFurniTransparencyView';
 import { WiredExtraAchievementEnablerNativeView } from './extras/WiredExtraAchievementEnablerNativeView';
 import { WiredExtraDailyTaskNativeView } from './extras/WiredExtraDailyTaskNativeView';
+import { WiredExtraContextMenuItemView } from './extras/WiredExtraContextMenuItemView';
 import { WiredExtraGlobalPlaceholderNativeView } from './extras/WiredExtraGlobalPlaceholderNativeView';
 import { WiredExtraLinkSpeakerView } from './extras/WiredExtraLinkSpeakerView';
 import { WiredExtraPointerVariableView } from './extras/WiredExtraPointerVariableView';
@@ -189,6 +191,8 @@ export const NativeWiredActionLayoutView = (code: number) => {
         case 62: return <WiredActionSetFurniHighlightView />;  // wf_act_set_highlight
         case 63: return <WiredActionSendLinkMessageView />;  // wf_act_send_message
         case 64: return <WiredActionSendLinkDataframeView />;  // wf_act_send_dataframe
+        case UnreleasedWiredCode.ACTION_INVITE_TO_GROUP: return <WiredActionInviteToGroupView />;  // wf_act_invite_to_group
+        case UnreleasedWiredCode.ACTION_REMOVE_FROM_GROUP: return <WiredActionRemoveFromGroupView />;  // wf_act_remove_from_group
     }
 
     return null;
@@ -264,6 +268,7 @@ export const NativeWiredAddonLayoutView = (code: number) => {
         case 2001: return <WiredExtraAchievementEnablerNativeView />;  // wf_xtra_achievement_enabler
         case 2002: return <WiredExtraVariablesWebApiNativeView />;  // wf_xtra_var_web_api
         case 2003: return <WiredExtraLinkSpeakerView />;  // wf_xtra_link_speaker
+        case UnreleasedWiredCode.ADDON_CONTEXT_MENU_ITEM: return <WiredExtraContextMenuItemView />;  // wf_xtra_context_menu_item
     }
 
     return null;

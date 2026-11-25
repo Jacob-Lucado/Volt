@@ -1,6 +1,6 @@
 import { NotEnoughBalanceMessageEvent, PurchaseFromCatalogComposer } from '@volt/renderer';
 import { FC, useCallback, useRef, useState } from 'react';
-import { CatalogPurchaseState, GetConfigurationValue, LocalizeText, OpenUrl, SanitizeHtml, SendMessageComposer } from '../../../../../api';
+import { CatalogPurchaseState, GetConfigurationValue, LocalizeText, OpenUrl, SanitizeHotelHtml, SendMessageComposer } from '../../../../../api';
 import creditsIcon from '../../../../../assets/images/catalog/air/builder/pursearea-credits-icon.png';
 import diamondIcon from '../../../../../assets/images/catalog/air/builder/pursearea-diamond-icon.png';
 import { ClassicScrollAreaView } from '../../../../../common';
@@ -211,7 +211,7 @@ export const CatalogLayoutBuildersClubOffersView: FC<CatalogLayoutProps> = ({ pa
 
     return (
         <div className={`volt-bc-layout is-offers ${isAddonsPage ? 'is-addons-page' : 'is-loyalty-page'}`}>
-            <div className="volt-bc-description" dangerouslySetInnerHTML={{ __html: SanitizeHtml(description) }} />
+            <div className="volt-bc-description" dangerouslySetInnerHTML={{ __html: SanitizeHotelHtml(description) }} />
             {!!libraryUrl && <img alt="" aria-hidden="true" className="volt-bc-art is-bottom" draggable={false} src={`${libraryUrl}catalogue/bc_bottom.png`} />}
             <div className="volt-bc-offers" data-widget={isAddonsPage ? 'builderAddonsWidget' : 'builderLoyaltyWidget'}>
                 <ClassicScrollAreaView className="h-full min-h-0">

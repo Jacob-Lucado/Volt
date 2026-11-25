@@ -236,6 +236,9 @@ export const NativeText: FC<NativeTextProps> = ({
             const lineHeight = metrics.textHeight + leading;
             // TextField puts every line's baseline on a whole pixel: round(2 + ascent + index * lineHeight) (AIR WIN63-202610201032).
             const lineOffset = (index: number) => roundTiesEven(2 + metrics.ascent + index * lineHeight) - roundTiesEven(2 + metrics.ascent);
+            // The underline of line n sits on floor(2 + ascent + n * lineHeight + size / 10), counted in twips, not one row under the rounded baseline.
+            const underlineShift = (index: number) =>
+                Math.floor((Math.round((2 + metrics.ascent + index * lineHeight) * 20) + 2 * fontStyle.size) / 20) - roundTiesEven(2 + metrics.ascent + index * lineHeight) - 1;
             let textWidth = 0;
             for (const line of lines) textWidth = Math.max(textWidth, measure(line));
             const fieldWidth = fixedWidth ?? Math.ceil(textWidth) + 4;
@@ -272,6 +275,7 @@ export const NativeText: FC<NativeTextProps> = ({
                         pixels: pixels.subarray(lineOffset(index) * scale * pixelWidth * 4),
                         width: pixelWidth,
                         height: pixelHeight - lineOffset(index) * scale,
+                        underlineShift: underlineShift(index) * scale,
                         // The space a wrapped line hangs at its end does not count for alignment (AIR WIN63-202610201032).
                         offsetX:
                             align === 'center'

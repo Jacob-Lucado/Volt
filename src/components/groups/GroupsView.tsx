@@ -5,6 +5,7 @@ import { useGroup, useGroupMemberRemovalSink, useMessageEvent } from '../../hook
 import { GroupCreatedView } from './views/GroupCreatedView';
 import { GroupCreatorView } from './views/GroupCreatorView';
 import { GroupInformationStandaloneView } from './views/GroupInformationStandaloneView';
+import { GroupInvitationView } from './views/GroupInvitationView';
 import { GroupManagerView } from './views/GroupManagerView';
 import { GroupAlert, GroupNativeAlertView } from './views/GroupNativeAlertView';
 import { GroupMembersView } from './views/GroupMembersView';
@@ -81,6 +82,7 @@ export const GroupsView: FC<{}> = (props) => {
             {!isCreatorVisible && <GroupManagerView />}
             <GroupMembersView />
             <GroupInformationStandaloneView />
+            <GroupInvitationView />
             {joinFailure && <GroupNativeAlertView alert={joinFailure} onClose={() => setJoinFailure(null)} />}
         </>
     );

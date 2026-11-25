@@ -80,12 +80,16 @@ export const LayoutBadgeImageView: FC<LayoutBadgeImageViewProps> = (props) => {
             newStyle.height = imageElement.height;
 
             if (scale !== 1) {
-                newStyle.transform = `scale(${scale})`;
-
-                if (!(scale % 1)) newStyle.imageRendering = PIXEL_ART_RENDERING;
-
                 newStyle.width = imageElement.width * scale;
                 newStyle.height = imageElement.height * scale;
+
+                // Whole-number scales stretch the image itself, so every texel lands on whole pixels.
+                if (!(scale % 1)) {
+                    newStyle.backgroundSize = `${newStyle.width}px ${newStyle.height}px`;
+                    newStyle.imageRendering = PIXEL_ART_RENDERING;
+                } else {
+                    newStyle.transform = `scale(${scale})`;
+                }
             }
         }
 

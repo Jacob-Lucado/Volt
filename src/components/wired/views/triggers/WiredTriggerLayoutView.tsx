@@ -1,4 +1,4 @@
-import { WiredTriggerLayout } from '../../../../api';
+import { UnreleasedWiredCode, WiredTriggerLayout } from '../../../../api';
 import { WiredTriggerAvatarEnterRoomView } from './WiredTriggerAvatarEnterRoomView';
 import { WiredTriggerAvatarLeaveRoomView } from './WiredTriggerAvatarLeaveRoomView';
 import { WiredTriggerAvatarSaysSomethingView } from './WiredTriggerAvatarSaysSomethingView';
@@ -8,6 +8,7 @@ import { WiredTriggerBotReachedAvatarView } from './WiredTriggerBotReachedAvatar
 import { WiredTriggerBotReachedStuffView } from './WiredTriggerBotReachedStuffView';
 import { WiredTriggerClickFurniView } from './WiredTriggerClickFurniView';
 import { WiredTriggerClickTileView } from './WiredTriggerClickTileView';
+import { WiredTriggerClickContextMenuView } from './WiredTriggerClickContextMenuView';
 import { WiredTriggerClickUserView } from './WiredTriggerClickUserView';
 import { WiredTriggerClockCounterView } from './WiredTriggerClockCounterView';
 import { WiredTriggerCollisionView } from './WiredTriggerCollisionView';
@@ -17,6 +18,7 @@ import { WiredTriggeExecutePeriodicallyShortView } from './WiredTriggerExecutePe
 import { WiredTriggeExecutePeriodicallyView } from './WiredTriggerExecutePeriodicallyView';
 import { WiredTriggerGameEndsView } from './WiredTriggerGameEndsView';
 import { WiredTriggerGameStartsView } from './WiredTriggerGameStartsView';
+import { WiredTriggerGroupMembershipView } from './WiredTriggerGroupMembershipView';
 import { WiredTriggerReceiveLinkDataframeView } from './WiredTriggerReceiveLinkDataframeView';
 import { WiredTriggerReceiveLinkMessageView } from './WiredTriggerReceiveLinkMessageView';
 import { WiredTriggerReceiveSignalView } from './WiredTriggerReceiveSignalView';
@@ -88,6 +90,10 @@ export const WiredTriggerLayoutView = (code: number) => {
             return <WiredTriggerReceiveLinkMessageView />;
         case WiredTriggerLayout.RECEIVE_LINK_DATAFRAME:
             return <WiredTriggerReceiveLinkDataframeView />;
+        case UnreleasedWiredCode.TRIGGER_GROUP_MEMBERSHIP:
+            return <WiredTriggerGroupMembershipView />;
+        case UnreleasedWiredCode.TRIGGER_CLICK_CONTEXT_MENU:
+            return <WiredTriggerClickContextMenuView />;
     }
 
     return null;

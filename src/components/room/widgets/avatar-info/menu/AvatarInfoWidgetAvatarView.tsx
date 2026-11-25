@@ -23,7 +23,6 @@ import {
     MessengerFriend,
     ReportType,
     RoomWidgetUpdateChatInputContentEvent,
-    SanitizeHtml,
     SendMessageComposer
 } from '../../../../../api';
 import { Permission } from '../../../../../api/permissions';
@@ -32,6 +31,7 @@ import { useFriends, useHasPermission, useHelp, useIsUserIgnored, useMessageEven
 import { ContextMenuHeaderView } from '../../context-menu/ContextMenuHeaderView';
 import { ContextMenuListItemView } from '../../context-menu/ContextMenuListItemView';
 import { ContextMenuView } from '../../context-menu/ContextMenuView';
+import { useWiredContextMenuItems, WiredContextMenuItemsView } from './WiredContextMenuItemsView';
 
 interface AvatarInfoWidgetAvatarViewProps {
     avatarInfo: AvatarInfoUser;
@@ -48,6 +48,7 @@ const MODE_RELATIONSHIP = 6;
 
 export const AvatarInfoWidgetAvatarView: FC<AvatarInfoWidgetAvatarViewProps> = (props) => {
     const { avatarInfo = null, onClose = null } = props;
+    const wiredMenu = useWiredContextMenuItems(avatarInfo);
     const [mode, setMode] = useState(MODE_NORMAL);
     const { canRequestFriend = null } = useFriends();
     const { report = null } = useHelp();
@@ -270,21 +271,20 @@ export const AvatarInfoWidgetAvatarView: FC<AvatarInfoWidgetAvatarViewProps> = (
             collapsable={true}
             freezePositionOnHover={true}
             maximumVerticalLeadRatio={0.05}
-            repositionKey={mode}
+            repositionKey={`${mode}-${wiredMenu.items.length}`}
             showCaretIcon={false}
             tallAvatarOffset={25}
             objectId={avatarInfo.roomIndex}
             userType={avatarInfo.userType}
             onClose={onClose}
         >
-            <ContextMenuHeaderView
-                className="cursor-pointer"
-                onClick={(event) => GetUserProfile(avatarInfo.webID)}
-                dangerouslySetInnerHTML={{ __html: SanitizeHtml(`${avatarInfo.name}`) }}
-            ></ContextMenuHeaderView>
+            <ContextMenuHeaderView className="cursor-pointer" onClick={(event) => GetUserProfile(avatarInfo.webID)}>
+                {avatarInfo.name}
+            </ContextMenuHeaderView>
             <div className="air-avatar-menu-buttons">
                 {mode === MODE_NORMAL && (
                     <>
+                        <WiredContextMenuItemsView items={wiredMenu.items} onClick={wiredMenu.click} onClose={onClose} />
                         {canRequestFriend(avatarInfo.webID) && (
                             <ContextMenuListItemView onClick={(event) => processAction('friend')}>
                                 {LocalizeText('infostand.button.friend')}

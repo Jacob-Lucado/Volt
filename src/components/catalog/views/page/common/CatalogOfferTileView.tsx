@@ -34,7 +34,6 @@ export interface CatalogOfferTileViewProps extends LayoutGridItemProps {
     requestOfferToMover?: (offer: IPurchasableOffer) => void;
     bundleCounter?: number;
     readOnly?: boolean;
-    tintColor?: string;
     showPrices?: boolean;
     standardDensity?: boolean;
 }
@@ -54,7 +53,6 @@ export const CatalogOfferTileView: FC<CatalogOfferTileViewProps> = (props) => {
         bundleCounter = 0,
         readOnly = false,
         itemActive = false,
-        tintColor = null,
         showPrices = true,
         standardDensity = false,
         ...rest
@@ -176,7 +174,6 @@ export const CatalogOfferTileView: FC<CatalogOfferTileViewProps> = (props) => {
                         className="volt-catalog-grid-offer-icon"
                         src={iconUrl}
                         draggable={false}
-                        style={!isBundleOffer && tintColor ? { filter: 'url(#guild-furni-recolor)', transform: 'translateZ(0)' } : undefined}
                         onError={(event) => {
                             if (offer.pricingModel === Offer.PRICING_MODEL_BUNDLE) return;
 

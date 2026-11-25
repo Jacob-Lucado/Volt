@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from 'react';
 import { CreateLinkEvent, GroupBadgePart, HasHabboClub, IGroupData, LocalizeText, SendMessageComposer } from '../../../api';
 import creditIcon from '../../../assets/images/groups/native/gcreate_icon_credit.png';
 import vipIcon from '../../../assets/images/groups/native/icon-vip-square.png';
-import { useMessageEvent } from '../../../hooks';
+import { useGroup, useMessageEvent } from '../../../hooks';
 import { flatText, GroupBox, GroupButton, GroupText } from './GroupNativeLayout';
 import { GroupManagementWindow } from './GroupManagementWindow';
 import { GroupTabBadgeView } from './tabs/GroupTabBadgeView';
@@ -24,6 +24,7 @@ export const GroupCreatorView: FC<GroupCreatorViewProps> = (props) => {
     const [groupData, setGroupData] = useState<IGroupData>(null);
     const [availableRooms, setAvailableRooms] = useState<{ id: number; name: string }[]>(null);
     const [purchaseCost, setPurchaseCost] = useState<number>(0);
+    const { groupCustomize = null } = useGroup();
     const hasClub = HasHabboClub();
 
     const onCloseClose = () => {
@@ -37,7 +38,7 @@ export const GroupCreatorView: FC<GroupCreatorViewProps> = (props) => {
         if (!groupData || isBuyingGroup) return;
 
         // The badge step does not let a badge without a base through; a list that still lacks one is never sent.
-        const badge = GroupBadgePart.serialize(groupData.groupBadgeParts);
+        const badge = GroupBadgePart.serialize(groupData.groupBadgeParts, groupCustomize);
 
         if (!badge) return;
 
@@ -85,6 +86,11 @@ export const GroupCreatorView: FC<GroupCreatorViewProps> = (props) => {
 
         parser.availableRooms.forEach((name, id) => rooms.push({ id, name }));
 
+        const groupBadgeParts = parser.badgeParts.map((part) =>
+            new GroupBadgePart(part.isBase ? GroupBadgePart.BASE : GroupBadgePart.SYMBOL, part.key, part.color, part.position)
+        );
+
+        setGroupData((previous) => ({ ...previous, groupBadgeParts }));
         setAvailableRooms(rooms);
         setPurchaseCost(parser.groupCost);
     });

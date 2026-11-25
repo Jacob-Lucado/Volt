@@ -8,7 +8,6 @@ import { getAirCatalogColumnCount, getVisibleAirGridEntries, isAirBaseCatalogOff
 import { shouldVirtualizeCatalogOffers } from './catalogGridPerformance.helpers';
 
 interface CatalogItemGridWidgetViewProps extends AutoGridProps {
-    tintColor?: string;
     showPrices?: boolean;
     /** Replaces the page's offers, e.g. one tile per colour family. */
     offers?: IPurchasableOffer[];
@@ -20,7 +19,6 @@ export const CatalogItemGridWidgetView: FC<CatalogItemGridWidgetViewProps> = (pr
         columnCount = 5,
         columnMinHeight = 80,
         columnMinWidth = 40,
-        tintColor = null,
         showPrices = true,
         children = null,
         className = '',
@@ -132,7 +130,6 @@ export const CatalogItemGridWidgetView: FC<CatalogItemGridWidgetViewProps> = (pr
                     itemActive={isOfferActive ? isOfferActive(offer) : currentOffer && currentOffer.offerId === offer.offerId}
                     offer={offer}
                     selectOffer={selectOffer}
-                    tintColor={tintColor}
                     standardDensity={isAirStandardDensity}
                     showPrices={showPrices}
                 />

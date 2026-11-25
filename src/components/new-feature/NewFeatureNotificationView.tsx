@@ -12,11 +12,17 @@ import cursedDragonAdoptionIcon from '../../assets/images/cursed-dragon-adoption
 import commonCloseX from '../../assets/images/new-feature/common_close_x.png';
 import rewardTrackSmallIcon from '../../assets/images/new-feature/reward_track_small_icon.png';
 import { useTintedSkin } from '../../common';
+import { NativeText } from '../../common/native-text/NativeText';
 import { useMessageEvent, useRoom } from '../../hooks';
 
 // NewFeatureNotification.as:46-48 (AIR WIN63-202610151745-318700621, com/sulake/habbo/notifications/singular).
 const AUTO_OPEN_DELAY_MS = 5000;
 const BG_COLOR_NORMAL = 0x686661;
+const LINK_COLOR_NORMAL = 0xffffff;
+const LINK_COLOR_HIGHLIGHT = 0xbae1f9;
+const ICON_SIZE = 20;
+// The desc text window of new_feature_notification_promo_xml.
+const DESC_STYLE = { color: LINK_COLOR_NORMAL, underline: true, kerning: false, sharpness: 0, thickness: 0 };
 
 // The client's own bitmaps that notifications.new_feature.image.<key> can name; anything else is read as a url.
 const NEW_FEATURE_IMAGES: Record<string, string> = {
@@ -60,6 +66,7 @@ export const NewFeatureNotificationView: FC<{ featureKey: string; onDispose: (fe
     const [isReady, setIsReady] = useState(!expiry);
     const [isCancelVisible, setIsCancelVisible] = useState(false);
     const [isHovering, setIsHovering] = useState(false);
+    const [iconSize, setIconSize] = useState<{ width: number; height: number }>(null);
     const [autoOpenClaimId, setAutoOpenClaimId] = useState<string>(null);
     const [isAutoOpenPending, setIsAutoOpenPending] = useState(false);
     const { roomSession = null } = useRoom();
@@ -203,10 +210,27 @@ export const NewFeatureNotificationView: FC<{ featureKey: string; onDispose: (fe
             <div aria-hidden="true" className="volt-new-feature-promo-border" style={borderImage ? { borderImageSource: borderImage } : undefined} />
             {imageUrl && (
                 <div className="volt-new-feature-promo-icon">
-                    <img alt="" draggable={false} src={imageUrl} />
+                    {/* BitmapDataRenderer centres with int((20 - size) / 2). */}
+                    <img
+                        alt=""
+                        draggable={false}
+                        src={imageUrl}
+                        style={iconSize ? { left: Math.trunc((ICON_SIZE - iconSize.width) / 2), top: Math.trunc((ICON_SIZE - iconSize.height) / 2) } : { visibility: 'hidden' }}
+                        onLoad={(event) => setIconSize({ width: event.currentTarget.naturalWidth, height: event.currentTarget.naturalHeight })}
+                    />
                 </div>
             )}
-            <div className="volt-new-feature-promo-desc">{LocalizeText(`notifications.new_feature.${ featureKey }.desc`)}</div>
+            <div className="volt-new-feature-promo-desc">
+                <NativeText
+                    transparent
+                    clipToWindow
+                    background={color}
+                    maxWidth={148}
+                    overrides={{ ...DESC_STYLE, color: isHovering ? LINK_COLOR_HIGHLIGHT : LINK_COLOR_NORMAL }}
+                    text={LocalizeText(`notifications.new_feature.${ featureKey }.desc`)}
+                    textStyle="u_regular"
+                />
+            </div>
             {isCancelVisible && (
                 <button aria-label="close" className="volt-new-feature-promo-cancel" type="button" onClick={onCancel}>
                     <img alt="" draggable={false} src={commonCloseX} />

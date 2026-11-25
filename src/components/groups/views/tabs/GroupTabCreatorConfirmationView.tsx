@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction } from 'react';
-import { IGroupData, LocalizeText } from '../../../../api';
+import { GroupBadgePart, IGroupData, LocalizeText } from '../../../../api';
 import { LayoutBadgeImageView } from '../../../../common';
 import { useGroup } from '../../../../hooks';
 import { flatText, GroupBox, GroupSwatch, GroupText } from '../GroupNativeLayout';
@@ -17,15 +17,7 @@ export const GroupTabCreatorConfirmationView: FC<GroupTabCreatorConfirmationView
     const { groupData = null, purchaseCost = 0 } = props;
     const { groupCustomize = null } = useGroup();
 
-    const getCompleteBadgeCode = () => {
-        if (!groupData || !groupData.groupBadgeParts || !groupData.groupBadgeParts.length) return '';
-
-        let badgeCode = '';
-
-        groupData.groupBadgeParts.forEach((part) => part.previewCode && (badgeCode += part.previewCode));
-
-        return badgeCode;
-    };
+    const getCompleteBadgeCode = () => GroupBadgePart.getBadgeCode(groupData?.groupBadgeParts, groupCustomize);
 
     const getGroupColor = (colorIndex: number) => {
         const list = colorIndex === 0 ? groupCustomize?.groupColorsA : groupCustomize?.groupColorsB;

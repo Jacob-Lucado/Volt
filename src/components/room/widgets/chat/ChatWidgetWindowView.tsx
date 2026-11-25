@@ -1,6 +1,6 @@
 import { GetSessionDataManager, RoomObjectType } from '@volt/renderer';
 import { FC, UIEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ChatEntryType, LocalizeText, SanitizeHtml } from '../../../../api';
+import { ChatEntryType, LocalizeText, SanitizeChatHtml } from '../../../../api';
 import { DraggableWindowPosition, VoltCardContentView, VoltCardHeaderView, VoltCardView } from '../../../../common';
 import { useChatHistory, useChatWindow, useOnClickChat } from '../../../../hooks';
 import { useRoom } from '../../../../hooks/rooms';
@@ -143,8 +143,8 @@ export const ChatWidgetWindowView: FC<{}> = () => {
                                 )}
                                 {hideBalloons && (
                                     <div onClick={onClickChat}>
-                                        <b dangerouslySetInnerHTML={{ __html: SanitizeHtml(`${chat.name}: `) }} />
-                                        <span className={messageClassName} dangerouslySetInnerHTML={{ __html: SanitizeHtml(chat.message) }} />
+                                        <b>{chat.name}: </b>
+                                        <span className={messageClassName} dangerouslySetInnerHTML={{ __html: SanitizeChatHtml(chat.message) }} />
                                     </div>
                                 )}
                                 {!hideBalloons && (
@@ -170,10 +170,10 @@ export const ChatWidgetWindowView: FC<{}> = () => {
                                             <div
                                                 className={`chat-content py-[5px] px-[6px] leading-none min-h-[25px] ${!hideAvatars ? (isOwnMessage ? 'mr-[27px]' : 'ml-[27px]') : ''}`}
                                             >
-                                                <b className="username" dangerouslySetInnerHTML={{ __html: SanitizeHtml(`${chat.name}: `) }} />
+                                                <b className="username">{chat.name}: </b>
                                                 <span
                                                     className={messageClassName}
-                                                    dangerouslySetInnerHTML={{ __html: SanitizeHtml(`${chat.message}`) }}
+                                                    dangerouslySetInnerHTML={{ __html: SanitizeChatHtml(`${chat.message}`) }}
                                                     onClick={onClickChat}
                                                 />
                                             </div>
