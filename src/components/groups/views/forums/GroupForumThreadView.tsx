@@ -17,7 +17,6 @@ import replyIcon from '../../../../assets/images/groups/native/forum_reply.png';
 import reportIcon from '../../../../assets/images/groups/native/forum_forum_report.png';
 import unhideIcon from '../../../../assets/images/groups/native/forum_forum_unhide.png';
 import { ClassicScrollAreaView, LayoutAvatarImageView } from '../../../../common';
-import { SubpixelText } from '../../../../common/native-text/SubpixelText';
 import { useHelp, useMessageEvent } from '../../../../hooks';
 import { flatText, GroupText } from '../GroupNativeLayout';
 import { FORUM_PAGE_SIZE, FORUM_SURFACE, stripTags, ForumButton, forumAge, forumQuote, ForumPager } from './GroupForumLayout';
@@ -27,7 +26,6 @@ import { forumPermissionText } from './GroupForumThreadListView';
 const MESSAGE_VISIBLE = 1;
 const MESSAGE_HIDDEN_BY_ADMIN = 10;
 const MESSAGE_DELETED_BY_STAFF = 20;
-const MESSAGE_NEW = -1;
 
 const ITEM_WIDTH = 515;
 
@@ -40,26 +38,13 @@ interface GroupForumThreadViewProps {
     initialPageIndex: number;
     scrollIndex: number;
     onBack: () => void;
-    /** GroupForumController.getThreadLastReadMessageIndex. */
-    getLastReadMessageIndex: (thread: GuildForumThread) => number;
     /** GroupForumController.updateUnreadMessageCounts(messageId, threadId, messageIndex). */
     onMessagesSeen: (messageId: number, threadId: number, messageIndex: number) => void;
     onReply: (subject: string, quote?: string) => void;
 }
 
-export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({
-    forumData,
-    groupId,
-    threadId,
-    initialThread,
-    initialPageIndex,
-    scrollIndex,
-    getLastReadMessageIndex,
-    onBack,
-    onMessagesSeen,
-    onReply
-}) => {
-    const [messages, setMessages] = useState<{ message: MessageData; isNew: boolean }[]>([]);
+export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({ forumData, groupId, threadId, initialThread, initialPageIndex, scrollIndex, onBack, onMessagesSeen, onReply }) => {
+    const [messages, setMessages] = useState<MessageData[]>([]);
     const [thread, setThread] = useState<GuildForumThread>(initialThread);
     const [pageIndex, setPageIndex] = useState<number>(initialPageIndex);
     const viewportRef = useRef<HTMLDivElement>(null);
@@ -77,9 +62,7 @@ export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({
 
         if (parser.groupId !== groupId || parser.threadId !== threadId || parser.startIndex !== pageIndex * FORUM_PAGE_SIZE) return;
 
-        const lastReadIndex = thread ? getLastReadMessageIndex(thread) : Infinity;
-
-        setMessages(parser.messages.map((message) => ({ message, isNew: message.messageIndex > lastReadIndex })));
+        setMessages(parser.messages);
 
         // updateUnreadMessageCounts: the newest message of the page counts as seen; the marker is sent when the forum is left (GroupForumController.markForumAsRead).
         if (parser.messages.length > 0) {
@@ -108,7 +91,7 @@ export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({
 
         if (parser.groupId !== groupId || parser.threadId !== threadId) return;
 
-        setMessages((previous) => previous.map((row) => (row.message.messageId === parser.message.messageId ? { message: parser.message, isNew: false } : row)));
+        setMessages((previous) => previous.map((message) => (message.messageId === parser.message.messageId ? parser.message : message)));
     });
 
     useMessageEvent<PostThreadMessageEvent>(PostThreadMessageEvent, (event) => {
@@ -123,8 +106,7 @@ export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({
         if (parser.groupId === groupId && parser.thread.threadId === threadId) setThread(parser.thread);
     });
 
-    // A link to one message scrolls its page to that message once (MessageListView.scrollToSpecificElement): the list scrolls to the
-    // bottom of the message before it, so the 1px gap between messages stays above the message.
+    // A link to one message scrolls its page to that message once (MessageListView.scrollToSpecificElement): the top of the message sits at the top of the list.
     useEffect(() => {
         const viewport = viewportRef.current;
         const index = pendingScroll.current;
@@ -133,9 +115,9 @@ export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({
 
         pendingScroll.current = 0;
 
-        const previous = viewport.querySelectorAll<HTMLElement>('.volt-forum__message')[index - 1];
+        const target = viewport.querySelectorAll<HTMLElement>('.volt-forum__message')[index];
 
-        if (previous) viewport.scrollTop = previous.offsetTop + previous.offsetHeight;
+        if (target) viewport.scrollTop = target.offsetTop;
     }, [messages]);
 
     useEffect(() => {
@@ -147,10 +129,10 @@ export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({
     const quoteOf = (message: MessageData) => forumQuote(message);
 
     // MessageListView.handleButtonVisibility: moderators hide a message, show one hidden by an admin again, and only staff show one deleted by staff.
-    const hideActionOf = (state: number): 'hide' | 'unhide' | null => {
+    const hideActionOf = (message: MessageData): 'hide' | 'unhide' | null => {
         if (!canModerate) return null;
-        if (state === MESSAGE_HIDDEN_BY_ADMIN) return 'unhide';
-        if (state === MESSAGE_DELETED_BY_STAFF) return isStaff ? 'unhide' : null;
+        if (message.state === MESSAGE_HIDDEN_BY_ADMIN) return 'unhide';
+        if (message.state === MESSAGE_DELETED_BY_STAFF) return isStaff ? 'unhide' : null;
 
         return 'hide';
     };
@@ -193,7 +175,7 @@ export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({
                         };
                         const text = isModerationMessage ? getModerationMessage() : message.messageText;
                         const showText = !!text;
-                        const hideAction = hideActionOf(state);
+                        const hideAction = hideActionOf(message);
                         const actions = (hideAction ? 1 : 0) + (canReport ? 1 : 0) + 1;
                         const actionsWidth = actions * 22;
 
@@ -206,8 +188,9 @@ export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({
                                         background={0x1b6ab4}
                                         overrides={flatText(12, { color: 0xeeeeee })}
                                         text={'#' + (message.messageIndex + 1)}
-                                        textStyle="u_regular"
                                         width={40}
+                                        x={ITEM_WIDTH - actionsWidth - 40}
+                                        y={4}
                                     />
                                     <div className="volt-forum__message-actions" style={{ width: actionsWidth }}>
                                         {hideAction && (
@@ -240,7 +223,7 @@ export const GroupForumThreadView: FC<GroupForumThreadViewProps> = ({
                                     </div>
                                     <div className="volt-forum__message-text" style={{ background: '#' + textColor.toString(16).padStart(6, '0') }}>
                                         {showText && (
-                                            <GroupText background={textColor} text={text} width={ITEM_WIDTH - 130 - 12} wrap x={8} y={4} />
+                                            <GroupText background={textColor} overrides={flatText(12)} text={text} width={ITEM_WIDTH - 130 - 12} wrap x={8} y={4} />
                                         )}
                                     </div>
                                 </div>

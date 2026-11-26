@@ -489,7 +489,6 @@ export const GroupForumView: FC<{}> = () =>
                         scrollIndex={threadStart.scrollIndex}
                         threadId={threadId}
                         onBack={backToThreads}
-                        getLastReadMessageIndex={getThreadLastReadMessageIndex}
                         onMessagesSeen={onMessagesSeen}
                         onReply={(subject, quote) => setCompose((previous) => ({ kind: 'reply', threadId, subject, quote, quoteSeq: previous && previous.kind === 'reply' && previous.threadId === threadId ? previous.quoteSeq + 1 : 0 }))}
                     />

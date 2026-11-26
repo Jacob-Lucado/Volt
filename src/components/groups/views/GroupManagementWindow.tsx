@@ -127,7 +127,7 @@ export const GroupManagementWindow: FC<GroupManagementWindowProps> = ({
                         text={description}
                         width={232}
                         x={126}
-                        y={isEditing ? 49 : 69}
+                        y={isEditing ? 52 : 69}
                     />
                     {tabs}
                     {children}

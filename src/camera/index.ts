@@ -1,5 +1,4 @@
-import 'pixi.js/browser';
-import { matteOnTransparent } from './avatarMatte';
+import { emptyRows, matteOnTransparent } from './avatarMatte';
 import { cullOpaqueSprites } from './opaqueCull';
 import { buildAvatarEffectLibraries, avatarEffectsReady } from './effectLibraries';
 import
@@ -1264,30 +1263,17 @@ const AVATAR_VIEW = 512;
 const AVATAR_MAX_FRAMES = 32;
 // An avatar draws its next animation frame after two room updates of this length.
 const AVATAR_FRAME_STEP_MS = 42;
-// Habbo's imager draws an avatar on a canvas of a fixed size and cuts off what does not fit, such as a tall hat.
-// A body frame starts at (x, y) from the avatar's place on the screen, a head frame at (x, y) in the head drawing.
-// Habbo draws mirrored directions as mirror images inside the same canvas, so they start at mirroredX.
-// Habbo's small images have their own canvas size; the halved medium image goes at (small.x, small.y).
-interface AvatarFrame
-{
-    x: number;
-    mirroredX: number;
-    mirroredDirections: number[];
-    y: number;
-    width: number;
-    height: number;
-    small: { width: number, height: number, x: number, y: number };
-}
-
-const AVATAR_STANDING_FRAME: AvatarFrame = { x: -32, mirroredX: -29, mirroredDirections: [ 4, 5, 6 ], y: -100, width: 64, height: 110, small: { width: 33, height: 56, x: -1, y: 1 } };
-const AVATAR_FRAMES: { [posture: string]: AvatarFrame } = {
+// The crop around the avatar's tile for each posture, before the empty rows above the avatar are cut off.
+const AVATAR_STANDING_FRAME = { width: 64, height: 110, left: 32, top: 96 };
+const AVATAR_FRAMES: { [posture: string]: { width: number, height: number, left: number, top: number } } = {
     std: AVATAR_STANDING_FRAME,
     mv: AVATAR_STANDING_FRAME,
-    sit: { ...AVATAR_STANDING_FRAME, y: -68 },
-    // The room draws the mirrored lying pose when its direction is 0.
-    lay: { x: -25, mirroredX: -84, mirroredDirections: [ 0 ], y: -3, width: 110, height: 64, small: { width: 56, height: 33, x: -4, y: 1 } }
+    sit: { width: 64, height: 110, left: 32, top: 70 },
+    lay: { width: 110, height: 64, left: 18, top: -6 }
 };
-const AVATAR_HEAD_FRAME: AvatarFrame = { x: 19, mirroredX: 20, mirroredDirections: [ 4, 5, 6 ], y: 22, width: 54, height: 62, small: { width: 27, height: 30, x: 0, y: 0 } };
+const AVATAR_HEAD_FRAME = { x: 18, y: 0, width: 54, height: 74 };
+// Room above a standing avatar for tall hats and effects. Rows that stay empty are cut off again.
+const AVATAR_HEADROOM = 60;
 const AVATAR_SCALES = [ 0.5, 1, 2 ];
 
 function readAvatarJob(job: AvatarImageJob): AvatarImageJob
@@ -1312,37 +1298,20 @@ function readAvatarJob(job: AvatarImageJob): AvatarImageJob
 
     if(!AVATAR_SCALES.includes(job.scale)) fail('Invalid avatar scale');
 
-    // Lying avatars face one of two ways. A sitting body in a diagonal direction uses pose 4.
-    if(job.posture === 'lay')
-    {
-        const direction = (job.direction === 2) ? 2 : 0;
-
-        return { ...job, direction, headDirection: direction };
-    }
-
-    if((job.posture === 'sit') && (job.direction % 2)) return { ...job, direction: 4 };
-
     return job;
 }
 
-function encodeAvatarFrame(source: HTMLCanvasElement, x: number, y: number, frame: AvatarFrame, scale: number, mirrored: boolean): string
+function encodeAvatarFrame(source: HTMLCanvasElement, x: number, y: number, width: number, height: number, scale: number): string
 {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
 
     if(!context) fail('Canvas is unavailable');
 
-    const small = (scale < 1);
-
-    const width = frame.width * scale;
-
-    canvas.width = small ? frame.small.width : width;
-    canvas.height = small ? frame.small.height : (frame.height * scale);
-
-    const smallX = mirrored ? (canvas.width - width - frame.small.x) : frame.small.x;
-
-    context.imageSmoothingEnabled = small;
-    context.drawImage(source, x, y, frame.width, frame.height, small ? smallX : 0, small ? frame.small.y : 0, width, frame.height * scale);
+    canvas.width = Math.round(width * scale);
+    canvas.height = Math.round(height * scale);
+    context.imageSmoothingEnabled = (scale < 1);
+    context.drawImage(source, x, y, width, height, 0, 0, canvas.width, canvas.height);
 
     const encoded = canvas.toDataURL('image/png');
 
@@ -1352,31 +1321,40 @@ function encodeAvatarFrame(source: HTMLCanvasElement, x: number, y: number, fram
     return encoded.slice(encoded.indexOf(',') + 1);
 }
 
+async function figureLibraries(figure: string): Promise<void>
+{
+    const avatars = GetAvatarRenderManager();
+    const container = avatars.createFigureContainer(figure);
+    const deadline = performance.now() + READY_BUDGET_MS;
+
+    avatars.downloadAvatarFigure(container, { resetFigure: () => undefined, dispose: () => undefined, disposed: false });
+
+    while(!avatars.isFigureContainerReady(container))
+    {
+        if(performance.now() > deadline) fail('Avatar figure library was not ready');
+
+        await new Promise(resolve => setTimeout(resolve, 10));
+    }
+}
+
+// The row where every frame of one image starts. It leaves as much room above the drawing as there is below it,
+// and all frames keep one size.
+function avatarTop(images: Uint8ClampedArray[], width: number, height: number): number
+{
+    const rows = images.map(image => emptyRows(image, width, height));
+    const above = Math.min(...rows.map(row => row.above));
+
+    return (above >= height) ? 0 : Math.max(0, above - Math.min(...rows.map(row => row.below)));
+}
+
 // A head is drawn as the client draws its own head images, since a room always draws the whole body.
 async function renderAvatarHead(job: AvatarImageJob): Promise<string[]>
 {
-    const avatars = GetAvatarRenderManager();
-    let ready = false;
-    const listener = { resetFigure: () => { ready = true; }, dispose: () => undefined, disposed: false };
-    let image = avatars.createAvatarImage(job.figure, AvatarScaleType.LARGE, job.gender, listener);
+    await figureLibraries(job.figure);
 
-    // The renderer adds default parts to incomplete figures before it requests their libraries.
-    if(image?.isPlaceholder())
-    {
-        image.dispose();
-        const deadline = performance.now() + READY_BUDGET_MS;
+    const image = GetAvatarRenderManager().createAvatarImage(job.figure, AvatarScaleType.LARGE, job.gender);
 
-        while(!ready)
-        {
-            if(performance.now() > deadline) fail('Avatar figure library was not ready');
-
-            await new Promise(resolve => setTimeout(resolve, 10));
-        }
-
-        image = avatars.createAvatarImage(job.figure, AvatarScaleType.LARGE, job.gender);
-    }
-
-    if(!image) fail('Avatar head was not created');
+    if(!image || image.isPlaceholder()) fail('Avatar head was not created');
 
     try
     {
@@ -1391,16 +1369,27 @@ async function renderAvatarHead(job: AvatarImageJob): Promise<string[]>
 
         const canvas = GetRenderer().texture.generateCanvas(image.processAsTexture(AvatarSetType.HEAD, false)) as HTMLCanvasElement;
         const frame = AVATAR_HEAD_FRAME;
-        const mirrored = frame.mirroredDirections.includes(job.headDirection);
+        const head = document.createElement('canvas');
+        const context = head.getContext('2d');
+
+        if(!context) fail('Canvas is unavailable');
 
         try
         {
-            return [ encodeAvatarFrame(canvas, mirrored ? frame.mirroredX : frame.x, frame.y, frame, job.scale, mirrored) ];
+            head.width = frame.width;
+            head.height = frame.height;
+            context.drawImage(canvas, frame.x, frame.y, frame.width, frame.height, 0, 0, frame.width, frame.height);
+
+            const top = avatarTop([ context.getImageData(0, 0, frame.width, frame.height).data ], frame.width, frame.height);
+
+            return [ encodeAvatarFrame(head, 0, top, frame.width, frame.height - top, job.scale) ];
         }
         finally
         {
             canvas.width = 0;
             canvas.height = 0;
+            head.width = 0;
+            head.height = 0;
         }
     }
     finally
@@ -1489,9 +1478,9 @@ async function renderAvatarBody(job: AvatarImageJob): Promise<string[]>
         const backdrop = master.children[0] as VoltSprite;
         const shadow = GetAssetManager().getAsset('h_std_sd_1_0_0')?.texture ?? null;
         const engineTime = { value: GetTicker().lastTime };
-        const frame = AVATAR_FRAMES[job.posture];
-        const mirrored = frame.mirroredDirections.includes(job.direction);
-        const frames: string[] = [];
+        const posture = AVATAR_FRAMES[job.posture];
+        const frame = { ...posture, top: posture.top + AVATAR_HEADROOM, height: posture.height + AVATAR_HEADROOM };
+        const images: Uint8ClampedArray<ArrayBuffer>[] = [];
         const matte = document.createElement('canvas');
         const context = matte.getContext('2d', { willReadFrequently: true });
 
@@ -1537,14 +1526,18 @@ async function renderAvatarBody(job: AvatarImageJob): Promise<string[]>
 
             hideAvatarSurroundings(master, shadow);
 
-            const bounds = new VoltRectangle(Math.round(location.x) + (mirrored ? frame.mirroredX : frame.x), Math.round(location.y) + frame.y, frame.width, frame.height);
+            const bounds = new VoltRectangle(Math.round(location.x) - frame.left, Math.round(location.y) - frame.top, frame.width, frame.height);
 
-            const image = matteOnTransparent(drawOn(0x000000, bounds), drawOn(0xFFFFFF, bounds));
+            images.push(matteOnTransparent(drawOn(0x000000, bounds), drawOn(0xFFFFFF, bounds)));
+        }
 
+        const top = avatarTop(images, frame.width, frame.height);
+        const frames = images.map(image =>
+        {
             context.putImageData(new ImageData(image, frame.width, frame.height), 0, 0);
 
-            frames.push(encodeAvatarFrame(matte, 0, 0, frame, job.scale, mirrored));
-        }
+            return encodeAvatarFrame(matte, 0, top, frame.width, frame.height - top, job.scale);
+        });
 
         matte.width = 0;
         matte.height = 0;
@@ -1622,8 +1615,7 @@ async function start(): Promise<void>
         resolution: 1,
         backgroundAlpha: 0,
         preference: 'webgl',
-        autoDensity: false,
-        skipExtensionImports: true
+        autoDensity: false
     });
 
     // Single-texture batches avoid the large sampler-selection shader. In SwiftShader that
@@ -1649,7 +1641,6 @@ async function start(): Promise<void>
 
     effectLibraries = libraries;
     requireMandatoryLibraries();
-    await GetAssetManager().whenRoomAssetsReady?.();
 
     const engine = GetRoomEngine();
 

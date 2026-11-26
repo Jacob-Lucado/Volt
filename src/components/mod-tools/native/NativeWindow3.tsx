@@ -34,7 +34,7 @@ interface Native3FrameProps {
     children?: ReactNode;
 }
 
-/** Frame style 3: the 9-slice frame_3 skin, a 19x20 close button at (width - 28, 8) and the content area at the frame margins (6, 25). */
+/** Frame style 3: the 9-slice frame_3 skin, a 19x20 close button at (width - 29, 8) and the content area at the frame margins (6, 25). */
 export const Native3Frame: FC<Native3FrameProps> = ({ width, height, title, onClose, color = FRAME3_COLOR, clientX = 6, clientY = 25, children }) => {
     const [closeState, setCloseState] = useState<'default' | 'hovering' | 'pressed'>('default');
     const titleColor = multiply(FRAME3_TITLE_SKIN, color);
@@ -49,7 +49,7 @@ export const Native3Frame: FC<Native3FrameProps> = ({ width, height, title, onCl
                 aria-label="Close"
                 className="native3-close"
                 role="button"
-                style={rect(width - 28, 8, 19, 20)}
+                style={rect(width - 29, 8, 19, 20)}
                 onClick={onClose}
                 onPointerDown={() => setCloseState('pressed')}
                 onPointerEnter={() => setCloseState('hovering')}

@@ -19,3 +19,24 @@ export function matteOnTransparent(black: Uint8ClampedArray, white: Uint8Clamped
 
     return image;
 }
+
+// The number of empty rows above and below the drawing in an image. An empty image has only rows above.
+export function emptyRows(image: Uint8ClampedArray, width: number, height: number): { above: number, below: number }
+{
+    const shown = (row: number): boolean =>
+    {
+        const end = (row + 1) * width * 4;
+
+        for(let index = (row * width * 4) + 3; index < end; index += 4) if(image[index]) return true;
+
+        return false;
+    };
+    let above = 0;
+    let below = 0;
+
+    while((above < height) && !shown(above)) above++;
+
+    while((below < (height - above)) && !shown(height - 1 - below)) below++;
+
+    return { above, below };
+}

@@ -12,8 +12,7 @@ vi.mock('../../../../../api', () => ({
 vi.mock('../../../../../common', () => ({
     Column: ({ alignItems: _alignItems, children, overflow: _overflow, size: _size, ...props }: any) => <div {...props}>{children}</div>,
     Flex: ({ alignItems: _alignItems, children, gap: _gap, ...props }: any) => <div {...props}>{children}</div>,
-    Grid: ({ children, overflow: _overflow, ...props }: any) => <div {...props}>{children}</div>,
-    LayoutActivityPointIcon: () => <span />
+    Grid: ({ children, overflow: _overflow, ...props }: any) => <div {...props}>{children}</div>
 }));
 
 vi.mock('../../../../../common/layout/LayoutImage', () => ({ LayoutImage: () => null }));

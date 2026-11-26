@@ -8,6 +8,7 @@ interface CatalogGridOfferViewProps extends LayoutGridItemProps {
     offer: IPurchasableOffer;
     selectOffer: (offer: IPurchasableOffer) => void;
     bundleCounter?: number;
+    tintColor?: string;
     showPrices?: boolean;
     standardDensity?: boolean;
 }
