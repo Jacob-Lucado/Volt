@@ -1,5 +1,6 @@
 import {
     ColorConverter,
+    GetConfiguration,
     GetDesiredResolution,
     GetRenderer,
     GetRoomEngine,
@@ -31,6 +32,8 @@ import {
     DispatchUiEvent,
     GetRoomSession,
     IsFurnitureSelectionDisabled,
+    IsTouchLayout,
+    useVoltLayout,
     ProcessRoomObjectOperation,
     RoomWidgetUpdateRoomObjectEvent,
     SetActiveRoomId,
@@ -58,6 +61,12 @@ const useRoomState = () => {
     const [roomMaster, setRoomMaster] = useState<VoltContainer>(null);
     // The toner color lives apart from the background sprite, so a color set on room entry is kept until the sprite exists.
     const roomBackgroundColor = useRef(new ColorTransitioner(0, 0));
+
+    const followOnTouch = IsTouchLayout(useVoltLayout());
+
+    useEffect(() => {
+        GetConfiguration().setValue('room.camera.track_movement', followOnTouch);
+    }, [followOnTouch]);
 
     useWiredFurniOpacity(roomSession?.roomId ?? 0);
 
