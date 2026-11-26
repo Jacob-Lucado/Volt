@@ -55,7 +55,7 @@ export const HabboPagesWindow: FC<{ page: HabboPageContent; onClose: () => void 
         >
             <VoltCardHeaderView headerText="" onCloseClick={onClose}>
                 <NativeText
-                    background={0x578ca5}
+                    background={0x537fa9}
                     className="habbopages__native-title"
                     overrides={{ color: 0xffffff }}
                     text={page.header}

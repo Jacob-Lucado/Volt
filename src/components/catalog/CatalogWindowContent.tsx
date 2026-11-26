@@ -141,7 +141,7 @@ export const CatalogWindowContent: FC<{}> = () => {
                         <NativeCenteredField className="volt-catalog-title" width={556}>
                             <NativeText
                                 nativeResolution
-                                background={isBuilder ? 0xd79b34 : 0x377998}
+                                background={isBuilder ? 0xd79b34 : 0x32699d}
                                 overrides={{ color: 0xffffff }}
                                 text={isBusy ? LocalizeText('generic.loading') || 'Loading...' : LocalizeText(isBuilder ? 'builder.catalog.title' : 'catalog.title')}
                                 textStyle="u_frame_title"
@@ -199,7 +199,7 @@ export const CatalogWindowContent: FC<{}> = () => {
                                     <NativeText
                                         nativeResolution
                                         transparent
-                                        background={0x0e3f52}
+                                        background={0x0b3155}
                                         className="volt-catalog-standard-header-title"
                                         overrides={{ color: 0xffffff }}
                                         text={
@@ -212,7 +212,7 @@ export const CatalogWindowContent: FC<{}> = () => {
                                     <NativeText
                                         nativeResolution
                                         transparent
-                                        background={0x0e3f52}
+                                        background={0x0b3155}
                                         className="volt-catalog-standard-header-description"
                                         maxWidth={HEADER_DESCRIPTION_FIELD_WIDTH}
                                         overrides={{ color: 0xffffff }}
