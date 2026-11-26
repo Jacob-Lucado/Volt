@@ -5,11 +5,15 @@
     <!-- Hand-off URLs carry ?sso= / ?token=; never send them on in a Referer. -->
     <meta name="referrer" content="strict-origin" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
     <title>Volt</title>
     <!-- The loading screen's photo frame paints with the page, before any script runs.
          LoadingView draws the same frame in the same place once React mounts. -->
     <style>
-        html, body { margin: 0; background: #0e151c; }
+        html, body { margin: 0; background: #0e151c; touch-action: manipulation; -webkit-touch-callout: none; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
         .boot-loading-screen { position: fixed; inset: 0; overflow: hidden; background: radial-gradient(ellipse at 50% 38%, #1d3550 0%, #0e151c 62%); }
         .boot-loading-screen::before { content: "Lucado Hotel"; position: absolute; top: max(12px, calc(50% - 312px)); left: 0; right: 0; text-align: center; font: 700 30px/1.2 Ubuntu, "Trebuchet MS", sans-serif; letter-spacing: 2px; color: #fff; text-shadow: 0 0 18px rgba(80, 150, 230, 0.75), 0 2px 0 rgba(0, 0, 0, 0.45); }
         .boot-loading-screen__photo { position: absolute; top: calc(50% - 250px); left: calc(50% - 250px); width: 500px; height: 434px; }

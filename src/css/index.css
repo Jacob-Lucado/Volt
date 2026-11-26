@@ -217,6 +217,10 @@ body {
     -webkit-user-select: none;
     user-select: none;
     overscroll-behavior: none;
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
 }
 
 #root {
