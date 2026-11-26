@@ -1,4 +1,3 @@
-import '../../css/WiredView.css';
 import { IWiredTransactionInfo, WIRED_TRANSACTION_LIST_CHEST, WiredTransactionGetChestLogsComposer, WiredTransactionGetRoomLogsComposer } from '@volt/renderer';
 import { FC, useEffect, useState } from 'react';
 import { GetUserProfile, localizeWithFallback, SendMessageComposer } from '../../api';
