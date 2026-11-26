@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'react-error-boundary';
+import { StartVoltLayout } from './api/touch';
 import { App } from './App';
 import { LoadingView } from './components/loading/LoadingView';
 
@@ -107,11 +108,28 @@ import './css/camera/CameraWidget.css';
 import './css/catalog/CatalogGiftView.css';
 import './css/navigator/NavigatorView.css';
 import './css/quests/RewardTrackView.css';
+
+import './css/touch/TouchWindows.css';
+import './css/touch/TouchRightSide.css';
+import './css/touch/TouchHud.css';
+import './css/touch/TouchChat.css';
+import './css/touch/TouchRoom.css';
+import './css/touch/TouchCatalog.css';
+import './css/touch/TouchNavigator.css';
+import './css/touch/TouchInventory.css';
+import './css/touch/TouchSocial.css';
+import './css/touch/TouchAvatarEditor.css';
+import './css/touch/TouchInstall.css';
+import './css/touch/TouchWired.css';
+import './css/touch/TouchWiredTools.css';
+import './css/touch/TouchFloorplan.css';
+import './css/touch/TouchQuests.css';
 import './css/common/ClassicScrollbar.css';
 
 // bootstrap.ts mounts the app once the configuration has loaded.
 export const mountApp = () => {
     document.documentElement.classList.add('has-classic-scrollbar');
+    StartVoltLayout();
 
     createRoot(document.getElementById('root')).render(
         <StrictMode>

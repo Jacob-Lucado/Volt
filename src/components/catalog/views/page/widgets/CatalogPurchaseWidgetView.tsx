@@ -12,6 +12,7 @@ import {
     ProductTypeEnum,
     SendMessageComposer
 } from '../../../../../api';
+import { IsTouchLayout, useVoltLayout } from '../../../../../api/touch';
 import { getCatalogBundlePrice } from '../../../../../api/catalog/CatalogBundleDiscount';
 import { useHabbiconCatalog } from '../../../../../api/habbicons';
 import { localizeWithFallback } from '../../../../../api/utils/localizeWithFallback';
@@ -46,6 +47,7 @@ interface CatalogPurchaseWidgetViewProps {
     disabled?: boolean;
     noGiftOption?: boolean;
     purchaseCallback?: () => void;
+    onPurchased?: () => void;
     /** Checked when Buy is pressed, before the confirmation opens; false stops the purchase (the room ad checks in PurchaseCatalogWidget.onPurchase). */
     canStartPurchase?: () => boolean;
     /** AIR PURCHASE_OVERRIDE: Buy and Gift call this instead of opening the confirmation; `openConfirmation` carries on (pet name approval). */
@@ -53,12 +55,16 @@ interface CatalogPurchaseWidgetViewProps {
 }
 
 /** buy_button's purchase_label: bold white text centred in a 160px field at (0, 3), so on sub-pixel pens. */
-const BuyCaption: FC<{ text: string }> = ({ text }) => (
-    <SubpixelText transparent align="center" background={0x00aa00} className="volt-catalog-buy-caption" color={0xffffff} text={text} textStyle="u_bold" width={160} />
-);
+const BuyCaption: FC<{ text: string; isTouch?: boolean }> = ({ text, isTouch = false }) =>
+    isTouch ? (
+        <span className="volt-catalog-buy-caption is-touch">{text}</span>
+    ) : (
+        <SubpixelText transparent align="center" background={0x00aa00} className="volt-catalog-buy-caption" color={0xffffff} text={text} textStyle="u_bold" width={160} />
+    );
 
 export const CatalogPurchaseWidgetView: FC<CatalogPurchaseWidgetViewProps> = (props) => {
-    const { disabled = false, noGiftOption = false, purchaseCallback = null, canStartPurchase = null, purchaseOverride = null } = props;
+    const { disabled = false, noGiftOption = false, purchaseCallback = null, onPurchased, canStartPurchase = null, purchaseOverride = null } = props;
+    const isTouch = IsTouchLayout(useVoltLayout());
     const habbicons = useHabbiconCatalog();
     const [purchaseWillBeGift, setPurchaseWillBeGift] = useState(false);
     const [purchaseState, setPurchaseState] = useState(CatalogPurchaseState.NONE);
@@ -180,14 +186,17 @@ export const CatalogPurchaseWidgetView: FC<CatalogPurchaseWidgetViewProps> = (pr
         (event: CatalogEvent) => {
             if (!ownsPurchaseOutcomeRef.current) return;
 
-            ownsPurchaseOutcomeRef.current = false;
-
             switch (event.type) {
-                case CatalogPurchasedEvent.PURCHASE_SUCCESS:
+                case CatalogPurchasedEvent.PURCHASE_SUCCESS: {
+                    const purchasedOfferId = (event as CatalogPurchasedEvent).purchase?.offerId ?? 0;
+
+                    if (onPurchased && purchasedOfferId > 0 && purchasedOfferId !== currentOffer?.offerId) return;
+                    if (purchasedOfferId > 0) onPurchased?.();
                     resetPurchaseGuard();
                     setPurchaseWillBeGift(false);
                     setPurchaseState(CatalogPurchaseState.NONE);
                     return;
+                }
                 case CatalogPurchaseFailureEvent.PURCHASE_FAILED:
                     resetPurchaseGuard();
                     setPurchaseWillBeGift(false);
@@ -205,7 +214,7 @@ export const CatalogPurchaseWidgetView: FC<CatalogPurchaseWidgetViewProps> = (pr
                     return;
             }
         },
-        [resetPurchaseGuard]
+        [currentOffer, onPurchased, resetPurchaseGuard]
     );
 
     useUiEvent(CatalogPurchasedEvent.PURCHASE_SUCCESS, onCatalogEvent);
@@ -323,7 +332,7 @@ export const CatalogPurchaseWidgetView: FC<CatalogPurchaseWidgetViewProps> = (pr
         if (habbiconOwned)
             return (
                 <button type="button" className={purchaseButtonClassNames.join(' ')} disabled>
-                    <BuyCaption text={localizeWithFallback('generic.owned', 'Owned')} />
+                    <BuyCaption isTouch={isTouch} text={localizeWithFallback('generic.owned', 'Owned')} />
                 </button>
             );
 
@@ -331,6 +340,7 @@ export const CatalogPurchaseWidgetView: FC<CatalogPurchaseWidgetViewProps> = (pr
             return (
                 <button type="button" className={purchaseButtonClassNames.join(' ')} disabled>
                     <BuyCaption
+                        isTouch={isTouch}
                         text={currentOffer.isLazy ? LocalizeText('generic.loading') : LocalizeText('catalog.purchase_confirmation.' + (currentOffer.isRentOffer ? 'rent' : 'buy'))}
                     />
                 </button>
@@ -339,7 +349,7 @@ export const CatalogPurchaseWidgetView: FC<CatalogPurchaseWidgetViewProps> = (pr
         if (isLimitedSoldOut)
             return (
                 <button type="button" className={purchaseButtonClassNames.join(' ')} disabled>
-                    <BuyCaption text={LocalizeText('catalog.alert.limited_edition_sold_out.title')} />
+                    <BuyCaption isTouch={isTouch} text={LocalizeText('catalog.alert.limited_edition_sold_out.title')} />
                 </button>
             );
 
@@ -347,7 +357,7 @@ export const CatalogPurchaseWidgetView: FC<CatalogPurchaseWidgetViewProps> = (pr
             case CatalogPurchaseState.CONFIRM:
                 return (
                     <button type="button" className={`${purchaseButtonClassNames.join(' ')} pointer-events-none`}>
-                        <BuyCaption text={LocalizeText('catalog.purchase_confirmation.' + (currentOffer.isRentOffer ? 'rent' : 'buy'))} />
+                        <BuyCaption isTouch={isTouch} text={LocalizeText('catalog.purchase_confirmation.' + (currentOffer.isRentOffer ? 'rent' : 'buy'))} />
                     </button>
                 );
             case CatalogPurchaseState.PURCHASE:
@@ -359,13 +369,13 @@ export const CatalogPurchaseWidgetView: FC<CatalogPurchaseWidgetViewProps> = (pr
             case CatalogPurchaseState.FAILED:
                 return (
                     <button type="button" className={purchaseButtonClassNames.join(' ')}>
-                        <BuyCaption text={LocalizeText('generic.failed')} />
+                        <BuyCaption isTouch={isTouch} text={LocalizeText('generic.failed')} />
                     </button>
                 );
             case CatalogPurchaseState.SOLD_OUT:
                 return (
                     <button type="button" className={purchaseButtonClassNames.join(' ')}>
-                        <BuyCaption text={LocalizeText('generic.failed') + ' - ' + LocalizeText('catalog.alert.limited_edition_sold_out.title')} />
+                        <BuyCaption isTouch={isTouch} text={LocalizeText('generic.failed') + ' - ' + LocalizeText('catalog.alert.limited_edition_sold_out.title')} />
                     </button>
                 );
             case CatalogPurchaseState.NONE:
@@ -398,7 +408,7 @@ export const CatalogPurchaseWidgetView: FC<CatalogPurchaseWidgetViewProps> = (pr
                             else openConfirmation();
                         }}
                     >
-                        <BuyCaption text={LocalizeText('catalog.purchase_confirmation.' + (currentOffer.isRentOffer ? 'rent' : 'buy'))} />
+                        <BuyCaption isTouch={isTouch} text={LocalizeText('catalog.purchase_confirmation.' + (currentOffer.isRentOffer ? 'rent' : 'buy'))} />
                     </button>
                 );
         }
@@ -434,9 +444,13 @@ export const CatalogPurchaseWidgetView: FC<CatalogPurchaseWidgetViewProps> = (pr
                     }}
                 >
                     {/* gift_button: button style 3, a button_shiny_regular label centred on the 170px button. */}
-                    <NativeCenteredField className="volt-catalog-gift-caption" width={170}>
-                        <NativeText nativeResolution transparent background={0xdddddd} text={LocalizeText('catalog.purchase_confirmation.gift')} textStyle="u_regular" />
-                    </NativeCenteredField>
+                    {isTouch ? (
+                        <span className="volt-catalog-gift-caption is-touch">{LocalizeText('catalog.purchase_confirmation.gift')}</span>
+                    ) : (
+                        <NativeCenteredField className="volt-catalog-gift-caption" width={170}>
+                            <NativeText nativeResolution transparent background={0xdddddd} text={LocalizeText('catalog.purchase_confirmation.gift')} textStyle="u_regular" />
+                        </NativeCenteredField>
+                    )}
                 </button>
             )}
             {!isClubLocked && <PurchaseButton />}
