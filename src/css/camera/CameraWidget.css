@@ -453,7 +453,7 @@
     border: 1px solid #5d5d5a;
     border-bottom: 0;
     border-radius: 5px 5px 0 0;
-    background: #cccccc;
+    background: #e4dfd0;
     box-shadow: none;
     cursor: pointer;
 }
@@ -614,7 +614,7 @@
     left: 249px;
     width: 320px;
     height: 59px;
-    color: #eeeeee;
+    color: #faf8f1;
 }
 
 /* slider_bg_border: black border at blend 0.5 */
@@ -816,7 +816,7 @@
     flex: none;
     width: 320px;
     height: 320px;
-    background: #cccccc;
+    background: #e4dfd0;
 }
 
 .volt-camera-checkout__image.is-failed {

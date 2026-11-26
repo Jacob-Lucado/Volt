@@ -161,7 +161,7 @@
 
 .volt-inventory-filter-option.is-active,
 .volt-inventory-filter-option:hover {
-    background: #d9d9d9;
+    background: #e4dfd0;
 }
 
 /* Keep mobile text autosizing from inflating the native AIR captions. */

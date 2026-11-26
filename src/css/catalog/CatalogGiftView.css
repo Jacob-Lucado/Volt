@@ -161,7 +161,7 @@
     padding: 0;
     overflow: hidden;
     color: #000000;
-    background: #eeeeee;
+    background: #faf8f1;
     font-size: 12px;
     font-weight: 400;
     line-height: 20px;
@@ -502,7 +502,7 @@
     width: 308px;
     height: 30px;
     overflow: hidden;
-    background: #eeeeee;
+    background: #faf8f1;
 }
 
 .volt-catalog-gift-palette-grid {

@@ -50,7 +50,7 @@
 .volt-card-shell.volt-card-frame-3:not(.volt-wired)::before {
     border: 2px solid var(--cr-navy);
     border-radius: 6px;
-    border-image: none;
+    border-image-source: none;
     background: linear-gradient(var(--cr-blue-top), var(--cr-blue-bottom) 31px, var(--cr-navy) 31px, var(--cr-navy) 33px, var(--cr-cream) 33px);
     box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
 }
@@ -136,7 +136,7 @@
 
 /* Toolbar. */
 .volt-toolbar-hobba {
-    border-image: none;
+    border-image-source: none;
     border: 0;
     border-top: 3px solid var(--cr-blue-top);
     background-color: var(--cr-bar);
@@ -154,4 +154,64 @@
 .volt-chat-input-container {
     border-radius: 4px;
     box-shadow: 0 0 0 2px var(--cr-navy);
+}
+
+/* Toolbar: line icons on 44px buttons, green on hover. */
+.tb-nav-clip .tb-slot:not(.tb-slot-memenu) {
+    width: 44px;
+    height: 44px;
+    margin: 0 3px;
+    border-radius: 5px;
+    transition: background-color 0.12s ease;
+}
+
+.tb-nav-clip .tb-slot:not(.tb-slot-memenu):hover {
+    background: var(--cr-green);
+    transform: none;
+}
+
+.tb-nav-clip .tb-slot:not(.tb-slot-memenu):active {
+    background: #247a40;
+    transform: none;
+}
+
+.tb-nav-clip .tb-slot .tb-icon {
+    position: absolute !important;
+    inset: 0 !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 44px !important;
+    height: 44px !important;
+    background-color: transparent !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: 24px 24px !important;
+    filter: none !important;
+    image-rendering: auto !important;
+}
+
+.tb-nav-clip .tb-slot .icon-habbo.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z'/%3E%3C/svg%3E") !important; }
+.tb-nav-clip .tb-slot .icon-house.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z'/%3E%3C/svg%3E") !important; }
+.tb-nav-clip .tb-slot .icon-rooms.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm0 4v5l3 2'/%3E%3C/svg%3E") !important; }
+.tb-nav-clip .tb-slot .icon-progression.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4l2.5 5 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.5-.8z'/%3E%3C/svg%3E") !important; }
+.tb-nav-clip .tb-slot .icon-game.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 9h10a4 4 0 0 1 4 4v2a2 2 0 0 1-3.5 1.3L16 14H8l-1.5 2.3A2 2 0 0 1 3 15v-2a4 4 0 0 1 4-4zM8 10.5v3M6.5 12h3'/%3E%3C/svg%3E") !important; }
+.tb-nav-clip .tb-slot .icon-stories.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h10'/%3E%3C/svg%3E") !important; }
+.tb-nav-clip .tb-slot .icon-catalog.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 7h12l-1 12H7zM9 7a3 3 0 0 1 6 0'/%3E%3C/svg%3E") !important; }
+.tb-nav-clip .tb-slot .icon-buildersclub.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 4l6 6-3 3-6-6zM12 8L4 16l4 4 8-8'/%3E%3C/svg%3E") !important; }
+.tb-nav-clip .tb-slot .icon-inventory.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8'/%3E%3C/svg%3E") !important; }
+.tb-nav-clip .tb-slot .icon-wired-tools.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 3L5 13h6l-1 8 8-10h-6z'/%3E%3C/svg%3E") !important; }
+.tb-nav-clip .tb-slot .icon-camera.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 8h4l2-3h4l2 3h4v11H4zM12 17a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z'/%3E%3C/svg%3E") !important; }
+.tb-nav-clip .tb-slot .icon-friendall.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM3 19c0-3 3-5 6-5s6 2 6 5M16 11a2.5 2.5 0 1 0 0-5M17 14c2.5.4 4 2 4 5'/%3E%3C/svg%3E") !important; }
+.tb-nav-clip .tb-slot .icon-friendsearch.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4'/%3E%3C/svg%3E") !important; }
+.tb-nav-clip .tb-slot .icon-message.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 5h16v11H8l-4 4z'/%3E%3C/svg%3E") !important; }
+.tb-nav-clip .tb-slot .icon-modtools.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z'/%3E%3C/svg%3E") !important; }
+.tb-nav-clip .tb-slot .icon-buildheight.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v16M8 8l4-4 4 4M8 16l4 4 4-4'/%3E%3C/svg%3E") !important; }
+
+/* Purse box at the top right: dark plate instead of the framed art. */
+.volt-purse__chrome {
+    border: 0 !important;
+    border-image-source: none !important;
+    border-radius: 8px;
+    background: var(--cr-bar);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
 }

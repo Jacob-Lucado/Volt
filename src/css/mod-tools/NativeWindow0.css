@@ -34,7 +34,7 @@
 .native0-dropmenu__list { position: absolute; left: 0; z-index: 5; }
 .native0-dropmenu__list > .native-skin { position: absolute; left: 0; top: 0; }
 .native0-dropmenu__item { position: absolute; left: 3px; right: 3px; height: 16px; cursor: pointer; }
-.native0-dropmenu__item.is-hover { background: #d9d9d9; }
+.native0-dropmenu__item.is-hover { background: #e4dfd0; }
 .native0-dropmenu__item { z-index: 1; }
 .native0-text { white-space: nowrap; }
 

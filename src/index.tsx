@@ -78,8 +78,9 @@ import './css/widgets/FurnitureWidgets.css';
 import './css/widgets/FurnitureNativeDialogs.css';
 import './css/navigator/NavigatorView.css';
 import './css/common/SharedComponentStyles.css';
-import './css/common/ClassicScrollbar.css';
+import './css/theme/ClassicButtons.css';
 import './css/theme/ClassicRefined.css';
+import './css/common/ClassicScrollbar.css';
 
 // bootstrap.ts mounts the app once the configuration has loaded.
 export const mountApp = () => {

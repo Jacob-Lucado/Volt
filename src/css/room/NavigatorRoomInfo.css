@@ -146,15 +146,15 @@
     min-height: 29px;
     padding: 2px 8px 3px !important;
     border: 0 solid transparent !important;
-    border-image-source: url("@/assets/images/habbo-skin/slices/button-shiny-default.png") !important;
+    border-image-source: var(--habbo-skin-shiny) !important;
     border-image-slice: 5 fill !important;
     border-image-width: 5px !important;
     border-image-repeat: stretch !important;
     text-align: center !important;
     text-shadow: none !important;
 }
-.volt-room-info .volt-room-info__action:hover { border-image-source: url("@/assets/images/habbo-skin/slices/button-shiny-hover.png") !important; }
-.volt-room-info .volt-room-info__action:active { border-image-source: url("@/assets/images/habbo-skin/slices/button-shiny-pressed.png") !important; }
+.volt-room-info .volt-room-info__action:hover { border-image-source: var(--habbo-skin-shiny-hover) !important; }
+.volt-room-info .volt-room-info__action:active { border-image-source: var(--habbo-skin-shiny-pressed) !important; }
 .volt-room-info .volt-room-info__report { position: relative; width: 218px; height: 55px; }
 .volt-room-info__report-skin { position: absolute; inset: 0; pointer-events: none; }
 .volt-room-info__report-skin.is-hovering,

@@ -104,7 +104,7 @@
     margin: 0;
     padding: 0;
     border: 5px solid transparent;
-    border-image: url("@/assets/images/habbo-skin/slices/button-shiny-thick-default.png") 5 fill / 5px stretch;
+    border-image: var(--habbo-skin-shiny-thick) 5 fill / 5px stretch;
     border-radius: 0;
     background: transparent;
     color: #000000;
@@ -115,11 +115,11 @@
 }
 
 .snowwar-shiny-button:hover {
-    border-image-source: url("@/assets/images/habbo-skin/slices/button-shiny-thick-hover.png");
+    border-image-source: var(--habbo-skin-shiny-thick-hover);
 }
 
 .snowwar-shiny-button:active {
-    border-image-source: url("@/assets/images/habbo-skin/slices/button-shiny-thick-pressed.png");
+    border-image-source: var(--habbo-skin-shiny-thick-pressed);
 }
 
 /* games_left_region itemlist: 0xffb9e2ec band sized to its items, spacing 5. */
@@ -268,7 +268,7 @@ body.snowwar-desktop-hidden #draggable-windows-container > .draggable-window:not
 /* listBorder: border style 0 (habbo_skin_border_white), blend 0.5. */
 .snowwar-list-border {
     box-sizing: border-box;
-    border-image: url("@/assets/images/habbo-skin/slices/border-white.png") 6 fill / 6px stretch;
+    border-image: var(--habbo-skin-border-white) 6 fill / 6px stretch;
     opacity: 0.5;
     image-rendering: pixelated;
 }

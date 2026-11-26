@@ -263,11 +263,11 @@
         background: #ffffff;
         border: 1px solid #79858c;
         border-radius: 2px;
-        box-shadow: inset 1px 1px 0 #ececec;
+        box-shadow: inset 1px 1px 0 #faf8f1;
         outline: none;
 
         &::placeholder {
-            color: #666666;
+            color: #5d6b7a;
             opacity: 1;
         }
     }
@@ -770,7 +770,7 @@
         padding: 8px;
         background:
             linear-gradient(#f7f7f7, #f7f7f7) padding-box,
-            repeating-linear-gradient(180deg, #f7f7f7 0 34px, #ececec 34px 68px);
+            repeating-linear-gradient(180deg, #f7f7f7 0 34px, #faf8f1 34px 68px);
 
         & .messenger-message-row {
             display: flex;
@@ -838,7 +838,7 @@
         }
 
         & .messenger-message-time {
-            color: #666666 !important;
+            color: #5d6b7a !important;
             font-size: 11px !important;
         }
 
@@ -925,7 +925,7 @@
             outline: none;
 
             &::placeholder {
-                color: #666666;
+                color: #5d6b7a;
                 opacity: 1;
             }
         }
@@ -1709,7 +1709,7 @@ button.swf-friends-section-header {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: #666666 !important;
+    color: #5d6b7a !important;
     font-size: 10px !important;
     font-weight: 700;
     line-height: 15px;
@@ -1803,7 +1803,7 @@ button.swf-friends-section-header {
 
 .swf-messenger-window .messenger-message-name {
     height: 16px;
-    color: #666666;
+    color: #5d6b7a;
     font-size: 10px;
     font-weight: 700;
 }
@@ -1841,7 +1841,7 @@ button.swf-friends-section-header {
 
 .swf-messenger-window .messenger-message-time {
     margin-top: 2px;
-    color: #666666;
+    color: #5d6b7a;
     font-size: 10px;
 }
 
@@ -1901,7 +1901,7 @@ button.swf-friends-section-header {
     width: 258px;
     max-height: 304px;
     padding: 5px;
-    border: 1px solid #666666;
+    border: 1px solid #5d6b7a;
     border-radius: 6px;
     background: #e4e4e4;
     box-shadow: 0 2px 5px rgba(0, 0, 0, .5);
@@ -1997,7 +1997,7 @@ button.swf-friends-section-header {
     height: 15px;
     padding: 0;
     border: 0;
-    background-color: #ececec;
+    background-color: #faf8f1;
     background-image: url("@/assets/images/friends/friends-spritesheet.png");
     background-repeat: no-repeat;
 }
@@ -2180,7 +2180,7 @@ button.swf-friends-section-header {
     min-width: 35px !important;
     border: 1px solid #c5c5c5 !important;
     border-radius: 4px !important;
-    background: #ebebeb !important;
+    background: #faf8f1 !important;
     box-shadow: inset 1px 1px 0 #ffffff !important;
 }
 
@@ -2322,7 +2322,7 @@ button.swf-friends-section-header {
     border: 1px solid #c5c5c5 !important;
     border-image-source: none !important;
     border-radius: 4px !important;
-    background: #ebebeb !important;
+    background: #faf8f1 !important;
     box-shadow: inset 1px 1px 0 #ffffff !important;
 }
 
@@ -2536,7 +2536,7 @@ button.swf-friends-section-header {
 }
 
 .friend-bar .friend-bar-find-friends-button:hover {
-    background: linear-gradient(#ffffff, #ececec);
+    background: linear-gradient(#ffffff, #faf8f1);
 }
 
 .friend-bar .friend-bar-actions {
@@ -2617,7 +2617,7 @@ button.swf-friends-section-header {
     margin: auto 2px 0;
     border: 2px solid #000000;
     border-radius: 2px;
-    background: linear-gradient(#ffffff, #d9d9d9);
+    background: linear-gradient(#ffffff, #e4dfd0);
     box-shadow: inset 0 1px rgba(255, 255, 255, 1);
     font-size: 12px;
 }

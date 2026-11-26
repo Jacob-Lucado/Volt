@@ -17,13 +17,13 @@
     z-index: 1;
     height: 33px;
     border-radius: 6px 6px 0 0;
-    background: linear-gradient(#537fa9 0 31px, #04101b 31px 32px, #e9e9e1 32px 33px);
+    background: linear-gradient(#537fa9 0 31px, #04101b 31px 32px, #faf8f1 32px 33px);
     box-shadow: inset 0 2px #6395c3;
     content: '';
     pointer-events: none;
 }
 
-.habbopages > .volt-card-header-shell { border-bottom-color: #e9e9e1; cursor: move; }
+.habbopages > .volt-card-header-shell { border-bottom-color: #faf8f1; cursor: move; }
 .habbopages__native-title { position: absolute !important; top: 2px; left: 50%; transform: translateX(-50%); }
 .habbopages.volt-card-shell.volt-card-frame-3 > .volt-card-header-shell .volt-card-close-button { top: 1px !important; right: 2px !important; }
 
@@ -35,7 +35,7 @@
     margin: 3px 0 0 1px;
     overflow: hidden;
     border: 0;
-    background: #e9e9e1;
+    background: #faf8f1;
 }
 
 .habbopages__viewport > .volt-classic-scroll-area-viewport {

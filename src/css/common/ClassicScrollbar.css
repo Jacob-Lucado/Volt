@@ -11,7 +11,7 @@
 @supports not selector(::-webkit-scrollbar) {
     .has-classic-scrollbar,
     .has-classic-scrollbar * {
-        scrollbar-color: #d9d9d9 #bdbbb3 !important;
+        scrollbar-color: #e4dfd0 #bdbbb3 !important;
     }
 }
 
@@ -375,3 +375,123 @@
 .has-classic-scrollbar .has-air-scrollbar[data-scrollable="false"]::-webkit-scrollbar-button:single-button:vertical:increment {
     background-image: url("../../assets/images/habbo-skin/slices/scroll-down-3-disabled.png") !important;
 }
+
+/* Scrollbars: plain track, rounded blue thumb. */
+.has-classic-scrollbar *::-webkit-scrollbar,
+.has-classic-scrollbar::-webkit-scrollbar {
+    width: 14px !important;
+    height: 14px !important;
+}
+
+.has-classic-scrollbar *::-webkit-scrollbar-track:vertical,
+.has-classic-scrollbar::-webkit-scrollbar-track:vertical,
+.has-classic-scrollbar *::-webkit-scrollbar-track:horizontal,
+.has-classic-scrollbar::-webkit-scrollbar-track:horizontal {
+    background: #e4dfd0 !important;
+    background-image: none !important;
+    border-left: 1px solid #cfc8b4 !important;
+}
+
+.has-classic-scrollbar *::-webkit-scrollbar-thumb:vertical,
+.has-classic-scrollbar::-webkit-scrollbar-thumb:vertical,
+.has-classic-scrollbar *::-webkit-scrollbar-thumb:horizontal,
+.has-classic-scrollbar::-webkit-scrollbar-thumb:horizontal {
+    background: #2a6aa6 !important;
+    background-image: none !important;
+    border: 3px solid #e4dfd0 !important;
+    border-radius: 8px !important;
+    min-height: 28px !important;
+}
+
+.has-classic-scrollbar *::-webkit-scrollbar-thumb:vertical:hover,
+.has-classic-scrollbar::-webkit-scrollbar-thumb:vertical:hover,
+.has-classic-scrollbar *::-webkit-scrollbar-thumb:horizontal:hover,
+.has-classic-scrollbar::-webkit-scrollbar-thumb:horizontal:hover {
+    background: #3b86c9 !important;
+    background-image: none !important;
+}
+
+.has-classic-scrollbar *::-webkit-scrollbar-thumb:vertical:active,
+.has-classic-scrollbar::-webkit-scrollbar-thumb:vertical:active,
+.has-classic-scrollbar *::-webkit-scrollbar-thumb:horizontal:active,
+.has-classic-scrollbar::-webkit-scrollbar-thumb:horizontal:active {
+    background: #235a92 !important;
+    background-image: none !important;
+}
+
+.has-classic-scrollbar *::-webkit-scrollbar-button,
+.has-classic-scrollbar::-webkit-scrollbar-button,
+.has-classic-scrollbar *::-webkit-scrollbar-button:single-button:vertical:decrement,
+.has-classic-scrollbar *::-webkit-scrollbar-button:single-button:vertical:increment,
+.has-classic-scrollbar *::-webkit-scrollbar-button:single-button:horizontal:decrement,
+.has-classic-scrollbar *::-webkit-scrollbar-button:single-button:horizontal:increment,
+.has-classic-scrollbar::-webkit-scrollbar-button:single-button:vertical:decrement,
+.has-classic-scrollbar::-webkit-scrollbar-button:single-button:vertical:increment,
+.has-classic-scrollbar::-webkit-scrollbar-button:single-button:horizontal:decrement,
+.has-classic-scrollbar::-webkit-scrollbar-button:single-button:horizontal:increment {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.has-classic-scrollbar *::-webkit-scrollbar-corner,
+.has-classic-scrollbar::-webkit-scrollbar-corner {
+    background: #e4dfd0 !important;
+}
+
+/* Scroll areas with their own bar. */
+.volt-classic-scrollbar {
+    width: 14px !important;
+}
+
+.volt-classic-scrollbar .volt-classic-scrollbar-track {
+    background: #e4dfd0 !important;
+    background-image: none !important;
+    border-left: 1px solid #cfc8b4 !important;
+}
+
+.volt-classic-scrollbar .volt-classic-scrollbar-thumb {
+    padding: 0 !important;
+    background: #2a6aa6 !important;
+    background-image: none !important;
+    border: 3px solid #e4dfd0 !important;
+    border-radius: 8px !important;
+    box-sizing: border-box;
+}
+
+.volt-classic-scrollbar .volt-classic-scrollbar-thumb:hover {
+    background: #3b86c9 !important;
+}
+
+.volt-classic-scrollbar .volt-classic-scrollbar-thumb::before,
+.volt-classic-scrollbar .volt-classic-scrollbar-thumb::after {
+    display: none !important;
+}
+
+.volt-classic-scrollbar .volt-classic-scrollbar-button {
+    width: 14px !important;
+    height: 14px !important;
+    background-color: #e4dfd0 !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: 10px 10px !important;
+    border: 0 !important;
+    border-left: 1px solid #cfc8b4 !important;
+}
+
+.volt-classic-scrollbar .volt-classic-scrollbar-button:hover {
+    background-color: #ebe6d6 !important;
+}
+
+.volt-classic-scrollbar .volt-classic-scrollbar-button.is-up,
+.volt-classic-scrollbar .volt-classic-scrollbar-button.is-up:hover,
+.volt-classic-scrollbar .volt-classic-scrollbar-button.is-up:active {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M2 6.5L5 3.5L8 6.5' fill='none' stroke='%231c3e66' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+}
+
+.volt-classic-scrollbar .volt-classic-scrollbar-button.is-down,
+.volt-classic-scrollbar .volt-classic-scrollbar-button.is-down:hover,
+.volt-classic-scrollbar .volt-classic-scrollbar-button.is-down:active {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M2 3.5L5 6.5L8 3.5' fill='none' stroke='%231c3e66' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+}
+

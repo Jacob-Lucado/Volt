@@ -1,6 +1,6 @@
 /**
  * Official Habbo Ubuntu palette (Habbo Air deobfuscated).
- * Frame #3b7bb6, catalog header #0b3155 / #345778, content #dfdfdf / #ecece4.
+ * Frame #3b7bb6, catalog header #0b3155 / #345778, content #f4f1e8 / #ecece4.
  */
 :root {
     --habbo-blue: #3b7bb6;
@@ -10,21 +10,21 @@
     --habbo-blue-header: #0b3155;
     --habbo-blue-header-border: #345778;
     --habbo-frame-border: #283f5d;
-    --habbo-surface: #dfdfdf;
+    --habbo-surface: #f4f1e8;
     --habbo-surface-warm: #ecece4;
     --habbo-panel: #f7f7f2;
-    --habbo-tab: #b6bec5;
-    --habbo-tab-active: #dfdfdf;
+    --habbo-tab: #cfc8b4;
+    --habbo-tab-active: #f4f1e8;
     --habbo-grid: #cdd3d9;
-    --habbo-grid-active: #ececec;
+    --habbo-grid-active: #faf8f1;
     --habbo-select: #5ca8f0;
     --habbo-select-outer: #7db9f2;
     --habbo-close: #921911;
     --habbo-close-hover: #b9322a;
     --habbo-toolbar: #555555;
     --habbo-nav-border: #eceae0;
-    --habbo-text: #151515;
-    --habbo-text-muted: #666666;
+    --habbo-text: #1d2a38;
+    --habbo-text-muted: #5d6b7a;
     --habbo-success: #00800b;
     --habbo-danger: #a81a12;
     --habbo-buy-top: #3dcc45;

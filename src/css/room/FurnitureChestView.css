@@ -78,7 +78,7 @@
 .volt-chest-air__header::before {
     position: absolute;
     inset: 0 1px;
-    background: #dadada;
+    background: #e4dfd0;
     border-bottom: 1px solid #c0c0c0;
     content: '';
 }
@@ -320,7 +320,7 @@
     right: 1px;
     height: 110px;
     box-sizing: border-box;
-    background: #dadada;
+    background: #e4dfd0;
     border-top: 1px solid #c0c0c0;
     content: '';
 }

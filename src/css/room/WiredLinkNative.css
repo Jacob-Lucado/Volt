@@ -41,8 +41,8 @@
 .volt-wired-link-air input:not([type='checkbox']) { position: absolute; inset: 5px 6px 3px; width: calc(100% - 12px); height: 20px; padding: 0; margin: 0; border: 0; outline: none; background: transparent; color: #000000; font: 12px/17px HabboAirUbuntu, Ubuntu, sans-serif; }
 .volt-wired-link-air__receive { flex: none; height: 44px; }
 .volt-wired-link-air__receive > label { position: absolute; left: 14px; top: 12px; display: flex; align-items: flex-start; gap: 7px; width: 564px; height: 20px; cursor: pointer; }
-.volt-wired-link-air__receive input { appearance: none; flex: none; margin: 0; padding: 0; border: 0; width: 17px; height: 17px; background: url('../../assets/images/habbo-skin/slices/checkbox-default.png') no-repeat; }
-.volt-wired-link-air__receive input:checked { background-image: url('../../assets/images/habbo-skin/slices/checkbox-checked.png'); }
+.volt-wired-link-air__receive input { appearance: none; flex: none; margin: 0; padding: 0; border: 0; width: 17px; height: 17px; background: var(--habbo-skin-checkbox) no-repeat; }
+.volt-wired-link-air__receive input:checked { background-image: var(--habbo-skin-checkbox-checked); }
 .volt-wired-link-air__status { flex: none; min-height: 32px; padding: 0 14px; overflow: hidden; }
 .volt-wired-link-air__rename { position: relative; display: flex; flex: none; height: 30px; align-items: center; gap: 10px; }
 .volt-wired-link-air__rename > :first-child { width: 87px; }

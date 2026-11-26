@@ -24,7 +24,7 @@
 .air-chooser__search input::placeholder { color: #666; opacity: .5; }
 .air-chooser__search:focus-within { outline: 1px solid #418db0; border-radius: 5px; }
 .air-chooser__clear { position: absolute; right: 2px; top: 3px; width: 20px; height: 20px; padding: 0; border: 0; background: url('../../../../assets/images/habbo-skin/slices/close-black.png') center no-repeat; cursor: pointer; }
-.air-chooser__table { position: relative; display: flex; flex-direction: column; flex: 1; min-height: 50px; padding: 5px; border-image: url('../../../../assets/images/habbo-skin/slices/border-white.png') 6 fill / 6px stretch; }
+.air-chooser__table { position: relative; display: flex; flex-direction: column; flex: 1; min-height: 50px; padding: 5px; border-image: var(--habbo-skin-border-white) 6 fill / 6px stretch; }
 .air-chooser__heading, .air-chooser__row { display: grid; grid-template-columns: 65% 35%; }
 .air-chooser--furni .air-chooser__heading, .air-chooser--furni .air-chooser__row { grid-template-columns: 50% 25% 25%; }
 .air-chooser__heading { height: 24px; flex: none; margin-right: 22px; border-bottom: 1px solid #b0b0b0; font-weight: 700; }
@@ -41,8 +41,8 @@
 .air-chooser__bulk-toggle { border: 0; padding: 0; background: transparent; color: #333; font: inherit; text-decoration: underline; cursor: pointer; }
 .air-chooser__bulk { display: flex; align-items: center; justify-content: space-between; gap: 6px; padding-top: 5px; }
 .air-chooser__bulk label { display: flex; align-items: center; gap: 5px; }
-.air-chooser input[type='checkbox'], .air-chooser__check { appearance: none; display: inline-block; flex: none; width: 17px; height: 17px; margin: 0 4px 0 0; padding: 0; border: 0; border-radius: 0; background: url('../../../../assets/images/habbo-skin/slices/checkbox-default.png') no-repeat; vertical-align: top; }
-.air-chooser input[type='checkbox']:checked, .air-chooser__check.is-checked { background-image: url('../../../../assets/images/habbo-skin/slices/checkbox-checked.png'); }
+.air-chooser input[type='checkbox'], .air-chooser__check { appearance: none; display: inline-block; flex: none; width: 17px; height: 17px; margin: 0 4px 0 0; padding: 0; border: 0; border-radius: 0; background: var(--habbo-skin-checkbox) no-repeat; vertical-align: top; }
+.air-chooser input[type='checkbox']:checked, .air-chooser__check.is-checked { background-image: var(--habbo-skin-checkbox-checked); }
 
 .air-chooser__scroll > .volt-classic-scroll-area-viewport { width: calc(100% - 22px); }
 

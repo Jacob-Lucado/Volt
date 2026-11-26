@@ -986,7 +986,7 @@
 
 .volt-catalog-purchase-confirm-button.is-buy:disabled {
     border-image-source: var(--habbo-skin-shiny-thick-green-disabled) !important;
-    color: #eeeeee !important;
+    color: #faf8f1 !important;
 }
 
 .volt-catalog-purchase-confirm-button:focus-visible {

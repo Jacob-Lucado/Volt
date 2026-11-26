@@ -23,7 +23,7 @@
         width: 164px;
         height: var(--room-tools-height);
         transition: transform 140ms cubic-bezier(0.215, 0.61, 0.355, 1);
-        color: #cccccc;
+        color: #e4dfd0;
     }
 
     .volt-room-tools::before {
@@ -69,7 +69,7 @@
         flex: 0 0 30px;
         width: 130px;
         height: 30px;
-        color: #cccccc;
+        color: #e4dfd0;
     }
 
     .room-tools-zoom-row::after {
@@ -139,7 +139,7 @@
 
     .room-tool-row--achievements,
     .room-tool-row--settings {
-        color: #cccccc;
+        color: #e4dfd0;
     }
 
     .room-tool-row:hover {
@@ -898,7 +898,7 @@
 }
 
 .volt-context-menu .volt-context-menu-item + .volt-context-menu-item {
-    border-top: 1px solid #151515;
+    border-top: 1px solid #1d2a38;
 }
 
 .volt-context-menu .volt-context-menu-item:hover {
@@ -1637,7 +1637,7 @@
     height: 24px;
     padding: 0;
     border: 5px solid transparent;
-    border-image: url('../../assets/images/habbo-skin/slices/button-shiny-thick-default.png') 5 fill / 5px stretch;
+    border-image: var(--habbo-skin-shiny-thick) 5 fill / 5px stretch;
     background: transparent;
     color: #000000;
     font: inherit;
@@ -1645,11 +1645,11 @@
 }
 
 .air-friend-request__accept:hover {
-    border-image-source: url('../../assets/images/habbo-skin/slices/button-shiny-thick-hover.png');
+    border-image-source: var(--habbo-skin-shiny-thick-hover);
 }
 
 .air-friend-request__accept:active {
-    border-image-source: url('../../assets/images/habbo-skin/slices/button-shiny-thick-pressed.png');
+    border-image-source: var(--habbo-skin-shiny-thick-pressed);
 }
 
 .air-friend-request__accept-icon {

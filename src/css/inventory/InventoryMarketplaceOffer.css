@@ -130,7 +130,7 @@
 
 .volt-market-offer-list button:hover:not(:disabled) { border-image-source: var(--habbo-skin-shiny-hover) !important; }
 .volt-market-offer-list button:active:not(:disabled) { border-image-source: var(--habbo-skin-shiny-pressed) !important; }
-.volt-market-offer-list button:disabled { border-image-source: url('@/assets/images/habbo-skin/slices/button-shiny-disabled.png') !important; opacity: 1; }
+.volt-market-offer-list button:disabled { border-image-source: var(--habbo-skin-shiny-disabled) !important; opacity: 1; }
 
 .volt-market-offer-copy {
     align-self: flex-end;

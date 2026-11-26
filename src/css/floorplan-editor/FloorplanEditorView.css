@@ -1238,7 +1238,7 @@
 
 .fp-bc-side > .fp-bc-preview-vbar {
     /* the first art column is translucent over the white preview border, and the parent border clips the rest */
-    background: linear-gradient(90deg, #ffffff 1px, #bdbdb5 1px);
+    background: linear-gradient(90deg, #ffffff 1px, #cfc8b4 1px);
     position: absolute;
     left: 274px;
     top: 135px;
@@ -1382,7 +1382,7 @@
     height: 266px;
     margin: 0;
     padding: 2px;
-    border: 1px solid #bdbdb5;
+    border: 1px solid #cfc8b4;
     background: #ffffff;
     color: #111111;
     font-family: Courier, monospace;
@@ -1696,7 +1696,7 @@
 }
 
 .fp-bc-drop-item[aria-selected="true"] { background: #dddddd; }
-.fp-bc-drop-item.is-highlighted { background: #ebebeb; }
+.fp-bc-drop-item.is-highlighted { background: #faf8f1; }
 .fp-bc-drop-item[aria-selected="true"].is-highlighted { background: #dddddd; }
 
 /* v75 floor_plan_export_import_xml (379x374, colour 0x418db0): everything is placed in dialog coordinates measured on the running client. */
@@ -1869,5 +1869,5 @@
 /* the heightmap bar sits over the black map, the track colour has to come from the bar itself */
 .fp-bc-map-vbar {
     /* first column is the translucent edge of the art over the black map, which runs under it */
-    background: linear-gradient(90deg, transparent 1px, #bdbdb5 1px);
+    background: linear-gradient(90deg, transparent 1px, #cfc8b4 1px);
 }
