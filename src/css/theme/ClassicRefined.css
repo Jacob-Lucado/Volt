@@ -207,13 +207,40 @@
 .tb-nav-clip .tb-slot .icon-modtools.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z'/%3E%3C/svg%3E") !important; }
 .tb-nav-clip .tb-slot .icon-buildheight.tb-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v16M8 8l4-4 4 4M8 16l4 4 4-4'/%3E%3C/svg%3E") !important; }
 
-/* Purse box at the top right: dark plate instead of the framed art. */
-.volt-purse__chrome {
-    border: 0 !important;
-    border-image-source: none !important;
-    border-radius: 8px;
+/* Purse: three separate dark pills instead of one framed plate. */
+.volt-purse__chrome,
+.volt-purse__divider {
+    display: none !important;
+}
+
+.volt-purse__currencies,
+.volt-purse__col--primary,
+.volt-purse__col--actions {
+    isolation: isolate;
+}
+
+.volt-purse__currencies::before,
+.volt-purse__col--primary::before,
+.volt-purse__col--actions::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
     background: var(--cr-bar);
-    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.25);
+    pointer-events: none;
+}
+
+.volt-purse__currencies::before {
+    inset: -6px -3px -6px -7px;
+}
+
+.volt-purse__col--primary::before {
+    inset: -4px -3px -4px -1px;
+}
+
+.volt-purse__col--actions::before {
+    inset: -5px -6px -5px -4px;
 }
 
 /* Form fields. */
