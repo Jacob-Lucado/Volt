@@ -286,3 +286,13 @@ body:has([data-window-key='achievements']) .tb-nav-clip .tb-slot:has(.icon-progr
     color: #ffffff;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
 }
+
+/* Toolbar tooltip and avatar pop-up: dark navy plates. */
+.tb-nav-clip [data-toolbar-tooltip]::after,
+[data-toolbar-tooltip]::after {
+    border-image-source: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 13 13'%3E%3Crect x='.5' y='.5' width='12' height='12' rx='5' fill='%231c2a3a' stroke='%233b86c9' stroke-width='1'/%3E%3C/svg%3E") !important;
+}
+
+.volt-toolbar-me-popup {
+    border-image-source: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Crect x='.5' y='.5' width='19' height='19' rx='7' fill='%231c2a3a' stroke='%233b86c9' stroke-width='1'/%3E%3C/svg%3E") !important;
+}
