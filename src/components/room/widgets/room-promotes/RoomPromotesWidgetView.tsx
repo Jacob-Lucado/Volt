@@ -1,8 +1,12 @@
 import { CreateLinkEvent, DesktopViewEvent } from '@volt/renderer';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { GetConfigurationValue, LocalizeText } from '../../../../api';
-import { LosIcon } from '../../../../common/lucadoos';
+import contractedBackground from '../../../../assets/images/room/promotes/event_bg_contracted.png';
+import eventIcon from '../../../../assets/images/room/promotes/event_icon.png';
+import ownerBackground from '../../../../assets/images/room/promotes/event_bg_owner.png';
+import visitorBackground from '../../../../assets/images/room/promotes/event_bg_visitor.png';
 import { useActiveRoomSessionSnapshot, useMessageEvent, useRoomPromote } from '../../../../hooks';
+import { RoomPromoteText } from './RoomPromoteText';
 import { RoomPromoteEditWidgetView } from './views';
 
 // Room controller level 1 (guest rights) can manage the room ad like the owner.
@@ -68,30 +72,16 @@ export const RoomPromotesWidgetView: FC<{}> = () => {
 
     return (
         <>
-            <div className={`los-event${isExpanded ? ' is-expanded' : ''}`}>
-                <button type="button" className="los-event__head" onClick={onBackgroundClick}>
-                    <LosIcon name="megaphone" size={14} />
-                    <span>{hasEvent ? eventData.eventName : LocalizeText('roomad.get.event')}</span>
-                    {hasEvent && <LosIcon name="chevron" size={12} />}
-                </button>
-                {isExpanded && (
-                    <div className="los-event__body">
-                        <p>{eventData.eventDescription}</p>
-                        {showInProgress && <b>{LocalizeText('navigator.eventinprogress')}</b>}
-                        {showModify && (
-                            <div className="los-event__actions">
-                                <button type="button" className="los-button" onClick={() => setIsEditingPromote(true)}>
-                                    {LocalizeText('navigator.roominfo.editevent')}
-                                </button>
-                                {canExtend && (
-                                    <button type="button" className="los-button" onClick={extend}>
-                                        {LocalizeText('roomad.extend.event')}
-                                    </button>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                )}
+            <div className={`volt-event-info${isExpanded ? ' is-expanded' : ''}`}>
+                <img alt="" className="volt-event-info__bg" draggable={false} src={isExpanded ? (isOwner ? ownerBackground : visitorBackground) : contractedBackground} />
+                <div className="volt-event-info__region" onClick={onBackgroundClick} />
+                {hasEvent && <RoomPromoteText alignCenter bold size={13} spacing={-0.4} text={eventData.eventName} width={67} x={61} y={2} />}
+                {!hasEvent && canManage && <RoomPromoteText className="is-link" height={17} text={LocalizeText('roomad.get.event')} underline width={126} x={31} y={3} onClick={onBackgroundClick} />}
+                {isExpanded && <RoomPromoteText height={90} text={eventData.eventDescription} width={175} wrap x={10} y={27} />}
+                {showInProgress && <RoomPromoteText alignCenter bold text={LocalizeText('navigator.eventinprogress')} width={156} x={18} y={107} />}
+                {showModify && <RoomPromoteText className="is-link" height={17} text={LocalizeText('navigator.roominfo.editevent')} underline x={16} y={110} onClick={() => setIsEditingPromote(true)} />}
+                {showModify && canExtend && <RoomPromoteText alignRight className="is-link" height={17} text={LocalizeText('roomad.extend.event')} underline width={88} x={88} y={110} onClick={extend} />}
+                <img alt="" className="volt-event-info__icon" draggable={false} src={eventIcon} />
             </div>
             {/* Keyed by the event: when another event replaces this one the window starts over from the new event instead of saving the old draft into it. */}
             {isEditingPromote && hasEvent && (

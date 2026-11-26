@@ -18,7 +18,7 @@
     border-radius: 0;
     background: transparent;
     box-shadow: none;
-    color: #111111;
+    color: #111;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 12px;
     line-height: 15px;
@@ -54,7 +54,7 @@
 
 .fnd-button.fnd-button-thick.fnd-button-green {
     border-image-source: var(--habbo-skin-shiny-thick-green);
-    color: #ffffff;
+    color: #fff;
     font-weight: 700;
 }
 
@@ -74,7 +74,7 @@
 /* packagecard_new / packagecard_new_opened */
 .volt-furni-gift {
     box-sizing: border-box;
-    color: #000000;
+    color: #000;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 12px;
 }
@@ -107,7 +107,7 @@
     width: 306px;
     height: 56px;
     padding: 3px;
-    background: #ffffff;
+    background: #fff;
 }
 
 .volt-furni-gift .fnd-gift-warning-body {
@@ -131,7 +131,7 @@
 .volt-furni-gift .fnd-gift-warning-text {
     width: 235px;
     min-height: 30px;
-    color: #ffffff;
+    color: #fff;
     font-size: 11px;
     font-weight: 700;
     line-height: 12.5px;

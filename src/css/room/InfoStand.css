@@ -554,7 +554,7 @@
     .text-tags {
       padding: 2px;
       border-radius: 3px;
-      background: #333333;
+      background: #333;
       margin-right: 5px;
       margin-bottom: 10px;
       cursor: pointer;
@@ -579,7 +579,7 @@
     div {
         line-height: 28px;
         text-align: center;
-        color: #000000;
+        color: #000;
         font-weight: bold;
     }
 }
@@ -1088,7 +1088,7 @@
   font-size: 13px;
   font-weight: bold;
   line-height: 23px;
-  color: #ffffff;
+  color: #fff;
   text-align: center;
   filter: var(--volt-native-text-halo);
 }

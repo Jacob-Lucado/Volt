@@ -517,7 +517,7 @@ export const VaultView: FC<{}> = () =>
         >
             <VoltCardHeaderView headerText="" onCloseClick={() => changeVisibility(false)}>
                 <NativeText
-                    background={0x32699d}
+                    background={0x377998}
                     className="volt-vault__title"
                     overrides={{ color: 0xffffff }}
                     text={localizeWithFallback('earnings.title', 'Earnings')}

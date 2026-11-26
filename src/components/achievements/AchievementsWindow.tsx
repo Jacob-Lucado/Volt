@@ -1,4 +1,3 @@
-import '../../css/achievements/AchievementsView.css';
 import { FC, useEffect, useState } from 'react';
 import { AchievementUtilities, LocalizeText } from '../../api';
 import { VoltCardHeaderView, VoltCardView } from '../../common';
@@ -47,7 +46,7 @@ export const AchievementsWindow: FC = () => {
         >
             <VoltCardHeaderView headerText="" onCloseClick={close}>
                 <NativeText
-                    background={0x32699d}
+                    background={0x377998}
                     className="air-achievements-native-title"
                     overrides={{ color: 0xffffff }}
                     text={LocalizeText('inventory.achievements')}

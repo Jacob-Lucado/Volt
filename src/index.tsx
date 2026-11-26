@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'react-error-boundary';
+import { StartVoltLayout } from './api/touch';
 import { App } from './App';
 import { LoadingView } from './components/loading/LoadingView';
 
@@ -18,10 +19,20 @@ const queryClient = new QueryClient({
 import './css/habbo/HabboTheme.css';
 import './css/index.css';
 
+import './css/avatar-editor/AvatarEditorView.css';
 import './css/badges/BadgeLeaderboardView.css';
-// CatalogExperience & CatalogAirMarket also style room furniture recolor & chest widgets.
+import './css/catalog/CatalogView.css';
+import './css/catalog/CatalogLayouts.css';
 import './css/catalog/CatalogExperience.css';
+import './css/catalog/CatalogVipBuyView.css';
+import './css/catalog/CatalogBuildersClubView.css';
+import './css/catalog/CatalogBuilderWarehouse.css';
+import './css/catalog/CatalogAirPets.css';
+import './css/catalog/CatalogAirGuild.css';
+import './css/catalog/CatalogAirClub.css';
+import './css/catalog/CatalogAirBc.css';
 import './css/catalog/CatalogAirMarket.css';
+import './css/catalog/CatalogAirInfo.css';
 import './css/floorplan-editor/FloorplanEditorView.css';
 
 import './css/chat/Chats.css';
@@ -39,20 +50,36 @@ import './css/groups/GroupManagement.css';
 import './css/groups/GroupInvitation.css';
 import './css/groups/GroupForum.css';
 
+import './css/game-center/GameCenterView.css';
+
+import './css/help/HelpView.css';
+
 import './css/hotelview/HotelView.css';
 
 import './css/loading/LoadingView.css';
 
 import './css/icons/icons.css';
 
+import './css/inventory/InventoryView.css';
+import './css/inventory/InventoryTrade.css';
+import './css/inventory/InventoryAnimals.css';
+import './css/inventory/InventoryBadges.css';
+import './css/inventory/InventoryFilters.css';
+import './css/inventory/InventoryMarketplaceOffer.css';
+
 import './css/layout/LayoutTrophy.css';
 
+
 import './css/voltcard/VoltCardView.css';
+import './css/achievements/AchievementsView.css';
 
 import './css/notification/NotificationCenterView.css';
 import './css/notification/NewFeatureNotification.css';
 import './css/catalog/CursedDragonAdoption.css';
+import './css/collectibles/CollectiblesHubView.css';
 import './css/notification/HotelAlertToast.css';
+
+import './css/habbopages/HabboPagesViewer.css';
 
 import './css/purse/PurseView.css';
 
@@ -75,14 +102,35 @@ import './css/user-settings/UserSettingsView.css';
 
 import './css/vault/VaultView.css';
 import './css/widgets/FurnitureWidgets.css';
+import './css/widgets/EffectBoxDialog.css';
 import './css/widgets/FurnitureNativeDialogs.css';
+import './css/WiredView.css';
+import './css/camera/CameraWidget.css';
+import './css/catalog/CatalogGiftView.css';
 import './css/navigator/NavigatorView.css';
-import './css/common/SharedComponentStyles.css';
+import './css/quests/RewardTrackView.css';
+
+import './css/touch/TouchWindows.css';
+import './css/touch/TouchRightSide.css';
+import './css/touch/TouchHud.css';
+import './css/touch/TouchChat.css';
+import './css/touch/TouchRoom.css';
+import './css/touch/TouchCatalog.css';
+import './css/touch/TouchNavigator.css';
+import './css/touch/TouchInventory.css';
+import './css/touch/TouchSocial.css';
+import './css/touch/TouchAvatarEditor.css';
+import './css/touch/TouchInstall.css';
+import './css/touch/TouchWired.css';
+import './css/touch/TouchWiredTools.css';
+import './css/touch/TouchFloorplan.css';
+import './css/touch/TouchQuests.css';
 import './css/common/ClassicScrollbar.css';
 
 // bootstrap.ts mounts the app once the configuration has loaded.
 export const mountApp = () => {
     document.documentElement.classList.add('has-classic-scrollbar');
+    StartVoltLayout();
 
     createRoot(document.getElementById('root')).render(
         <StrictMode>

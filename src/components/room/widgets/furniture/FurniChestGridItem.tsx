@@ -32,7 +32,7 @@ export const FurniChestGridItem: FC<{
                 />
                 {group.quantity > 1 && (
                     <div className="volt-chest-air__item-quantity">
-                        <ChestText background={0xffffff} color={0x2b5a86} text={String(group.quantity)} textStyle="regular" />
+                        <ChestText background={0xffffff} color={0x2f6982} text={String(group.quantity)} textStyle="regular" />
                     </div>
                 )}
                 {isLtd && (

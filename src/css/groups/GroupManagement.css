@@ -8,7 +8,7 @@
     min-height: 497px !important;
     max-height: 497px !important;
     padding: 0 !important;
-    color: #000000;
+    color: #000;
     font-family: Ubuntu, sans-serif;
     font-size: 13px;
     line-height: 1;
@@ -184,7 +184,7 @@
     border-image: var(--habbo-skin-shiny-thick) 5 fill / 5px stretch;
     border-radius: 0;
     background: transparent;
-    color: #000000;
+    color: #000;
     cursor: pointer;
     image-rendering: pixelated;
     display: flex;
@@ -215,8 +215,8 @@
 .volt-group-native__field {
     position: absolute;
     box-sizing: border-box;
-    border: 1px solid #000000;
-    background: #ffffff;
+    border: 1px solid #000;
+    background: #fff;
     overflow: hidden;
 }
 
@@ -241,8 +241,8 @@
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-    color: #000000 !important;
-    caret-color: #000000;
+    color: #000 !important;
+    caret-color: #000;
     font: 400 13px/16px Ubuntu, sans-serif;
     outline: 0 !important;
     resize: none;
@@ -698,15 +698,178 @@ textarea.volt-group-native__input::-webkit-scrollbar {
     z-index: 2;
 }
 
+/* AIR centres the 78px badge in the 85px widget and rounds the offset down. */
 .volt-group-info__badge {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: flex-start;
+    box-sizing: border-box;
     width: 85px;
     height: 85px;
+    padding: 3px;
 }
 
 .volt-group-info__icon {
     max-width: none;
     display: block;
+}
+
+/* guild_members_window: frame style 3, 352x431, client 33px below the top. */
+.volt-group-members.volt-card-shell.volt-card-frame-3 {
+    box-sizing: border-box;
+    width: 352px !important;
+    min-width: 352px !important;
+    max-width: 352px !important;
+    height: 431px !important;
+    min-height: 431px !important;
+    max-height: 431px !important;
+    padding: 0 !important;
+    line-height: 1;
+    image-rendering: pixelated;
+}
+
+.volt-group-members.volt-card-shell.volt-card-frame-3 > .volt-card-header-shell .volt-card-close-button {
+    right: 3px !important;
+}
+
+.volt-group-members .volt-group-native__text:not(.is-static),
+.volt-group-members .volt-group-native__field,
+.volt-group-members__badge,
+.volt-group-members__list,
+.volt-group-members__pages,
+.volt-group-members__pager {
+    position: absolute;
+    z-index: 1;
+}
+
+.volt-group-members__badge {
+    width: 39px;
+    height: 39px;
+}
+
+/* searching_icon: icon 15x15 at x 300, y 18 of header_cont. */
+.volt-group-members__searching {
+    position: absolute;
+    z-index: 1;
+    left: 310px;
+    top: 51px;
+    width: 15px;
+    height: 15px;
+    background-repeat: no-repeat;
+    pointer-events: none;
+}
+
+.volt-group-members__list {
+    left: 10px;
+    top: 115px;
+    width: 333px;
+    height: 277px;
+    overflow: hidden;
+}
+
+/* member_entry: border style 0, 164x35. */
+.volt-group-members__entry {
+    position: absolute;
+    width: 164px;
+    height: 35px;
+}
+
+.volt-group-members__entry::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-style: solid;
+    border-width: 6px;
+    border-image: url('../../assets/images/habbo-skin/slices/border-white.png') 6 fill / 6px stretch;
+}
+
+.volt-group-members__entry-bg {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+}
+
+.volt-group-members__head {
+    position: absolute;
+    left: -3px;
+    top: 0;
+    width: 33px;
+    height: 34px;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.volt-group-members__entry .volt-group-native__text,
+.volt-group-members__icon,
+.volt-group-members__action {
+    position: absolute;
+}
+
+.volt-group-members__entry .volt-group-native__text,
+.volt-group-members__icon {
+    pointer-events: none;
+}
+
+.volt-group-members__action,
+.volt-group-members__remove {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+/* At rest AIR leaves the remove button's over bitmap visible under the off bitmap; hovering shows the over bitmap alone. */
+.volt-group-members__remove {
+    position: absolute;
+    width: 17px;
+    height: 18px;
+}
+
+.volt-group-members__remove img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    max-width: none;
+}
+
+.volt-group-members__remove:hover .volt-group-members__remove-off {
+    visibility: hidden;
+}
+
+.volt-group-members__action .volt-group-native__text {
+    pointer-events: none;
+}
+
+.volt-group-members__pager {
+    width: 50px;
+    height: 25px;
+}
+
+.volt-group-members__pager img {
+    position: absolute;
+    filter: brightness(0);
+}
+
+/* itemlist_horizontal with spacing 2: the page text, the page input and the page count. */
+.volt-group-members__pages {
+    left: 87px;
+    top: 400px;
+    display: flex;
+    gap: 2px;
+    height: 17px;
+}
+
+.volt-group-members__pages .volt-group-native__text {
+    position: relative;
+    opacity: 0.7;
+}
+
+.volt-group-members__page-input {
+    box-sizing: border-box;
+    width: 21px;
+    height: 17px;
+    padding: 0 1px;
+    border: 1px solid #000;
+    background: #fff;
+    font: 11px Ubuntu, sans-serif;
+    text-align: left;
+    outline: none;
 }

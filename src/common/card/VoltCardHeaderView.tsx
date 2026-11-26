@@ -29,7 +29,7 @@ export const VoltCardHeaderView: FC<VoltCardHeaderViewProps> = (props) => {
         ...rest
     } = props;
 
-    const onMouseDown = (event: MouseEvent<HTMLElement>) => {
+    const onMouseDown = (event: MouseEvent<HTMLDivElement>) => {
         event.stopPropagation();
         event.nativeEvent.stopImmediatePropagation();
     };

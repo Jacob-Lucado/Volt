@@ -1,6 +1,7 @@
 import { CatalogGroupsComposer, CreateLinkEvent, GetSessionDataManager, HabboGroupEntryData, StringDataType } from '@volt/renderer';
 import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { LocalizeText, SendMessageComposer } from '../../../../../api';
+import { centredResizeX, useAirButton } from '../../../../../common/air/AirSkinButton';
 import { NativeText } from '../../../../../common/native-text/NativeText';
 import { useCatalogData, useCatalogUiState, useUserGroups } from '../../../../../hooks';
 
@@ -127,6 +128,27 @@ export const CatalogGuildSelectorWidgetView: FC<CatalogGuildSelectorWidgetViewPr
 };
 
 const MEMBERS_ONLY_COLOR = 0x5ea1ab;
+
+/**
+ * find_groups_button (-23, 55, 210x25) in the members_only border, whose children sit 6px inside the border image here. It has
+ * no width_min, so ButtonController shrinks it to 0 and grows it to its label around the same centre.
+ */
+const FindGroupsButton: FC = () => {
+    const button = useAirButton<HTMLButtonElement>({ kind: 'shiny', caption: LocalizeText('catalog.guild_selector.find_groups'), height: 25 });
+
+    return (
+        <button
+            ref={button.ref}
+            className="air-skin-button volt-catalog-guild-find-groups"
+            data-air-kind={button.kind}
+            style={{ ...button.style, left: centredResizeX(-23, [210, 0, button.style.minWidth as number]) - 6 }}
+            type="button"
+            onClick={() => CreateLinkEvent('navigator/search/hotel_view/group:')}
+        >
+            {button.caption}
+        </button>
+    );
+};
 
 /** guild_selector_widget_item: guild_colors is 21x14, black with a 1px border, colour A then colour B (GuildSelectorCatalogWidget.createGuildColorsBitmap). */
 const GuildColors: FC<{ colorA: string; colorB: string }> = ({ colorA, colorB }) => (

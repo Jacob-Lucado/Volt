@@ -14,7 +14,7 @@ import { TryVisitRoom, takeLaunchRoom } from '../api';
 import { NativeTextHaloFilter } from '../common';
 import { useVoltEventReducer } from '../hooks';
 import { AchievementsView } from './achievements/AchievementsView';
-import { AvatarEditorView } from './avatar-editor';
+import { AvatarEditorView } from './avatar-editor/AvatarEditorView';
 import { BadgeLeaderboardView } from './badge-leaderboard/BadgeLeaderboardView';
 import { DailyHubView } from './daily-hub/DailyHubView';
 import { RareValuesView } from './rare-values/RareValuesView';
@@ -35,13 +35,17 @@ import { GuideToolView } from './guide-tool/GuideToolView';
 import { HcCenterView } from './hc-center/HcCenterView';
 import { HelpView } from './help/HelpView';
 import { HotelView } from './hotel-view/HotelView';
+import { InstallPromptView } from './install-prompt/InstallPromptView';
 import { InventoryView } from './inventory/InventoryView';
 import { ModToolsView } from './mod-tools/ModToolsView';
 import { NavigatorView } from './navigator/NavigatorView';
 import { VoltbubbleHiddenView } from './voltbubblehidden/VoltbubbleHiddenView';
 import { HabboPagesViewer } from './habbopages/HabboPagesViewer';
 import { ExternalPluginLoader } from './plugins/ExternalPluginLoader';
-import { DailyTasksView, QuestCompletedView, QuestsView, RewardTrackView } from './quests';
+import { DailyTasksView } from './quests/DailyTasksView';
+import { QuestCompletedView } from './quests/QuestCompletedView';
+import { QuestsView } from './quests/QuestsView';
+import { RewardTrackView } from './quests/RewardTrackView';
 import { RightSideView } from './right-side/RightSideView';
 import { RoomView } from './room/RoomView';
 import { ToolbarView } from './toolbar/ToolbarView';
@@ -191,6 +195,7 @@ export const MainView: FC<{}> = (props) =>
             <FloorplanEditorView />
             <TraxEditorView />
             <ExternalPluginLoader />
+            <InstallPromptView />
         </>
     );
 };

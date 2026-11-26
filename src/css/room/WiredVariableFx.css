@@ -37,7 +37,7 @@
     font-family: 'Ubuntu', sans-serif;
     font-size: 11px;
     font-weight: 700;
-    color: #ffffff;
+    color: #fff;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
     filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
 }
@@ -166,6 +166,19 @@
     line-height: 1;
 }
 
+.volt-wired-fx .volt-wired-fx__icon:has(> .volt-wired-fx__icon-image) {
+    height: auto;
+}
+
+.volt-wired-fx__icon--xmas26_snowman {
+    translate: 0 -1px;
+}
+
+.volt-wired-fx__icon-image {
+    display: block;
+    image-rendering: pixelated;
+}
+
 .volt-wired-fx__level {
     display: inline-flex;
     align-items: center;
@@ -236,7 +249,7 @@
 }
 
 .volt-wired-fx--design-freeze_style .volt-wired-fx__number {
-    color: #b0d9ff;
+    color: #8fe3ff;
     -webkit-text-stroke: 1px #1c4f7a;
 }
 
@@ -248,8 +261,8 @@
 
 .volt-wired-fx--design-blocky .volt-wired-fx__number {
     font-family: 'Pixelify Sans', 'Ubuntu', monospace;
-    color: #ffffff;
-    -webkit-text-stroke: 1px #000000;
+    color: #fff;
+    -webkit-text-stroke: 1px #000;
 }
 
 /* Editor */

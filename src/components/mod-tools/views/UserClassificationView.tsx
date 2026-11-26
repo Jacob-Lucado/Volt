@@ -5,7 +5,7 @@ import { findNativeNode, nativeCaption, nativeNumber, NativeNode, parseNativeLay
 import { Native0Frame, Native0Rows, Native0Scrollbar, Native0Text } from '../native/NativeWindow0';
 
 const rectOf = (node: NativeNode) => ({ x: nativeNumber(node, 'x'), y: nativeNumber(node, 'y'), width: nativeNumber(node, 'width'), height: nativeNumber(node, 'height') });
-const SHADE = 0x9ec7ee;
+const SHADE = 0xa2d6ea;
 
 export interface UserClassificationEntry {
     userId: number;

@@ -1,11 +1,10 @@
-import '../../css/avatar-editor/AvatarEditorView.css';
 import {
     AvatarEditorFigureCategory,
     GetSessionDataManager,
     SetClothingChangeDataMessageComposer
 } from '@volt/renderer';
 import { Dispatch, FC, SetStateAction, useEffect, useRef, useState } from 'react';
-import { LocalizeText, SendMessageComposer } from '../../api';
+import { IsPhoneLayout, LocalizeText, SendMessageComposer } from '../../api';
 import mainGenericSrc from '../../assets/images/avatareditor/air/main-generic.png';
 import mainHeadSrc from '../../assets/images/avatareditor/air/main-head.png';
 import mainHotLooksSrc from '../../assets/images/avatareditor/air/main-hotlooks.png';
@@ -129,18 +128,19 @@ export const AvatarEditorWindow: FC<AvatarEditorWindowProps> = ({
             initialPosition={editorPosition}
             isResizable={false}
             onPositionChange={setEditorPosition}
+            touchPresentation="full"
             uniqueKey="avatar-editor"
         >
             <VoltCardHeaderView
                 headerText=""
                 onCloseClick={onClose}
             >
-                <NativeText className="volt-avatar-editor-title" text={LocalizeText(clothingChangeData ? 'widget.furni.clothingchange.editor.title' : 'avatareditor.title')} textStyle="u_frame_title" background={0x32699d} overrides={{ color: 0xffffff }} />
+                <NativeText className="volt-avatar-editor-title" text={LocalizeText(clothingChangeData ? 'widget.furni.clothingchange.editor.title' : 'avatareditor.title')} textStyle="u_frame_title" background={0x377998} overrides={{ color: 0xffffff }} />
             </VoltCardHeaderView>
             <VoltCardContentView className="volt-avatar-editor-content" gap={0}>
                 <div className="volt-avatar-editor-stage">
                     <div className="volt-avatar-editor-nameplate">
-                        <div className="volt-avatar-editor-name-text"><NativeText text={GetSessionDataManager().userName} textStyle="u_headline_big" background={0x0b3155} overrides={{ size: 12, color: 0xffffff }} /></div>
+                        <div className="volt-avatar-editor-name-text"><NativeText text={GetSessionDataManager().userName} textStyle="u_headline_big" background={0x0e3f52} overrides={{ size: 12, color: 0xffffff }} /></div>
                     </div>
                     <div className="volt-avatar-editor-tab-row">
                         <VoltCardTabsView classNames={['avatar-editor-tabs']}>
@@ -149,7 +149,10 @@ export const AvatarEditorWindow: FC<AvatarEditorWindowProps> = ({
                                     key={modelKey}
                                     classNames={['volt-avatar-editor-main-tab', `is-${modelKey}`]}
                                     isActive={activeModelKey === modelKey}
-                                    onClick={() => setActiveModelKey(modelKey)}
+                                    onClick={() => {
+                                        setActiveModelKey(modelKey);
+                                        if (IsPhoneLayout()) setIsWardrobeOpen(false);
+                                    }}
                                 >
                                     <img className="volt-avatar-editor-main-tab-icon" src={MAIN_TAB_ICONS[modelKey]} alt="" draggable={false} />
                                 </VoltCardTabsItemView>

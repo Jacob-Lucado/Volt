@@ -7,11 +7,11 @@
     --catalog-standard-border-dark: #6f6f6a;
     --catalog-standard-text: #222222;
     --catalog-standard-muted: #666666;
-    --catalog-standard-blue: #3b7bb6;
-    --catalog-standard-blue-dark: #0b3155;
-    --catalog-standard-blue-border: #345778;
-    --catalog-standard-select: #5ca8f0;
-    --catalog-standard-select-outer: #7db9f2;
+    --catalog-standard-blue: #418db0;
+    --catalog-standard-blue-dark: #0e3f52;
+    --catalog-standard-blue-border: #376275;
+    --catalog-standard-select: #63c5e9;
+    --catalog-standard-select-outer: #82d1ed;
     /* Quantity stepper +/- sprites, kept identical to origin/main so the
        glyphs stay put through hover/active/disabled states. */
     --habbo-stepper-plus: url("../../assets/images/catalog/buttons/plus.png");
@@ -119,14 +119,14 @@
     margin: 0 0 0 1px;
     width: 568px;
     border: 0;
-    background: #0b3155;
-    box-shadow: inset 0 0 0 2px #345778;
+    background: #0e3f52;
+    box-shadow: inset 0 0 0 2px #376275;
     overflow: hidden;
 }
 
 /* standard: header image blend 0.1, greyscale, zoom 2, pivot center.
    L'immagine reale per-pagina arriva inline da currentPage.getImage(0);
-   se assente resta il body #0b3155 (nessun finto gradiente). */
+   se assente resta il body #0e3f52 (nessun finto gradiente). */
 .volt-catalog-standard-header-bg {
     position: absolute;
     inset: 0;
@@ -166,7 +166,7 @@
     left: 80px;
     top: 11px;
     width: 475px;
-    color: #ffffff;
+    color: #fff;
 }
 
 .volt-catalog-standard-header-title {
@@ -417,7 +417,7 @@
 .volt-catalog-navigation-node.is-child .volt-catalog-navigation-item {
     gap: 9px;
     padding-left: calc(15px + var(--volt-catalog-navigation-indent, 0px));
-    color: #4e779e;
+    color: #52819a;
     font-style: italic;
 }
 
@@ -519,7 +519,7 @@
     left: 145px;
     width: 15px;
     height: 15px;
-    background-color: #999999;
+    background-color: #999;
     mask: url("../../assets/images/catalog/air/skin/icon-triangle-right.png") 0 0 no-repeat;
 }
 
@@ -598,7 +598,7 @@
     height: 100%;
     padding: 0;
     overflow: hidden;
-    background: #000000;
+    background: #000;
 }
 
 /* Follows the product view now that the product view follows the page. */
@@ -616,7 +616,7 @@
     font-size: 12px !important;
     font-weight: 700 !important;
     line-height: 15px !important;
-    text-shadow: 0 1px 0 #000000;
+    text-shadow: 0 1px 0 #000;
 }
 
 .volt-catalog-offer-preview > .shadow-room-previewer {
@@ -674,7 +674,7 @@
     height: 460px;
     min-height: 460px;
     overflow: hidden;
-    color: #222222;
+    color: #222;
     background: var(--catalog-standard-bg, #e4e3db);
 }
 
@@ -808,7 +808,7 @@
     width: 360px;
     height: 240px;
     overflow: hidden;
-    background: #000000;
+    background: #000;
 }
 
 .volt-catalog-badge-preview.is-empty {
@@ -829,7 +829,7 @@
     width: 280px;
     max-height: 64px;
     overflow: hidden;
-    color: #ffffff;
+    color: #fff;
     pointer-events: none;
 }
 
@@ -912,7 +912,7 @@
 
 .volt-catalog-badge-product-copy .volt-catalog-product-details-name,
 .volt-catalog-badge-product-copy .volt-catalog-product-details-description {
-    color: #ffffff !important;
+    color: #fff !important;
     opacity: 1 !important;
 }
 
@@ -952,7 +952,7 @@
     outline: 0;
     background: transparent !important;
     box-shadow: none !important;
-    color: #000000 !important;
+    color: #000 !important;
     font-family: Ubuntu, sans-serif !important;
     font-size: 12px !important;
     line-height: 14px !important;
@@ -981,7 +981,7 @@
     cursor: pointer;
 }
 
-:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget, .volt-catalog-guild-price) .volt-catalog-price-frame {
+:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget) .volt-catalog-price-frame {
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -992,7 +992,7 @@
     padding: 0;
     border: 8px solid transparent;
     border-radius: 0;
-    border-image-source: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAk0lEQVR42u2Vuw2AMBBDzxFrUDIDDWIyykyGaJiBkkFMlSg/AZdQ4i4X3ZNT2AFJCQUgHjyIJMJzl4LObdHw/J4Dg6QAoBaUqp+skERXulz34xVkHofcsYhE7t7CStB+smJqnN3tGPlYP/AHtgJLUdLGz7jI1EDT2EX11erUl4OrLzfQ1lj4OpLIgC3ywNr6L30DF6ICQ8ZcwDtIAAAAAElFTkSuQmCC");
+    border-image-source: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABrSURBVDhP7dSxEYBACETR7dJmbMEy7MROLATHQAb2cOTQMbrgE8ELgYjABuAc6Zp7hvZt7ophxXixtwsNwXWZUoVgFbtDHcjL2QY4wEL/gRXU3ipYRQMsBispyE+VF5+yt+59fZH72G9gaxwJZL9A0RMtPQAAAABJRU5ErkJggg==");
     border-image-slice: 8 fill;
     border-image-width: 8px;
     border-image-repeat: stretch;
@@ -1000,21 +1000,21 @@
     box-shadow: none;
 }
 
-:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget, .volt-catalog-guild-price) .volt-catalog-price-frame .volt-catalog-standard-price-display {
+:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget) .volt-catalog-price-frame .volt-catalog-standard-price-display {
     height: 13px;
     min-height: 13px;
     gap: 1px;
 }
 
-:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget, .volt-catalog-guild-price) .volt-catalog-price-frame .volt-catalog-standard-price-pill {
+:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget) .volt-catalog-price-frame .volt-catalog-standard-price-pill {
     min-width: 0;
     height: 13px;
     gap: 1px;
     padding: 0;
 }
 
-:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget, .volt-catalog-guild-price) .volt-catalog-price-frame .volt-catalog-standard-price-text {
-    color: #111111 !important;
+:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget) .volt-catalog-price-frame .volt-catalog-standard-price-text {
+    color: #111 !important;
     font-family: Ubuntu, Arial, sans-serif;
     font-size: 14px !important;
     font-weight: 700 !important;
@@ -1022,7 +1022,7 @@
     text-shadow: none !important;
 }
 
-:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget, .volt-catalog-guild-price) .volt-catalog-price-frame .volt-currency-icon {
+:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget) .volt-catalog-price-frame .volt-currency-icon {
     flex: 0 0 22px;
     width: 22px !important;
     height: 22px !important;
@@ -1030,8 +1030,8 @@
     image-rendering: var(--volt-pixel-art, pixelated);
 }
 
-:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget, .volt-catalog-guild-price) .volt-catalog-price-frame .is-credits .volt-currency-icon {
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABmElEQVR42rWVPVLDMBCF32Z8AMIhQgU1TdxE4y4ORyAXoKR04ZKSHCA5ArE7xpUralOFQ2DfYCnEWrJs2UmRndFY0c+3T9KTQsyMa0QAAN+Hu17H/fMJRDSalZnJNzfwArcErsdVSeKhBMEQVIBZMg6WcUTENpyIDNiGCjBUXdBNaOpNacZx3YcH9rIEKsCy0N/iE0jfdP3l0cDfv0wCgVf7BQHATNT6IlSAisxvFWng0CpsVuBT60byasD2V5LbqgFQcI4nQ2USugrbtgJ+V/iitCcVQJxOTlnP7FOOUwfiqBZgU3b7skT32facXaR2pK13eZi5Pbym1Pt1jo/tCxSn2oYqAjY73UTyCBER18fu5KmbJ1uTJdrrO+20uPcICbQp9XKnDkmAKtJldxp2BdEc7D48clCyr6HSdXublivg9smoBZC7dotpjoxrIA6nD2i5GoS2byqq/aLjQQAMgOsjmOvh8vuhx/yXtRRhtYql4WH7k0v2+QbZhOiOymq/yDt2kzfUvT0X/hvlPR97wOcmyL0X5BrxB6981enzqS0oAAAAAElFTkSuQmCC") !important;
+:is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget) .volt-catalog-price-frame .is-credits .volt-currency-icon {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAD/SURBVEhLtZSBDYMwDAQzTTtNR2GmrlBW6SBlhFSO9OFsnJRKraUngPH5ZSCl1lr+oXZ43i8HtWQpdhhqWhuTBNZtrlGDA1hQFa7LXGxATgvdIFSF2+pFt3bNBoQ7MKECqXC57mA7l9hAcAeObgnmqrwacGR03cEZNILlUhCtmevTYCq6jNdfgW2lToBvHSw3hBMc8wSz2WmwxDydfwRbIhZzLMpRbKAX68DRdSwcic8ZuEMF5g8i5ywcSUA1GoHdSASO89a5VgO/HgGqzw1gu+lczcAGTKApuMOzmVMAOuhhE3Jb3v4gizPRZYNmm1AMV3RCPiZgRQRE5SHwr/UG8Hq+iW3+jYQAAAAASUVORK5CYII=") !important;
 }
 
 .volt-catalog-sound-layout {
@@ -1041,7 +1041,7 @@
     height: 460px;
     min-height: 460px;
     overflow: hidden;
-    color: #222222;
+    color: #222;
     background: var(--catalog-standard-bg, #e4e3db);
 }
 
@@ -1180,7 +1180,7 @@
     min-height: 0;
     padding: 3px;
     overflow: hidden;
-    border: 1px solid #777777;
+    border: 1px solid #777;
     border-radius: 6px;
     background: #c9c9c3;
 }
@@ -1233,7 +1233,7 @@
     height: 460px;
     min-height: 460px;
     overflow: hidden;
-    color: #000000;
+    color: #000;
     font-family: UbuntuRegular, Ubuntu, sans-serif;
 }
 
@@ -1370,7 +1370,7 @@
     outline: 0;
     background: transparent !important;
     box-shadow: none !important;
-    color: #000000 !important;
+    color: #000 !important;
     font-family: UbuntuRegular, Ubuntu, sans-serif;
     font-size: 12px !important;
     font-weight: 700;
@@ -1507,7 +1507,7 @@
     .volt-catalog-window .layout-grid-item.is-active {
         background-color: #ffffff !important;
         background-image: none !important;
-        border: 2px solid #5ba7ef !important;
+        border: 2px solid #62c4e8 !important;
         box-shadow: none !important;
     }
 
@@ -1532,7 +1532,7 @@
     border: 1px solid #a1a19b;
     border-radius: 4px;
     background: #ffffff;
-    box-shadow: inset 0 0 0 1px #5ca8f0;
+    box-shadow: inset 0 0 0 1px #63c5e9;
     pointer-events: none;
 }
 
@@ -1567,7 +1567,7 @@
 }
 
 .volt-catalog-window .layout-grid-item.has-highlight:hover {
-    border-color: #000000 !important;
+    border-color: #000 !important;
     box-shadow:
         inset 1px 1px 0 rgba(255, 255, 255, 0.5),
         inset -1px -1px 0 rgba(0, 0, 0, 0.25),
@@ -1575,11 +1575,11 @@
 }
 
 .volt-catalog-window .layout-grid-item.has-highlight.is-active {
-    border-color: #000000 !important;
+    border-color: #000 !important;
     box-shadow:
         inset 0 0 0 2px #ffffff,
-        inset 0 0 0 3px #000000,
-        0 0 0 1px #5ca8f0 !important;
+        inset 0 0 0 3px #000,
+        0 0 0 1px #63c5e9 !important;
 }
 
 .volt-catalog-grid-offer-icon {
@@ -1797,7 +1797,7 @@
     gap: 3px;
     width: 100%;
     padding-right: 4px;
-    color: #000000;
+    color: #000;
     font-size: 11px;
     font-weight: 700;
     line-height: 12px;
@@ -2023,7 +2023,7 @@
     left: 20px;
     height: 17px;
     line-height: 0;
-    color: #666666;
+    color: #666;
     font-size: 12px;
     font-weight: 400;
     line-height: 17px;
@@ -2191,7 +2191,7 @@
     position: relative;
     width: 200px;
     height: 25px;
-    color: #000000;
+    color: #000;
 }
 
 .volt-catalog-standard-spinner-label {
@@ -2332,7 +2332,7 @@
     justify-content: flex-start;
     gap: 3px;
     min-height: 24px;
-    color: #222222;
+    color: #222;
     font-size: 11px;
 }
 
@@ -2349,7 +2349,7 @@
 }
 
 .volt-catalog-standard-price-text {
-    color: #222222 !important;
+    color: #222 !important;
     font-size: 11px !important;
     font-weight: 700 !important;
     line-height: 17px !important;
@@ -2445,18 +2445,18 @@
 .volt-catalog-window .volt-catalog-preview-price .volt-catalog-standard-price-text {
     color: #ffffff !important;
     text-shadow:
-        0 0 2px #000000,
-        1px 1px 1px #000000,
-        -1px 1px 1px #000000,
-        1px -1px 1px #000000,
-        -1px -1px 1px #000000 !important;
+        0 0 2px #000,
+        1px 1px 1px #000,
+        -1px 1px 1px #000,
+        1px -1px 1px #000,
+        -1px -1px 1px #000 !important;
 }
 
 .volt-catalog-standard-price-plus {
     display: inline-block;
     width: 7px;
     height: 17px;
-    color: #666666;
+    color: #666;
     font-size: 11px;
     font-weight: 700;
     line-height: 17px;
@@ -2481,8 +2481,8 @@
 .volt-catalog-preview-btn svg {
     width: 14px !important;
     height: 14px !important;
-    color: #111111 !important;
-    fill: #111111 !important;
+    color: #111 !important;
+    fill: #111 !important;
     flex-shrink: 0 !important;
     display: block !important;
 }

@@ -74,9 +74,9 @@ export const HelpCenteredText: FC<HelpTextProps & { width: number }> = ({ width,
     );
 };
 
-export const HELP_FRAME_TITLE_COLOR = 0x32699d;
+export const HELP_FRAME_TITLE_COLOR = 0x377998;
 
-// Frame caption: u_frame_title, white on the flat 0x32699d header, centred in the strip left of the close button (frame width - 20).
+// Frame caption: u_frame_title, white on the flat 0x377998 header, centred in the strip left of the close button (frame width - 20).
 export const HelpFrameTitle: FC<{ text: string; width: number }> = ({ text, width }) => (
     <HelpCenteredText text={text} width={width - 20} textStyle="u_frame_title" color={0xffffff} background={HELP_FRAME_TITLE_COLOR} />
 );

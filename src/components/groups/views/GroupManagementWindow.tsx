@@ -82,7 +82,7 @@ export const GroupManagementWindow: FC<GroupManagementWindowProps> = ({
                                         <img alt="" draggable={false} src={isActive ? active : inactive} />
                                         <GroupText
                                             align="center"
-                                            background={index === 3 ? 0xf4b800 : isActive ? 0x21507b : 0x3a7ab5}
+                                            background={index === 3 ? 0xf4b800 : isActive ? 0x255c77 : 0x408caf}
                                             overrides={flatText(13, { bold: true, color: 0xffffff })}
                                             text={LocalizeText(`group.create.steplabel.${index + 1}`)}
                                             width={index === 3 ? 108 : width}
@@ -127,7 +127,7 @@ export const GroupManagementWindow: FC<GroupManagementWindowProps> = ({
                         text={description}
                         width={232}
                         x={126}
-                        y={isEditing ? 52 : 69}
+                        y={isEditing ? 49 : 69}
                     />
                     {tabs}
                     {children}

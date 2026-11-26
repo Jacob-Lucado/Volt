@@ -61,8 +61,8 @@ export const CatalogRedeemVoucherView: FC<CatalogRedeemVoucherViewProps> = (prop
 
     return (
         <div className="volt-cfp-voucher">
-            {/* ctlg_txt2 (10, 6): formatted_text in u_regular over the #69b3f7 border. */}
-            <CatalogAirHtmlTextView transparent background={0x69b3f7} className="volt-cfp-voucher-text" html={text ?? ''} width={272} />
+            {/* ctlg_txt2 (10, 6): formatted_text in u_regular over the #51bbee border. */}
+            <CatalogAirHtmlTextView transparent background={0x51bbee} className="volt-cfp-voucher-text" html={text ?? ''} width={272} />
             <div className="volt-cfp-voucher-input">
                 <input
                     name="voucher_code"

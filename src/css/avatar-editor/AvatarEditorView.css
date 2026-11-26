@@ -68,7 +68,7 @@
     width: 486px;
     height: 110px;
     overflow: hidden;
-    background: #0b3155;
+    background: #0e3f52;
 }
 
 .volt-avatar-editor-name-text {
@@ -687,7 +687,7 @@
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-    color: #111111 !important;
+    color: #111 !important;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif !important;
     font-size: 12px !important;
     font-weight: 700 !important;
@@ -716,7 +716,7 @@
     padding: 0 8px 0 6px;
     overflow: hidden;
     background: #e9e9e1;
-    box-shadow: inset 1px 0 #000000;
+    box-shadow: inset 1px 0 #000;
 }
 
 .volt-avatar-editor-wardrobe-header {
@@ -1025,8 +1025,8 @@
     top: 2px;
     width: 18px;
     height: 14px;
-    border: 1px solid #dddddd;
-    background: #666666;
+    border: 1px solid #ddd;
+    background: #666;
     overflow: hidden;
     display: flex;
     justify-content: flex-start;
@@ -1040,15 +1040,15 @@
     top: 41px;
     width: 42px;
     height: 5px;
-    border: 1px solid #dddddd;
-    background: #000000;
+    border: 1px solid #ddd;
+    background: #000;
 }
 
 .volt-avatar-editor-effect-duration > div { height: 3px; background: #20bf20; }
 .volt-avatar-editor-effect-name { position: absolute; left: 351px; top: 400px; width: 120px; display: flex; justify-content: center; }
 .volt-avatar-editor-effect-activate { position: absolute; left: 21px; top: 443px; width: 300px; display: flex; justify-content: center; }
 .volt-avatar-editor-effect-time { position: absolute; left: 357px; top: 417px; width: 120px; height: 17px; display: flex; justify-content: center; }
-.volt-avatar-editor-effect-time-bar { position: absolute; left: 1px; top: 1px; width: 120px; height: 16px; background: #000000; }
+.volt-avatar-editor-effect-time-bar { position: absolute; left: 1px; top: 1px; width: 120px; height: 16px; background: #000; }
 .volt-avatar-editor-effect-time-bar > div { height: 16px; background: #20bf20; }
 .volt-avatar-editor-effect-time > span { mix-blend-mode: multiply; }
 .volt-avatar-editor-effect-time > .volt-avatar-editor-effect-time-ink { position: absolute !important; filter: invert(1) brightness(0.4); mix-blend-mode: plus-lighter; }

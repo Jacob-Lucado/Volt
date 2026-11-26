@@ -1,4 +1,3 @@
-import '../../../css/catalog/CatalogView.css';
 import { IObjectData } from '@volt/renderer';
 import { CSSProperties, FC, KeyboardEvent, ReactNode, useEffect, useRef, useState } from 'react';
 import { GetConfigurationValue, IPurchasableOffer, LocalizeText, ProductTypeEnum } from '../../../api';
@@ -101,6 +100,7 @@ export const CatalogPurchaseConfirmView: FC<CatalogPurchaseConfirmViewProps> = (
             style={tintedFrame ? ({ '--volt-card-frame-3': tintedFrame } as CSSProperties) : undefined}
             tabIndex={-1}
             theme="primary-slim"
+            touchPresentation="dialog"
             onKeyDown={onKeyDown}
         >
             <VoltCardHeaderView headerText={title} onCloseClick={onCancel} />

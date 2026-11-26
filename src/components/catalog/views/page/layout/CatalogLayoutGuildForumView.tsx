@@ -7,7 +7,7 @@ import { CatalogGuildBadgeWidgetView } from '../widgets/CatalogGuildBadgeWidgetV
 import { CatalogGuildSelectorWidgetView } from '../widgets/CatalogGuildSelectorWidgetView';
 import { CatalogNativeHtmlText } from '../widgets/CatalogNativeHtmlText';
 import { CatalogPurchaseWidgetView } from '../widgets/CatalogPurchaseWidgetView';
-import { CatalogTotalPriceWidget } from '../widgets/CatalogTotalPriceWidget';
+import { CatalogAirPriceDisplayView } from './CatalogAirPriceDisplayView';
 import { CatalogLayoutProps } from './CatalogLayout.types';
 
 const PAGE_BACKGROUND = 0xe9e9e1;
@@ -37,13 +37,7 @@ export const CatalogLayouGuildForumView: FC<CatalogLayoutProps> = (props) => {
             <CatalogFirstProductSelectorWidgetView />
             <CatalogNativeHtmlText background={PAGE_BACKGROUND} className="volt-catalog-guild-forum-text" html={page.localization.getText(1)} width={260} />
             {!!libraryUrl && <img alt="" className="volt-catalog-guild-forum-teaser" src={`${libraryUrl}catalogue/guild_forums_teaser.gif`} />}
-            {!!currentOffer && hasGroups && (
-                <div className="volt-catalog-guild-forum-price volt-catalog-guild-price">
-                    <div className="volt-catalog-preview-price volt-catalog-price-frame">
-                        <CatalogTotalPriceWidget />
-                    </div>
-                </div>
-            )}
+            {!!currentOffer && <CatalogAirPriceDisplayView className="volt-catalog-guild-forum-price" offer={currentOffer} />}
             <CatalogGuildBadgeWidgetView className="volt-catalog-guild-forum-badge" />
             <CatalogGuildSelectorWidgetView forumSelector className="volt-catalog-guild-forum-selector" />
             {selectedGroupHasForum && (

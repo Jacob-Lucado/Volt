@@ -18,8 +18,8 @@ interface SeasonalViewProps {
     amount: number;
 }
 
-// purse_indicator_seasonal_xml defaults: badge border 0x74b4ef, name colour 0xbb7dc3.
-const DEFAULT_BADGE_COLOR = 0x74b4ef;
+// purse_indicator_seasonal_xml defaults: badge border 0x7adde9, name colour 0xbb7dc3.
+const DEFAULT_BADGE_COLOR = 0x7adde9;
 const DEFAULT_NAME_COLOR = 0xbb7dc3;
 // The BGCOLOR border colour the text is drawn over.
 const ROW_COLOR = 0x686661;

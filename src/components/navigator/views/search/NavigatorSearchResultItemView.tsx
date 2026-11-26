@@ -1,6 +1,6 @@
 import { GetSessionDataManager, RoomDataParser } from '@volt/renderer';
 import { FC, KeyboardEvent, MouseEvent } from 'react';
-import { CreateRoomSession, DoorStateType, TryVisitRoom } from '../../../../api';
+import { CreateRoomSession, DoorStateType, IsPhoneLayout, TryVisitRoom, useVoltLayout } from '../../../../api';
 import { LayoutBadgeImageView, LayoutRoomThumbnailView } from '../../../../common';
 import { NativeText } from '../../../../common/native-text/NativeText';
 import { useDoorState, useNavigatorRoomInfoPopupStore } from '../../../../hooks';
@@ -17,6 +17,7 @@ export interface NavigatorSearchResultItemViewProps {
 export const NavigatorSearchResultItemView: FC<NavigatorSearchResultItemViewProps> = (props) => {
     const { roomData = null, thumbnail = false, eventTitle = false, stripe = false } = props;
     const { setSnapshot: setDoorData } = useDoorState();
+    const isPhone = IsPhoneLayout(useVoltLayout());
     const title = eventTitle && roomData.roomAdName ? roomData.roomAdName : roomData.roomName;
 
     const doorClass = () => {
@@ -69,6 +70,25 @@ export const NavigatorSearchResultItemView: FC<NavigatorSearchResultItemViewProp
         useNavigatorRoomInfoPopupStore.getState().retargetIfVisible(roomData, thumbnail ? 'tile' : 'row', event.currentTarget.getBoundingClientRect());
     };
 
+    if (isPhone)
+        return (
+            <div className="volt-navigator-air__phone-room">
+                <button type="button" className="volt-navigator-air__phone-visit" aria-label={title} onClick={visitRoom}>
+                    <LayoutRoomThumbnailView className="volt-navigator-air__phone-art" customUrl={roomData.officialRoomPicRef} roomId={roomData.roomId} />
+                    <span className="volt-navigator-air__phone-details">
+                        <strong>{title}</strong>
+                        {roomData.showOwner && roomData.ownerName && <small>{roomData.ownerName}</small>}
+                        <span className="volt-navigator-air__phone-status">
+                            <NavigatorUserCountView userCount={roomData.userCount} maxUserCount={roomData.maxUserCount} />
+                            {roomData.doorMode !== RoomDataParser.OPEN_STATE && <i className={doorClass()} />}
+                            {roomData.habboGroupId > 0 && <i className="volt-navigator-air__group" />}
+                        </span>
+                    </span>
+                </button>
+                <NavigatorSearchResultItemInfoView roomData={roomData} thumbnail={thumbnail} />
+            </div>
+        );
+
     if (thumbnail)
         return (
             <div
@@ -106,7 +126,7 @@ export const NavigatorSearchResultItemView: FC<NavigatorSearchResultItemViewProp
         >
             <NavigatorUserCountView userCount={roomData.userCount} maxUserCount={roomData.maxUserCount} />
             <span className="volt-navigator-air__row-name">
-                <NativeText text={title} textStyle="u_regular" background={stripe ? 0xffffff : 0xcce6ff} nativeResolution />
+                <NativeText text={title} textStyle="u_regular" background={stripe ? 0xffffff : 0xd6eeff} nativeResolution />
             </span>
             {roomData.doorMode !== RoomDataParser.OPEN_STATE && <i className={`volt-navigator-air__row-door ${doorClass()}`} />}
             {roomData.habboGroupId > 0 && <i className="volt-navigator-air__row-group volt-navigator-air__group" />}

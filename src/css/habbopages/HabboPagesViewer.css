@@ -3,7 +3,7 @@
     width: 418px;
     height: 398px;
     padding: 33px 3px 3px;
-    color: #111111;
+    color: #111;
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
     font-size: 12px;
     line-height: 14px;
@@ -17,8 +17,8 @@
     z-index: 1;
     height: 33px;
     border-radius: 6px 6px 0 0;
-    background: linear-gradient(#537fa9 0 31px, #04101b 31px 32px, #e9e9e1 32px 33px);
-    box-shadow: inset 0 2px #6395c3;
+    background: linear-gradient(#578ca5 0 31px, #05121a 31px 32px, #e9e9e1 32px 33px);
+    box-shadow: inset 0 2px #67a3bf;
     content: '';
     pointer-events: none;
 }
@@ -42,7 +42,7 @@
     box-sizing: border-box;
     height: calc(100% - 1px);
     padding-right: 17px;
-    background: #ffffff;
+    background: #fff;
     scrollbar-width: none !important;
 }
 
@@ -101,8 +101,8 @@
     min-height: 100%;
     padding: 3px 5px 8px;
     overflow-wrap: break-word;
-    color: #111111;
-    background: #ffffff;
+    color: #111;
+    background: #fff;
 }
 
 .habbopages__content > .habbopages__native-container { margin-left: 1px; padding: 0; }
@@ -110,7 +110,7 @@
 .habbopages__native-page { position: relative; min-height: 100%; }
 .habbopages__native-page > canvas { image-rendering: pixelated; }
 .habbopages__native-link { position: absolute; display: block; background: transparent; }
-.habbopages__native-link:focus-visible { outline: 1px dotted #000000; outline-offset: 1px; }
+.habbopages__native-link:focus-visible { outline: 1px dotted #000; outline-offset: 1px; }
 .habbopages__accessible-copy {
     position: absolute;
     width: 1px;

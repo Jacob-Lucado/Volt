@@ -149,7 +149,7 @@ const pluginApi: IVoltPluginApi = {
         // Header (draggable)
         const header = document.createElement('div');
         header.style.cssText =
-            'display:flex;align-items:center;justify-content:center;position:relative;min-height:33px;background:linear-gradient(180deg,#386792 0%,#2a4f6e 100%);cursor:move;user-select:none';
+            'display:flex;align-items:center;justify-content:center;position:relative;min-height:33px;background:linear-gradient(180deg,#3c6a8e 0%,#2a4f6e 100%);cursor:move;user-select:none';
 
         const titleEl = document.createElement('span');
         titleEl.textContent = title;

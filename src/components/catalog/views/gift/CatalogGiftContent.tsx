@@ -1,5 +1,3 @@
-import '../../../../css/catalog/CatalogGiftView.css';
-import '../../../../css/catalog/CatalogView.css';
 import {
     GetSessionDataManager,
     GiftReceiverNotFoundEvent,
@@ -499,7 +497,7 @@ export const CatalogGiftContent: FC<{ initialGiftEvent?: CatalogInitGiftEvent | 
     if (!isVisible || !giftConfiguration || !boxTypes.length) return null;
 
     return (
-        <VoltCardView classNames={['volt-catalog-gift']} frameStyle={3} isResizable={false} theme="primary-slim">
+        <VoltCardView classNames={['volt-catalog-gift']} frameStyle={3} isResizable={false} theme="primary-slim" touchPresentation="dialog">
             <VoltCardHeaderView headerText={LocalizeText('catalog.gift_wrapping.title')} onCloseClick={onClose} />
             <VoltCardContentView classNames={['volt-catalog-gift-content']} overflow="hidden">
                 <div className="volt-catalog-gift-name-border">

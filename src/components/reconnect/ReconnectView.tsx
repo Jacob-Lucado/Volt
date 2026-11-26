@@ -65,7 +65,7 @@ export const ReconnectView: FC<{}> = () => {
             <Column alignItems="center" gap={3} className="p-6 rounded-xl bg-[#1a1a2e]/90 border border-white/10 shadow-2xl max-w-[400px]">
                 {isReconnecting && (
                     <>
-                        <Base className="w-[48px] h-[48px] border-4 border-white/20 border-t-[#4eaaff] rounded-full animate-spin" />
+                        <Base className="w-[48px] h-[48px] border-4 border-white/20 border-t-[#4dabf7] rounded-full animate-spin" />
                         <Text fontSizeCustom={18} variant="white" className="text-center font-semibold">
                             Connection lost
                         </Text>
@@ -74,7 +74,7 @@ export const ReconnectView: FC<{}> = () => {
                         </Text>
                         <Base className="w-full h-[4px] rounded-full bg-white/10 overflow-hidden mt-1">
                             <Base
-                                className="h-full bg-[#4eaaff] rounded-full transition-all duration-300"
+                                className="h-full bg-[#4dabf7] rounded-full transition-all duration-300"
                                 style={{ width: `${maxAttempts > 0 ? (attempt / maxAttempts) * 100 : 0}%` }}
                             />
                         </Base>

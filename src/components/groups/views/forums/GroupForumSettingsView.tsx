@@ -27,6 +27,19 @@ const SECTIONS: Section[] = [
     { labelKey: 'groupforum.permissions.moderate_label', y: 410, levels: [2, 3] }
 ];
 
+/**
+ * ForumSettingsView.setSelectorState: posting can not be open to more people than reading, and starting threads not to more
+ * than posting, so each choice is raised to at least the level chosen above it. Moderating is for administrators at least.
+ */
+const limitLevels = ([read, postMessage, postThread, moderate]: number[]): number[] => {
+    const limitedPostMessage = Math.max(read, postMessage);
+
+    return [read, limitedPostMessage, Math.max(limitedPostMessage, postThread), Math.max(2, moderate)];
+};
+
+/** The lowest level each section can take; the options below it are disabled at half alpha. */
+const minimumLevels = (levels: number[]): number[] => [0, levels[0], levels[1], 2];
+
 interface GroupForumSettingsViewProps {
     forumData: ExtendedForumData;
     groupId: number;
@@ -37,7 +50,10 @@ interface GroupForumSettingsViewProps {
 }
 
 export const GroupForumSettingsView: FC<GroupForumSettingsViewProps> = ({ forumData, groupId, readForumData, initialPosition, onClose }) => {
-    const [levels, setLevels] = useState<number[]>([forumData.readPermissions, forumData.postMessagePermissions, forumData.postThreadPermissions, forumData.moderatePermissions]);
+    const [levels, setLevels] = useState<number[]>(() =>
+        limitLevels([forumData.readPermissions, forumData.postMessagePermissions, forumData.postThreadPermissions, forumData.moderatePermissions])
+    );
+    const minimum = minimumLevels(levels);
 
     // Two presses before the window closes still send one update.
     const saved = useRef<boolean>(false);
@@ -62,8 +78,10 @@ export const GroupForumSettingsView: FC<GroupForumSettingsViewProps> = ({ forumD
             className="volt-group-forum-settings"
             height={545}
             initialPosition={initialPosition}
+            isResizable={true}
+            minHeight={455}
+            resizeAxis="vertical"
             title={LocalizeText('groupforum.settings.window_title')}
-            uniqueKey="group-forum-settings"
             width={350}
             onClose={onClose}
             onHelp={() => CreateLinkEvent('habbopages/forums')}
@@ -81,22 +99,25 @@ export const GroupForumSettingsView: FC<GroupForumSettingsViewProps> = ({ forumD
                 <div key={section.labelKey} className="volt-forum__section" style={{ top: section.y }}>
                     <GroupText text={LocalizeText(section.labelKey)} x={0} y={0} />
                     {section.levels.map((level, row) => (
-                        <div key={level}>
+                        <div key={level} style={level < minimum[sectionIndex] ? { opacity: 0.5 } : undefined}>
                             <button
                                 aria-checked={levels[sectionIndex] === level}
                                 className={`volt-group-native__check is-radio${levels[sectionIndex] === level ? ' is-checked' : ''}`}
+                                disabled={level < minimum[sectionIndex]}
                                 role="radio"
                                 style={{ left: 20, top: 23 + row * 20 }}
                                 type="button"
-                                onClick={() => setLevels((previous) => previous.map((value, index) => (index === sectionIndex ? level : value)))}
+                                onClick={() => setLevels((previous) => limitLevels(previous.map((value, index) => (index === sectionIndex ? level : value))))}
                             />
                             <GroupText text={LocalizeText(OPTION_KEYS[level])} x={40} y={20 + row * 20} />
                         </div>
                     ))}
                 </div>
             ))}
-            <ForumButton label={LocalizeText('groupforum.settings.cancel')} width={120} x={25} y={478} onClick={onClose} />
-            <ForumButton label={LocalizeText('groupforum.settings.ok')} tint="blue" width={120} x={190} y={478} onClick={save} />
+            <div className="volt-forum__footer is-settings">
+                <ForumButton label={LocalizeText('groupforum.settings.cancel')} width={120} x={25} onClick={onClose} />
+                <ForumButton label={LocalizeText('groupforum.settings.ok')} tint="blue" width={120} x={190} onClick={save} />
+            </div>
         </ForumFrame>
     );
 };

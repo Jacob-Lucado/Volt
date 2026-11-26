@@ -58,7 +58,7 @@
 }
 
 .hotel-alert-toast.is-staff .hotel-alert-toast-circle {
-    background: radial-gradient(circle at 32% 28%, #cce6ff 0%, #69b1f4 55%, #2879c4 100%);
+    background: radial-gradient(circle at 32% 28%, #cdeaff 0%, #5fb5ec 55%, #2f7fbd 100%);
     border-color: #1d5a8c;
 }
 
@@ -109,7 +109,7 @@
 }
 
 .hotel-alert-toast-message {
-    color: #ffffff;
+    color: #fff;
     font-size: 13px;
     line-height: 16px;
     white-space: pre-line;

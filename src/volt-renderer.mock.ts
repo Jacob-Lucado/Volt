@@ -253,7 +253,6 @@ export class FlatAccessDeniedMessageEvent extends MessageEvent {}
 export class GenericErrorEvent extends MessageEvent {}
 export class GetGuestRoomResultEvent extends MessageEvent {}
 export class ThumbnailStatusMessageEvent extends MessageEvent {}
-export class ChatStyleNotificationMessageEvent extends MessageEvent {}
 export class RoomStreamEndedComposer
 {
     constructor(public roomId: number, public token: number) {}
@@ -261,10 +260,6 @@ export class RoomStreamEndedComposer
     public getMessageArray() { return [ this.roomId, this.token ]; }
 
     public dispose() {}
-}
-export class RecyclerFinishedMessageEvent extends MessageEvent
-{
-    public static FINISHED_OK = 1;
 }
 
 // Shared hooks mounted by the registry subscribe even when their feature is
@@ -289,6 +284,10 @@ export class AchievementEvent extends MessageEvent {}
 export class AchievementsScoreEvent extends MessageEvent {}
 export class WiredEnvironmentEvent extends MessageEvent {}
 export class PurchaseNotAllowedMessageEvent extends MessageEvent {}
+export class ChatStyleNotificationMessageEvent extends MessageEvent {}
+export class RecyclerFinishedMessageEvent extends MessageEvent {
+    public static readonly FINISHED_OK = 1;
+}
 
 export const MessengerMessageType = {
     Habbicon: 4

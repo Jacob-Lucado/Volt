@@ -12,7 +12,7 @@ export const LayoutProgressBar: FC<LayoutProgressBarProps> = (props) => {
 
     const getClassNames = useMemo(() => {
         const newClassNames: string[] = [
-            'border border-[solid] border-[#fff] p-[2px] h-[20px] rounded-[.25rem] overflow-hidden bg-[#3b7bb6]        ',
+            'border border-[solid] border-[#fff] p-[2px] h-[20px] rounded-[.25rem] overflow-hidden bg-[#418db0]        ',
             'text-white'
         ];
 
@@ -29,7 +29,7 @@ export const LayoutProgressBar: FC<LayoutProgressBarProps> = (props) => {
                 </Flex>
             )}
             <Base
-                className="h-full z-10 [transition:all_1s] rounded-[.125rem] bg-[repeating-linear-gradient(#267AC9,#2DABC2_50%,#2B91A7_50%,#2B91A7_100%)]"
+                className="h-full z-10 [transition:all_1s] rounded-[.125rem] bg-[repeating-linear-gradient(#2DABC2,#2DABC2_50%,#2B91A7_50%,#2B91A7_100%)]"
                 style={{ width: ~~(((progress - 0) * (100 - 0)) / (maxProgress - 0) + 0) + '%' }}
             />
             {children}

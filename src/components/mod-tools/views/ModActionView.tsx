@@ -21,7 +21,7 @@ import { Native0Button, Native0Frame, Native0Input } from '../native/NativeWindo
 import { NativeWindowShell } from '../native/NativeWindowShell';
 
 const rectOf = (node: NativeNode) => ({ x: nativeNumber(node, 'x'), y: nativeNumber(node, 'y'), width: nativeNumber(node, 'width'), height: nativeNumber(node, 'height') });
-const FRAME_COLOR = 0x3b7bb6;
+const FRAME_COLOR = 0x418db0;
 const NO_ISSUE_ID = -1;
 enum ActionType {
     ALERT = 1,

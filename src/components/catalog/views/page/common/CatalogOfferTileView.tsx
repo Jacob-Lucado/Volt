@@ -6,8 +6,10 @@ import {
     GetConfigurationValue,
     GetProductIconUrl,
     IPurchasableOffer,
+    IsTouchLayout,
     Offer,
-    ProductTypeEnum
+    ProductTypeEnum,
+    useVoltLayout
 } from '../../../../../api';
 import dealIconNarrow from '../../../../../assets/images/catalog/air/ctlg-pic-deal-icon-narrow.png';
 import {
@@ -26,6 +28,10 @@ const CatalogPriceText: FC<{ text: string }> = ({ text }) => (
     <SubpixelText transparent background={0xd2d1cb} text={text} textStyle="u_bold" />
 );
 
+/** Touch grids draw an icon at 2x when it fits the 64 x 56 icon box, else at 1x. */
+const ICON_2X_MAX_WIDTH = 32;
+const ICON_2X_MAX_HEIGHT = 28;
+
 const HasActivityPointIconStyle = (type: number) => !!ACTIVITY_POINT_ICON_REGIONS[GetActivityPointIconStyle(type, false)];
 
 export interface CatalogOfferTileViewProps extends LayoutGridItemProps {
@@ -34,7 +40,6 @@ export interface CatalogOfferTileViewProps extends LayoutGridItemProps {
     requestOfferToMover?: (offer: IPurchasableOffer) => void;
     bundleCounter?: number;
     readOnly?: boolean;
-    tintColor?: string;
     showPrices?: boolean;
     standardDensity?: boolean;
 }
@@ -54,12 +59,12 @@ export const CatalogOfferTileView: FC<CatalogOfferTileViewProps> = (props) => {
         bundleCounter = 0,
         readOnly = false,
         itemActive = false,
-        tintColor = null,
         showPrices = true,
         standardDensity = false,
         ...rest
     } = props;
     const [isMouseDown, setMouseDown] = useState(false);
+    const isTouch = IsTouchLayout(useVoltLayout());
     const tileRef = useRef<HTMLDivElement>(null);
     const [iconVisible, setIconVisible] = useState(false);
 
@@ -152,9 +157,10 @@ export const CatalogOfferTileView: FC<CatalogOfferTileViewProps> = (props) => {
                 itemCount={showMultiCount ? 1 : count}
                 itemUniqueNumber={product.uniqueLimitedItemSeriesSize}
                 itemUniqueSoldout={!!product.uniqueLimitedItemSeriesSize && !product.uniqueLimitedItemsLeft}
-                onMouseDown={onMouseEvent}
-                onMouseOut={onMouseEvent}
-                onMouseUp={onMouseEvent}
+                onClick={isTouch ? () => selectOffer?.(offer) : undefined}
+                onMouseDown={isTouch ? undefined : onMouseEvent}
+                onMouseOut={isTouch ? undefined : onMouseEvent}
+                onMouseUp={isTouch ? undefined : onMouseEvent}
                 {...rest}
             >
                 {showMultiCount && (
@@ -176,7 +182,11 @@ export const CatalogOfferTileView: FC<CatalogOfferTileViewProps> = (props) => {
                         className="volt-catalog-grid-offer-icon"
                         src={iconUrl}
                         draggable={false}
-                        style={!isBundleOffer && tintColor ? { filter: 'url(#guild-furni-recolor)', transform: 'translateZ(0)' } : undefined}
+                        onLoad={(event) => {
+                            const image = event.currentTarget;
+
+                            image.dataset.fits2x = String(image.naturalWidth <= ICON_2X_MAX_WIDTH && image.naturalHeight <= ICON_2X_MAX_HEIGHT);
+                        }}
                         onError={(event) => {
                             if (offer.pricingModel === Offer.PRICING_MODEL_BUNDLE) return;
 

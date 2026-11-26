@@ -468,8 +468,8 @@ export const TraxEditorWindow: FC<{ isVisible?: boolean; onClose: () => void }> 
                                         onClick={() => openSong(song)}
                                         className="flex cursor-pointer items-center gap-2 rounded-lg border p-2"
                                         style={{
-                                            borderColor: isOpen ? '#295e8f' : 'rgba(0, 0, 0, 0.2)',
-                                            background: isOpen ? 'linear-gradient(#cce6ff, #d0e6fb)' : 'linear-gradient(#ffffff, #ececec)',
+                                            borderColor: isOpen ? '#2e6f8a' : 'rgba(0, 0, 0, 0.2)',
+                                            background: isOpen ? 'linear-gradient(#eaf7fe, #d2ecf9)' : 'linear-gradient(#ffffff, #ececec)',
                                             boxShadow: isOpen ? '0 0 5px rgba(46, 111, 138, 0.55)' : '0 1px 2px rgba(0, 0, 0, 0.15)'
                                         }}
                                     >
@@ -485,7 +485,7 @@ export const TraxEditorWindow: FC<{ isVisible?: boolean; onClose: () => void }> 
                                             <span className="block truncate text-[12px] font-bold" style={{ color: '#222222' }}>{song.name}</span>
                                             <span className="block text-[10px]" style={{ color: 'rgba(0, 0, 0, 0.5)' }}>♪ {formatStamp(song.length)}</span>
                                         </div>
-                                        {isOpen && <span className="shrink-0 text-[12px]" style={{ color: '#295e8f' }}>▶</span>}
+                                        {isOpen && <span className="shrink-0 text-[12px]" style={{ color: '#2e6f8a' }}>▶</span>}
                                     </div>
                                 );
                             })}
@@ -674,7 +674,7 @@ export const TraxEditorWindow: FC<{ isVisible?: boolean; onClose: () => void }> 
                                     </MachineButton>
                                 </Flex>
                                 {/* Timeline */}
-                                <div className="overflow-x-auto rounded border border-black/40 p-2" style={{ background: 'linear-gradient(#212c37, #19232c)', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.5)' }}>
+                                <div className="overflow-x-auto rounded border border-black/40 p-2" style={{ background: 'linear-gradient(#222f36, #1a252b)', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.5)' }}>
                                     <div className="relative" style={{ width: songLength * CELL_WIDTH }}>
                                         <div
                                             ref={playheadRef}
@@ -727,7 +727,7 @@ export const TraxEditorWindow: FC<{ isVisible?: boolean; onClose: () => void }> 
                                                     onClick={(event) => onChannelClick(event, channel)}
                                                     onMouseMove={(event) => onChannelMouseMove(event, channel)}
                                                     onMouseLeave={() => setHoverCell(null)}
-                                                    className="relative h-10 shrink-0 cursor-crosshair rounded bg-[#293b4c]"
+                                                    className="relative h-10 shrink-0 cursor-crosshair rounded bg-[#2b3f4a]"
                                                     style={{
                                                         width: songLength * CELL_WIDTH,
                                                         boxShadow: `inset 3px 0 0 ${CHANNEL_COLORS[channel]}`,

@@ -22,7 +22,7 @@ describe('PurseView.css', () => {
         expect(css).toContain('height: 77px');
         expect(css).toContain('left: 64px');
         expect(css).toContain('left: 174px');
-        expect(css).toContain('#47a6ff');
+        expect(css).toContain('#00c1c4');
         expect(css).not.toContain('--habbo-skin-shiny');
         expect(css).not.toContain('.volt-purse::before');
         expect(css).toMatch(/\.volt-purse__col--actions\s*\{[^}]*gap:\s*2px;/s);

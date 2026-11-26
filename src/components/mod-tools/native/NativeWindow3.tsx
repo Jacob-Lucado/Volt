@@ -12,7 +12,7 @@ import { multiplyColorChannel, NativeSkinView } from './NativeSkinView';
 // Window-manager style 3 (the Ubuntu skin): frame_3 coloured 0xff418db0, close button, shiny thick button, Ubuntu text styles.
 const SKINS = { frame: parseNativeSkin(frameXml), close: parseNativeSkin(closeXml), thick: parseNativeSkin(thickXml) };
 
-export const FRAME3_COLOR = 0x3b7bb6;
+export const FRAME3_COLOR = 0x418db0;
 /** The title bar pixel of the frame_3 skin before the frame colour is applied. */
 const FRAME3_TITLE_SKIN = 0xd7dbdc;
 
@@ -26,7 +26,7 @@ interface Native3FrameProps {
     height: number;
     title: string;
     onClose: () => void;
-    /** The frame's window colour (0x3b7bb6 unless the layout sets its own). */
+    /** The frame's window colour (0x418db0 unless the layout sets its own). */
     color?: number;
     /** The client area origin: the frame margins (6, 25) unless the layout sets its own margin variables. */
     clientX?: number;
@@ -34,7 +34,7 @@ interface Native3FrameProps {
     children?: ReactNode;
 }
 
-/** Frame style 3: the 9-slice frame_3 skin, a 19x20 close button at (width - 29, 8) and the content area at the frame margins (6, 25). */
+/** Frame style 3: the 9-slice frame_3 skin, a 19x20 close button at (width - 28, 8) and the content area at the frame margins (6, 25). */
 export const Native3Frame: FC<Native3FrameProps> = ({ width, height, title, onClose, color = FRAME3_COLOR, clientX = 6, clientY = 25, children }) => {
     const [closeState, setCloseState] = useState<'default' | 'hovering' | 'pressed'>('default');
     const titleColor = multiply(FRAME3_TITLE_SKIN, color);
@@ -49,7 +49,7 @@ export const Native3Frame: FC<Native3FrameProps> = ({ width, height, title, onCl
                 aria-label="Close"
                 className="native3-close"
                 role="button"
-                style={rect(width - 29, 8, 19, 20)}
+                style={rect(width - 28, 8, 19, 20)}
                 onClick={onClose}
                 onPointerDown={() => setCloseState('pressed')}
                 onPointerEnter={() => setCloseState('hovering')}

@@ -2,11 +2,11 @@
     --inv-surface: #e9e9e1;
     --inv-beige: #dfdfdf;
     --inv-line: #6b6f73;
-    --inv-accent: #3b7bb6;
+    --inv-accent: #418db0;
     --inv-empty-title: #dd0000;
     --inv-place: #ececec;
     --inv-sell: #d13e31;
-    --inv-border: #0e1923;
+    --inv-border: #0f1b22;
 
     position: relative;
     box-sizing: border-box !important;
@@ -30,7 +30,7 @@
 
 .volt-inventory-window :where(.bg-card-grid-item, .bg-white, .bg-light, .bg-muted) {
     background-color: var(--inv-beige) !important;
-    color: #111111 !important;
+    color: #111 !important;
 }
 
 .volt-inventory-window :where(.border-card-grid-item-border, .border-muted, .border-gray-400) {
@@ -38,7 +38,7 @@
 }
 
 .volt-inventory-window .bg-card-grid-item-active {
-    background-color: #ffffff !important;
+    background-color: #fff !important;
 }
 
 .volt-inventory-window .border-card-grid-item-active {
@@ -119,7 +119,7 @@
 
 .volt-inventory-window :where(.bg-card-grid-item, .bg-white, .bg-light, .bg-muted) {
     background-color: #ececec !important;
-    color: #111111 !important;
+    color: #111 !important;
 }
 
 .volt-inventory-window :where(.border-card-grid-item-border, .border-muted, .border-gray-400) {
@@ -127,11 +127,11 @@
 }
 
 .volt-inventory-window .bg-card-grid-item-active {
-    background-color: #c4dff9 !important;
+    background-color: #c6e2f7 !important;
 }
 
 .volt-inventory-window .border-card-grid-item-active {
-    border-color: #295e8f !important;
+    border-color: #2e6f8a !important;
     box-shadow: none !important;
 }
 
@@ -178,7 +178,7 @@
 }
 
 .volt-inventory-empty-desc {
-    color: #111111;
+    color: #111;
     font-size: 11px;
     line-height: 14px;
 }
@@ -304,7 +304,7 @@
     border-image-width: 5px !important;
     border-image-repeat: stretch !important;
     background: transparent !important;
-    color: #111111 !important;
+    color: #111 !important;
     font-weight: 700 !important;
     line-height: 11px !important;
     text-align: center !important;
@@ -390,8 +390,8 @@
 
 .volt-inventory-thumb > .bg-red-700 {
     background: white;
-    border: 1px solid #2b5a86;
-    color: #2b5a86;
+    border: 1px solid #2f6982;
+    color: #2f6982;
     border-radius: 0;
 }
 
@@ -527,7 +527,7 @@
     padding: 0;
     border: 0;
     background: transparent;
-    color: #ffffff;
+    color: #fff;
     cursor: pointer;
     isolation: isolate;
 }
@@ -546,7 +546,7 @@
 
 .volt-inventory-preview-delete:hover::before { border-image-source: var(--habbo-skin-shiny-red-hover); }
 .volt-inventory-preview-delete:active::before { border-image-source: var(--habbo-skin-shiny-red-pressed); }
-.volt-inventory-preview-delete:focus-visible { outline: 1px dotted #ffffff; outline-offset: -4px; }
+.volt-inventory-preview-delete:focus-visible { outline: 1px dotted #fff; outline-offset: -4px; }
 .volt-inventory-preview-delete svg { width: 8px; height: 9px; }
 
 .volt-inventory-tabs-shell::after {
@@ -556,7 +556,7 @@
     right: 0;
     top: 30px;
     height: 2px;
-    background: linear-gradient(#000000 0 1px, #ffffff 1px 2px);
+    background: linear-gradient(#000 0 1px, #fff 1px 2px);
     pointer-events: none;
 }
 
@@ -570,8 +570,8 @@
     font-size: 12px;
     line-height: 14px;
     font-weight: normal;
-    color: #000000;
-    text-shadow: 0 0 2px #ffffff, 0 0 2px #ffffff, 0 0 2px #ffffff;
+    color: #000;
+    text-shadow: 0 0 2px #fff, 0 0 2px #fff, 0 0 2px #fff;
 }
 .volt-inventory-furni-status-count.is-trade-count { left: 33px; }
 .volt-inventory-furni-status-count.is-recycle-count { left: 18px; }
@@ -674,17 +674,17 @@
 .volt-inventory-window .volt-inventory-btn-rent {
     border: 2px solid var(--inv-border) !important;
     border-radius: 4px;
-    color: #ffffff !important;
+    color: #fff !important;
     font-weight: 700;
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
     background: var(--inv-blue) !important;
-    box-shadow: inset -2px -2px 0 #265b8d, inset 2px 2px 0 #7baddc;
+    box-shadow: inset -2px -2px 0 #2b6a88, inset 2px 2px 0 #7fbcd8;
 }
 
 
 .volt-inventory-window .volt-inventory-btn-goto:hover,
 .volt-inventory-window .volt-inventory-btn-rent:hover {
-    background: #498bc8 !important;
+    background: #4f9dc2 !important;
 }
 
 
@@ -696,10 +696,10 @@
         align-items: center;
         gap: 5px;
         padding: 4px 8px;
-        border: 1px solid #555555;
+        border: 1px solid #555;
         border-radius: 5px;
         background: rgba(0, 0, 0, 0.7);
-        color: #ffffff;
+        color: #fff;
         font-size: 10px;
         font-weight: 700;
         cursor: pointer;
@@ -749,7 +749,7 @@
     flex: 0 0 auto;
 }
 
-/* v75 client area: #eceae0 under the tab line, from x=6 to x=484 and down to 7px above the frame bottom. */
+/* v75 client area: #ECEAE0 under the tab line, from x=6 to x=484 and down to 7px above the frame bottom. */
 .volt-inventory-window .volt-inventory-body {
     margin-top: -3px;
     margin-bottom: 2px;
@@ -779,7 +779,7 @@
     width: 39px !important;
 }
 
-/* inventory_thumb number_container: 15px tall plate with a #2b5a86 frame on three sides, anchored 2px from the
+/* inventory_thumb number_container: 15px tall plate with a #2f6982 frame on three sides, anchored 2px from the
    thumb's right edge and growing leftwards, Volter digits. */
 .volt-inventory-window .volt-inventory-thumb > .bg-red-700 {
     top: 3px;
@@ -788,11 +788,11 @@
     min-width: 11px;
     height: 15px;
     padding: 3px 2px 0 3px;
-    border: 1px solid #2b5a86;
+    border: 1px solid #2f6982;
     border-right: 0;
     border-radius: 0;
-    background: #ffffff;
-    color: #2b5a86;
+    background: #fff;
+    color: #2f6982;
     font: 9px/7px Volter, sans-serif;
     text-align: left;
 }
@@ -804,7 +804,7 @@
 /* tradeable_number / recyclable_number: 1px hard white outline instead of a blurred glow, sitting 2px lower and right. */
 .volt-inventory-furni-status-count {
     top: 3px;
-    text-shadow: -1px -1px 0 #ffffff, 0 -1px 0 #ffffff, 1px -1px 0 #ffffff, -1px 0 0 #ffffff, 1px 0 0 #ffffff, -1px 1px 0 #ffffff, 0 1px 0 #ffffff, 1px 1px 0 #ffffff;
+    text-shadow: -1px -1px 0 #fff, 0 -1px 0 #fff, 1px -1px 0 #fff, -1px 0 0 #fff, 1px 0 0 #fff, -1px 1px 0 #fff, 0 1px 0 #fff, 1px 1px 0 #fff;
 }
 
 .volt-inventory-furni-status-count.is-trade-count {

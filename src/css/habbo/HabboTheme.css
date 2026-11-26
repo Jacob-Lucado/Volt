@@ -1,14 +1,14 @@
 /**
  * Official Habbo Ubuntu palette (Habbo Air deobfuscated).
- * Frame #3b7bb6, catalog header #0b3155 / #345778, content #dfdfdf / #ecece4.
+ * Frame #418DB0, catalog header #0E3F52 / #376275, content #DFDFDF / #ECECE4.
  */
 :root {
-    --habbo-blue: #3b7bb6;
-    --habbo-blue-light: #6395c3;
-    --habbo-blue-highlight: #5691c9;
-    --habbo-blue-dark: #295e8f;
-    --habbo-blue-header: #0b3155;
-    --habbo-blue-header-border: #345778;
+    --habbo-blue: #418db0;
+    --habbo-blue-light: #67a3bf;
+    --habbo-blue-highlight: #5ba4c4;
+    --habbo-blue-dark: #2e6f8a;
+    --habbo-blue-header: #0e3f52;
+    --habbo-blue-header-border: #376275;
     --habbo-frame-border: #283f5d;
     --habbo-surface: #dfdfdf;
     --habbo-surface-warm: #ecece4;
@@ -17,8 +17,8 @@
     --habbo-tab-active: #dfdfdf;
     --habbo-grid: #cdd3d9;
     --habbo-grid-active: #ececec;
-    --habbo-select: #5ca8f0;
-    --habbo-select-outer: #7db9f2;
+    --habbo-select: #63c5e9;
+    --habbo-select-outer: #82d1ed;
     --habbo-close: #921911;
     --habbo-close-hover: #b9322a;
     --habbo-toolbar: #555555;
@@ -42,13 +42,13 @@
     --habbo-purse-divider: #444444;
     --habbo-purse-hc-border: rgba(59, 57, 51, 0.8);
     --habbo-purse-credit: #d5af22;
-    --habbo-purse-diamond: #73b7f8;
+    --habbo-purse-diamond: #38caeb;
     --habbo-purse-ducket: #d787d7;
-    --habbo-purse-help: #1a6ebc;
+    --habbo-purse-help: #217bb5;
     --habbo-purse-settings: #726b86;
     --habbo-purse-hc: #3b9333;
     --habbo-purse-hc-dark: #2d7228;
-    --habbo-purse-hc-text: #47a6ff;
+    --habbo-purse-hc-text: #00c1c4;
     --habbo-purse-width: 230px;
     --habbo-purse-height: 77px;
 }
@@ -164,7 +164,7 @@
     cursor: not-allowed;
 }
 
-/* AIR has no dedicated red button style; Volt danger uses shiny × purse logout #de5347. */
+/* AIR has no dedicated red button style; Volt danger uses shiny × purse logout #DE5347. */
 .habbo-btn-danger {
     display: inline-flex;
     align-items: center;
@@ -323,7 +323,7 @@ input[type='radio']:checked,
 
 input[type='checkbox']:focus-visible,
 input[type='radio']:focus-visible {
-    outline: 1px solid #4778a5;
+    outline: 1px solid #4b7ea1;
     outline-offset: 1px;
 }
 

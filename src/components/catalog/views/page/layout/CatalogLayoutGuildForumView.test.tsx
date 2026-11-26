@@ -12,7 +12,8 @@ vi.mock('../../../../../api', () => ({
 vi.mock('../../../../../common', () => ({
     Column: ({ alignItems: _alignItems, children, overflow: _overflow, size: _size, ...props }: any) => <div {...props}>{children}</div>,
     Flex: ({ alignItems: _alignItems, children, gap: _gap, ...props }: any) => <div {...props}>{children}</div>,
-    Grid: ({ children, overflow: _overflow, ...props }: any) => <div {...props}>{children}</div>
+    Grid: ({ children, overflow: _overflow, ...props }: any) => <div {...props}>{children}</div>,
+    LayoutActivityPointIcon: () => <span />
 }));
 
 vi.mock('../../../../../common/layout/LayoutImage', () => ({ LayoutImage: () => null }));
@@ -33,7 +34,7 @@ vi.mock('../widgets/CatalogPurchaseWidgetView', () => ({
         </button>
     )
 }));
-vi.mock('../widgets/CatalogTotalPriceWidget', () => ({ CatalogTotalPriceWidget: () => <div data-testid="price" /> }));
+vi.mock('../widgets/CatalogTotalPriceWidget', () => ({ CatalogTotalPriceWidget: () => null }));
 
 const page = {
     localization: {
@@ -92,18 +93,5 @@ describe('guild forum page', () => {
 
         expect(screen.queryByRole('button', { name: 'purchase' })).not.toBeInTheDocument();
         expect(screen.queryByText('catalog.alert.group_has_forum')).not.toBeInTheDocument();
-    });
-
-    it('hides the price while the player is in no group', () => {
-        vi.mocked(useUserGroups).mockReturnValue({ data: [] } as any);
-        renderView();
-
-        expect(screen.queryByTestId('price')).not.toBeInTheDocument();
-    });
-
-    it('shows the price once the player is in a group', () => {
-        renderView();
-
-        expect(screen.getByTestId('price')).toBeInTheDocument();
     });
 });

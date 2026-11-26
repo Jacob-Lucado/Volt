@@ -44,11 +44,11 @@ export const WiredLinkView: FC<{}> = () => {
     };
     return (
         <VoltCardView frameStyle={3} nativeShadow resizeAxis="vertical" className="volt-wired-link-air volt-wired-link-air--owner" role="dialog" aria-label={title}>
-            <VoltCardHeaderView headerText="" onCloseClick={closeWiredLink}><NativeText text={title} textStyle="u_frame_title" background={0x31689c} overrides={{ color: 0xffffff }} /></VoltCardHeaderView>
+            <VoltCardHeaderView headerText="" onCloseClick={closeWiredLink}><NativeText text={title} textStyle="u_frame_title" background={0x367897} overrides={{ color: 0xffffff }} /></VoltCardHeaderView>
             <div className="volt-wired-link-air__client">
-                <WiredLinkBorder kind="input" color={0xdbe4ed} className="volt-wired-link-air__summary">
-                    <span className="volt-wired-link-air__selected"><WiredLinkText text={selectionLine} bold size={13} color={0x25496b} background={0xdbe4ed} /></span>
-                    <WiredLinkAction text={localizeWithFallback('wiredlink.clear', 'Clear connection')} className="volt-wired-link-air__clear" color={0x335473} background={0xdbe4ed} onClick={clearWiredLinkConnection} />
+                <WiredLinkBorder kind="input" color={0xdce8ec} className="volt-wired-link-air__summary">
+                    <span className="volt-wired-link-air__selected"><WiredLinkText text={selectionLine} bold size={13} color={0x285568} background={0xdce8ec} /></span>
+                    <WiredLinkAction text={localizeWithFallback('wiredlink.clear', 'Clear connection')} className="volt-wired-link-air__clear" color={0x365f70} background={0xdce8ec} onClick={clearWiredLinkConnection} />
                 </WiredLinkBorder>
                 <div className="volt-wired-link-air__networks">
                     <WiredLinkText text={localizeWithFallback('wiredlink.networks.title', 'My networks:')} size={14} bold />

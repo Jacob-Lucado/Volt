@@ -104,6 +104,7 @@ const renderThread = (rights: Partial<{ canModerate: boolean; isStaff: boolean }
             groupId={7}
             initialPageIndex={0}
             initialThread={{ threadId: 3, header: 'Subject', totalMessages: 3, isLocked: false } as any}
+            getLastReadMessageIndex={() => Number.POSITIVE_INFINITY}
             scrollIndex={0}
             threadId={3}
             onBack={vi.fn()}

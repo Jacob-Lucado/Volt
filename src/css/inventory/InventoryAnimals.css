@@ -117,7 +117,7 @@
     width: 32px;
     height: 9px;
     background: url('@/assets/images/inventory/pet-level-plate.png') no-repeat;
-    color: #000000;
+    color: #000;
     font: 9px/9px Volter, sans-serif;
     text-align: center;
     z-index: 2;

@@ -8,7 +8,7 @@
     min-height: var(--vault-height);
     max-height: var(--vault-height);
     padding: 0 !important;
-    color: #000000;
+    color: #000;
     font-family: Ubuntu, sans-serif;
     font-size: 12px;
     line-height: 1;

@@ -14,7 +14,7 @@ import { Native3Frame, Native3ThickButton } from '../../../mod-tools/native/Nati
 const NAME_MAX_LENGTH = 15;
 // The small layout's texts set their font in the layout instead of a text style, so Flash keeps its default sharpness and thickness.
 const FLASH_DEFAULT_RENDERING = { sharpness: 0, thickness: 0 };
-const HEADER_BODY_COLOR = 0x0b3155;
+const HEADER_BODY_COLOR = 0x0e3f52;
 const FRAME3_BODY_COLOR = 0xe9e9e1;
 
 const rect = (x: number, y: number, width?: number, height?: number): CSSProperties => ({ position: 'absolute', left: x, top: y, width, height });
@@ -112,11 +112,11 @@ const PetPackageFigureView: FC<PetPackageLayoutProps & { figure: PetFigureData }
     </Native0Frame>
 );
 
-/** AIR layout `petpackage_new` (475x250, frame style 3 in 0x6395c3 with 33px top margin): shown when the package sends no figure. */
+/** AIR layout `petpackage_new` (475x250, frame style 3 in 0x67a3bf with 33px top margin): shown when the package sends no figure. */
 const PetPackageBoxView: FC<PetPackageLayoutProps> = ({ petName, onChangePetName, onConfirm, onClose }) => (
-    <Native3Frame clientX={0} clientY={33} color={0x6395c3} height={250} title={LocalizeText('widgets.petpackage.name.title')} width={475} onClose={onClose}>
-        <div style={{ ...rect(1, 0, 473, 100), backgroundColor: '#345778' }}>
-            <div style={{ ...rect(2, 2, 469, 95), backgroundColor: '#0b3155' }} />
+    <Native3Frame clientX={0} clientY={33} color={0x67a3bf} height={250} title={LocalizeText('widgets.petpackage.name.title')} width={475} onClose={onClose}>
+        <div style={{ ...rect(1, 0, 473, 100), backgroundColor: '#376275' }}>
+            <div style={{ ...rect(2, 2, 469, 95), backgroundColor: '#0e3f52' }} />
             <CentredBox height={93} width={85} x={3} y={5}>
                 <img
                     alt=""

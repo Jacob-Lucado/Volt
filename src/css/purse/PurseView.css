@@ -126,7 +126,7 @@
 }
 
 .volt-purse .volt-purse-button.currency-5 .volt-purse-button__amount {
-    color: #73b7f8 !important;
+    color: #38caeb !important;
 }
 
 .volt-purse .volt-purse-button .volt-currency-icon,
@@ -174,7 +174,7 @@
     border: 0;
     border-radius: 0;
     background: transparent;
-    color: #47a6ff;
+    color: #00c1c4;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 12px;
     font-weight: 700;
@@ -509,7 +509,7 @@
     width: 29px;
     height: 29px;
     isolation: isolate;
-    background: var(--seasonal-badge, #74b4ef);
+    background: var(--seasonal-badge, #7adde9);
     -webkit-mask-box-image-source: url("../../assets/images/habbo-skin/slices/border-6-79756e.png");
     -webkit-mask-box-image-slice: 6 fill;
     -webkit-mask-box-image-width: 6px;
@@ -557,7 +557,7 @@
     padding: 6px 6px 7px 4px;
     overflow: hidden;
     isolation: isolate;
-    background: var(--seasonal-badge, #74b4ef);
+    background: var(--seasonal-badge, #7adde9);
     -webkit-mask-box-image-source: url("../../assets/images/habbo-skin/slices/border-6-79756e.png");
     -webkit-mask-box-image-slice: 6 fill;
     -webkit-mask-box-image-width: 6px;

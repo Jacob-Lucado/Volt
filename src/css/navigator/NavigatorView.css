@@ -1,9 +1,9 @@
 .volt-navigator-air {
     --navigator-air-orange: #fba800;
-    --navigator-air-row: #cce6ff;
+    --navigator-air-row: #d6eeff;
     --navigator-air-row-alt: #ffffff;
     --navigator-air-surface: #eceae0;
-    --navigator-air-name: #0a4780;
+    --navigator-air-name: #0f557b;
     position: relative;
     box-sizing: border-box;
     width: 425px;
@@ -69,7 +69,7 @@
     position: absolute;
     inset: -29px -7px auto;
     height: 28px;
-    background: #32699d;
+    background: #377998;
 }
 
 .volt-navigator-air__skin::after {
@@ -228,7 +228,7 @@
     background-position: left top, right top, 9px top !important;
     background-size: 9px 32px, 9px 32px, calc(100% - 18px) 32px !important;
     box-shadow: none !important;
-    color: #111111 !important;
+    color: #111 !important;
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
     font-size: 12px;
     font-weight: 400;
@@ -379,7 +379,7 @@
         3px 1px,
         5px 1px
     );
-    background: #ffffff;
+    background: #fff;
 }
 
 .volt-navigator-search-saves-result {
@@ -391,7 +391,7 @@
     height: 100%;
     flex-direction: column;
     overflow: hidden;
-    background: #ffffff;
+    background: #fff;
 }
 
 .volt-navigator-search-saves-result__header {
@@ -420,7 +420,7 @@
     left: 20px;
     right: 3px;
     overflow: hidden;
-    color: #ffffff;
+    color: #fff;
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
     font-size: 12px;
     font-weight: 700;
@@ -439,7 +439,7 @@
     min-height: 0;
     overflow-x: hidden;
     overflow-y: auto;
-    background: #ffffff;
+    background: #fff;
 }
 
 .saved-search-row {
@@ -472,7 +472,7 @@
 .saved-search-row__label {
     display: block;
     overflow: hidden;
-    color: #000000;
+    color: #000;
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
     font-size: 12px;
     line-height: 17px;
@@ -578,7 +578,7 @@
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-    color: #000000;
+    color: #000;
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
     font-size: 12px;
     font-style: normal;
@@ -674,7 +674,7 @@
 .volt-navigator-air__empty {
     width: 286px;
     margin: 0 0 0 51px;
-    color: #111111;
+    color: #111;
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
     font-size: 16px;
     font-weight: 700;
@@ -704,7 +704,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 14px 0 0;
-    background: #ffffff;
+    background: #fff;
 }
 
 .volt-navigator-air__category-toggle {
@@ -853,7 +853,7 @@
         1px 1px,
         2px 1px
     );
-    color: #ffffff !important;
+    color: #fff !important;
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
     font-size: 12px !important;
     font-weight: 700 !important;
@@ -872,7 +872,7 @@
 }
 
 .volt-navigator-air__usercount span {
-    color: #ffffff !important;
+    color: #fff !important;
     font-size: 12px !important;
     font-weight: 700 !important;
     line-height: 14px !important;
@@ -1033,7 +1033,7 @@
     width: 106px !important;
     height: 106px !important;
     border: 0 !important;
-    box-shadow: -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 2px 0 #000000, 1px 2px 0 #000000;
+    box-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 2px 0 #000, 1px 2px 0 #000;
     border-radius: 0 !important;
     background-color: #c4c4bc;
     background-image: url("@/assets/images/navigator/air/default-room.png");
@@ -1136,7 +1136,7 @@
     padding: 15px 15px 4px 14px;
     border: 0;
     background: transparent;
-    color: #000000;
+    color: #000;
     font: 400 12px/14px HabboAirUbuntu, Ubuntu, sans-serif;
     font-kerning: normal;
     image-rendering: pixelated;
@@ -1186,9 +1186,9 @@
     width: 112px !important;
     height: 112px !important;
     overflow: hidden;
-    border: 1px solid #000000 !important;
+    border: 1px solid #000 !important;
     border-radius: 0 !important;
-    background: #000000 url("@/assets/images/navigator/air/default-room.png") center no-repeat !important;
+    background: #000 url("@/assets/images/navigator/air/default-room.png") center no-repeat !important;
 }
 .volt-navigator-air__room-badge { position: absolute !important; top: 1px; left: 1px; z-index: 2; width: 48px !important; height: 48px !important; }
 .volt-navigator-air__room-popover-copy { position: relative; width: 219px; height: 112px; }
@@ -1240,13 +1240,13 @@
 .volt-navigator-air__room-popover-bottom.is-empty { height: 11px; }
 .volt-navigator-air__room-popover-tag-group { position: relative; width: 345px; height: 23px; }
 .volt-navigator-air__room-popover-tags { display: flex; width: 200px; height: 20px; gap: 2px; overflow: hidden; }
-.volt-navigator-air__room-bubble .volt-navigator-air__tag { flex: none; box-sizing: border-box; height: 19px; padding: 4px 4px 0 5px; background: #f1a700; color: #ffffff; font: 400 10px/12px HabboAirUbuntu, Ubuntu, sans-serif; white-space: nowrap; }
+.volt-navigator-air__room-bubble .volt-navigator-air__tag { flex: none; box-sizing: border-box; height: 19px; padding: 4px 4px 0 5px; background: #f1a700; color: #fff; font: 400 10px/12px HabboAirUbuntu, Ubuntu, sans-serif; white-space: nowrap; }
 .volt-navigator-air__room-popover-event { position: relative; width: 331px; height: 55px; margin-left: 7px; opacity: 0.7; }
 .volt-navigator-air__room-popover-event-skin { position: absolute; inset: 0; }
 .volt-navigator-air__room-popover-event-icon { position: absolute; top: 9px; left: 6px; width: 42px; height: 40px; background: url("@/assets/images/navigator/air/event-icon.png") center no-repeat; image-rendering: pixelated; }
 .volt-navigator-air__room-popover-event-copy { position: absolute; inset: 0; }
 .volt-navigator-air__room-popover-event-name,
-.volt-navigator-air__room-popover-event-description { position: absolute; left: 54px; box-sizing: border-box; width: 275px; padding: 2px; overflow: hidden; color: #ffffff !important; }
+.volt-navigator-air__room-popover-event-description { position: absolute; left: 54px; box-sizing: border-box; width: 275px; padding: 2px; overflow: hidden; color: #fff !important; }
 .volt-navigator-air__room-popover-event-name { top: 3px; height: 16px; font-weight: 700 !important; white-space: nowrap; }
 .volt-navigator-air__room-popover-event-description { top: 19px; height: 36px; white-space: pre-wrap; overflow-wrap: break-word; }
 

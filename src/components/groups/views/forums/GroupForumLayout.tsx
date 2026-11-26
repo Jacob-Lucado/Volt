@@ -1,8 +1,10 @@
 import { CSSProperties, FC, ReactNode } from 'react';
+import { useTextWindowWidths } from '../../../../common/native-text/useTextWindowWidths';
 import { FriendlyTime, LocalizeText } from '../../../../api';
 import settingsIcon from '../../../../assets/images/groups/native/pursearea_settings_icon.png';
 import { MessageData } from '@volt/renderer';
 import { LayoutBadgeImageView, VoltCardHeaderView, VoltCardView } from '../../../../common';
+import { SubpixelText } from '../../../../common/native-text/SubpixelText';
 import { flatText, GroupText, GroupWindowTitle } from '../GroupNativeLayout';
 
 export const FORUM_PAGE_SIZE = 20;
@@ -12,7 +14,7 @@ export const stripTags = (text: string) => text.replace(/<[^>]*>/g, '').replace(
 
 // The surface of the forum windows and the dark teal header band (HabboFriendBarCom groupforum_*).
 export const FORUM_SURFACE = 0xe9e9e1;
-export const FORUM_HEADER = 0x0b3155;
+export const FORUM_HEADER = 0x0e3f52;
 
 /** GroupForumView.getAsDaysHoursMinutes: FriendlyTime with the ".ago" texts and a threshold of 1, so a unit rolls over as soon as the next bigger one is exceeded ("90 seconds" is "2 minutes ago"). */
 export const forumAge = (seconds: number): string => FriendlyTime.format(seconds, '.ago', 1);
@@ -50,7 +52,7 @@ export const forumQuote = (message: MessageData): string =>
 };
 
 interface ForumFrameProps {
-    uniqueKey: string;
+    uniqueKey?: string;
     className: string;
     title: string;
     width: number;
@@ -58,6 +60,7 @@ interface ForumFrameProps {
     minWidth?: number;
     minHeight?: number;
     isResizable?: boolean;
+    resizeAxis?: 'both' | 'vertical';
     initialPosition?: { x: number; y: number };
     onClose: () => void;
     onHelp?: () => void;
@@ -65,13 +68,28 @@ interface ForumFrameProps {
 }
 
 /** A group forum window: frame 3 with the help and close buttons, its client origin 6px right of and 25px below the frame corner. */
-export const ForumFrame: FC<ForumFrameProps> = ({ uniqueKey, className, title, width, height, minWidth = width, minHeight = height, isResizable = false, initialPosition, onClose, onHelp, children }) => (
+export const ForumFrame: FC<ForumFrameProps> = ({
+    uniqueKey,
+    className,
+    title,
+    width,
+    height,
+    minWidth = width,
+    minHeight = height,
+    isResizable = false,
+    resizeAxis = 'both',
+    initialPosition,
+    onClose,
+    onHelp,
+    children
+}) => (
     <VoltCardView
         aria-label={title}
         className={`volt-forum ${className}`}
         frameStyle={3}
         initialPosition={initialPosition}
         isResizable={isResizable}
+        resizeAxis={resizeAxis}
         role="dialog"
         style={{ '--forum-width': width + 'px', '--forum-height': height + 'px', '--forum-min-width': minWidth + 'px', '--forum-min-height': minHeight + 'px' } as CSSProperties}
         uniqueKey={uniqueKey}
@@ -113,7 +131,8 @@ export const ForumHeader: FC<ForumHeaderProps> = ({ title, description, badge, i
         {canChangeSettings && (
             <button className="volt-forum__settings" type="button" onClick={onSettings}>
                 <img alt="" draggable={false} src={settingsIcon} />
-                <GroupText background={0x000000} overrides={flatText(11, { bold: true, color: 0xffffff, thickness: 15 })} text={LocalizeText('groupforum.view.settings.header')} x={17} y={1} />
+                {/* u_bold at size 11 with bold off and thickness 15. */}
+                <GroupText background={0x000000} className="is-static" overrides={{ size: 11, bold: false, color: 0xffffff, thickness: 15 }} text={LocalizeText('groupforum.view.settings.header')} textStyle="u_bold" x={17} y={1} />
             </button>
         )}
     </div>
@@ -130,19 +149,28 @@ export const ForumShortcuts: FC<ForumShortcutsProps> = ({ unreadCount = 0, onOpe
     const strip = (key: string) => stripTags(LocalizeText(key));
     const mine = unreadCount > 0 ? stripTags(LocalizeText('groupforum.view.shortcuts.my.unread', ['UNREAD_COUNT'], [String(unreadCount)])) : strip('groupforum.view.shortcuts.my');
 
+    const header = LocalizeText('groupforum.view.shortcuts.header');
+    const active = strip('groupforum.view.shortcuts.active');
+    const popular = strip('groupforum.view.shortcuts.popular');
+    const widths = useTextWindowWidths([header, mine, active, popular].map((text, index) => ({
+        text,
+        textStyle: 'u_regular',
+        overrides: { size: 11, bold: index === 0 }
+    })));
+
     return (
-        <div className="volt-forum__shortcuts">
-            <GroupText background={0xffffff} className="is-static" overrides={flatText(11, { bold: true })} text={LocalizeText('groupforum.view.shortcuts.header')} x={0} y={0} />
+        <div className="volt-forum__shortcuts" style={{ gridTemplateColumns: widths?.map((width) => `${width}px`).join(' ') }}>
+            <GroupText background={0xffffff} className="is-static" overrides={{ size: 11, bold: true }} text={header} x={0} y={0} />
             <ForumShortcutLink text={mine} onClick={() => onOpenList('my')} />
-            <ForumShortcutLink text={strip('groupforum.view.shortcuts.active')} onClick={() => onOpenList('active')} />
-            <ForumShortcutLink text={strip('groupforum.view.shortcuts.popular')} onClick={() => onOpenList('popular')} />
+            <ForumShortcutLink text={active} onClick={() => onOpenList('active')} />
+            <ForumShortcutLink text={popular} onClick={() => onOpenList('popular')} />
         </div>
     );
 };
 
 const ForumShortcutLink: FC<{ text: string; onClick: () => void }> = ({ text, onClick }) => (
     <button className="volt-forum__shortcut" type="button" onClick={onClick}>
-        <GroupText background={0xffffff} className="is-static" overrides={flatText(11, { color: 0x1466b2, underline: true })} text={text} x={0} y={0} />
+        <GroupText background={0xffffff} className="is-static" overrides={{ size: 11, color: 0x1b79ab, underline: true }} text={text} x={0} y={0} />
     </button>
 );
 
@@ -159,7 +187,7 @@ interface ForumButtonProps {
     onClick: () => void;
 }
 
-/** container_button: shiny thick skin tinted 0xdddddd (grey) or 0x1b90fe (blue). */
+/** container_button: shiny thick skin tinted 0xdddddd (grey) or 0x0a9bc5 (blue). */
 export const ForumButton: FC<ForumButtonProps> = ({ label, x, right, y = 0, width, height = 30, tint = 'grey', disabled = false, onClick }) => (
     <button className={`volt-forum__button is-${tint}`} disabled={disabled} style={{ left: right === undefined ? x : undefined, right, top: y, width, height }} type="button" onClick={onClick}>
         <GroupText
@@ -203,7 +231,16 @@ export const ForumPager: FC<ForumPagerProps> = ({ pageIndex, pageCount, onPage }
                     <GroupText blend="multiply" className="is-static" text={label} textStyle="u_bold" x={0} y={0} />
                 </button>
             ))}
-            <GroupText align="center" background={FORUM_SURFACE} overrides={flatText(12, { color: 0x949491 })} text={`${pageIndex + 1} / ${pageCount}`} width={50} x={58} y={5} />
+            {/* page_info: an auto size "center" text window, which AIR draws in sub-pixel mode. */}
+            <SubpixelText
+                align="field"
+                background={FORUM_SURFACE}
+                color={0x949491}
+                style={{ position: 'absolute', left: 58, top: 5 }}
+                text={`${pageIndex + 1} / ${pageCount}`}
+                textStyle="u_regular"
+                width={50}
+            />
         </div>
     );
 };

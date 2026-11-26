@@ -29,7 +29,7 @@
     font-family: Ubuntu, sans-serif;
     font-size: 10px;
     line-height: 12px;
-    color: #000000;
+    color: #000;
 
     > * {
         position: absolute;
@@ -63,8 +63,8 @@
         box-sizing: border-box;
         width: 29px;
         height: 27px;
-        border-top: 1px solid #999999;
-        border-left: 1px solid #999999;
+        border-top: 1px solid #999;
+        border-left: 1px solid #999;
     }
 
     .volt-toner__label {
@@ -129,7 +129,7 @@
     box-sizing: border-box;
     width: 274px;
     height: 222px;
-    color: #000000;
+    color: #000;
     font-family: Volter, monospace;
     font-size: 9px;
     line-height: 10px;
@@ -184,13 +184,13 @@
         box-sizing: border-box;
         height: 15px;
         padding-top: 1px;
-        background: #3b7bb6;
-        box-shadow: -11px 0 0 #3b7bb6, 9px 0 0 #3b7bb6;
+        background: #418db0;
+        box-shadow: -11px 0 0 #418db0, 9px 0 0 #418db0;
     }
 }
 
 .volt-dimmer__title-text {
-    color: #ffffff;
+    color: #fff;
     filter: var(--volt-native-text-halo);
 }
 
@@ -200,7 +200,7 @@
     left: 250px;
     width: 15px;
     height: 15px;
-    background: #3b7bb6 url('@/assets/images/room-widgets/dimmer-widget/close.png') 1px 0 no-repeat !important;
+    background: #418db0 url('@/assets/images/room-widgets/dimmer-widget/close.png') 1px 0 no-repeat !important;
 }
 
 .volt-dimmer__panel,
@@ -249,7 +249,7 @@
     left: 30px;
     width: 212px;
     top: 139px;
-    color: #999999;
+    color: #999;
 }
 
 .volt-dimmer__tabs {
@@ -371,7 +371,7 @@
     padding: 2px 8px 0 !important;
     border: 3px solid transparent !important;
     border-image: var(--habbo-skin-button) 3 fill / 3px stretch !important;
-    color: #000000 !important;
+    color: #000 !important;
     line-height: 20px;
     white-space: nowrap;
 
@@ -673,7 +673,7 @@
         left: 5px;
         width: 175px;
         height: 135px;
-        color: #000000;
+        color: #000;
         font-family: Volter, monospace;
         font-size: 9px;
         line-height: 12px;
@@ -874,7 +874,7 @@
 
 .volt-widget-high-score {
     border-radius: 0.3rem;
-    border: solid 1px #000000;
+    border: solid 1px #000;
 
     .header {
         border-image-source: none !important;
@@ -892,7 +892,7 @@
 
     .high-score-content {
         height: 100%;
-        background-color: #000000;
+        background-color: #000;
         border-radius: 0.3rem;
     }
 
@@ -1103,7 +1103,7 @@
         width: 100%;
         min-height: 120px;
         border-radius: 2px;
-        background-color: #0b3155;
+        background-color: #0E3F52;
 
         .mysterytrophy-image {
             width: 80px;
@@ -1124,7 +1124,7 @@
         width: 100%;
         min-height: 120px;
         border-radius: 2px;
-        background-color: #e9e9e1;
+        background-color: #E9E9E1;
 
         .input-mysterytrophy-dialog {
             width: min(380px, 100%);
@@ -1171,7 +1171,7 @@
 .volt-recolor {
     width: 388px;
     height: 551px;
-    color: #000000;
+    color: #000;
     font-family: Ubuntu, sans-serif;
     font-size: 11px;
     line-height: 17px;
@@ -1215,7 +1215,7 @@
         padding: 1px;
         border: 1px solid #b4b4ae;
         border-radius: 5px;
-        background: #ffffff;
+        background: #fff;
     }
 
     .volt-recolor__preview--original {
