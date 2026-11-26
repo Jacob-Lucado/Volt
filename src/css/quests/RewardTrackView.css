@@ -1026,7 +1026,7 @@
     padding: 6px 7px;
     border: 0;
     background: transparent;
-    color: #1d2a38;
+    color: #444444;
     font-size: 12px;
     font-weight: 700;
     line-height: 17px;
@@ -1952,7 +1952,7 @@
     padding: 0;
     border: 0;
     background: transparent;
-    color: #1d2a38;
+    color: #333333;
     cursor: pointer;
     isolation: isolate;
 }

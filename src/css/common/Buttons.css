@@ -75,7 +75,7 @@ input[type=number] {
 }
 
 .btn-warning{
-  color: #1d2a38;
+  color: #111111;
   border: 3px solid transparent;
   border-image-source: var(--habbo-skin-button);
   border-image-slice: 3 fill;

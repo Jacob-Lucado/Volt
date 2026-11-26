@@ -1,5 +1,4 @@
 import { CSSProperties, FC, useEffect, useRef, useState } from 'react';
-import { classicBackground, classicInk } from './ClassicPalette';
 import { NativeText } from './NativeText';
 
 /**
@@ -197,8 +196,8 @@ export const measureSubpixelText = async (textStyle: SubpixelTextStyle, text: st
 export const SubpixelText: FC<SubpixelTextProps> = ({
     text,
     textStyle,
-    color: colorProp = 0,
-    background: backgroundProp,
+    color = 0,
+    background,
     transparent = false,
     align = 'left',
     underline = false,
@@ -211,8 +210,6 @@ export const SubpixelText: FC<SubpixelTextProps> = ({
     ariaHidden = false,
     penX
 }) => {
-    const background = classicBackground(backgroundProp);
-    const color = classicInk(colorProp);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [size, setSize] = useState<{ width: number; height: number }>(null);
     const [fallback, setFallback] = useState(false);

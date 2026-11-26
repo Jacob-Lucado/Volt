@@ -18,7 +18,7 @@
 }
 
 .volt-catalog-air-html.is-dom a {
-    color: #1d2a38;
+    color: #333333;
     text-decoration: underline;
 }
 
@@ -432,7 +432,7 @@
     bottom: 6px;
 }
 
-/* playPreviewContainer (7, 195, 175x36): border style 2 in #e4dfd0 at blend 0.5, play_preview_text (u_small) at 9,11. */
+/* playPreviewContainer (7, 195, 175x36): border style 2 in #cccccc at blend 0.5, play_preview_text (u_small) at 9,11. */
 .volt-catalog-sound-layout .volt-catalog-sound-listen-panel {
     border: 0;
     background: none;

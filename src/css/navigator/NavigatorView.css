@@ -76,7 +76,7 @@
     content: "";
     position: absolute;
     inset: 0 -7px -6px;
-    background: linear-gradient(var(--navigator-air-surface), var(--navigator-air-surface)) top / 100% calc(100% - 13px) no-repeat, #faf8f1;
+    background: linear-gradient(var(--navigator-air-surface), var(--navigator-air-surface)) top / 100% calc(100% - 13px) no-repeat, #e9e9e1;
     clip-path: polygon(
         0 0,
         100% 0,
@@ -228,7 +228,7 @@
     background-position: left top, right top, 9px top !important;
     background-size: 9px 32px, 9px 32px, calc(100% - 18px) 32px !important;
     box-shadow: none !important;
-    color: #1d2a38 !important;
+    color: #111111 !important;
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
     font-size: 12px;
     font-weight: 400;
@@ -622,7 +622,7 @@
     position: absolute;
     inset: 0;
     border: 5px solid transparent;
-    border-image-source: var(--habbo-skin-shiny);
+    border-image-source: url("@/assets/images/habbo-skin/slices/button-shiny-default.png");
     border-image-slice: 5 fill;
     border-image-width: 5px;
     border-image-repeat: stretch;
@@ -631,11 +631,11 @@
 }
 
 .volt-navigator-air__search-refresh:hover .volt-navigator-air__search-refresh-skin {
-    border-image-source: var(--habbo-skin-shiny-hover);
+    border-image-source: url("@/assets/images/habbo-skin/slices/button-shiny-hover.png");
 }
 
 .volt-navigator-air__search-refresh:active .volt-navigator-air__search-refresh-skin {
-    border-image-source: var(--habbo-skin-shiny-pressed);
+    border-image-source: url("@/assets/images/habbo-skin/slices/button-shiny-pressed.png");
 }
 
 .volt-navigator-air__search-refresh img {
@@ -674,7 +674,7 @@
 .volt-navigator-air__empty {
     width: 286px;
     margin: 0 0 0 51px;
-    color: #1d2a38;
+    color: #111111;
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
     font-size: 16px;
     font-weight: 700;
@@ -1526,7 +1526,7 @@
     border-style: solid;
     border-color: transparent;
     border-width: 0;
-    border-image-source: var(--habbo-skin-border-white);
+    border-image-source: url("@/assets/images/habbo-skin/slices/border-white.png");
     border-image-slice: 6 fill;
     border-image-width: 6px;
     border-image-repeat: stretch;
@@ -1575,7 +1575,7 @@
     border-image-repeat: stretch !important;
     background: transparent !important;
     box-shadow: none !important;
-    color: #1d2a38;
+    color: #111111;
     font-family: Volter, monospace;
     font-size: 9px;
     font-weight: 700;
@@ -1605,17 +1605,17 @@
 .volt-room-creator-air__button--cancel {
     left: 156px;
     border-width: 3px !important;
-    border-image-source: var(--habbo-skin-button) !important;
+    border-image-source: url("@/assets/images/habbo-skin/slices/button-default.png") !important;
     border-image-slice: 3 fill !important;
     border-image-width: 3px !important;
 }
 
 .volt-room-creator-air__button--cancel:hover {
-    border-image-source: var(--habbo-skin-button-hover) !important;
+    border-image-source: url("@/assets/images/habbo-skin/slices/button-hover.png") !important;
 }
 
 .volt-room-creator-air__button--cancel:active {
-    border-image-source: var(--habbo-skin-button-pressed) !important;
+    border-image-source: url("@/assets/images/habbo-skin/slices/button-pressed.png") !important;
 }
 
 .volt-room-creator-air__layouts {
@@ -1626,7 +1626,7 @@
     box-sizing: border-box;
     width: 295px;
     height: 295px;
-    background: #faf8f1;
+    background: #e9e9e1;
     image-rendering: var(--volt-pixel-art, pixelated);
 }
 

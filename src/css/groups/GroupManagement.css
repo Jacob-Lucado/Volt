@@ -114,7 +114,7 @@
 
 .volt-group-native__box.is-white::before {
     border-width: 6px;
-    border-image: var(--habbo-skin-border-white) 6 fill / 6px stretch;
+    border-image: url('../../assets/images/habbo-skin/slices/border-white.png') 6 fill / 6px stretch;
 }
 
 .volt-group-native__box.is-outline::before {

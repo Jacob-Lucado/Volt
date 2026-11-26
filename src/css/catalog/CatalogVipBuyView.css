@@ -6,7 +6,7 @@
     margin: 0 auto;
     overflow: hidden;
     background: #f1f1f1;
-    color: #1d2a38;
+    color: #222222;
     font-family: HabboAirUbuntu, Ubuntu, sans-serif;
     font-size: 12px;
 }
@@ -21,8 +21,8 @@
     overflow: hidden;
     border: 1px solid #969696;
     border-radius: 0;
-    background: #f4f1e8;
-    box-shadow: inset 0 0 0 1px #f4f1e8;
+    background: #dfdfdf;
+    box-shadow: inset 0 0 0 1px #dfdfdf;
 }
 
 /* vip_buy_item border style 2 = habbo_skin_border_colorless (2939_class_848) over the blue skin atlas.
@@ -538,7 +538,7 @@
 .volt-club-purchase-confirm .volt-club-purchase-confirm-cancel {
     left: 9px;
     border-image-source: var(--habbo-skin-shiny);
-    color: #1d2a38;
+    color: #111111;
     font-weight: 400;
 }
 

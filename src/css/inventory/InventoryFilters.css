@@ -156,12 +156,12 @@
 }
 
 .volt-inventory-filter-option[aria-selected='true'] {
-    background: #faf8f1;
+    background: #f2f2f2;
 }
 
 .volt-inventory-filter-option.is-active,
 .volt-inventory-filter-option:hover {
-    background: #e4dfd0;
+    background: #d9d9d9;
 }
 
 /* Keep mobile text autosizing from inflating the native AIR captions. */
@@ -185,7 +185,7 @@
 }
 
 .volt-inventory-filter-option[aria-selected='true'].is-active {
-    background: #faf8f1;
+    background: #f2f2f2;
 }
 
 /* A disabled dropmenu keeps its frame and greys the caption to 50% black. */

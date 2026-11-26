@@ -16,7 +16,7 @@ export const PRESET_COLORS: string[] = [
     '#000000',
     '#444444',
     '#888888',
-    '#e4dfd0',
+    '#CCCCCC',
     '#660000',
     '#CC3333',
     '#FF6666',

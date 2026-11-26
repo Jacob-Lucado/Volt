@@ -170,13 +170,13 @@
     padding: 0;
     border: 0;
     border-radius: 0;
-    background: var(--habbo-skin-checkbox) 0 0 no-repeat;
+    background: url('../../assets/images/habbo-skin/slices/checkbox-default.png') 0 0 no-repeat;
     box-shadow: none;
     image-rendering: pixelated;
     cursor: pointer;
 }
 
-.air-checkbox:checked { background-image: var(--habbo-skin-checkbox-checked); }
+.air-checkbox:checked { background-image: url('../../assets/images/habbo-skin/slices/checkbox-checked.png'); }
 
 .air-slider {
     height: 30px;

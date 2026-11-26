@@ -8,7 +8,7 @@
     display: flex;
     flex-direction: column;
     padding: 15px 14px 14px;
-    background: #faf8f1;
+    background: #e9e9e1;
     font-family: HabboAirUbuntu, Ubuntu, sans-serif;
 }
 
@@ -69,7 +69,7 @@
     padding: 0 4px;
     border: 2px solid #000;
     border-radius: 4px;
-    background: linear-gradient(to bottom, #f3f3f3 0 50%, #e4dfd0 50% 100%);
+    background: linear-gradient(to bottom, #f3f3f3 0 50%, #d9d9d9 50% 100%);
     color: #000;
     font-family: inherit;
     font-size: 12px;
@@ -83,7 +83,7 @@
 }
 
 .volt-group-invitation__button:active {
-    background: #e4dfd0;
+    background: #d9d9d9;
 }
 
 .volt-group-invitation__button--accept {

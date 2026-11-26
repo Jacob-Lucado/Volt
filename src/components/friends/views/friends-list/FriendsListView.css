@@ -404,7 +404,7 @@
     margin: 0 0 1px;
     padding: 0;
     border: 0;
-    background: #faf8f1;
+    background: #ececec;
     cursor: pointer;
 }
 .habbo-friend-relationship-menu button:nth-of-type(even) { background: #fff; }

@@ -1,5 +1,4 @@
 import { CSSProperties, FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { classicBackground, classicInk } from './ClassicPalette';
 import { compositeAir32RetainedToOpaque, resolveLineMetrics, roundTiesEven } from './Air32NativeTextRenderer';
 import { renderCanvasSpacedText, supportsCanvasSpacedText } from './CanvasSpacedText';
 import { loadNativeFont, measureNativeText, NativeFontStyle, supportsNativeText } from './NativeFont';
@@ -118,7 +117,7 @@ function wrapNativeParagraph(text: string, width: number, measure: (text: string
 export const NativeText: FC<NativeTextProps> = ({
     text,
     textStyle,
-    background: backgroundProp,
+    background,
     maxWidth,
     leading = 0,
     align,
@@ -139,9 +138,7 @@ export const NativeText: FC<NativeTextProps> = ({
 {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [size, setSize] = useState<{ width: number; height: number; trim?: number }>(null);
-    const background = classicBackground(backgroundProp);
-    const merged = { ...nativeTextStyles[textStyle], ...overrides };
-    const fontStyle = { ...merged, color: classicInk(merged.color ?? 0x000000), background };
+    const fontStyle = { ...nativeTextStyles[textStyle], ...overrides, background };
     const tinted = tintedProp ?? fontStyle.tinted ?? false;
     const styleKey = JSON.stringify(fontStyle);
     const displayScale = useNativeTextScale();

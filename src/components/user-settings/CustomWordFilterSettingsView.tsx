@@ -15,7 +15,7 @@ const RESULT_ADDED = 1;
 const RESULT_REMOVED = 3;
 // Row colours of the v75 list: odd rows white, even rows #e9e9e1, selected #9ab8d9, hovered #b6d9ff.
 const ROW_COLOR_ODD = '#ffffff';
-const ROW_COLOR_EVEN = '#faf8f1';
+const ROW_COLOR_EVEN = '#e9e9e1';
 const ROW_COLOR_SELECTED = '#9ab8d9';
 const ROW_COLOR_HOVER = '#b6d9ff';
 

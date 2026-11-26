@@ -1,6 +1,6 @@
 /**
  * Official Habbo Ubuntu palette (Habbo Air deobfuscated).
- * Frame #3b7bb6, catalog header #0b3155 / #345778, content #f4f1e8 / #ecece4.
+ * Frame #3b7bb6, catalog header #0b3155 / #345778, content #dfdfdf / #ecece4.
  */
 :root {
     --habbo-blue: #3b7bb6;
@@ -10,21 +10,21 @@
     --habbo-blue-header: #0b3155;
     --habbo-blue-header-border: #345778;
     --habbo-frame-border: #283f5d;
-    --habbo-surface: #f4f1e8;
+    --habbo-surface: #dfdfdf;
     --habbo-surface-warm: #ecece4;
     --habbo-panel: #f7f7f2;
-    --habbo-tab: #cfc8b4;
-    --habbo-tab-active: #f4f1e8;
+    --habbo-tab: #b6bec5;
+    --habbo-tab-active: #dfdfdf;
     --habbo-grid: #cdd3d9;
-    --habbo-grid-active: #faf8f1;
+    --habbo-grid-active: #ececec;
     --habbo-select: #5ca8f0;
     --habbo-select-outer: #7db9f2;
     --habbo-close: #921911;
     --habbo-close-hover: #b9322a;
     --habbo-toolbar: #555555;
     --habbo-nav-border: #eceae0;
-    --habbo-text: #1d2a38;
-    --habbo-text-muted: #5d6b7a;
+    --habbo-text: #151515;
+    --habbo-text-muted: #666666;
     --habbo-success: #00800b;
     --habbo-danger: #a81a12;
     --habbo-buy-top: #3dcc45;
@@ -68,7 +68,7 @@
     border-image-width: 3px !important;
     border-image-repeat: stretch !important;
     background: transparent !important;
-    color: #1d2a38 !important;
+    color: #111111 !important;
     font-family: Volter, Arial, sans-serif;
     font-size: 9px;
     font-weight: 400;
@@ -97,7 +97,7 @@
 .habbo-btn-secondary.pointer-events-none,
 .habbo-btn-slice.pointer-events-none {
     border-image-source: var(--habbo-skin-button-disabled) !important;
-    color: #5d6b7a !important;
+    color: #777777 !important;
     opacity: 1;
     cursor: not-allowed;
     filter: none;

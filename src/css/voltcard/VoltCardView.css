@@ -1,13 +1,13 @@
 :root {
     --volt-card-border: var(--habbo-frame-border, #283f5d);
     --volt-card-frame: #345778;
-    --volt-card-surface: var(--habbo-surface, #f4f1e8);
-    --volt-card-surface-raised: var(--habbo-grid-active, #faf8f1);
+    --volt-card-surface: var(--habbo-surface, #dfdfdf);
+    --volt-card-surface-raised: var(--habbo-grid-active, #ececec);
     --volt-card-header: var(--habbo-blue, #3b7bb6);
     --volt-card-header-highlight: var(--habbo-blue-highlight, #5691c9);
     --volt-card-header-shadow: var(--habbo-blue-dark, #295e8f);
-    --volt-card-text: var(--habbo-text, #1d2a38);
-    --volt-card-muted: var(--habbo-text-muted, #5d6b7a);
+    --volt-card-text: var(--habbo-text, #151515);
+    --volt-card-muted: var(--habbo-text-muted, #666666);
     --volt-card-focus: #ffd95a;
     --volt-card-radius: 6px;
     --volt-card-shadow: 0 4px 4px rgba(0, 0, 0, 0.349);
@@ -346,14 +346,14 @@
 
 .volt-card-panel {
     background: rgba(0, 0, 0, 0.04) !important;
-    border: 1px solid var(--habbo-tab, #cfc8b4) !important;
+    border: 1px solid var(--habbo-tab, #b6bec5) !important;
     border-radius: 4px !important;
     box-shadow: none !important;
 }
 
 .volt-card-row {
     background: rgba(0, 0, 0, 0.035) !important;
-    border: 1px solid var(--habbo-tab, #cfc8b4) !important;
+    border: 1px solid var(--habbo-tab, #b6bec5) !important;
     border-radius: 4px !important;
     box-shadow: none !important;
     transition: background-color .15s ease, border-color .15s ease;
@@ -365,7 +365,7 @@
 }
 
 .volt-card-divider {
-    border-color: var(--habbo-tab, #cfc8b4) !important;
+    border-color: var(--habbo-tab, #b6bec5) !important;
     box-shadow: none !important;
 }
 
@@ -375,7 +375,7 @@
 }
 
 .volt-card-shell :where(.border, .border-muted, .border-card-grid-item-border, .border-card-grid-item-border-active, .border-white, .border-white\/10, .border-white\/20, .border-white\/30) {
-    border-color: var(--habbo-tab, #cfc8b4) !important;
+    border-color: var(--habbo-tab, #b6bec5) !important;
     box-shadow: none !important;
 }
 

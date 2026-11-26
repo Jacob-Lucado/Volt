@@ -73,7 +73,7 @@ const TAB_BUTTONS: ReadonlyArray<{ id: number; icon: string; tooltip: string }> 
 /** TabButtonView.as:226-236, 288-306: border/shadow colours and icon blend per state. */
 const TAB_COLORS = {
     active: { border: '#e0e0e0', shadow: '#aaaaaa', blend: 0.6 },
-    hover: { border: '#efefef', shadow: '#e4dfd0', blend: 0.5 },
+    hover: { border: '#efefef', shadow: '#cccccc', blend: 0.5 },
     none: { border: '#fafafa', shadow: '#dddddd', blend: 0.4 }
 };
 

@@ -108,9 +108,9 @@
 }
 
 .habbo-dropmenu-item:hover,
-.habbo-dropmenu-item.is-active { background: #e4dfd0; }
+.habbo-dropmenu-item.is-active { background: #d9d9d9; }
 .habbo-dropmenu-item.is-selected,
-.habbo-dropmenu-item:active { background: #faf8f1; }
+.habbo-dropmenu-item:active { background: #f2f2f2; }
 .habbo-dropmenu-padding { height: 3px; }
 
 .habbo-dropmenu-scrollbar {
@@ -177,7 +177,7 @@
     font-kerning: normal;
 }
 .habbo-dropmenu--ubuntu .habbo-dropmenu-item:hover,
-.habbo-dropmenu--ubuntu .habbo-dropmenu-item.is-active { background: #faf8f1; }
+.habbo-dropmenu--ubuntu .habbo-dropmenu-item.is-active { background: #ebebeb; }
 .habbo-dropmenu--ubuntu .habbo-dropmenu-item.is-selected,
 .habbo-dropmenu--ubuntu .habbo-dropmenu-item:active { background: #ddd; }
 /* The native label is the item's _BTN_TEXT field (2px gutter included) at the margins (4,2). */
@@ -256,4 +256,4 @@
 .habbo-dropmenu--illumina .habbo-dropmenu-item > span { position: relative; top: -1px; padding: 0; }
 .habbo-dropmenu--illumina .habbo-dropmenu-item.is-selected { background: #ddd; }
 .habbo-dropmenu--illumina .habbo-dropmenu-item:hover,
-.habbo-dropmenu--illumina .habbo-dropmenu-item.is-active { background: #faf8f1; }
+.habbo-dropmenu--illumina .habbo-dropmenu-item.is-active { background: #ebebeb; }
