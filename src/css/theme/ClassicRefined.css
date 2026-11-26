@@ -241,3 +241,14 @@
 .volt-card-shell input[type='radio'] {
     accent-color: var(--cr-green);
 }
+
+/* A toolbar button stays green while its window is open. */
+body:has([data-window-key='navigator']) .tb-nav-clip .tb-slot:has(.icon-rooms),
+body:has([data-window-key='catalog']) .tb-nav-clip .tb-slot:has(.icon-catalog),
+body:has([data-window-key='inventory']) .tb-nav-clip .tb-slot:has(.icon-inventory),
+body:has([data-window-key='volt-friends']) .tb-nav-clip .tb-slot:has(.icon-friendall),
+body:has([data-window-key='volt-messenger']) .tb-nav-clip .tb-slot:has(.icon-message),
+body:has([data-window-key='wired-creator-tools']) .tb-nav-clip .tb-slot:has(.icon-wired-tools),
+body:has([data-window-key='achievements']) .tb-nav-clip .tb-slot:has(.icon-progression) {
+    background: var(--cr-green);
+}
