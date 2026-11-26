@@ -110,7 +110,7 @@
 .habbo-dropmenu-item:hover,
 .habbo-dropmenu-item.is-active { background: #e4dfd0; }
 .habbo-dropmenu-item.is-selected,
-.habbo-dropmenu-item:active { background: #f2f2f2; }
+.habbo-dropmenu-item:active { background: #faf8f1; }
 .habbo-dropmenu-padding { height: 3px; }
 
 .habbo-dropmenu-scrollbar {

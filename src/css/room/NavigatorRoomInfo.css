@@ -42,7 +42,7 @@
 }
 
 .volt-room-info .volt-room-info__content .is-bold { font-weight: 700 !important; }
-.volt-room-info .volt-room-info__content .is-caption { color: #777777 !important; }
+.volt-room-info .volt-room-info__content .is-caption { color: #5d6b7a !important; }
 .volt-room-info .volt-room-info__content svg { image-rendering: pixelated; pointer-events: none; }
 .volt-room-info .volt-room-info__content button:focus-visible,
 .volt-room-info .volt-room-info__content input:focus-visible { outline: 1px solid #fff27a; outline-offset: 1px; }

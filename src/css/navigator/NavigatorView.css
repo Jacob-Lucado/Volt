@@ -228,7 +228,7 @@
     background-position: left top, right top, 9px top !important;
     background-size: 9px 32px, 9px 32px, calc(100% - 18px) 32px !important;
     box-shadow: none !important;
-    color: #111111 !important;
+    color: #1d2a38 !important;
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
     font-size: 12px;
     font-weight: 400;
@@ -674,7 +674,7 @@
 .volt-navigator-air__empty {
     width: 286px;
     margin: 0 0 0 51px;
-    color: #111111;
+    color: #1d2a38;
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
     font-size: 16px;
     font-weight: 700;
@@ -1575,7 +1575,7 @@
     border-image-repeat: stretch !important;
     background: transparent !important;
     box-shadow: none !important;
-    color: #111111;
+    color: #1d2a38;
     font-family: Volter, monospace;
     font-size: 9px;
     font-weight: 700;

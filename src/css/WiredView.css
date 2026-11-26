@@ -2,8 +2,8 @@
     width: 240px;
     min-width: 0;
     max-width: calc(100vw - 16px);
-    background: #efefef;
-    border: 1px solid #8d8d8d !important;
+    background: #faf8f1;
+    border: 1px solid #b9b29c !important;
     border-radius: 6px !important;
     box-shadow: inset 0 0 0 1px #ffffff !important;
     color: #000000;
@@ -12,7 +12,7 @@
 
     .volt-wired__content {
         position: relative;
-        background: #efefef !important;
+        background: #faf8f1 !important;
         border: 0 !important;
         box-shadow: none !important;
         padding: 0 !important;
@@ -97,7 +97,7 @@
     }
 
     .volt-wired__summary-title {
-        color: #4a4a4a !important;
+        color: #1d2a38 !important;
         font-size: 15px !important;
         font-weight: 700 !important;
         line-height: 1.02;
@@ -147,7 +147,7 @@
         min-width: 18px;
         appearance: none;
         -webkit-appearance: none;
-        border: 1px solid #8e8e8e;
+        border: 1px solid #b9b29c;
         border-radius: 5px;
         background: linear-gradient(180deg, #fcfcfc 0%, #faf8f1 100%);
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
@@ -221,9 +221,9 @@
     input[type='number'],
     textarea {
         min-height: 24px;
-        border: 1px solid #8d8d8d !important;
+        border: 1px solid #b9b29c !important;
         border-radius: 4px !important;
-        background: #f6f6f6 !important;
+        background: #faf8f1 !important;
         color: #000000 !important;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
         font-size: 12px;
@@ -237,7 +237,7 @@
         align-items: center !important;
         justify-content: center !important;
         min-height: 22px !important;
-        border: 1px solid #8e8e8e !important;
+        border: 1px solid #b9b29c !important;
         border-radius: 6px !important;
         background: linear-gradient(180deg, #fcfcfc 0%, #e8e8e8 46%, #d5d5d5 47%, #efefef 100%) !important;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
@@ -301,7 +301,7 @@
         width: 18px;
         height: 18px;
         padding: 0;
-        border: 1px solid #8e8e8e;
+        border: 1px solid #b9b29c;
         border-radius: 4px;
         background: linear-gradient(180deg, #f6f6f6 0%, #e4e4e4 49%, #d0d0d0 50%, #faf8f1 100%);
         color: #7b7b7b;
@@ -383,7 +383,7 @@
         min-width: 18px;
         min-height: 18px;
         padding: 0;
-        border: 1px solid #8e8e8e;
+        border: 1px solid #b9b29c;
         border-radius: 4px;
         background: transparent;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
@@ -713,7 +713,7 @@
     .volt-slider .track {
         height: 4px;
         border-radius: 999px;
-        border: 1px solid #9a9a9a;
+        border: 1px solid #b9b29c;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
 
         &.track-0 {
@@ -737,13 +737,13 @@
 }
 
 .volt-wired :where(.bg-white, .bg-light, .bg-muted, .bg-card-grid-item, .bg-gray-50) {
-    background: #f7f7f7 !important;
-    color: #111111 !important;
+    background: #faf8f1 !important;
+    color: #1d2a38 !important;
     box-shadow: none !important;
 }
 
 .volt-wired :where(.border, .border-muted, .border-card-grid-item-border, .border-white, .border-white\/10, .border-white\/20, .border-white\/30) {
-    border-color: #b5b5b5 !important;
+    border-color: #b9b29c !important;
     box-shadow: none !important;
 }
 
@@ -760,14 +760,14 @@
     border: 1px solid #8b8b8b !important;
     border-radius: 3px !important;
     background: #ffffff !important;
-    color: #111111 !important;
+    color: #1d2a38 !important;
     box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.14), inset 0 0 0 1px rgba(255, 255, 255, 0.7) !important;
     font-size: 11px !important;
 }
 
 .volt-card-shell.volt-wired {
-    border: 1px solid #8d8d8d !important;
-    border-color: #8d8d8d !important;
+    border: 1px solid #b9b29c !important;
+    border-color: #b9b29c !important;
     box-shadow: inset 0 0 0 1px #ffffff !important;
     outline: none !important;
 }
@@ -861,7 +861,7 @@
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-    color: #555555 !important;
+    color: #5d6b7a !important;
     font: 9px/19px Volter, sans-serif !important;
     outline: 0;
 }
@@ -903,7 +903,7 @@
     isolation: isolate;
     border: 1px solid transparent;
     background: transparent;
-    color: #555555;
+    color: #5d6b7a;
     font: 9px Volter, sans-serif;
     overflow: visible;
 }
@@ -958,7 +958,7 @@
     border-radius: 3px;
     background: #ffffff;
     box-shadow: inset -1px -1px 0 #e4dfd0;
-    color: #555555;
+    color: #5d6b7a;
     font: 9px Volter, sans-serif;
 }
 
@@ -995,7 +995,7 @@
 
 .volt-wired__vpicker-empty {
     padding: 4px 9px 5px;
-    color: #555555;
+    color: #5d6b7a;
 }
 
 /* Wired's frame margins override the WindowManager's generic frame defaults. */
@@ -1011,7 +1011,7 @@
     background: transparent !important;
     box-shadow: none !important;
     overflow: visible !important;
-    color: #222222;
+    color: #1d2a38;
     font-family: HabboAirUbuntu, sans-serif !important;
     font-size: var(--wired-body-font-size);
     filter: drop-shadow(2.828px 2.828px 2px rgba(0, 0, 0, 0.349));
@@ -1065,7 +1065,7 @@
     .volt-wired__summary {
         padding: 5px;
         background: #faf8f1;
-        color: #222222;
+        color: #1d2a38;
     }
 
     .volt-wired__divider {
@@ -1152,7 +1152,7 @@
     --wired-footer-inset: 5px;
     --wired-body-font-size: 11px;
     padding: 25px 6px 7px;
-    color: #333333;
+    color: #1d2a38;
     filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.349));
 
     &::before {
@@ -1302,8 +1302,8 @@
     padding: 1px;
     border: 1px solid #000000;
     border-radius: 0;
-    background: #f2f2f2;
-    color: #333333;
+    background: #faf8f1;
+    color: #1d2a38;
     font-family: HabboAirUbuntu, UbuntuRegular, sans-serif;
     font-size: 11px;
     line-height: 16px;
@@ -1330,7 +1330,7 @@
 }
 
 .volt-wired__shell-menu-item:disabled {
-    color: #888888;
+    color: #5d6b7a;
     cursor: default;
 }
 
@@ -1398,7 +1398,7 @@
 .volt-wired__shell-button:disabled {
     --wired-button-offset-x: -37px;
     --wired-button-right-offset-x: -37px;
-    color: #888888;
+    color: #5d6b7a;
     cursor: default;
 }
 
@@ -1440,7 +1440,7 @@
 
 .volt-wired__shell-button--illumina {
     height: 22px;
-    color: #333333;
+    color: #1d2a38;
     font-size: 10px;
     font-weight: 700;
     line-height: 13px;
@@ -1916,7 +1916,7 @@
     border-radius: 0 !important;
     background: url('../assets/images/wired/native/input_left.png') 0 0 no-repeat, url('../assets/images/wired/native/input_right.png') 100% 0 no-repeat, url('../assets/images/wired/native/input_mid.png') 14px 0 / calc(100% - 28px) 21px no-repeat !important;
     box-shadow: none !important;
-    color: #4a4a4a !important;
+    color: #1d2a38 !important;
     font-size: 11px !important;
     line-height: 16px;
     image-rendering: pixelated;
@@ -1936,7 +1936,7 @@
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-    color: #4a4a4a !important;
+    color: #1d2a38 !important;
     font-size: 11px !important;
     line-height: 16px;
     min-height: 0 !important;
@@ -2021,7 +2021,7 @@
     }
 
     .volt-wired__text--soft {
-        color: #444444;
+        color: #1d2a38;
     }
 
     .volt-wired__text--wrap {
@@ -2999,7 +2999,7 @@
 .volt-wired .volt-wired__section-toggle { display: flex; align-items: center; gap: 5px; padding: 0; border: 0; background: none; cursor: pointer; }
 .volt-wired__section-toggle > span:first-child { width: 8px; height: 8px; background: url('../assets/images/wired/native/arrow-right.png') center no-repeat; }
 .volt-wired__section-toggle > span:first-child.is-expanded { background-image: url('../assets/images/wired/native/arrow-down.png'); }
-.volt-wired-fx-editor__visualization, .volt-wired-fx-editor__change-settings { display: flex; flex-direction: column; gap: 5px; padding: 5px 6px; border: 1px solid #aaaaaa; border-radius: 3px; margin: 0; min-width: 0; }
+.volt-wired-fx-editor__visualization, .volt-wired-fx-editor__change-settings { display: flex; flex-direction: column; gap: 5px; padding: 5px 6px; border: 1px solid #b9b29c; border-radius: 3px; margin: 0; min-width: 0; }
 .volt-wired-fx-editor__named-row { display: flex; align-items: center; gap: 5px; min-width: 0; }
 .volt-wired-fx-editor__named-row > :first-child { flex-shrink: 0; }
 .volt-wired-fx-editor__named-row > .volt-wired__dropdown, .volt-wired-fx-editor__named-row > select, .volt-wired-fx-editor__named-row > .habbo-dropmenu { flex: 1; min-width: 0; }
@@ -3035,9 +3035,9 @@
 .volt-wired-message-editor__toolbar { position: relative; display: flex; align-items: flex-start; height: 19px; flex-shrink: 0; }
 .volt-wired-message-editor__references { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; height: 19px; }
 .volt-wired-message-editor__counter { position: absolute; right: 0; top: 1px; width: 60px; text-align: right; }
-.volt-wired-message-editor__palette { position: absolute; left: 54px; top: 19px; z-index: 2; padding: 4px; display: flex; gap: 3px; border: 1px solid #919191; background: #f4f1e8; }
-.volt-wired-message-editor__swatch { width: 13px; height: 14px; border: 1px solid #919191; }
-.volt-wired-message-editor__textarea { width: 100%; resize: none; padding: 3px; border: 1px solid #919191; border-radius: 0; background: #ffffff; color: #000000; font: 11px/16px HabboAirUbuntu, sans-serif; }
+.volt-wired-message-editor__palette { position: absolute; left: 54px; top: 19px; z-index: 2; padding: 4px; display: flex; gap: 3px; border: 1px solid #b9b29c; background: #f4f1e8; }
+.volt-wired-message-editor__swatch { width: 13px; height: 14px; border: 1px solid #b9b29c; }
+.volt-wired-message-editor__textarea { width: 100%; resize: none; padding: 3px; border: 1px solid #b9b29c; border-radius: 0; background: #ffffff; color: #000000; font: 11px/16px HabboAirUbuntu, sans-serif; }
 .volt-wired-message-preview { display: flex; flex-direction: column; gap: 5px; }
 .volt-wired-message-preview__area { width: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 .volt-wired-message-preview__bubble { position: absolute; top: 50%; left: 0; width: max-content; transform-origin: left center; translate: 0 -50%; pointer-events: none; }
@@ -3049,7 +3049,7 @@
 .volt-wired-message-editor__divider { width: 1px; height: 19px; background: linear-gradient(to bottom, #919191 0 18px, #f2f2f2 18px); }
 .volt-wired-message-editor [role='dialog'] { pointer-events: auto; }
 .volt-wired-message-editor__body { position: relative; z-index: 1; }
-.volt-wired.volt-wired-message-editor textarea.volt-wired-message-editor__textarea { background: #ffffff !important; border: 1px solid #919191 !important; border-radius: 0 !important; box-shadow: none !important; }
+.volt-wired.volt-wired-message-editor textarea.volt-wired-message-editor__textarea { background: #ffffff !important; border: 1px solid #b9b29c !important; border-radius: 0 !important; box-shadow: none !important; }
 
 /* AIR LinkDataframe row: equally sized key/mode controls and aligned named labels. */
 .volt-wired__dataframe-row .volt-wired__native-section-inner {

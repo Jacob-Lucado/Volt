@@ -664,8 +664,8 @@ body {
     width: min(300px, calc(100vw - 16px));
     min-width: 0;
     max-width: calc(100vw - 16px);
-    background: #efefef;
-    border: 1px solid #8d8d8d !important;
+    background: #faf8f1;
+    border: 1px solid #b9b29c !important;
     border-radius: 6px !important;
     box-shadow: inset 0 0 0 1px #ffffff !important;
     color: #000000;
@@ -740,7 +740,7 @@ body {
 
     .volt-wired__content {
         position: relative;
-        background: #efefef !important;
+        background: #faf8f1 !important;
         border: 0 !important;
         box-shadow: none !important;
         padding: 0 !important;
@@ -821,7 +821,7 @@ body {
     }
 
     .volt-wired__summary-title {
-        color: #4a4a4a !important;
+        color: #1d2a38 !important;
         font-size: 15px !important;
         font-weight: 700 !important;
         line-height: 1.02;
@@ -879,9 +879,9 @@ body {
     input[type='number'],
     textarea {
         min-height: 24px;
-        border: 1px solid #8d8d8d !important;
+        border: 1px solid #b9b29c !important;
         border-radius: 4px !important;
-        background: #f6f6f6 !important;
+        background: #faf8f1 !important;
         color: #000000 !important;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
         font-size: 12px;
@@ -963,7 +963,7 @@ body {
         width: 18px;
         height: 18px;
         padding: 0;
-        border: 1px solid #8e8e8e;
+        border: 1px solid #b9b29c;
         border-radius: 4px;
         background: linear-gradient(180deg, #f6f6f6 0%, #e4e4e4 49%, #d0d0d0 50%, #faf8f1 100%);
         color: #7b7b7b;
@@ -1045,7 +1045,7 @@ body {
         min-width: 18px;
         min-height: 18px;
         padding: 0;
-        border: 1px solid #8e8e8e;
+        border: 1px solid #b9b29c;
         border-radius: 4px;
         background: transparent;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
@@ -1321,7 +1321,7 @@ body {
     .volt-slider .track {
         height: 4px;
         border-radius: 999px;
-        border: 1px solid #9a9a9a;
+        border: 1px solid #b9b29c;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
 
         &.track-0 {
@@ -1345,8 +1345,8 @@ body {
 }
 
 .volt-card-shell.volt-wired {
-    border: 1px solid #8d8d8d !important;
-    border-color: #8d8d8d !important;
+    border: 1px solid #b9b29c !important;
+    border-color: #b9b29c !important;
     box-shadow: inset 0 0 0 1px #ffffff !important;
     outline: none !important;
 }
@@ -1623,7 +1623,7 @@ body {
         font-size: 11px;
         font-weight: 700;
         line-height: 1;
-        color: #555555;
+        color: #5d6b7a;
         white-space: nowrap;
         cursor: pointer;
         user-select: none;
@@ -1705,9 +1705,9 @@ body {
     input[type='number'],
     textarea {
         min-height: 22px;
-        border: 1px solid #8d8d8d !important;
+        border: 1px solid #b9b29c !important;
         border-radius: 4px !important;
-        background: #f6f6f6 !important;
+        background: #faf8f1 !important;
         color: #000000 !important;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
         font-size: 12px;

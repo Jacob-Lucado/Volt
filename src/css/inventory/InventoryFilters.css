@@ -156,7 +156,7 @@
 }
 
 .volt-inventory-filter-option[aria-selected='true'] {
-    background: #f2f2f2;
+    background: #faf8f1;
 }
 
 .volt-inventory-filter-option.is-active,
@@ -185,7 +185,7 @@
 }
 
 .volt-inventory-filter-option[aria-selected='true'].is-active {
-    background: #f2f2f2;
+    background: #faf8f1;
 }
 
 /* A disabled dropmenu keeps its frame and greys the caption to 50% black. */

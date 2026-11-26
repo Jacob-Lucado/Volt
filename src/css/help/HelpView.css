@@ -264,7 +264,7 @@
 .volt-help .help-user-selection { position: absolute; left: 0; top: 0; image-rendering: pixelated; pointer-events: none; }
 .volt-help .help-user-avatar { position: absolute; left: -11px; top: -29px; width: 90px; height: 130px; overflow: hidden; }
 .volt-help .help-user-name { position: absolute; left: 61px; top: 11px; font-size: 10px; line-height: 15px; font-weight: 700; color: #000000; text-shadow: 0 1px rgba(255, 255, 255, 0.698); }
-.volt-help .help-user-room { position: absolute; left: 61px; top: 24px; width: 218px; height: 16px; color: #444444; font-size: 11px; line-height: 16px; }
+.volt-help .help-user-room { position: absolute; left: 61px; top: 24px; width: 218px; height: 16px; color: #1d2a38; font-size: 11px; line-height: 16px; }
 
 .volt-help .help-report-panel { position: absolute; left: 0; top: 100px; width: 444px; height: 330px; }
 .volt-help .help-message-panel { width: 445px; }
@@ -283,7 +283,7 @@
 .volt-help .help-message-input textarea { position: absolute; left: 5px; top: 5px; width: 380px; height: 209px; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; resize: none; outline: none; font-size: 11px; line-height: 16px; color: #000000; }
 .volt-help .help-message-input.is-native-text textarea { color: transparent; }
 .volt-help .help-message-text { position: absolute; left: 5px; top: 5px; width: 380px; height: 209px; overflow: hidden; color: #000000; pointer-events: none; }
-.volt-help .help-message-placeholder { position: absolute; left: 6px; top: 5px; height: 16px; color: #888888; font-size: 11px; line-height: 16px; pointer-events: none; }
+.volt-help .help-message-placeholder { position: absolute; left: 6px; top: 5px; height: 16px; color: #5d6b7a; font-size: 11px; line-height: 16px; pointer-events: none; }
 
 .volt-help .help-topics-panel { position: absolute; left: 0; top: 90px; width: 445px; height: 340px; }
 .volt-help .help-pick-topic { position: absolute; left: 30px; top: 12px; width: 405px; height: 59px; }

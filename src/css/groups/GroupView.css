@@ -1,12 +1,12 @@
 .volt-groups-window {
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif;
-    color: #111111;
+    color: #1d2a38;
 }
 .volt-groups-window .volt-card-content,
 .volt-groups-window .volt-card-content-shell,
 .volt-groups-content {
     background: #eeeee7 !important;
-    color: #111111;
+    color: #1d2a38;
 }
 .volt-groups-window .volt-card-tabs {
     background: #d6d5cc;
@@ -18,7 +18,7 @@
     border-bottom: 0;
     border-radius: 6px 6px 0 0;
     background: #c8c7bf;
-    color: #111111;
+    color: #1d2a38;
     text-shadow: none;
 }
 .volt-groups-window .volt-card-tabs-item.active,
@@ -33,7 +33,7 @@
     border: 1px solid #9c9c94 !important;
     border-radius: 3px !important;
     background: #ffffff !important;
-    color: #111111 !important;
+    color: #1d2a38 !important;
     box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.08);
     font-size: 12px;
 }
@@ -53,7 +53,7 @@
     border-image-repeat: stretch !important;
     border-radius: 0 !important;
     background: transparent !important;
-    color: #111111 !important;
+    color: #1d2a38 !important;
     text-shadow: none !important;
     box-shadow: none !important;
     font-size: 12px;
@@ -74,7 +74,7 @@
 .volt-groups-window button:disabled,
 .volt-group-room-info .volt-groups-button:disabled {
     border-image-source: var(--habbo-skin-button-disabled) !important;
-    color: #777777 !important;
+    color: #5d6b7a !important;
     opacity: 1 !important;
 }
 .volt-group-room-info {
@@ -362,7 +362,7 @@
     text-align: center !important;
 }
 .volt-group-room-info__button .text-white {
-    color: #111111 !important;
+    color: #1d2a38 !important;
 }
 /* button_thick style 3: neutral shiny skin shared by group controls. */
 .volt-groups-window .volt-groups-button--primary,

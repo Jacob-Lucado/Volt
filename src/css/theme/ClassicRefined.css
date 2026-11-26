@@ -279,3 +279,10 @@ body:has([data-window-key='wired-creator-tools']) .tb-nav-clip .tb-slot:has(.ico
 body:has([data-window-key='achievements']) .tb-nav-clip .tb-slot:has(.icon-progression) {
     background: var(--cr-green);
 }
+
+/* Coloured buttons keep white text inside windows. */
+.volt-card-content-shell :is(.btn-success, .btn-primary, .btn-danger, .btn-dark, .btn-green),
+.content-area :is(.btn-success, .btn-primary, .btn-danger, .btn-dark, .btn-green) {
+    color: #ffffff;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+}

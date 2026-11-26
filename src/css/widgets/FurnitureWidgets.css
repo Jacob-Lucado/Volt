@@ -63,8 +63,8 @@
         box-sizing: border-box;
         width: 29px;
         height: 27px;
-        border-top: 1px solid #999999;
-        border-left: 1px solid #999999;
+        border-top: 1px solid #b9b29c;
+        border-left: 1px solid #b9b29c;
     }
 
     .volt-toner__label {
@@ -1213,7 +1213,7 @@
         width: 108px;
         height: 124px;
         padding: 1px;
-        border: 1px solid #b4b4ae;
+        border: 1px solid #b9b29c;
         border-radius: 5px;
         background: #ffffff;
     }
@@ -1254,9 +1254,9 @@
         box-sizing: border-box;
         width: 360px;
         padding: 3px;
-        border: 1px solid #b4b4ae;
+        border: 1px solid #b9b29c;
         border-radius: 5px;
-        background: #f7f7f2;
+        background: #faf8f1;
     }
 
     .volt-recolor__grid--palette {

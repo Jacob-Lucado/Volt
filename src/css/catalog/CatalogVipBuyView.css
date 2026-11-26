@@ -6,7 +6,7 @@
     margin: 0 auto;
     overflow: hidden;
     background: #f1f1f1;
-    color: #222222;
+    color: #1d2a38;
     font-family: HabboAirUbuntu, Ubuntu, sans-serif;
     font-size: 12px;
 }
@@ -538,7 +538,7 @@
 .volt-club-purchase-confirm .volt-club-purchase-confirm-cancel {
     left: 9px;
     border-image-source: var(--habbo-skin-shiny);
-    color: #111111;
+    color: #1d2a38;
     font-weight: 400;
 }
 

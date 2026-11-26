@@ -113,7 +113,7 @@
     max-height: calc(100vh - 16px);
     resize: none !important;
     font-family: Ubuntu, sans-serif;
-    color: #111111;
+    color: #1d2a38;
 
     & span,
     & input,
@@ -135,7 +135,7 @@
     & .volt-card-accordion-set-header {
         min-height: 24px;
         padding: 3px 7px !important;
-        color: #111111;
+        color: #1d2a38;
         font-size: 12px;
         font-weight: 700;
         border: 0 !important;
@@ -143,7 +143,7 @@
 
     & .volt-card-accordion-set-header span {
         font-size: 12px;
-        color: #111111 !important;
+        color: #1d2a38 !important;
     }
 
     & .volt-card-accordion-set-header .fa-icon {
@@ -164,9 +164,9 @@
     & .friends-list-item {
         min-height: 34px;
         padding: 0 4px !important;
-        color: #111111;
+        color: #1d2a38;
         font-size: 13px;
-        background: #f7f7f7;
+        background: #faf8f1;
         border: 0 !important;
         gap: 3px !important;
     }
@@ -174,12 +174,12 @@
     & .friends-list-toolbar {
         min-height: 22px;
         font-size: 12px;
-        background: #efefef;
+        background: #faf8f1;
         border-bottom: 1px solid rgba(0, 0, 0, .12);
     }
 
     & .friends-list-toolbar-link {
-        color: #111111;
+        color: #1d2a38;
         font-size: 12px;
         font-weight: 700;
         cursor: pointer;
@@ -229,7 +229,7 @@
         min-width: 0;
         margin-left: 3px;
         overflow: hidden;
-        color: #111111;
+        color: #1d2a38;
         font-size: 13px;
         line-height: 1.15;
         font-weight: 500;
@@ -257,7 +257,7 @@
     & .search-input {
         min-height: 28px;
         padding: 5px 8px;
-        color: #111111 !important;
+        color: #1d2a38 !important;
         font-size: 13px !important;
         line-height: 1.2;
         background: #ffffff;
@@ -657,7 +657,7 @@
         flex-shrink: 0;
         overflow: hidden;
         padding: 6px 8px;
-        background: #efefef;
+        background: #faf8f1;
         border-bottom: 1px solid rgba(0, 0, 0, .12);
     }
 
@@ -673,7 +673,7 @@
         flex-shrink: 0;
         overflow: hidden;
         cursor: pointer;
-        background: #d7d7d7;
+        background: #e4dfd0;
         border: 0;
         border-radius: 4px;
         padding: 0;
@@ -705,12 +705,12 @@
         justify-content: space-between;
         flex-shrink: 0;
         padding: 4px 8px;
-        background: #efefef;
+        background: #faf8f1;
         border-bottom: 1px solid rgba(0, 0, 0, .12);
     }
 
     & .messenger-thread-name {
-        color: #111111 !important;
+        color: #1d2a38 !important;
         font-size: 13px !important;
         font-weight: 700;
     }
@@ -746,7 +746,7 @@
             padding: 0 5px;
             color: #000000 !important;
             font-size: 13px;
-            background: #d7d7d7;
+            background: #e4dfd0;
         }
 
         &.icon-btn {
@@ -810,7 +810,7 @@
         }
 
         & .messenger-message-name {
-            color: #111111 !important;
+            color: #1d2a38 !important;
             font-size: 12px !important;
             font-weight: 700;
         }
@@ -818,7 +818,7 @@
         & .messenger-message-bubble {
             position: relative;
             padding: 4px 7px;
-            color: #111111 !important;
+            color: #1d2a38 !important;
             font-size: 13px !important;
             line-height: 1.35;
             max-width: 200px;
@@ -909,14 +909,14 @@
         align-items: center;
         flex-shrink: 0;
         padding: 6px 8px;
-        background: #efefef;
+        background: #faf8f1;
         border-top: 1px solid rgba(0, 0, 0, .12);
 
         & input {
             flex: 1;
             min-height: 28px;
             padding: 0 8px;
-            color: #111111 !important;
+            color: #1d2a38 !important;
             font-size: 13px !important;
             line-height: 1.2;
             background: #ffffff;
@@ -957,7 +957,7 @@
 }
 
 .friends-group-chip:hover {
-    background: #efefef;
+    background: #faf8f1;
 }
 
 .friends-group-chip.active {
@@ -1005,7 +1005,7 @@
 }
 
 .friends-list-group-menu-item:hover {
-    background: #efefef;
+    background: #faf8f1;
 }
 
 .friends-list-group-menu-item.active {
@@ -1022,7 +1022,7 @@
 }
 
 .volt-friends-category-manager .volt-card-content-shell {
-    color: #111111;
+    color: #1d2a38;
     background: #f3f3ef;
 }
 
@@ -1031,7 +1031,7 @@
     border: 1px solid #858585 !important;
     border-radius: 3px !important;
     background: #fffdf4 !important;
-    color: #111111 !important;
+    color: #1d2a38 !important;
     box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.14), inset 0 0 0 1px rgba(255, 255, 255, 0.72) !important;
     font-size: 11px !important;
 }
@@ -1598,7 +1598,7 @@ button.swf-friends-section-header {
     overflow: hidden;
     border: 1px solid #777771;
     border-radius: 5px;
-    background: #e4e4e4;
+    background: #e4dfd0;
     box-shadow: inset 0 0 0 1px #ffffff, 0 2px 5px rgba(0,0,0,.42);
 }
 
@@ -1651,7 +1651,7 @@ button.swf-friends-section-header {
     top: 31px;
     height: 49px;
     padding: 11px 38px 0 27px !important;
-    background: #e4e4e4 !important;
+    background: #e4dfd0 !important;
     display: flex;
     gap: 7px;
     overflow: hidden;
@@ -1697,7 +1697,7 @@ button.swf-friends-section-header {
     padding: 0 !important;
     border-top: 1px solid #c7c7c7 !important;
     border-bottom: 1px solid #c7c7c7 !important;
-    background: #e4e4e4 !important;
+    background: #e4dfd0 !important;
 }
 
 .swf-messenger-window .messenger-thread-name {
@@ -1767,7 +1767,7 @@ button.swf-friends-section-header {
     bottom: 34px;
     padding: 4px 1px 4px 0 !important;
     overflow-y: auto !important;
-    background: #e4e4e4 !important;
+    background: #e4dfd0 !important;
     border: 0 !important;
 }
 
@@ -1853,7 +1853,7 @@ button.swf-friends-section-header {
     height: 34px;
     padding: 4px 5px !important;
     border-top: 1px solid #b9b9b9;
-    background: #e4e4e4 !important;
+    background: #e4dfd0 !important;
     display: flex;
     align-items: center;
     gap: 5px;
@@ -1903,17 +1903,17 @@ button.swf-friends-section-header {
     padding: 5px;
     border: 1px solid #5d6b7a;
     border-radius: 6px;
-    background: #e4e4e4;
+    background: #e4dfd0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, .5);
 }
 .swf-messenger-habbicon-controls { display: flex; height: 24px; gap: 8px; }
-.swf-messenger-habbicon-controls input { flex: 1; min-width: 0; padding: 2px 5px; border: 1px solid #777777; border-radius: 5px; background: #ffffff; color: #555555; font-size: 11px; }
-.swf-messenger-habbicon-controls button { width: 91px; padding: 0; border: 1px solid #777777; border-radius: 4px; background: linear-gradient(#f7f7f7, #d8d8d8); color: #333333; font-size: 11px; font-weight: 700; line-height: 18px; }
+.swf-messenger-habbicon-controls input { flex: 1; min-width: 0; padding: 2px 5px; border: 1px solid #777777; border-radius: 5px; background: #ffffff; color: #5d6b7a; font-size: 11px; }
+.swf-messenger-habbicon-controls button { width: 91px; padding: 0; border: 1px solid #777777; border-radius: 4px; background: linear-gradient(#f7f7f7, #d8d8d8); color: #1d2a38; font-size: 11px; font-weight: 700; line-height: 18px; }
 .swf-messenger-habbicon-scroll { max-height: 252px; margin-top: 4px; padding-right: 2px; overflow-y: auto; }
 .swf-messenger-habbicon-scroll section { margin: 0 0 5px; }
-.swf-messenger-habbicon-scroll strong { display: block; height: 16px; color: #111111; font-size: 10px; font-weight: 400; line-height: 16px; }
+.swf-messenger-habbicon-scroll strong { display: block; height: 16px; color: #1d2a38; font-size: 10px; font-weight: 400; line-height: 16px; }
 .swf-messenger-habbicon-grid { display: grid; grid-template-columns: repeat(5, 46px); gap: 2px; }
-.swf-messenger-habbicon-grid button { display: flex; width: 46px; height: 46px; min-height: 46px; align-items: center; justify-content: center; padding: 0; border: 1px solid #aaaaaa; border-radius: 4px; background: #f5f5f5; box-shadow: inset 0 1px 0 #ffffff; }
+.swf-messenger-habbicon-grid button { display: flex; width: 46px; height: 46px; min-height: 46px; align-items: center; justify-content: center; padding: 0; border: 1px solid #b9b29c; border-radius: 4px; background: #f5f5f5; box-shadow: inset 0 1px 0 #ffffff; }
 .swf-messenger-habbicon-grid button:hover { border-color: #5c9edb; background: #dfecf9; }
 .swf-messenger-habbicon-grid button span { display: block; max-width: 42px; max-height: 42px; background-repeat: no-repeat; }
 .swf-messenger-habbicon-message { display: block; width: 42px; height: 42px; background-repeat: no-repeat; background-position: 0 0; }
@@ -2093,7 +2093,7 @@ button.swf-friends-section-header {
     border: 1px solid #6193c2;
     border-radius: 4px;
     background: #d2e5f7;
-    color: #333333;
+    color: #1d2a38;
     font-size: 10px;
     line-height: 13px;
     position: relative;
@@ -2141,7 +2141,7 @@ button.swf-friends-section-header {
 .swf-messenger-window .chat-messages { top: 124px; }
 
 .swf-messenger-window {
-    background: #e4e4e4;
+    background: #e4dfd0;
     box-shadow: none;
 }
 
@@ -2205,7 +2205,7 @@ button.swf-friends-section-header {
 }
 
 .swf-messenger-window .messenger-thread-name {
-    color: #4a4a4a !important;
+    color: #1d2a38 !important;
 }
 
 .swf-messenger-window .messenger-actions {
@@ -2216,7 +2216,7 @@ button.swf-friends-section-header {
 }
 
 .swf-messenger-window .messenger-btn:not(.close-btn) {
-    border: 1px solid #8d8d8d;
+    border: 1px solid #b9b29c;
     border-radius: 4px;
     background: linear-gradient(#ffffff, #d7d7d7);
     box-shadow: inset 0 1px 0 #ffffff;
@@ -2313,7 +2313,7 @@ button.swf-friends-section-header {
     border: 1px solid #777771;
     border-image-source: none;
     border-radius: 5px;
-    background: #e4e4e4;
+    background: #e4dfd0;
     box-shadow: inset 0 0 0 1px #ffffff, 0 2px 5px rgba(0, 0, 0, .42);
 }
 
@@ -2390,7 +2390,7 @@ button.swf-friends-section-header {
 .swf-messenger-window .messenger-thread-header,
 .swf-messenger-window .chat-messages,
 .swf-messenger-window .messenger-input-row {
-    background: #e4e4e4 !important;
+    background: #e4dfd0 !important;
 }
 
 .swf-messenger-window .message-avatar {
@@ -2606,7 +2606,7 @@ button.swf-friends-section-header {
     box-sizing: border-box;
     min-height: 76px;
     padding: 7px 4px 3px;
-    color: #111111;
+    color: #1d2a38;
     font-size: 12px;
     line-height: 13px;
 }
@@ -3168,7 +3168,7 @@ button.swf-friends-section-header {
     min-width: 0;
     margin-left: 3px;
     overflow: hidden;
-    color: #111111;
+    color: #1d2a38;
     font-size: 10px;
     font-weight: normal;
     line-height: 13px;

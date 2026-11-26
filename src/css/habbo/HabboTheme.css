@@ -68,7 +68,7 @@
     border-image-width: 3px !important;
     border-image-repeat: stretch !important;
     background: transparent !important;
-    color: #111111 !important;
+    color: #1d2a38 !important;
     font-family: Volter, Arial, sans-serif;
     font-size: 9px;
     font-weight: 400;
@@ -97,7 +97,7 @@
 .habbo-btn-secondary.pointer-events-none,
 .habbo-btn-slice.pointer-events-none {
     border-image-source: var(--habbo-skin-button-disabled) !important;
-    color: #777777 !important;
+    color: #5d6b7a !important;
     opacity: 1;
     cursor: not-allowed;
     filter: none;

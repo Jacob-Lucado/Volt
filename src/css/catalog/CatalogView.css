@@ -674,7 +674,7 @@
     height: 460px;
     min-height: 460px;
     overflow: hidden;
-    color: #222222;
+    color: #1d2a38;
     background: var(--catalog-standard-bg, #e4e3db);
 }
 
@@ -1014,7 +1014,7 @@
 }
 
 :is(.volt-catalog-badge-preview, .volt-catalog-trophy-widget, .volt-catalog-guild-price) .volt-catalog-price-frame .volt-catalog-standard-price-text {
-    color: #111111 !important;
+    color: #1d2a38 !important;
     font-family: Ubuntu, Arial, sans-serif;
     font-size: 14px !important;
     font-weight: 700 !important;
@@ -1041,7 +1041,7 @@
     height: 460px;
     min-height: 460px;
     overflow: hidden;
-    color: #222222;
+    color: #1d2a38;
     background: var(--catalog-standard-bg, #e4e3db);
 }
 
@@ -1146,7 +1146,7 @@
     border: 1px solid #111111 !important;
     border-radius: 3px !important;
     background: linear-gradient(180deg, #f7f7f7 0%, #dedede 100%) !important;
-    color: #111111 !important;
+    color: #1d2a38 !important;
     font-size: 10px !important;
     font-weight: 700 !important;
     line-height: 20px !important;
@@ -2107,7 +2107,7 @@
     border-image-width: 3px !important;
     border-image-repeat: stretch !important;
     background: transparent !important;
-    color: #111111 !important;
+    color: #1d2a38 !important;
     font-family: HabboAirUbuntu, UbuntuRegular, Ubuntu, sans-serif !important;
     font-size: 11px !important;
     font-weight: 700 !important;
@@ -2138,7 +2138,7 @@
 .volt-catalog-window .volt-catalog-standard-button.pointer-events-none,
 .volt-catalog-window .volt-catalog-standard-button:disabled {
     border-image-source: var(--habbo-skin-button-disabled) !important;
-    color: #777777 !important;
+    color: #5d6b7a !important;
     opacity: 1 !important;
     cursor: not-allowed !important;
 }
@@ -2332,7 +2332,7 @@
     justify-content: flex-start;
     gap: 3px;
     min-height: 24px;
-    color: #222222;
+    color: #1d2a38;
     font-size: 11px;
 }
 
@@ -2349,7 +2349,7 @@
 }
 
 .volt-catalog-standard-price-text {
-    color: #222222 !important;
+    color: #1d2a38 !important;
     font-size: 11px !important;
     font-weight: 700 !important;
     line-height: 17px !important;
@@ -2413,7 +2413,7 @@
     height: 17px;
     margin-left: -2px;
     margin-top: 3px;
-    color: #222222;
+    color: #1d2a38;
     font-size: 12px;
     font-weight: 700;
     line-height: 17px;
@@ -2481,7 +2481,7 @@
 .volt-catalog-preview-btn svg {
     width: 14px !important;
     height: 14px !important;
-    color: #111111 !important;
+    color: #1d2a38 !important;
     fill: #111111 !important;
     flex-shrink: 0 !important;
     display: block !important;
