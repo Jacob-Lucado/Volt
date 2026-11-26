@@ -215,3 +215,29 @@
     background: var(--cr-bar);
     box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
 }
+
+/* Form fields. */
+.volt-card-shell :is(.form-control, .form-select, input[type='text'], input[type='number'], input[type='search'], input[type='password'], input[type='email'], textarea, select) {
+    border: 2px solid var(--cr-navy) !important;
+    border-radius: 4px !important;
+    background: #ffffff !important;
+    color: var(--cr-ink) !important;
+    box-shadow: none !important;
+    font-family: Ubuntu, sans-serif;
+}
+
+.volt-card-shell :is(.form-control, .form-select, input[type='text'], input[type='number'], input[type='search'], input[type='password'], input[type='email'], textarea, select):focus {
+    border-color: var(--cr-green) !important;
+    outline: 0;
+    box-shadow: 0 0 0 2px rgba(47, 143, 78, 0.25) !important;
+}
+
+.volt-card-shell :is(input, textarea)::placeholder {
+    color: var(--cr-ink-soft);
+    opacity: 1;
+}
+
+.volt-card-shell input[type='checkbox'],
+.volt-card-shell input[type='radio'] {
+    accent-color: var(--cr-green);
+}
