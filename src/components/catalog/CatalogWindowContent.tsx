@@ -1,5 +1,6 @@
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { CatalogType, GetConfigurationValue, ICatalogNode, LocalizeShortNumber, LocalizeText, useVoltLayout } from '../../api';
+import { flushSync } from 'react-dom';
+import { CatalogType, GetConfigurationValue, ICatalogNode, IsPhoneLayout, LocalizeShortNumber, LocalizeText, useVoltLayout } from '../../api';
 import { LayoutCurrencyIcon, VoltCardContentView, VoltCardHeaderView, VoltCardTabsItemView, VoltCardTabsView, VoltCardView } from '../../common';
 import { NativeCenteredField } from '../../common/native-text/NativeCenteredField';
 import { NativeText } from '../../common/native-text/NativeText';
@@ -12,10 +13,10 @@ import { CatalogBuilderHeaderView } from './views/catalog-header/CatalogBuilderH
 import { CatalogIconView } from './views/catalog-icon/CatalogIconView';
 import { CatalogBreadcrumbView } from './views/navigation/CatalogBreadcrumbView';
 import { CatalogNavigationView } from './views/navigation/CatalogNavigationView';
-import { CatalogTouchBackBar } from './views/navigation/CatalogTouchBackBar';
+import { CatalogTouchTitleBar } from './views/navigation/CatalogTouchTitleBar';
 import { CatalogSearchView } from './views/page/common/CatalogSearchView';
 import { GetCatalogLayout } from './views/page/layout/GetCatalogLayout';
-import { catalogPageHidesLeftPane, getCatalogLayoutDefinition } from './views/page/layout/catalogLayoutRegistry';
+import { catalogPageHidesLeftPane } from './views/page/layout/catalogLayoutRegistry';
 
 // The Builders Club page icon (LocalizationCatalogWidget: builder pages show icon_193 in the header).
 const BUILDER_HEADER_ICON = 193;
@@ -78,7 +79,7 @@ const CatalogTabLabel: FC<{ text: string; width: number; isTouch?: boolean }> = 
 );
 
 export const CatalogWindowContent: FC<{}> = () => {
-    const { rootNode = null, currentPage = null, currentOffer = null, searchResult = null, isBusy = false, catalogLoadError = null } = useCatalogData();
+    const { rootNode = null, currentPage = null, searchResult = null, isBusy = false, catalogLoadError = null } = useCatalogData();
     const {
         isVisible = false,
         setIsVisible = null,
@@ -95,8 +96,8 @@ export const CatalogWindowContent: FC<{}> = () => {
     const { purse = null } = usePurse();
     const layout = useVoltLayout();
     const isTouch = layout !== 'desktop';
-    // Phone portrait shows the category list and the page as two steps instead of two panes.
-    const usesSteps = layout === 'phone-portrait';
+    // Phones show the category list and the page as two steps instead of two panes.
+    const usesSteps = IsPhoneLayout(layout);
     const [touchStep, setTouchStep] = useState<CatalogTouchStep>('list');
     const displayedCurrencies = GetConfigurationValue<number[]>('system.currency.types', []);
     // The header belongs to the open page: a folder (pageId -1) can be active without opening one.
@@ -133,16 +134,13 @@ export const CatalogWindowContent: FC<{}> = () => {
     const activeLeaf = activeNodes.at(-1) ?? null;
     const tabFirstPage = useMemo(() => (currentTab ? getFirstPageNode(currentTab) : null), [currentTab]);
 
-    const renderer = getCatalogLayoutDefinition(currentPage?.layoutCode)?.renderer;
-    const hasOfferDetail = !!currentOffer && (renderer === 'default' || renderer === 'colorGrouping' || renderer === 'recolorableFurniture');
-
-    // Keep the selected product when rotating. A tab's automatic first page still opens at the category list.
+    // A tab's automatic first page still opens at the category list.
     useEffect(() => {
         if (!usesSteps) return;
-        if (!hasOfferDetail && (pageId < 0 || !activeLeaf || hasVisibleChildren(activeLeaf) || activeLeaf === tabFirstPage)) return;
+        if (pageId < 0 || !activeLeaf || hasVisibleChildren(activeLeaf) || activeLeaf === tabFirstPage) return;
 
         setTouchStep('page');
-    }, [usesSteps, pageId, activeLeaf, tabFirstPage, hasOfferDetail]);
+    }, [usesSteps, pageId, activeLeaf, tabFirstPage]);
 
     const onNodeActivated = useCallback((node: ICatalogNode) => {
         if (node.pageId > -1 && !hasVisibleChildren(node)) setTouchStep('page');
@@ -157,6 +155,18 @@ export const CatalogWindowContent: FC<{}> = () => {
     const paneLayoutCode = searchKeepsOpenPane ? loadedPage?.layoutCode : currentPage?.layoutCode;
     const sidebarHidden = catalogPageHidesLeftPane(paneLayoutCode);
     const tabHasNoChildren = !!currentTab && !hasVisibleChildren(currentTab);
+    const hasTouchList = !sidebarHidden && !tabHasNoChildren;
+    const shownTouchStep: CatalogTouchStep = hasTouchList ? touchStep : 'page';
+    const sidebarRef = useRef<HTMLDivElement>(null);
+    const catalogTitle = LocalizeText(isBuilder ? 'builder.catalog.title' : 'catalog.title');
+    const pageTitle = searchResult ? LocalizeText('catalog.search.header') : getSwfTabLabel(activeCatalogNode?.localization ?? LocalizeText('catalog.title'));
+    const pageTrail = (activeNodes[0] === currentTab ? activeNodes : [currentTab, ...activeNodes]).filter((node) => node && node !== activeCatalogNode);
+
+    // Focus inside the tap so phones raise the keyboard: the list step has to be on screen first.
+    const openTouchSearch = () => {
+        flushSync(() => setTouchStep('list'));
+        sidebarRef.current?.querySelector<HTMLInputElement>('.volt-catalog-search-input')?.focus();
+    };
 
     if (!isVisible) return null;
 
@@ -172,16 +182,25 @@ export const CatalogWindowContent: FC<{}> = () => {
                     onPositionChange={onPositionChange}
                 >
                     <VoltCardHeaderView headerText="" onCloseClick={() => setIsVisible(false)}>
-                        {/* header_3 caption: u_frame_title in white, centred over the title bar (frame_3 leaves 6px left and 8px right: 556px). */}
-                        <NativeCenteredField className="volt-catalog-title" width={556}>
-                            <NativeText
-                                nativeResolution
-                                background={isBuilder ? 0xd79b34 : 0x377998}
-                                overrides={{ color: 0xffffff }}
-                                text={isBusy ? LocalizeText('generic.loading') || 'Loading...' : LocalizeText(isBuilder ? 'builder.catalog.title' : 'catalog.title')}
-                                textStyle="u_frame_title"
+                        {usesSteps ? (
+                            <CatalogTouchTitleBar
+                                crumb={shownTouchStep === 'page' && !searchResult ? pageTrail.map((node) => getSwfTabLabel(node.localization)).join(' \u203a ') : ''}
+                                title={shownTouchStep === 'page' ? pageTitle : catalogTitle}
+                                onBack={hasTouchList && touchStep === 'page' ? () => setTouchStep('list') : undefined}
+                                onSearch={hasTouchList ? openTouchSearch : undefined}
                             />
-                        </NativeCenteredField>
+                        ) : (
+                            /* header_3 caption: u_frame_title in white, centred over the title bar (frame_3 leaves 6px left and 8px right: 556px). */
+                            <NativeCenteredField className="volt-catalog-title" width={556}>
+                                <NativeText
+                                    nativeResolution
+                                    background={isBuilder ? 0xd79b34 : 0x377998}
+                                    overrides={{ color: 0xffffff }}
+                                    text={isBusy ? LocalizeText('generic.loading') || 'Loading...' : catalogTitle}
+                                    textStyle="u_frame_title"
+                                />
+                            </NativeCenteredField>
+                        )}
                     </VoltCardHeaderView>
                     <div className="volt-catalog-mobile-header">
                         <div className="volt-catalog-mobile-currency">
@@ -267,10 +286,10 @@ export const CatalogWindowContent: FC<{}> = () => {
                     <VoltCardContentView classNames={['volt-catalog-content-shell']}>
                         <div
                             className={`volt-catalog-stage ${sidebarHidden ? 'is-navigation-hidden' : ''}`}
-                            data-touch-step={usesSteps ? (sidebarHidden || tabHasNoChildren ? 'page' : touchStep) : undefined}
+                            data-touch-step={usesSteps ? shownTouchStep : undefined}
                         >
                             {!sidebarHidden && (
-                                <div className="volt-catalog-sidebar">
+                                <div ref={sidebarRef} className="volt-catalog-sidebar">
                                     <div className="volt-catalog-search-shell">
                                         <CatalogSearchView onSearchSubmit={usesSteps ? () => setTouchStep('page') : undefined} />
                                     </div>
@@ -288,19 +307,7 @@ export const CatalogWindowContent: FC<{}> = () => {
                             )}
                             <div aria-busy={isBusy} className="volt-catalog-layout-shell">
                                 <div className="volt-catalog-layout-header-shell">
-                                    {usesSteps && !sidebarHidden ? (
-                                        <CatalogTouchBackBar
-                                            backLabel={getSwfTabLabel((activeNodes.at(-2) ?? currentTab)?.localization ?? LocalizeText('catalog.title'))}
-                                            title={
-                                                searchResult
-                                                    ? LocalizeText('catalog.search.header')
-                                                    : getSwfTabLabel(activeCatalogNode?.localization ?? LocalizeText('catalog.title'))
-                                            }
-                                            onBack={() => setTouchStep('list')}
-                                        />
-                                    ) : (
-                                        <CatalogBreadcrumbView />
-                                    )}
+                                    <CatalogBreadcrumbView />
                                     <div className="volt-catalog-layout-hero">
                                         {!!currentPage?.localization?.getImage(0) && <img alt="" src={currentPage.localization.getImage(0)} />}
                                     </div>

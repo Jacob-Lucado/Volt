@@ -1,5 +1,5 @@
 import { CSSProperties, FC, KeyboardEvent, useCallback, useEffect, useRef } from 'react';
-import { CatalogType, ICatalogNode, IsTouchLayout, useVoltLayout } from '../../../../api';
+import { CatalogType, ICatalogNode, IsPhoneLayout, IsTouchLayout, useVoltLayout } from '../../../../api';
 import { NativeText } from '../../../../common/native-text/NativeText';
 import { useCatalogNodeState, useCatalogUiState } from '../../../../hooks';
 import { CatalogIconView } from '../catalog-icon/CatalogIconView';
@@ -35,7 +35,7 @@ export const CatalogNavigationItemView: FC<CatalogNavigationItemViewProps> = (pr
     const isBuilder = currentType === CatalogType.BUILDER;
     const layout = useVoltLayout();
     const isTouch = IsTouchLayout(layout);
-    const hint = layout === 'phone-portrait' && searchDepth === null ? getNodeHint(node) : '';
+    const hint = IsPhoneLayout(layout) && searchDepth === null ? getNodeHint(node) : '';
     const itemRef = useRef<HTMLDivElement>(null);
     // Strip only technical technical suffixes; labels such as
     // "Flags (Wall)" or "Forest (Blue)" are meaningful catalog names.
