@@ -1,4 +1,4 @@
-/* Phone portrait drills into a product. Landscape keeps the categories, offers and product side by side. */
+/* Phones show the category list and a product page as two steps. Tablets keep the categories, offers and product side by side. */
 
 /* ---------- Window size ---------- */
 
@@ -25,12 +25,8 @@ html[data-volt-touch='on'] .volt-catalog-window {
     --catalog-touch-preview: 210px;
 }
 
-html[data-volt-layout='phone-portrait'] .volt-catalog-window {
+html[data-volt-device='phone'] .volt-catalog-window {
     --catalog-touch-row: 54px;
-}
-
-html[data-volt-layout='phone-landscape'] .volt-catalog-window {
-    --catalog-touch-tree: clamp(126px, 21%, 212px);
 }
 
 /* Hide desktop 17px pixel scrollbars inside touch Catalog so lists and grids use the full width with native scrolling. */
@@ -338,8 +334,8 @@ html[data-volt-touch='on'] .volt-catalog-window .volt-catalog-navigation-item.is
     height: 5px;
 }
 
-/* Phone portrait: a page row pushes the page, so it gets the same chevron as a folder. */
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-navigation-item.is-leaf::after {
+/* Phones: a page row pushes the page, so it gets the same chevron as a folder. */
+html[data-volt-device='phone'] .volt-catalog-window .volt-catalog-navigation-item.is-leaf::after {
     content: '';
     position: relative;
     z-index: 1;
@@ -843,7 +839,7 @@ html[data-volt-touch='on'] .volt-catalog-window .volt-catalog-grid-density-stand
     height: 54px !important;
 }
 
-html[data-volt-device='tablet'] .volt-catalog-window .volt-catalog-grid-density-standard .layout-grid-item > .volt-catalog-grid-offer-icon[data-fits2x='true'] {
+html[data-volt-touch='on'] .volt-catalog-window .volt-catalog-grid-density-standard .layout-grid-item > .volt-catalog-grid-offer-icon[data-fits2x='true'] {
     top: 15px;
     left: calc(50% - 16px);
     width: 32px !important;
@@ -904,139 +900,132 @@ html[data-volt-touch='on'] .volt-catalog-window .volt-catalog-grid-density-stand
     left: 4px;
 }
 
-/* ---------- Phone portrait: list step and page step ---------- */
+/* ---------- Phones: list step and page step ---------- */
 
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-content-shell {
+html[data-volt-device='phone'] .volt-catalog-window .volt-catalog-content-shell {
     padding: 0 !important;
 }
 
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-stage,
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-stage.is-navigation-hidden {
+html[data-volt-device='phone'] .volt-catalog-window .volt-catalog-stage,
+html[data-volt-device='phone'] .volt-catalog-window .volt-catalog-stage.is-navigation-hidden {
     display: flex;
     flex-direction: column;
     gap: 0;
     height: 100%;
 }
 
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-stage[data-touch-step='list'] > .volt-catalog-layout-shell,
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-stage[data-touch-step='page'] > .volt-catalog-sidebar {
+html[data-volt-device='phone'] .volt-catalog-window .volt-catalog-stage[data-touch-step='list'] > .volt-catalog-layout-shell,
+html[data-volt-device='phone'] .volt-catalog-window .volt-catalog-stage[data-touch-step='page'] > .volt-catalog-sidebar {
     display: none;
 }
 
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-sidebar {
+html[data-volt-device='phone'] .volt-catalog-window .volt-catalog-sidebar {
     flex: 1 1 auto;
     gap: 8px;
     padding: 8px 8px 0;
 }
 
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-navigation-shell {
+html[data-volt-device='phone'] .volt-catalog-window .volt-catalog-navigation-shell {
     margin: 0 -8px;
     padding: 0;
 }
 
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-navigation-shell::before {
+html[data-volt-device='phone'] .volt-catalog-window .volt-catalog-navigation-shell::before {
     display: none;
 }
 
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-navigation-item {
+html[data-volt-device='phone'] .volt-catalog-window .volt-catalog-navigation-item {
     grid-template-columns: 40px minmax(0, 1fr) 12px;
     padding: 0 14px 0 10px;
     background: #f6f6f1;
 }
 
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-navigation-node.is-child .volt-catalog-navigation-item {
+html[data-volt-device='phone'] .volt-catalog-window .volt-catalog-navigation-node.is-child .volt-catalog-navigation-item {
     background: #eeede5;
 }
 
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-layout-shell {
+html[data-volt-device='phone'] .volt-catalog-window .volt-catalog-layout-shell {
     flex: 1 1 auto;
 }
 
-/* Page step header: back chip and page name, then the page's header art. */
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-layout-header-shell {
-    display: flex !important;
-    flex: 0 0 auto;
-    flex-direction: column;
+html[data-volt-device='phone'] .volt-catalog-window .volt-catalog-layout-container {
+    flex: 1 1 auto;
+    padding: 6px 6px 0;
 }
 
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-stage.is-navigation-hidden .volt-catalog-layout-header-shell {
-    display: none !important;
+/* Title bar: back, the page under its trail, then search beside the shared close. Every button is a 27 x 28 sprite at 1x. */
+html[data-volt-device='phone'] .draggable-window .volt-card-shell.volt-card-frame-3.volt-catalog-window > .volt-card-header-shell {
+    padding: 0 !important;
 }
 
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-layout-hero:has(> img) {
-    display: flex !important;
-    justify-content: center;
-    max-height: 54px;
-    overflow: hidden;
-    border-bottom: 1px solid #000;
-    background: #000;
+html[data-volt-device='phone'] .draggable-window .volt-card-shell.volt-card-frame-3.volt-catalog-window > .volt-card-header-shell .volt-card-close-button {
+    right: 6px !important;
+    width: 38px !important;
+    background-position: center !important;
 }
 
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-layout-hero > img {
-    flex: none;
-    max-width: none;
-}
-
-.volt-catalog-touch-back-bar {
+html[data-volt-device='phone'] .volt-catalog-touch-title-bar {
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
-    gap: 8px;
+    padding: 0 44px 0 6px;
+}
+
+html[data-volt-device='phone'] .volt-catalog-touch-title-bar > button {
+    flex: none;
     height: 44px;
-    padding: 0 8px;
-    border-bottom: 1px solid #000;
-    background: #fff;
-}
-
-.volt-catalog-touch-back {
-    display: flex;
-    flex: none;
-    align-items: center;
-    gap: 7px;
-    max-width: 48%;
-    height: 36px;
-    padding: 0 12px;
-    border-style: solid;
-    border-width: 3px;
-    border-image: url('../../assets/images/habbo-skin/slices/button-black-default.png') 3 fill / 3px stretch;
-    background: none;
-    color: #fff !important;
-    font: 700 13px/1 HabboAirUbuntu, Ubuntu, sans-serif;
+    padding: 0;
+    border: 0;
+    background: transparent center / 27px 28px no-repeat;
     image-rendering: pixelated;
 }
 
-.volt-catalog-touch-back:active {
-    border-image-source: url('../../assets/images/habbo-skin/slices/button-black-pressed.png');
+html[data-volt-device='phone'] .volt-catalog-touch-title-bar > button:active {
+    filter: brightness(0.85);
 }
 
-.volt-catalog-touch-back > img {
-    flex: none;
-    filter: brightness(10);
+html[data-volt-device='phone'] .volt-catalog-touch-title-bar > .volt-catalog-touch-back {
+    width: 44px;
+    background-image: url('../../assets/images/habbo-skin/touch/back-touch.png');
 }
 
-.volt-catalog-touch-back > span {
-    color: #fff !important;
+html[data-volt-device='phone'] .volt-catalog-touch-title-bar > .volt-catalog-touch-search {
+    width: 38px;
+    background-image: url('../../assets/images/habbo-skin/touch/search-touch.png');
 }
 
-.volt-catalog-touch-back > span,
-.volt-catalog-touch-back-title {
+html[data-volt-device='phone'] .volt-catalog-touch-title {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+    padding-left: 4px;
+    color: #fff;
+    font-family: HabboAirUbuntu, Ubuntu, sans-serif;
+}
+
+html[data-volt-device='phone'] .volt-catalog-touch-title-bar > .volt-catalog-touch-title:first-child {
+    padding-left: 8px;
+}
+
+html[data-volt-device='phone'] .volt-catalog-touch-title > * {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 
-.volt-catalog-touch-back-title {
-    min-width: 0;
-    color: #000;
-    font: 700 14px HabboAirUbuntu, Ubuntu, sans-serif;
+html[data-volt-device='phone'] .volt-catalog-touch-crumb {
+    color: #cfe3ee;
+    font-size: 12px;
+    line-height: 14px;
 }
 
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-layout-container {
-    flex: 1 1 auto;
-    padding: 6px 6px 0;
-}
-
-html[data-volt-layout='phone-portrait'] .volt-catalog-window .volt-catalog-default-layout {
-    padding-bottom: 4px;
+html[data-volt-device='phone'] .volt-catalog-touch-title > strong {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 22px;
 }
 
 /* ---------- Front Page (layout_frontpage_featured) on phones ---------- */
@@ -1641,8 +1630,12 @@ html[data-volt-touch='on'] .volt-catalog-gift-submit {
     font-size: 14px !important;
 }
 
-/* The phone detail owns the preview and purchase controls. Its grid scrolls independently. */
+/* Phones keep the selected product's preview, name, price and buy dock on screen while the item grid scrolls. */
 html[data-volt-device='phone'] .volt-catalog-window {
+    .volt-catalog-layout-container:has(> .volt-catalog-default-layout) {
+        padding: 0;
+    }
+
     .volt-catalog-default-layout {
         grid-template-rows: minmax(0, 1fr);
         padding: 0;
@@ -1653,7 +1646,6 @@ html[data-volt-device='phone'] .volt-catalog-window {
     }
 
     .volt-catalog-default-layout > .volt-catalog-grid-shell {
-        grid-area: 1 / 1 !important;
         min-width: 0;
         margin: 0;
         overflow: hidden;
@@ -1661,16 +1653,29 @@ html[data-volt-device='phone'] .volt-catalog-window {
 
     .volt-catalog-grid-density-standard,
     .volt-catalog-grid-virtual.volt-catalog-grid-density-standard .grid {
-        grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--volt-phone-tile-width, 52px)), 1fr)) !important;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--volt-phone-tile-width)), 1fr)) !important;
+        column-gap: var(--volt-phone-tile-gap) !important;
+        row-gap: var(--volt-phone-tile-gap) !important;
     }
 
-    .volt-catalog-grid-density-standard .layout-grid-item > .volt-catalog-grid-offer-icon,
-    .volt-catalog-grid-density-standard .layout-grid-item.uses-base-grid-template:not(.unique-item) > .volt-catalog-grid-offer-icon {
-        inset: 2px 3px auto;
-        width: calc(100% - 6px) !important;
-        height: 35px !important;
-        object-fit: scale-down !important;
-        object-position: center;
+    .volt-catalog-grid-density-standard:not(.volt-catalog-grid-virtual),
+    .volt-catalog-grid-virtual.volt-catalog-grid-density-standard .grid {
+        padding: 6px 16px 16px;
+    }
+
+    .volt-catalog-grid-density-standard .layout-grid-item.is-active::before {
+        display: none;
+    }
+
+    .volt-catalog-grid-density-standard [role='option'][aria-selected='true']::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        z-index: 2;
+        border: 7px solid transparent;
+        border-image: url('../../assets/images/inventory/air/inventory-item-selected-outline.png') 7 / 7px stretch;
+        image-rendering: pixelated;
+        pointer-events: none;
     }
 
     .volt-catalog-phone-detail {
@@ -1683,26 +1688,11 @@ html[data-volt-device='phone'] .volt-catalog-window {
         background: var(--catalog-standard-bg);
     }
 
-    .volt-catalog-phone-detail-heading {
-        display: flex;
-        flex: none;
-        align-items: center;
-        gap: 8px;
-        padding: 6px 8px;
-        background: #405667;
-        color: white;
-        font: 13px/1.25 HabboAirUbuntu, Ubuntu, sans-serif;
-        overflow-wrap: anywhere;
-    }
-
-    .volt-catalog-phone-detail-heading .volt-catalog-product-details-badges {
-        flex-direction: row;
-    }
-
     .volt-catalog-phone-detail .volt-catalog-product-view {
         flex: none;
-        height: clamp(106px, 21dvh, 156px);
+        height: clamp(120px, 21dvh, 170px);
         margin: 0;
+        border-bottom: 1px solid #000;
     }
 
     .volt-catalog-phone-detail .volt-catalog-offer-preview > .shadow-room-previewer {
@@ -1721,6 +1711,51 @@ html[data-volt-device='phone'] .volt-catalog-window {
         transform: translateY(-50%);
     }
 
+    .volt-catalog-phone-detail-heading {
+        display: flex;
+        flex: none;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 16px 8px;
+        color: #000;
+        font-family: HabboAirUbuntu, Ubuntu, sans-serif;
+    }
+
+    .volt-catalog-phone-detail-heading .volt-catalog-product-details {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        min-width: 0;
+    }
+
+    .volt-catalog-phone-detail-heading .volt-catalog-product-details > strong {
+        overflow: hidden;
+        font-size: 18px;
+        line-height: 22px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .volt-catalog-phone-detail-heading .volt-catalog-product-details > span {
+        display: -webkit-box;
+        overflow: hidden;
+        color: #555;
+        font-size: 13px;
+        line-height: 16px;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+
+    .volt-catalog-phone-detail-heading .volt-catalog-product-details-badges {
+        flex-direction: row;
+    }
+
+    .volt-catalog-phone-price {
+        position: relative;
+        flex: none;
+    }
+
     .volt-catalog-phone-detail > :is(.volt-catalog-colour-grid-shell, .volt-catalog-recolorable-palette) {
         flex: none;
         margin: 0;
@@ -1736,182 +1771,116 @@ html[data-volt-device='phone'] .volt-catalog-window {
     }
 
     .volt-catalog-phone-checkout {
-        --catalog-action-default: url('../../assets/images/habbo-skin/touch/btn-default-h30.png');
-        --catalog-action-green-default: url('../../assets/images/habbo-skin/touch/btn-green-default-h30.png');
-        --catalog-action-green-pressed: url('../../assets/images/habbo-skin/touch/btn-green-pressed-h30.png');
-        --catalog-action-pressed: url('../../assets/images/habbo-skin/touch/btn-pressed-h30.png');
-        --catalog-action-disabled: url('../../assets/images/habbo-skin/touch/btn-disabled-h30.png');
         display: flex;
         flex: none;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 0 8px;
-        padding: 2px 6px;
+        flex-direction: column;
+        gap: 8px;
+        padding: 10px 12px;
+        border-top: 1px solid #000;
+        background: #eeede5;
     }
 
-    .volt-catalog-phone-detail :is(.volt-catalog-price-row, .volt-catalog-purchase-row) {
-        flex: 1 1 auto;
-        width: auto !important;
-        min-width: 0;
+    .volt-catalog-phone-checkout :is(.volt-catalog-price-row, .volt-catalog-purchase-row) {
         min-height: 0;
         padding: 0;
     }
 
-    .volt-catalog-phone-detail .volt-catalog-price-row {
-        flex-wrap: wrap;
-    }
-
-    .volt-catalog-phone-detail .volt-catalog-offer-actions {
-        justify-content: flex-end;
-        gap: 6px !important;
-    }
-
-    .volt-catalog-phone-detail :is(.volt-catalog-standard-buy-button, .volt-catalog-standard-gift-button) {
-        position: relative;
-        flex: 0 1 auto;
-        min-width: 64px !important;
-        max-width: 100%;
-        height: 30px !important;
-        min-height: 30px !important;
-        padding-inline: 8px !important;
-        overflow: visible;
-    }
-
-    .volt-catalog-phone-detail :is(.volt-catalog-standard-buy-button, .volt-catalog-standard-gift-button)::after {
-        content: '';
-        position: absolute;
-        inset: -7px 0;
-    }
-
-    .volt-catalog-phone-detail :is(.volt-catalog-buy-caption, .volt-catalog-gift-caption).is-touch {
-        min-width: 0;
-        max-width: 100%;
-        font-size: 13px !important;
-    }
-
-    .volt-catalog-phone-detail .volt-catalog-touch-stepper {
-        background-position: center;
-        background-size: 24px 24px;
-    }
-
-    .volt-catalog-phone-detail .volt-catalog-standard-spinner-input-frame {
-        flex-basis: 34px;
-        width: 34px;
-        height: 28px;
-    }
-
-    .volt-catalog-phone-detail .volt-catalog-standard-spinner-value {
-        line-height: 28px !important;
-    }
-
-    .volt-catalog-phone-detail .volt-catalog-preview-controls {
+    .volt-catalog-preview-controls {
         top: 0;
         right: 0;
         gap: 0;
-        width: 88px;
+        width: auto;
     }
 
-    .volt-catalog-phone-detail .volt-catalog-preview-controls button.volt-catalog-preview-btn {
-        width: 44px !important;
-        height: 44px !important;
-    }
-
-    .volt-catalog-phone-detail .volt-catalog-preview-controls button.volt-catalog-preview-btn::before {
-        inset: 9px;
-    }
-
-    .volt-catalog-phone-detail .volt-catalog-preview-controls button.volt-catalog-preview-btn .volt-catalog-preview-arrow {
-        transform: none;
-    }
-
-    .volt-catalog-phone-detail-heading .volt-catalog-touch-back {
-        height: 30px;
-        padding-inline: 7px;
-    }
-}
-
-html[data-volt-layout='phone-portrait'] .volt-catalog-window {
-    .volt-catalog-default-layout.no-offer > .volt-catalog-phone-detail {
-        display: none;
-    }
-
-    .volt-catalog-default-layout.has-offer {
-        grid-template-rows: minmax(0, 1fr) fit-content(65%);
-    }
-
-    .volt-catalog-default-layout.has-offer > .volt-catalog-phone-detail {
-        grid-area: 2 / 1;
-        border-top: 1px solid #97968e;
-    }
-
-    .volt-catalog-layout-shell:has(.volt-catalog-default-layout.has-offer) > .volt-catalog-layout-header-shell {
+    .volt-catalog-preview-controls button.volt-catalog-preview-btn.is-right {
         display: none !important;
     }
 
-    .volt-catalog-layout-container:has(> .volt-catalog-default-layout) {
-        padding-bottom: 6px;
+    .volt-catalog-preview-controls button.volt-catalog-preview-btn {
+        width: 44px !important;
+        min-width: 44px !important;
+        height: 44px !important;
+        min-height: 44px !important;
+        background: url('../../assets/images/habbo-skin/touch/rotate-touch.png') center / 27px 28px no-repeat !important;
+    }
+
+    .volt-catalog-preview-controls button.volt-catalog-preview-btn::before,
+    .volt-catalog-preview-controls button.volt-catalog-preview-btn .volt-catalog-preview-arrow {
+        display: none;
+    }
+
+    .volt-catalog-preview-controls button.volt-catalog-preview-btn:active:not(:disabled) {
+        filter: brightness(0.85);
     }
 }
 
+/* Portrait stacks preview, product row, colours, grid and buy dock; only the grid scrolls. */
+html[data-volt-layout='phone-portrait'] .volt-catalog-window {
+    .volt-catalog-default-layout {
+        grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+        grid-template-areas: 'preview' 'heading' 'colours' 'grid' 'checkout';
+    }
+
+    .volt-catalog-phone-detail {
+        display: contents;
+    }
+
+    .volt-catalog-phone-detail > .volt-catalog-product-view {
+        grid-area: preview !important;
+    }
+
+    .volt-catalog-phone-detail-heading {
+        grid-area: heading;
+    }
+
+    .volt-catalog-phone-detail > :is(.volt-catalog-colour-grid-shell, .volt-catalog-recolorable-palette) {
+        grid-area: colours;
+    }
+
+    .volt-catalog-default-layout > .volt-catalog-grid-shell {
+        grid-area: grid !important;
+    }
+
+    .volt-catalog-phone-checkout {
+        grid-area: checkout;
+    }
+}
+
+/* Landscape puts the grid beside a product panel; the category list is the other step. */
 html[data-volt-layout='phone-landscape'] .volt-catalog-window {
-    .volt-catalog-stage {
-        gap: 5px;
-    }
-
-    .volt-catalog-navigation-item {
-        grid-template-columns: 22px minmax(0, 1fr) 6px;
-        grid-template-rows: auto;
-        grid-template-areas: 'icon label caret';
-        gap: 0 5px;
-        height: auto;
-        padding-right: 4px;
-    }
-
-    .volt-catalog-navigation-node.is-child .volt-catalog-navigation-item {
-        padding-left: calc(6px + var(--volt-catalog-navigation-indent, 0px));
-    }
-
-    .volt-catalog-navigation-item .volt-catalog-navigation-icon,
-    .volt-catalog-navigation-node.is-child .volt-catalog-navigation-icon {
-        width: 22px;
-        min-width: 22px;
-        height: 24px;
-    }
-
-    .volt-catalog-navigation-icon :is(img, canvas) {
-        zoom: 1;
-    }
-
-    .volt-catalog-navigation-item .volt-catalog-navigation-label,
-    .volt-catalog-navigation-node.is-child .volt-catalog-navigation-label {
-        height: auto;
-        overflow-wrap: anywhere;
-        white-space: normal;
-        color: #354d5b;
-        font: 700 13px/1.15 HabboAirUbuntu, Ubuntu, sans-serif;
-    }
-
-    .volt-catalog-navigation-item.is-active .volt-catalog-navigation-label {
-        color: #fff;
-    }
-
     .volt-catalog-search-helper {
         display: none;
     }
 
     .volt-catalog-default-layout {
-        grid-template-columns: minmax(0, 1fr) clamp(210px, 38%, 300px);
-        column-gap: 5px;
+        grid-template-columns: minmax(0, 1fr) clamp(260px, 46%, 400px);
+        column-gap: 0;
+    }
+
+    .volt-catalog-default-layout > .volt-catalog-grid-shell {
+        grid-area: 1 / 1 !important;
     }
 
     .volt-catalog-phone-detail {
         grid-area: 1 / 2;
-        border: 1px solid #97968e;
+        margin: 8px 8px 8px 0;
+        border: 1px solid #000;
         border-radius: 4px;
     }
 
-    .volt-catalog-default-layout.no-offer .volt-catalog-phone-detail {
-        justify-content: center;
+    .volt-catalog-phone-detail .volt-catalog-product-view {
+        flex: 1 1 0;
+        height: auto;
+        min-height: 90px;
+    }
+
+    .volt-catalog-phone-detail-heading {
+        padding: 6px 12px 2px;
+    }
+
+    .volt-catalog-phone-checkout {
+        padding: 6px 10px 8px;
+        border-top: 0;
+        background: none;
     }
 }

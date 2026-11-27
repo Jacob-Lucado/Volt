@@ -15,6 +15,7 @@ vi.mock('../../../../../common', () => ({ Text: () => null }));
 
 vi.mock('../../../../../hooks', () => ({
     getCatalogGridMetrics: () => ({}),
+    useCatalogActions: () => ({}),
     useCatalogData: vi.fn(),
     useCatalogDisplayPreferences: vi.fn(),
     useCatalogUiState: vi.fn(() => ({ currentType: 'NORMAL' }))

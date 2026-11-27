@@ -14,9 +14,9 @@ const TOUCH_COLUMN_COUNTS: Partial<Record<VoltLayout, number>> = {
 };
 
 const TOUCH_TILE_HEIGHT = 90;
-const PHONE_TILE_WIDTH = 52;
-const PHONE_TILE_HEIGHT = 70;
-const PHONE_TILE_GAP = 4;
+const PHONE_TILE_WIDTH = 76;
+const PHONE_TILE_HEIGHT = 82;
+const PHONE_TILE_GAP = 10;
 
 interface CatalogItemGridWidgetViewProps extends AutoGridProps {
     showPrices?: boolean;
@@ -62,7 +62,11 @@ export const CatalogItemGridWidgetView: FC<CatalogItemGridWidgetViewProps> = (pr
     const airGridStyle = {
         ...style,
         ...(isAirStandardDensity && { '--volt-air-column-count': (touchColumnCount ?? airColumnCount).toString() }),
-        ...(usesPhoneGrid && { '--volt-phone-tile-width': `${PHONE_TILE_WIDTH}px`, '--volt-touch-tile-height': `${PHONE_TILE_HEIGHT}px` })
+        ...(usesPhoneGrid && {
+            '--volt-phone-tile-width': `${PHONE_TILE_WIDTH}px`,
+            '--volt-phone-tile-gap': `${PHONE_TILE_GAP}px`,
+            '--volt-touch-tile-height': `${PHONE_TILE_HEIGHT}px`
+        })
     } as CSSProperties;
     const mixedLayout = useMemo(() => layoutAirCatalogOffers(offers, airColumnCount), [airColumnCount, offers]);
     const bundleCounterByOffer = useMemo(() => {
