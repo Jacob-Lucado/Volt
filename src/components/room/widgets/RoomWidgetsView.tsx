@@ -26,6 +26,7 @@ import { PetPackageWidgetView } from './pet-package/PetPackageWidgetView';
 import { RoomKeybindView } from './RoomKeybindView';
 import { RoomFilterWordsWidgetView } from './room-filter-words/RoomFilterWordsWidgetView';
 import { RoomStreamWidgetView } from './room-stream/RoomStreamWidgetView';
+import { VideoScreenWidgetView } from './video-screen/VideoScreenWidgetView';
 import { RoomThumbnailWidgetView } from './room-thumbnail/RoomThumbnailWidgetView';
 import { RoomToolsWidgetView } from './room-tools/RoomToolsWidgetView';
 import { TouchPlacementView } from './touch-placement/TouchPlacementView';
@@ -181,6 +182,9 @@ export const RoomWidgetsView: FC<{}> = (props) => {
             <div className="absolute top-0 left-0 pointer-events-none size-full">
                 <WidgetErrorBoundary name="VariableLeaderboard">
                     <VariableLeaderboardOverlayView />
+                </WidgetErrorBoundary>
+                <WidgetErrorBoundary name="VideoScreens">
+                    <VideoScreenWidgetView />
                 </WidgetErrorBoundary>
                 <WidgetErrorBoundary name="FurnitureLabel">
                     <FurnitureLabelWidgetView />

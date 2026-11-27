@@ -253,6 +253,15 @@ export class FlatAccessDeniedMessageEvent extends MessageEvent {}
 export class GenericErrorEvent extends MessageEvent {}
 export class GetGuestRoomResultEvent extends MessageEvent {}
 export class ThumbnailStatusMessageEvent extends MessageEvent {}
+export class YoutubeDisplayVideoMessageEvent extends MessageEvent {}
+export class GetYoutubeDisplayStatusMessageComposer
+{
+    constructor(public objectId: number) {}
+
+    public getMessageArray() { return [ this.objectId ]; }
+
+    public dispose() {}
+}
 export class RoomStreamEndedComposer
 {
     constructor(public roomId: number, public token: number) {}

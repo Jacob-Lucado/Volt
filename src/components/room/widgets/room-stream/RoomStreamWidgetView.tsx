@@ -4,6 +4,7 @@ import { SendMessageComposer } from '../../../../api';
 import { useRoom, useRoomStreamWidget } from '../../../../hooks';
 import { FavoriteSong, isFavorite, readFavorites, safeLink, saveFavorites, toggleFavorite } from './roomStreamFavorites';
 import './RoomStreamWidgetView.css';
+import { setRoomStreamPlayback, setRoomStreamPosition } from './roomStreamPlayback';
 
 const VOLUME_KEY = 'room-stream-volume';
 const VIDEO_WIDTH_KEY = 'room-stream-video-width';
@@ -321,6 +322,22 @@ export const RoomStreamWidgetView: FC<{}> = () => {
     const roomId = stream?.roomId ?? 0;
     const canEndSongs = !!roomSession && (roomSession.isRoomOwner || roomSession.controllerLevel >= RoomControllerLevel.GUEST);
     const endedTokenRef = useRef<number>(null);
+
+    useEffect(() => {
+        setRoomStreamPosition(position);
+    }, [position]);
+
+    useEffect(() => {
+        if (!url || !kind) {
+            setRoomStreamPlayback(null);
+
+            return;
+        }
+
+        setRoomStreamPlayback({ url, kind, title: track?.title ?? '', artist: track?.artist ?? '', artwork: track?.artwork ?? null, paused });
+
+        return () => setRoomStreamPlayback(null);
+    }, [url, kind, track?.title, track?.artist, track?.artwork, paused]);
 
     // Someone with rights tells the room a song ended, so it moves on to the next one. The server ignores anyone else.
     const reportEnded = () => {
