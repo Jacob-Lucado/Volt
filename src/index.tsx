@@ -115,6 +115,7 @@ import './css/touch/TouchRightSide.css';
 import './css/touch/TouchHud.css';
 import './css/touch/TouchChat.css';
 import './css/touch/TouchRoom.css';
+import './css/touch/TouchWalkStick.css';
 import './css/touch/TouchCatalog.css';
 import './css/touch/TouchNavigator.css';
 import './css/touch/TouchInventory.css';
