@@ -1,3 +1,4 @@
+import { GetRoomEngine, RoomObjectCategory, RoomObjectType } from '@volt/renderer';
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ChatMessageTypeEnum, CreateLinkEvent, GetConfigurationValue, LocalizeText, localizeWithFallback, RoomWidgetUpdateChatInputContentEvent } from '../../../../api';
@@ -6,8 +7,11 @@ import { Text } from '../../../../common';
 import { useChatHelpButton, useChatInputWidget, useClientAccessLists, useRoom, useSessionInfo, useUiEvent, useUserDataSnapshot } from '../../../../hooks';
 import { ChatInputHabbiconSelectorView } from './ChatInputHabbiconSelectorView';
 import { ChatInputStyleSelectorView } from './ChatInputStyleSelectorView';
-import { ChatInputTouchModeBarView, TouchChatMode } from './ChatInputTouchModeBarView';
+import { ChatInputTouchPeopleView, TouchChatPerson } from './ChatInputTouchPeopleView';
 import { ChatStyleDefinition, getChatStyleLibrary, getSelectableChatStyleIds } from './chatStyles';
+
+const PEOPLE_REFRESH_MS = 1500;
+const SHOUT_HOLD_MS = 450;
 
 export const ChatInputView: FC<{}> = (props) => {
     const [chatValue, setChatValue] = useState<string>('');
@@ -34,8 +38,10 @@ export const ChatInputView: FC<{}> = (props) => {
     const { isHelpButtonVisible, hoverRegionProps, helpButtonProps } = useChatHelpButton();
     const layout = useVoltLayout();
     const isTouch = IsTouchLayout(layout);
-    const [touchMode, setTouchMode] = useState<TouchChatMode>('say');
     const [whisperTarget, setWhisperTarget] = useState('');
+    const [people, setPeople] = useState<readonly TouchChatPerson[]>([]);
+    const [shoutArmed, setShoutArmed] = useState(false);
+    const shoutTimer = useRef(0);
 
     const chatModeIdWhisper = useMemo(() => LocalizeText('widgets.chatinput.mode.whisper'), []);
     const chatModeIdShout = useMemo(() => LocalizeText('widgets.chatinput.mode.shout'), []);
@@ -121,32 +127,17 @@ export const ChatInputView: FC<{}> = (props) => {
     );
 
     const sendTouchChatValue = useCallback(
-        (value: string) => {
+        (value: string, shout: boolean) => {
             if (!value || !value.trim().length) return;
 
-            if (touchMode === 'whisper' && whisperTarget) {
+            if (whisperTarget && !shout) {
                 sendChatValue(`${chatModeIdWhisper} ${whisperTarget} ${value}`, false, false);
                 return;
             }
 
-            sendChatValue(value, touchMode === 'shout');
+            sendChatValue(value, shout);
         },
-        [touchMode, whisperTarget, chatModeIdWhisper, sendChatValue]
-    );
-
-    const selectTouchMode = useCallback(
-        (mode: TouchChatMode) => {
-            if (mode === 'whisper') {
-                const target = selectedUsername || whisperTarget;
-
-                if (!target) return;
-
-                setWhisperTarget(target);
-            }
-
-            setTouchMode(mode);
-        },
-        [selectedUsername, whisperTarget]
+        [whisperTarget, chatModeIdWhisper, sendChatValue]
     );
 
     const updateChatInput = useCallback(
@@ -236,7 +227,7 @@ export const ChatInputView: FC<{}> = (props) => {
                     if (isTouch) {
                         if (event.isComposing || event.keyCode === 229) return;
                         event.preventDefault();
-                        sendTouchChatValue(value);
+                        sendTouchChatValue(value, event.shiftKey);
                     } else sendChatValue(value, event.shiftKey);
                     return;
                 case 'Backspace':
@@ -266,7 +257,6 @@ export const ChatInputView: FC<{}> = (props) => {
             case RoomWidgetUpdateChatInputContentEvent.WHISPER: {
                 if (isTouch) {
                     setWhisperTarget(event.userName);
-                    setTouchMode('whisper');
                     openTouchChat();
                     return;
                 }
@@ -295,8 +285,38 @@ export const ChatInputView: FC<{}> = (props) => {
     }, [chatValue]);
 
     useEffect(() => {
-        if (!isTouch) setTouchMode('say');
+        if (!isTouch) setWhisperTarget('');
     }, [isTouch]);
+
+    useEffect(() => {
+        if (!isTouch || !roomSession) return;
+
+        const readPeople = () => {
+            const engine = GetRoomEngine();
+            const own = engine.getRoomObject(roomSession.roomId, roomSession.ownRoomIndex, RoomObjectCategory.UNIT)?.getLocation();
+            const distance = (roomIndex: number) => {
+                const location = engine.getRoomObject(roomSession.roomId, roomIndex, RoomObjectCategory.UNIT)?.getLocation();
+
+                return own && location ? Math.max(Math.abs(location.x - own.x), Math.abs(location.y - own.y)) : Number.MAX_SAFE_INTEGER;
+            };
+
+            const next = (roomSession.userDataManager?.getRoomUserListSnapshot() ?? [])
+                .filter((user) => user.type === RoomObjectType.USER && user.roomIndex !== roomSession.ownRoomIndex)
+                .map((user) => ({ name: user.name, figure: user.figure, distance: distance(user.roomIndex) }))
+                .sort((a, b) => a.distance - b.distance)
+                .map(({ name, figure }) => ({ name, figure }));
+
+            setPeople((previous) =>
+                previous.length === next.length && previous.every((person, i) => person.name === next[i].name && person.figure === next[i].figure) ? previous : next
+            );
+        };
+
+        readPeople();
+
+        const interval = window.setInterval(readPeople, PEOPLE_REFRESH_MS);
+
+        return () => window.clearInterval(interval);
+    }, [isTouch, roomSession]);
 
     useEffect(() => {
         if (!roomSession) return;
@@ -324,18 +344,23 @@ export const ChatInputView: FC<{}> = (props) => {
     if (!roomSession || roomSession.isSpectator || !portalTarget) return null;
 
     if (isTouch) {
-        const whisperFigure = whisperTarget ? (roomSession.userDataManager?.getUserDataByName(whisperTarget)?.figure ?? '') : '';
+        const canSend = !floodBlocked && !!chatValue.trim();
+
+        const releaseSend = (shout: boolean) => {
+            window.clearTimeout(shoutTimer.current);
+            setShoutArmed(false);
+
+            if (canSend) sendTouchChatValue(chatValue, shout);
+        };
 
         return createPortal(
-            <div className="volt-touch-chat" data-chat-mode={touchMode} onFocusCapture={showTouchChat} onPointerDownCapture={showTouchChat}>
-                <ChatInputTouchModeBarView
-                    closeChat={closeTouchChat}
-                    canWhisper={!!(selectedUsername || whisperTarget)}
-                    mode={touchMode}
-                    selectMode={selectTouchMode}
-                    whisperFigure={whisperFigure}
-                    whisperTarget={whisperTarget}
-                />
+            <div
+                className="volt-touch-chat"
+                data-chat-mode={shoutArmed ? 'shout' : whisperTarget ? 'whisper' : 'say'}
+                onFocusCapture={showTouchChat}
+                onPointerDownCapture={showTouchChat}
+            >
+                <ChatInputTouchPeopleView people={people} whisperTarget={whisperTarget} selectWhisperTarget={setWhisperTarget} closeChat={closeTouchChat} />
                 <div className="volt-touch-chat-bar">
                     <ChatInputStyleSelectorView chatStyleId={chatStyleId} chatStyleIds={selectableChatStyleIds} selectChatStyleId={updateChatStyleId} />
                     {!floodBlocked && (
@@ -361,13 +386,22 @@ export const ChatInputView: FC<{}> = (props) => {
                     )}
                     <ChatInputHabbiconSelectorView />
                     <button
-                        className="volt-touch-chat-send"
-                        disabled={floodBlocked || !chatValue.trim()}
+                        className={`volt-touch-chat-send${shoutArmed ? ' is-shout' : ''}`}
+                        disabled={!canSend}
                         type="button"
-                        onPointerDown={(event) => event.preventDefault()}
-                        onClick={() => sendTouchChatValue(chatValue)}
+                        onContextMenu={(event) => event.preventDefault()}
+                        onPointerDown={(event) => {
+                            event.preventDefault();
+                            window.clearTimeout(shoutTimer.current);
+                            shoutTimer.current = window.setTimeout(() => setShoutArmed(true), SHOUT_HOLD_MS);
+                        }}
+                        onPointerUp={() => releaseSend(shoutArmed)}
+                        onPointerLeave={() => {
+                            window.clearTimeout(shoutTimer.current);
+                            setShoutArmed(false);
+                        }}
                     >
-                        {localizeWithFallback('widgets.chatinput.button.send', 'Send')}
+                        {shoutArmed ? localizeWithFallback('widgets.chatinput.button.shout', 'Shout') : localizeWithFallback('widgets.chatinput.button.send', 'Send')}
                     </button>
                 </div>
             </div>,
