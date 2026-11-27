@@ -213,6 +213,60 @@ describe('RoomStreamWidgetView', () => {
         expect(container.querySelector('.room-stream-seek')).toBeNull();
     });
 
+    it('loads a whole YouTube playlist and reports the end after its last video', async () => {
+        let index = 0;
+        const player = {
+            playVideo: vi.fn(),
+            pauseVideo: vi.fn(),
+            setVolume: vi.fn(),
+            seekTo: vi.fn(),
+            getCurrentTime: () => 10,
+            getDuration: () => 200,
+            getPlayerState: () => 0,
+            getVideoData: () => ({ title: 'Crazy in Love', author: 'Beyonce' }),
+            getPlaylist: () => ['a', 'b', 'c'],
+            getPlaylistIndex: () => index,
+            destroy: vi.fn()
+        };
+        const options: { videoId?: string; playerVars?: Record<string, unknown>; events?: { onReady: () => void; onStateChange: () => void } } = {};
+
+        window.YT = {
+            Player: function (_element: HTMLElement, given: typeof options) {
+                Object.assign(options, given);
+
+                return player;
+            } as never
+        };
+        state.stream = { roomId: 3, kind: 'youtube', url: 'https://www.youtube.com/playlist?list=PLabcdefghijk123', setBy: 'Jacob', token: 4, queued: 0 };
+
+        render(<RoomStreamWidgetView />);
+        await act(async () => {
+            await Promise.resolve();
+        });
+        await act(async () => {
+            options.events.onReady();
+        });
+
+        expect(options.videoId).toBeUndefined();
+        expect(options.playerVars).toMatchObject({ list: 'PLabcdefghijk123', listType: 'playlist' });
+
+        for (index = 0; index < 2; index++) {
+            await act(async () => {
+                options.events.onStateChange();
+            });
+        }
+
+        expect(state.sent).toHaveLength(0);
+
+        index = 2;
+        await act(async () => {
+            options.events.onStateChange();
+        });
+
+        expect(state.sent).toHaveLength(1);
+        expect(state.sent[0]).toMatchObject({ roomId: 3, token: 4 });
+    });
+
     it('plays a YouTube video with its title, author and a button to show the video', async () => {
         const player = {
             playVideo: vi.fn(),
@@ -373,6 +427,43 @@ describe('RoomStreamWidgetView', () => {
 
         expect(state.sent).toHaveLength(1);
         expect(state.sent[0]).toMatchObject({ roomId: 7, token: 6 });
+    });
+
+    it('reports a SoundCloud playlist as ended only after its last track', async () => {
+        const handlers: Record<string, (data?: unknown) => void> = {};
+        let index = 0;
+        const widget = {
+            bind: (event: string, callback: (data?: unknown) => void) => {
+                handlers[event] = callback;
+            },
+            play: vi.fn(),
+            pause: vi.fn(),
+            setVolume: vi.fn(),
+            seekTo: vi.fn(),
+            getCurrentSound: vi.fn(),
+            getSounds: (callback: (sounds: unknown[]) => void) => callback([{}, {}, {}]),
+            getCurrentSoundIndex: (callback: (value: number) => void) => callback(index)
+        };
+
+        window.SC = Object.assign(() => widget, {
+            Widget: Object.assign(() => widget, { Events: { READY: 'ready', PLAY: 'play', PLAY_PROGRESS: 'progress', FINISH: 'finish' } })
+        });
+        state.stream = { roomId: 7, kind: 'soundcloud', url: 'https://soundcloud.com/jacob-llll/sets/related-tracks-beyonce-crazy', setBy: 'Jacob', token: 9, queued: 0 };
+
+        render(<RoomStreamWidgetView />);
+        await act(async () => {
+            await Promise.resolve();
+        });
+
+        for (index = 0; index < 3; index++) {
+            await act(async () => {
+                handlers.play();
+                handlers.finish();
+            });
+        }
+
+        expect(state.sent).toHaveLength(1);
+        expect(state.sent[0]).toMatchObject({ roomId: 7, token: 9 });
     });
 
     it('adds a favorite to the song line for people with rights and suggests it for everyone else', () => {

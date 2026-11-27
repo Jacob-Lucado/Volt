@@ -28,6 +28,8 @@ interface ISoundCloudWidget {
     setVolume: (volume: number) => void;
     seekTo: (milliseconds: number) => void;
     getCurrentSound: (callback: (sound: SoundCloudSound | null) => void) => void;
+    getSounds?: (callback: (sounds: SoundCloudSound[] | null) => void) => void;
+    getCurrentSoundIndex?: (callback: (index: number) => void) => void;
 }
 
 interface IYouTubePlayer {
@@ -39,13 +41,15 @@ interface IYouTubePlayer {
     getDuration: () => number;
     getPlayerState: () => number;
     getVideoData: () => { title?: string; author?: string };
+    getPlaylist?: () => string[] | null;
+    getPlaylistIndex?: () => number;
     destroy: () => void;
 }
 
 interface YouTubePlayerOptions {
     width: string;
     height: string;
-    videoId: string;
+    videoId?: string;
     playerVars: Record<string, string | number>;
     events: {
         onReady: () => void;
@@ -159,6 +163,14 @@ const loadYouTubeApi = (): Promise<void> => {
 const youTubeVideoId = (url: string): string | null => {
     try {
         return new URL(url).searchParams.get('v');
+    } catch {
+        return null;
+    }
+};
+
+const youTubePlaylistId = (url: string): string | null => {
+    try {
+        return new URL(url).searchParams.get('list');
     } catch {
         return null;
     }
@@ -371,7 +383,13 @@ export const RoomStreamWidgetView: FC<{}> = () => {
                 const widget = window.SC.Widget(frameRef.current);
                 const { Events } = window.SC.Widget;
 
-                const loadSound = () =>
+                let playingIndex = 0;
+
+                // A playlist plays through on its own. The room only hears the stream ended after its last track.
+                const trackPlayed = () => widget.getCurrentSoundIndex?.((index) => (playingIndex = index));
+
+                const loadSound = () => {
+                    trackPlayed();
                     widget.getCurrentSound((sound) => {
                         if (!active || !sound) return;
 
@@ -383,6 +401,7 @@ export const RoomStreamWidgetView: FC<{}> = () => {
                         setDuration(sound.duration && sound.duration > 0 ? sound.duration / 1000 : null);
                         setReady(true);
                     });
+                };
 
                 widget.bind(Events.READY, () => {
                     widgetRef.current = widget;
@@ -390,7 +409,19 @@ export const RoomStreamWidgetView: FC<{}> = () => {
                     loadSound();
                 });
                 widget.bind(Events.PLAY, loadSound);
-                widget.bind(Events.FINISH, () => reportEndedRef.current());
+                widget.bind(Events.FINISH, () => {
+                    if (!widget.getSounds) {
+                        reportEndedRef.current();
+
+                        return;
+                    }
+
+                    widget.getSounds((sounds) => {
+                        if (!active) return;
+
+                        if (!sounds?.length || playingIndex >= sounds.length - 1) reportEndedRef.current();
+                    });
+                });
                 widget.bind(Events.PLAY_PROGRESS, (data) => {
                     const seconds = Math.floor((data?.currentPosition ?? 0) / 1000);
 
@@ -406,9 +437,10 @@ export const RoomStreamWidgetView: FC<{}> = () => {
 
     useEffect(() => {
         const videoId = kind === 'youtube' && url ? youTubeVideoId(url) : null;
+        const playlistId = kind === 'youtube' && url ? youTubePlaylistId(url) : null;
         const host = videoHostRef.current;
 
-        if (!videoId || !host) return;
+        if ((!videoId && !playlistId) || !host) return;
 
         let active = true;
         let player: IYouTubePlayer = null;
@@ -419,7 +451,7 @@ export const RoomStreamWidgetView: FC<{}> = () => {
         setTrack({
             title: 'Loading video...',
             artist: '',
-            artwork: `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`
+            artwork: videoId ? `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg` : null
         });
 
         const refresh = () => {
@@ -439,7 +471,13 @@ export const RoomStreamWidgetView: FC<{}> = () => {
                 setReady(true);
 
                 if (player.getPlayerState() === 1) setBlocked(false);
-                if (player.getPlayerState() === 0) reportEndedRef.current();
+                if (player.getPlayerState() === 0) {
+                    // A playlist moves on by itself, so the room only hears the end after its last video.
+                    const videos = playlistId ? player.getPlaylist?.() : null;
+                    const index = player.getPlaylistIndex?.() ?? 0;
+
+                    if (!videos?.length || index >= videos.length - 1) reportEndedRef.current();
+                }
             } catch {
                 // The player is not ready to answer yet.
             }
@@ -452,8 +490,9 @@ export const RoomStreamWidgetView: FC<{}> = () => {
                 player = new window.YT.Player(target, {
                     width: '100%',
                     height: '100%',
-                    videoId,
+                    videoId: videoId ?? undefined,
                     playerVars: {
+                        ...(playlistId ? { list: playlistId, ...(videoId ? {} : { listType: 'playlist' }) } : {}),
                         autoplay: 1,
                         playsinline: 1,
                         rel: 0,
