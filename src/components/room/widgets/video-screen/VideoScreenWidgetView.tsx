@@ -12,7 +12,7 @@ const SCAN_MS = 1000;
 const DRIFT_SECONDS = 6;
 
 // The glass is a 16:9 panel at the top of the furni picture, which also holds the small base below it. These are shares of the picture's width.
-const GLASS = { left: 0.011, top: 0.018, width: 0.977, ratio: 9 / 16 };
+const GLASS = { left: 0.0226, top: 0.0226, width: 0.959, ratio: 240 / 424 };
 
 const readVolume = () => {
     try {
