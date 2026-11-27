@@ -52,7 +52,11 @@
 }
 
 html[data-volt-layout='phone-portrait'] .volt-walk-stick {
-    bottom: calc(var(--volt-toolbar-height) + 16px);
+    bottom: calc(var(--volt-toolbar-height) + 62px);
+}
+
+html[data-volt-layout='phone-portrait']:has(.volt-touch-chat[data-chat-mode='whisper']) .volt-walk-stick {
+    bottom: calc(var(--volt-toolbar-height) + 108px);
 }
 
 html[data-volt-layout='tablet-portrait'] .volt-walk-stick,

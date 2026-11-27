@@ -1,8 +1,7 @@
 import { CreateLinkEvent, FindNewFriendsMessageComposer, GetRoomEngine, RewardTrackData, RoomObjectCategory } from '@volt/renderer';
 import { AnimatePresence, motion } from 'framer-motion';
-import { FC, ReactNode, useState } from 'react';
-import { DispatchUiEvent, GetRoomSession, IsPhoneLayout, IsTabletLayout, localizeWithFallback, MessengerIconState, OpenMessengerChat, RoomWidgetUpdateChatInputContentEvent, SendMessageComposer, VisitDesktop, VoltLayout } from '../../api';
-import chatStylesImg from '../../assets/images/chat-input-swf/chat_styles.png';
+import { FC, ReactNode, useEffect, useRef, useState } from 'react';
+import { GetRoomSession, IsPhoneLayout, IsTabletLayout, localizeWithFallback, MessengerIconState, OpenMessengerChat, SendMessageComposer, VisitDesktop, VoltLayout } from '../../api';
 import memenuBgImg from '../../assets/images/toolbar/air/memenu-bg.png';
 import memenuCircleImg from '../../assets/images/toolbar/air/memenu-circle.png';
 import { LayoutAvatarImageView } from '../../common';
@@ -172,11 +171,23 @@ export const ToolbarTouchView: FC<ToolbarTouchViewProps> = (props) => {
         </div>
     );
 
-    const openChat = () => {
-        setMeExpanded(false);
-        setProgressionExpanded(false);
-        DispatchUiEvent(new RoomWidgetUpdateChatInputContentEvent(RoomWidgetUpdateChatInputContentEvent.FOCUS, ''));
-    };
+    const toolbarRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const toolbar = toolbarRef.current;
+
+        if (!toolbar) return;
+
+        const root = document.documentElement;
+        const observer = new ResizeObserver(() => root.style.setProperty('--volt-touch-toolbar-width', `${toolbar.offsetWidth}px`));
+
+        observer.observe(toolbar);
+
+        return () => {
+            observer.disconnect();
+            root.style.removeProperty('--volt-touch-toolbar-width');
+        };
+    }, []);
 
     const slots = [
         !isPhone && slot('home', homeIcon, goHome),
@@ -194,24 +205,11 @@ export const ToolbarTouchView: FC<ToolbarTouchViewProps> = (props) => {
                 () => OpenMessengerChat(),
                 null,
                 messengerState === MessengerIconState.UNREAD ? `is-notify-${messengerNotifyFrame}` : ''
-            ),
-        isPhone && isInRoom && (
-            <div key="chat" className="volt-touch-toolbar__slot volt-touch-toolbar__slot--chat">
-                <button
-                    type="button"
-                    className="volt-touch-chat-open"
-                    aria-controls="toolbar-chat-input-container"
-                    aria-label={localizeWithFallback('toolbar.icon.label.chat', 'Chat')}
-                    onClick={openChat}
-                >
-                    <img src={chatStylesImg} alt="" />
-                </button>
-            </div>
-        )
+            )
     ];
 
     return (
-        <div className={`volt-touch-toolbar volt-touch-toolbar--${layout}`}>
+        <div ref={toolbarRef} className={`volt-touch-toolbar volt-touch-toolbar--${layout}`}>
             <AnimatePresence>
                 {isMeExpanded && (
                     <motion.div
