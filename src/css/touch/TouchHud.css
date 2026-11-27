@@ -122,27 +122,6 @@ html[data-volt-layout='phone-portrait'] .volt-touch-toolbar__group .volt-touch-t
     flex: 1 0 44px;
 }
 
-.volt-touch-chat-open {
-    display: flex;
-    width: 44px;
-    height: 44px;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    border: 0;
-    background: none;
-}
-
-.volt-touch-chat-open img {
-    width: 34px;
-    height: 38px;
-    image-rendering: pixelated;
-}
-
-.volt-touch-chat-open:active img {
-    filter: brightness(0.85);
-}
-
 /* Me menu and progression menu above the toolbar */
 
 .volt-touch-toolbar__popup {

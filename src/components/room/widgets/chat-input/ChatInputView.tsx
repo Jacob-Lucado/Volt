@@ -1,5 +1,5 @@
 import { GetRoomEngine, RoomObjectCategory, RoomObjectType } from '@volt/renderer';
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, PointerEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ChatMessageTypeEnum, CreateLinkEvent, GetConfigurationValue, LocalizeText, localizeWithFallback, RoomWidgetUpdateChatInputContentEvent } from '../../../../api';
 import { IsTouchLayout, useVoltLayout } from '../../../../api/touch/VoltLayout';
@@ -11,7 +11,18 @@ import { ChatInputTouchPeopleView, TouchChatPerson } from './ChatInputTouchPeopl
 import { ChatStyleDefinition, getChatStyleLibrary, getSelectableChatStyleIds } from './chatStyles';
 
 const PEOPLE_REFRESH_MS = 1500;
-const SHOUT_HOLD_MS = 450;
+
+type TouchChatMode = 'say' | 'shout' | 'whisper';
+
+const NEXT_TOUCH_CHAT_MODE: Record<TouchChatMode, TouchChatMode> = { say: 'shout', shout: 'whisper', whisper: 'say' };
+
+const TOUCH_CHAT_MODE_LABELS: Record<TouchChatMode, [string, string]> = {
+    say: ['widgets.chatinput.button.say', 'Say'],
+    shout: ['widgets.chatinput.button.shout', 'Shout'],
+    whisper: ['widgets.chatinput.button.whisper', 'Whisper']
+};
+
+const keepChatFocus = (event: PointerEvent) => event.preventDefault();
 
 export const ChatInputView: FC<{}> = (props) => {
     const [chatValue, setChatValue] = useState<string>('');
@@ -38,11 +49,9 @@ export const ChatInputView: FC<{}> = (props) => {
     const { isHelpButtonVisible, hoverRegionProps, helpButtonProps } = useChatHelpButton();
     const layout = useVoltLayout();
     const isTouch = IsTouchLayout(layout);
+    const [touchMode, setTouchMode] = useState<TouchChatMode>('say');
     const [whisperTarget, setWhisperTarget] = useState('');
     const [people, setPeople] = useState<readonly TouchChatPerson[]>([]);
-    const [shoutArmed, setShoutArmed] = useState(false);
-    const shoutTimer = useRef(0);
-    const sendCancelled = useRef(false);
 
     const chatModeIdWhisper = useMemo(() => LocalizeText('widgets.chatinput.mode.whisper'), []);
     const chatModeIdShout = useMemo(() => LocalizeText('widgets.chatinput.mode.shout'), []);
@@ -128,17 +137,17 @@ export const ChatInputView: FC<{}> = (props) => {
     );
 
     const sendTouchChatValue = useCallback(
-        (value: string, shout: boolean) => {
+        (value: string) => {
             if (!value || !value.trim().length) return;
 
-            if (whisperTarget && !shout) {
-                sendChatValue(`${chatModeIdWhisper} ${whisperTarget} ${value}`, false, false);
+            if (touchMode === 'whisper') {
+                if (whisperTarget) sendChatValue(`${chatModeIdWhisper} ${whisperTarget} ${value}`, false, false);
                 return;
             }
 
-            sendChatValue(value, shout);
+            sendChatValue(value, touchMode === 'shout');
         },
-        [whisperTarget, chatModeIdWhisper, sendChatValue]
+        [touchMode, whisperTarget, chatModeIdWhisper, sendChatValue]
     );
 
     const updateChatInput = useCallback(
@@ -176,7 +185,7 @@ export const ChatInputView: FC<{}> = (props) => {
         const closeOutside = (event: Event) => {
             if (!document.documentElement.dataset.voltChatOpen || !(event.target instanceof Element)) return;
 
-            if (!event.target.closest('.volt-touch-chat, .volt-touch-chat-open, .swf-chat-style-menu, .habbicon-selector-popover')) closeTouchChat();
+            if (!event.target.closest('.volt-touch-chat, .swf-chat-style-menu, .habbicon-selector-popover')) closeTouchChat();
         };
 
         const closeOnEscape = (event: KeyboardEvent) => {
@@ -228,7 +237,7 @@ export const ChatInputView: FC<{}> = (props) => {
                     if (isTouch) {
                         if (event.isComposing || event.keyCode === 229) return;
                         event.preventDefault();
-                        sendTouchChatValue(value, event.shiftKey);
+                        sendTouchChatValue(value);
                     } else sendChatValue(value, event.shiftKey);
                     return;
                 case 'Backspace':
@@ -257,6 +266,7 @@ export const ChatInputView: FC<{}> = (props) => {
                 return;
             case RoomWidgetUpdateChatInputContentEvent.WHISPER: {
                 if (isTouch) {
+                    setTouchMode('whisper');
                     setWhisperTarget(event.userName);
                     openTouchChat();
                     return;
@@ -286,7 +296,10 @@ export const ChatInputView: FC<{}> = (props) => {
     }, [chatValue]);
 
     useEffect(() => {
-        if (!isTouch) setWhisperTarget('');
+        if (isTouch) return;
+
+        setTouchMode('say');
+        setWhisperTarget('');
     }, [isTouch]);
 
     useEffect(() => {
@@ -345,30 +358,29 @@ export const ChatInputView: FC<{}> = (props) => {
     if (!roomSession || roomSession.isSpectator || !portalTarget) return null;
 
     if (isTouch) {
-        const canSend = !floodBlocked && !!chatValue.trim();
-
-        const cancelSend = () => {
-            window.clearTimeout(shoutTimer.current);
-            sendCancelled.current = true;
-            setShoutArmed(false);
-        };
-
-        const releaseSend = (shout: boolean) => {
-            window.clearTimeout(shoutTimer.current);
-            setShoutArmed(false);
-
-            if (canSend && !sendCancelled.current) sendTouchChatValue(chatValue, shout);
-        };
+        const needsTarget = touchMode === 'whisper' && !whisperTarget;
+        const canSend = !floodBlocked && !needsTarget && !!chatValue.trim();
+        const placeholder =
+            touchMode === 'shout'
+                ? localizeWithFallback('widgets.chatinput.shout.placeholder', 'Shout something')
+                : touchMode === 'whisper'
+                  ? whisperTarget
+                      ? localizeWithFallback('widgets.chatinput.whisper.placeholder', `To ${whisperTarget}`, ['name'], [whisperTarget])
+                      : localizeWithFallback('widgets.chatinput.whisper.pick', 'Pick someone above')
+                  : LocalizeText('widgets.chatinput.default');
 
         return createPortal(
-            <div
-                className="volt-touch-chat"
-                data-chat-mode={shoutArmed ? 'shout' : whisperTarget ? 'whisper' : 'say'}
-                onFocusCapture={showTouchChat}
-                onPointerDownCapture={showTouchChat}
-            >
-                <ChatInputTouchPeopleView people={people} whisperTarget={whisperTarget} selectWhisperTarget={setWhisperTarget} closeChat={closeTouchChat} />
+            <div className="volt-touch-chat" data-chat-mode={touchMode}>
+                {touchMode === 'whisper' && <ChatInputTouchPeopleView people={people} whisperTarget={whisperTarget} selectWhisperTarget={setWhisperTarget} />}
                 <div className="volt-touch-chat-bar">
+                    <button
+                        className="volt-touch-chat-mode"
+                        type="button"
+                        onPointerDown={keepChatFocus}
+                        onClick={() => setTouchMode(NEXT_TOUCH_CHAT_MODE[touchMode])}
+                    >
+                        {localizeWithFallback(...TOUCH_CHAT_MODE_LABELS[touchMode])}
+                    </button>
                     <ChatInputStyleSelectorView chatStyleId={chatStyleId} chatStyleIds={selectableChatStyleIds} selectChatStyleId={updateChatStyleId} />
                     {!floodBlocked && (
                         <div className="volt-touch-chat-field">
@@ -376,13 +388,14 @@ export const ChatInputView: FC<{}> = (props) => {
                                 ref={inputRef}
                                 autoComplete="off"
                                 className="volt-touch-chat-input"
-                                aria-label={LocalizeText('widgets.chatinput.default')}
+                                aria-label={placeholder}
                                 enterKeyHint="send"
                                 maxLength={maxChatLength}
-                                placeholder={LocalizeText('widgets.chatinput.default')}
+                                placeholder={placeholder}
                                 type="text"
                                 value={chatValue}
                                 onChange={(event) => updateChatInput(event.target.value)}
+                                onFocus={showTouchChat}
                             />
                         </div>
                     )}
@@ -393,28 +406,13 @@ export const ChatInputView: FC<{}> = (props) => {
                     )}
                     <ChatInputHabbiconSelectorView />
                     <button
-                        className={`volt-touch-chat-send${shoutArmed ? ' is-shout' : ''}`}
+                        className="volt-touch-chat-send"
                         disabled={!canSend}
                         type="button"
-                        onContextMenu={(event) => event.preventDefault()}
-                        onPointerDown={(event) => {
-                            event.preventDefault();
-                            sendCancelled.current = false;
-                            window.clearTimeout(shoutTimer.current);
-                            shoutTimer.current = window.setTimeout(() => setShoutArmed(true), SHOUT_HOLD_MS);
-                        }}
-                        onPointerMove={(event) => {
-                            // Touch pointers are captured by the button, so pointerleave never fires: test the finger against its bounds.
-                            const bounds = event.currentTarget.getBoundingClientRect();
-                            const outside =
-                                event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom;
-
-                            if (outside && !sendCancelled.current) cancelSend();
-                        }}
-                        onPointerUp={() => releaseSend(shoutArmed)}
-                        onPointerCancel={cancelSend}
+                        onPointerDown={keepChatFocus}
+                        onClick={() => sendTouchChatValue(chatValue)}
                     >
-                        {shoutArmed ? localizeWithFallback('widgets.chatinput.button.shout', 'Shout') : localizeWithFallback('widgets.chatinput.button.send', 'Send')}
+                        {localizeWithFallback('widgets.chatinput.button.send', 'Send')}
                     </button>
                 </div>
             </div>,
