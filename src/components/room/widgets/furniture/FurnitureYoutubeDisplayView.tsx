@@ -74,16 +74,20 @@ export const FurnitureYoutubeDisplayView: FC<{}> = (FurnitureYoutubeDisplayViewP
                             <i className="icon icon-youtube-next cursor-pointer" onClick={next} />
                         </span>
                         <div className="mb-1">{LocalizeText('widget.furni.video_viewer.playlists')}</div>
-                        <AutoGrid className="mb-1" columnCount={1} columnMinHeight={100} columnMinWidth={80} overflow="auto">
+                        <div className="mb-1 flex flex-col gap-1 overflow-auto">
                             {playlists &&
-                                playlists.map((entry, index) => {
-                                    return (
-                                        <LayoutGridItem key={index} itemActive={entry.video === selectedVideo} onClick={(event) => selectVideo(entry.video)}>
-                                            <b>{entry.title}</b>
-                                        </LayoutGridItem>
-                                    );
-                                })}
-                        </AutoGrid>
+                                playlists.map((entry, index) => (
+                                    <LayoutGridItem key={index} className="!h-auto !min-h-0 !w-full" itemActive={entry.video === selectedVideo} onClick={(event) => selectVideo(entry.video)}>
+                                        <div className="flex w-full items-center gap-2 p-1 text-left">
+                                            <img className="h-[45px] w-[80px] shrink-0 object-cover" src={`https://i.ytimg.com/vi/${entry.video}/mqdefault.jpg`} alt="" loading="lazy" />
+                                            <div className="flex min-w-0 flex-col">
+                                                <b className="line-clamp-2 text-[12px] leading-tight">{entry.title}</b>
+                                                {entry.description && <span className="truncate text-[11px] opacity-70">{entry.description}</span>}
+                                            </div>
+                                        </div>
+                                    </LayoutGridItem>
+                                ))}
+                        </div>
                     </div>
                 </div>
             </VoltCardContentView>
