@@ -94,7 +94,7 @@ const useFurnitureYoutubeWidgetState = () => {
 
         if (currentObjectId === -1 || currentObjectId !== parser.furniId) return;
 
-        setVideoId(parser.videoId);
+        setVideoId(parser.videoId === '@music' ? null : parser.videoId);
         setVideoStart(parser.startAtSeconds);
         setVideoEnd(parser.endAtSeconds);
         setCurrentVideoState(parser.state);
