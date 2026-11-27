@@ -1,0 +1,71 @@
+.volt-walk-path-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.volt-walk-path-layer > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
+    image-rendering: var(--volt-pixel-art, pixelated);
+}
+
+/* The panel fill is the phone toolbar's border-colorless-3b3933 slice (#3b3933 at 80%); the knob is the btn-default-h44 face. */
+.volt-walk-stick {
+    position: fixed;
+    z-index: 70;
+    left: calc(20px + var(--volt-safe-left, 0px));
+    bottom: calc(20px + var(--volt-safe-bottom, 0px));
+    display: flex;
+    width: 120px;
+    height: 120px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(59, 57, 51, 0.8) url('../../assets/images/room/walk-stick/tile-cursor-guide.png') center / 34px 19px no-repeat;
+    image-rendering: var(--volt-pixel-art, pixelated);
+    opacity: 0.85;
+    pointer-events: auto;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: opacity 0.15s linear;
+}
+
+.volt-walk-stick.is-active {
+    opacity: 1;
+}
+
+.volt-walk-stick__knob {
+    width: 46px;
+    height: 46px;
+    box-sizing: border-box;
+    border: 2px solid #000000;
+    border-radius: 50%;
+    background: linear-gradient(#f3f3f3 50%, #d9d9d9 50%);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+}
+
+html[data-volt-layout='phone-portrait'] .volt-walk-stick {
+    bottom: calc(var(--volt-toolbar-height) + 16px);
+}
+
+html[data-volt-layout='tablet-portrait'] .volt-walk-stick,
+html[data-volt-layout='tablet-landscape'] .volt-walk-stick {
+    bottom: calc(var(--volt-toolbar-height) + 20px);
+}
+
+html[data-volt-layout='phone-landscape'] .volt-touch-toolbar {
+    right: calc(6px + var(--volt-safe-right));
+    left: auto;
+}
+
+html[data-volt-chat-open] .volt-walk-stick,
+html[data-volt-keyboard='open'] .volt-walk-stick {
+    display: none;
+}
