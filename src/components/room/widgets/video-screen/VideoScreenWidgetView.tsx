@@ -11,8 +11,8 @@ const VOLUME_KEY = 'room-stream-volume';
 const SCAN_MS = 1000;
 const DRIFT_SECONDS = 6;
 
-// The glass of the furni, as a share of its picture.
-const INSET = { left: 0.018, right: 0.018, top: 0.035, bottom: 0.04 };
+// The glass is a 16:9 panel at the top of the furni picture, which also holds the small base below it. These are shares of the picture's width.
+const GLASS = { left: 0.011, top: 0.018, width: 0.977, ratio: 9 / 16 };
 
 const readVolume = () => {
     try {
@@ -90,10 +90,12 @@ const VideoScreenView: FC<{ roomId: number; objectId: number; value: string; mus
             const inView = bounds.left + bounds.width >= 0 && bounds.left <= container.clientWidth && bounds.top + bounds.height >= 0 && bounds.top <= container.clientHeight;
 
             box.style.visibility = inView ? 'visible' : 'hidden';
-            box.style.left = `${bounds.left + bounds.width * INSET.left}px`;
-            box.style.top = `${bounds.top + bounds.height * INSET.top}px`;
-            box.style.width = `${bounds.width * (1 - INSET.left - INSET.right)}px`;
-            box.style.height = `${bounds.height * (1 - INSET.top - INSET.bottom)}px`;
+            const width = bounds.width * GLASS.width;
+
+            box.style.left = `${bounds.left + bounds.width * GLASS.left}px`;
+            box.style.top = `${bounds.top + bounds.width * GLASS.top}px`;
+            box.style.width = `${width}px`;
+            box.style.height = `${width * GLASS.ratio}px`;
         };
 
         update();
