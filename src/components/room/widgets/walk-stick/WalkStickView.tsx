@@ -172,13 +172,15 @@ const RoomWalkStick: FC<{ roomSession: IRoomSession }> = ({ roomSession }) => {
         const value = selected.current;
         gesture.current = null;
         setKnob({ x: 0, y: 0 });
-        if (!commit || !value || (value.route?.length === 0 && value.requestId === received.current)) {
+        if (!commit || !value || value.route?.length === 0) {
             select(null);
             return;
         }
         select({ ...value, committed: true, lastMove: performance.now() });
         SendMessageComposer(new RoomUnitWalkComposer(value.goal.x, value.goal.y));
     };
+
+    const isBlocked = plan?.route?.length === 0 && !sameTile(plan.origin, plan.goal);
 
     return (
         <>
@@ -187,11 +189,18 @@ const RoomWalkStick: FC<{ roomSession: IRoomSession }> = ({ roomSession }) => {
                     <img key={`${x}-${y}`} alt="" draggable={false} src={pathCursor} data-x={x} data-y={y} />
                 ))}
                 {plan && (
-                    <img alt="" draggable={false} src={plan.route?.length === 0 ? blockedCursor : stopCursor} data-x={plan.goal.x} data-y={plan.goal.y} />
+                    <img
+                        alt=""
+                        draggable={false}
+                        className={isBlocked ? 'is-blocked' : undefined}
+                        src={isBlocked ? blockedCursor : stopCursor}
+                        data-x={plan.goal.x}
+                        data-y={plan.goal.y}
+                    />
                 )}
             </div>
             <div
-                className={`volt-walk-stick${gesture.current ? ' is-active' : ''}`}
+                className={`volt-walk-stick${gesture.current ? ' is-active' : ''}${isBlocked ? ' is-blocked' : ''}`}
                 onPointerDown={(event) => {
                     const origin = avatarTile();
                     if (gesture.current || !origin) return;
