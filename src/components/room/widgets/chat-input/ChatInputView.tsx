@@ -42,6 +42,7 @@ export const ChatInputView: FC<{}> = (props) => {
     const [people, setPeople] = useState<readonly TouchChatPerson[]>([]);
     const [shoutArmed, setShoutArmed] = useState(false);
     const shoutTimer = useRef(0);
+    const sendCancelled = useRef(false);
 
     const chatModeIdWhisper = useMemo(() => LocalizeText('widgets.chatinput.mode.whisper'), []);
     const chatModeIdShout = useMemo(() => LocalizeText('widgets.chatinput.mode.shout'), []);
@@ -346,11 +347,17 @@ export const ChatInputView: FC<{}> = (props) => {
     if (isTouch) {
         const canSend = !floodBlocked && !!chatValue.trim();
 
+        const cancelSend = () => {
+            window.clearTimeout(shoutTimer.current);
+            sendCancelled.current = true;
+            setShoutArmed(false);
+        };
+
         const releaseSend = (shout: boolean) => {
             window.clearTimeout(shoutTimer.current);
             setShoutArmed(false);
 
-            if (canSend) sendTouchChatValue(chatValue, shout);
+            if (canSend && !sendCancelled.current) sendTouchChatValue(chatValue, shout);
         };
 
         return createPortal(
@@ -392,14 +399,20 @@ export const ChatInputView: FC<{}> = (props) => {
                         onContextMenu={(event) => event.preventDefault()}
                         onPointerDown={(event) => {
                             event.preventDefault();
+                            sendCancelled.current = false;
                             window.clearTimeout(shoutTimer.current);
                             shoutTimer.current = window.setTimeout(() => setShoutArmed(true), SHOUT_HOLD_MS);
                         }}
-                        onPointerUp={() => releaseSend(shoutArmed)}
-                        onPointerLeave={() => {
-                            window.clearTimeout(shoutTimer.current);
-                            setShoutArmed(false);
+                        onPointerMove={(event) => {
+                            // Touch pointers are captured by the button, so pointerleave never fires: test the finger against its bounds.
+                            const bounds = event.currentTarget.getBoundingClientRect();
+                            const outside =
+                                event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom;
+
+                            if (outside && !sendCancelled.current) cancelSend();
                         }}
+                        onPointerUp={() => releaseSend(shoutArmed)}
+                        onPointerCancel={cancelSend}
                     >
                         {shoutArmed ? localizeWithFallback('widgets.chatinput.button.shout', 'Shout') : localizeWithFallback('widgets.chatinput.button.send', 'Send')}
                     </button>
