@@ -32,6 +32,7 @@ import { RoomToolsWidgetView } from './room-tools/RoomToolsWidgetView';
 import { TouchPlacementView } from './touch-placement/TouchPlacementView';
 import { applyRoomZoom } from './room-tools/roomZoom.helpers';
 import { VariableLeaderboardOverlayView } from './variable-leaderboard/VariableLeaderboardOverlayView';
+import { WalkStickView } from './walk-stick/WalkStickView';
 import { WiredLinkWidgetView } from './wired-link/WiredLinkWidgetView';
 import { WordQuizWidgetView } from './word-quiz/WordQuizWidgetView';
 
@@ -191,6 +192,9 @@ export const RoomWidgetsView: FC<{}> = (props) => {
                 </WidgetErrorBoundary>
                 <WidgetErrorBoundary name="FurnitureWidgets">
                     <FurnitureWidgetsView />
+                </WidgetErrorBoundary>
+                <WidgetErrorBoundary name="WalkStick">
+                    <WalkStickView />
                 </WidgetErrorBoundary>
             </div>
             <WidgetErrorBoundary name="AvatarInfoWidget">

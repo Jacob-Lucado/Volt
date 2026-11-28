@@ -1,4 +1,5 @@
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { GetRoomEngine, RoomObjectCategory, RoomObjectType } from '@volt/renderer';
+import { FC, PointerEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ChatMessageTypeEnum, CreateLinkEvent, GetConfigurationValue, LocalizeText, localizeWithFallback, RoomWidgetUpdateChatInputContentEvent } from '../../../../api';
 import { IsTouchLayout, useVoltLayout } from '../../../../api/touch/VoltLayout';
@@ -6,8 +7,22 @@ import { Text } from '../../../../common';
 import { useChatHelpButton, useChatInputWidget, useClientAccessLists, useRoom, useSessionInfo, useUiEvent, useUserDataSnapshot } from '../../../../hooks';
 import { ChatInputHabbiconSelectorView } from './ChatInputHabbiconSelectorView';
 import { ChatInputStyleSelectorView } from './ChatInputStyleSelectorView';
-import { ChatInputTouchModeBarView, TouchChatMode } from './ChatInputTouchModeBarView';
+import { ChatInputTouchPeopleView, TouchChatPerson } from './ChatInputTouchPeopleView';
 import { ChatStyleDefinition, getChatStyleLibrary, getSelectableChatStyleIds } from './chatStyles';
+
+const PEOPLE_REFRESH_MS = 1500;
+
+type TouchChatMode = 'say' | 'shout' | 'whisper';
+
+const NEXT_TOUCH_CHAT_MODE: Record<TouchChatMode, TouchChatMode> = { say: 'shout', shout: 'whisper', whisper: 'say' };
+
+const TOUCH_CHAT_MODE_LABELS: Record<TouchChatMode, [string, string]> = {
+    say: ['widgets.chatinput.button.say', 'Say'],
+    shout: ['widgets.chatinput.button.shout', 'Shout'],
+    whisper: ['widgets.chatinput.button.whisper', 'Whisper']
+};
+
+const keepChatFocus = (event: PointerEvent) => event.preventDefault();
 
 export const ChatInputView: FC<{}> = (props) => {
     const [chatValue, setChatValue] = useState<string>('');
@@ -36,6 +51,7 @@ export const ChatInputView: FC<{}> = (props) => {
     const isTouch = IsTouchLayout(layout);
     const [touchMode, setTouchMode] = useState<TouchChatMode>('say');
     const [whisperTarget, setWhisperTarget] = useState('');
+    const [people, setPeople] = useState<readonly TouchChatPerson[]>([]);
 
     const chatModeIdWhisper = useMemo(() => LocalizeText('widgets.chatinput.mode.whisper'), []);
     const chatModeIdShout = useMemo(() => LocalizeText('widgets.chatinput.mode.shout'), []);
@@ -124,29 +140,14 @@ export const ChatInputView: FC<{}> = (props) => {
         (value: string) => {
             if (!value || !value.trim().length) return;
 
-            if (touchMode === 'whisper' && whisperTarget) {
-                sendChatValue(`${chatModeIdWhisper} ${whisperTarget} ${value}`, false, false);
+            if (touchMode === 'whisper') {
+                if (whisperTarget) sendChatValue(`${chatModeIdWhisper} ${whisperTarget} ${value}`, false, false);
                 return;
             }
 
             sendChatValue(value, touchMode === 'shout');
         },
         [touchMode, whisperTarget, chatModeIdWhisper, sendChatValue]
-    );
-
-    const selectTouchMode = useCallback(
-        (mode: TouchChatMode) => {
-            if (mode === 'whisper') {
-                const target = selectedUsername || whisperTarget;
-
-                if (!target) return;
-
-                setWhisperTarget(target);
-            }
-
-            setTouchMode(mode);
-        },
-        [selectedUsername, whisperTarget]
     );
 
     const updateChatInput = useCallback(
@@ -184,7 +185,7 @@ export const ChatInputView: FC<{}> = (props) => {
         const closeOutside = (event: Event) => {
             if (!document.documentElement.dataset.voltChatOpen || !(event.target instanceof Element)) return;
 
-            if (!event.target.closest('.volt-touch-chat, .volt-touch-chat-open, .swf-chat-style-menu, .habbicon-selector-popover')) closeTouchChat();
+            if (!event.target.closest('.volt-touch-chat, .swf-chat-style-menu, .habbicon-selector-popover')) closeTouchChat();
         };
 
         const closeOnEscape = (event: KeyboardEvent) => {
@@ -265,8 +266,8 @@ export const ChatInputView: FC<{}> = (props) => {
                 return;
             case RoomWidgetUpdateChatInputContentEvent.WHISPER: {
                 if (isTouch) {
-                    setWhisperTarget(event.userName);
                     setTouchMode('whisper');
+                    setWhisperTarget(event.userName);
                     openTouchChat();
                     return;
                 }
@@ -295,8 +296,41 @@ export const ChatInputView: FC<{}> = (props) => {
     }, [chatValue]);
 
     useEffect(() => {
-        if (!isTouch) setTouchMode('say');
+        if (isTouch) return;
+
+        setTouchMode('say');
+        setWhisperTarget('');
     }, [isTouch]);
+
+    useEffect(() => {
+        if (!isTouch || !roomSession) return;
+
+        const readPeople = () => {
+            const engine = GetRoomEngine();
+            const own = engine.getRoomObject(roomSession.roomId, roomSession.ownRoomIndex, RoomObjectCategory.UNIT)?.getLocation();
+            const distance = (roomIndex: number) => {
+                const location = engine.getRoomObject(roomSession.roomId, roomIndex, RoomObjectCategory.UNIT)?.getLocation();
+
+                return own && location ? Math.max(Math.abs(location.x - own.x), Math.abs(location.y - own.y)) : Number.MAX_SAFE_INTEGER;
+            };
+
+            const next = (roomSession.userDataManager?.getRoomUserListSnapshot() ?? [])
+                .filter((user) => user.type === RoomObjectType.USER && user.roomIndex !== roomSession.ownRoomIndex)
+                .map((user) => ({ name: user.name, figure: user.figure, distance: distance(user.roomIndex) }))
+                .sort((a, b) => a.distance - b.distance)
+                .map(({ name, figure }) => ({ name, figure }));
+
+            setPeople((previous) =>
+                previous.length === next.length && previous.every((person, i) => person.name === next[i].name && person.figure === next[i].figure) ? previous : next
+            );
+        };
+
+        readPeople();
+
+        const interval = window.setInterval(readPeople, PEOPLE_REFRESH_MS);
+
+        return () => window.clearInterval(interval);
+    }, [isTouch, roomSession]);
 
     useEffect(() => {
         if (!roomSession) return;
@@ -324,19 +358,29 @@ export const ChatInputView: FC<{}> = (props) => {
     if (!roomSession || roomSession.isSpectator || !portalTarget) return null;
 
     if (isTouch) {
-        const whisperFigure = whisperTarget ? (roomSession.userDataManager?.getUserDataByName(whisperTarget)?.figure ?? '') : '';
+        const needsTarget = touchMode === 'whisper' && !whisperTarget;
+        const canSend = !floodBlocked && !needsTarget && !!chatValue.trim();
+        const placeholder =
+            touchMode === 'shout'
+                ? localizeWithFallback('widgets.chatinput.shout.placeholder', 'Shout something')
+                : touchMode === 'whisper'
+                  ? whisperTarget
+                      ? localizeWithFallback('widgets.chatinput.whisper.placeholder', `To ${whisperTarget}`, ['name'], [whisperTarget])
+                      : localizeWithFallback('widgets.chatinput.whisper.pick', 'Pick someone above')
+                  : LocalizeText('widgets.chatinput.default');
 
         return createPortal(
-            <div className="volt-touch-chat" data-chat-mode={touchMode} onFocusCapture={showTouchChat} onPointerDownCapture={showTouchChat}>
-                <ChatInputTouchModeBarView
-                    closeChat={closeTouchChat}
-                    canWhisper={!!(selectedUsername || whisperTarget)}
-                    mode={touchMode}
-                    selectMode={selectTouchMode}
-                    whisperFigure={whisperFigure}
-                    whisperTarget={whisperTarget}
-                />
+            <div className="volt-touch-chat" data-chat-mode={touchMode}>
+                {touchMode === 'whisper' && <ChatInputTouchPeopleView people={people} whisperTarget={whisperTarget} selectWhisperTarget={setWhisperTarget} />}
                 <div className="volt-touch-chat-bar">
+                    <button
+                        className="volt-touch-chat-mode"
+                        type="button"
+                        onPointerDown={keepChatFocus}
+                        onClick={() => setTouchMode(NEXT_TOUCH_CHAT_MODE[touchMode])}
+                    >
+                        {localizeWithFallback(...TOUCH_CHAT_MODE_LABELS[touchMode])}
+                    </button>
                     <ChatInputStyleSelectorView chatStyleId={chatStyleId} chatStyleIds={selectableChatStyleIds} selectChatStyleId={updateChatStyleId} />
                     {!floodBlocked && (
                         <div className="volt-touch-chat-field">
@@ -344,13 +388,14 @@ export const ChatInputView: FC<{}> = (props) => {
                                 ref={inputRef}
                                 autoComplete="off"
                                 className="volt-touch-chat-input"
-                                aria-label={LocalizeText('widgets.chatinput.default')}
+                                aria-label={placeholder}
                                 enterKeyHint="send"
                                 maxLength={maxChatLength}
-                                placeholder={LocalizeText('widgets.chatinput.default')}
+                                placeholder={placeholder}
                                 type="text"
                                 value={chatValue}
                                 onChange={(event) => updateChatInput(event.target.value)}
+                                onFocus={showTouchChat}
                             />
                         </div>
                     )}
@@ -362,9 +407,9 @@ export const ChatInputView: FC<{}> = (props) => {
                     <ChatInputHabbiconSelectorView />
                     <button
                         className="volt-touch-chat-send"
-                        disabled={floodBlocked || !chatValue.trim()}
+                        disabled={!canSend}
                         type="button"
-                        onPointerDown={(event) => event.preventDefault()}
+                        onPointerDown={keepChatFocus}
                         onClick={() => sendTouchChatValue(chatValue)}
                     >
                         {localizeWithFallback('widgets.chatinput.button.send', 'Send')}

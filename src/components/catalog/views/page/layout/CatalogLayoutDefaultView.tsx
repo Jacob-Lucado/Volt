@@ -1,9 +1,8 @@
-import { FC, ReactNode, SyntheticEvent, useState } from 'react';
+import { FC, ReactNode, SyntheticEvent, useEffect, useState } from 'react';
 import { CatalogType, GetConfigurationValue, IPurchasableOffer, LocalizeText, ProductTypeEnum } from '../../../../../api';
 import { IsPhoneLayout, useVoltLayout } from '../../../../../api/touch';
-import backIcon from '../../../../../assets/images/navigator/air/button-back.png';
 import { NativeText } from '../../../../../common/native-text/NativeText';
-import { getCatalogGridMetrics, useCatalogData, useCatalogDisplayPreferences, useCatalogUiState } from '../../../../../hooks';
+import { getCatalogGridMetrics, useCatalogActions, useCatalogData, useCatalogDisplayPreferences, useCatalogUiState } from '../../../../../hooks';
 import { getCatalogPlainText } from '../../../catalogLocalization.helpers';
 import { CatalogHeaderView } from '../../catalog-header/CatalogHeaderView';
 import { CatalogAddOnBadgeWidgetView } from '../widgets/CatalogAddOnBadgeWidgetView';
@@ -59,8 +58,9 @@ export const CatalogLayoutDefaultView: FC<CatalogLayoutDefaultViewProps> = (prop
     const { page = null, gridOffers, isGridOfferActive, colourGrid = null, layoutClassName = '', previewHeight = 240 } = props;
     const layout = useVoltLayout();
     const isPhone = IsPhoneLayout(layout);
-    const { currentOffer = null, currentPage = null, roomPreviewer = null } = useCatalogData();
-    const { currentType = CatalogType.NORMAL, setCurrentOffer } = useCatalogUiState();
+    const { currentOffer = null, currentPage = null, roomPreviewer = null, isBusy = false } = useCatalogData();
+    const { currentType = CatalogType.NORMAL } = useCatalogUiState();
+    const { selectCatalogOffer = null } = useCatalogActions();
     const isBuilder = currentType === CatalogType.BUILDER;
     const { density = 'standard', showTilePrices = true } = useCatalogDisplayPreferences();
     const gridMetrics = getCatalogGridMetrics(density);
@@ -76,6 +76,13 @@ export const CatalogLayoutDefaultView: FC<CatalogLayoutDefaultViewProps> = (prop
         !!currentOffer?.bundlePurchaseAllowed &&
         GetConfigurationValue<boolean>('catalog.multiple.purchase.enabled', true);
     const isBundleOffer = currentOffer?.pricingModel === 'pricing_model_bundle';
+    const firstOffer = (gridOffers ?? page?.offers)?.[0] ?? null;
+
+    // Phones keep the product preview and buy dock filled: a page opens on its first offer instead of the teaser.
+    // Opening a page clears the offer; while busy the previous page is still on screen.
+    useEffect(() => {
+        if (isPhone && !isBusy && !currentOffer && firstOffer) selectCatalogOffer?.(firstOffer);
+    }, [isPhone, isBusy, currentOffer, firstOffer, selectCatalogOffer]);
 
     const productView = (
         <div className="volt-catalog-product-view">
@@ -101,7 +108,7 @@ export const CatalogLayoutDefaultView: FC<CatalogLayoutDefaultViewProps> = (prop
                             </>
                         )}
                         {/* ProductViewCatalogWidget.onPreviewProduct: without the quantity and total price widgets the price sits on the product. */}
-                        {!showBundlePurchase && <CatalogAirPriceDisplayView className="volt-catalog-default-price" offer={currentOffer} />}
+                        {!showBundlePurchase && !isPhone && <CatalogAirPriceDisplayView className="volt-catalog-default-price" offer={currentOffer} />}
                         {currentOffer.product.productType === ProductTypeEnum.BADGE && <CatalogAddOnBadgeWidgetView className="scale-200" />}
                     </div>
                 </div>
@@ -156,7 +163,7 @@ export const CatalogLayoutDefaultView: FC<CatalogLayoutDefaultViewProps> = (prop
                 <CatalogBuilderWidgetView />
             ) : currentOffer ? (
                 <div className="volt-catalog-offer-actions flex gap-1.5">
-                    <CatalogPurchaseWidgetView onPurchased={layout === 'phone-portrait' ? () => setCurrentOffer(null) : undefined} />
+                    <CatalogPurchaseWidgetView />
                 </div>
             ) : (
                 <CatalogPurchaseSelectionPrompt />
@@ -171,18 +178,13 @@ export const CatalogLayoutDefaultView: FC<CatalogLayoutDefaultViewProps> = (prop
                 <>
                     {grid}
                     <div className="volt-catalog-phone-detail">
+                        {productView}
                         {currentOffer && (
                             <div className="volt-catalog-phone-detail-heading">
-                                {layout === 'phone-portrait' && (
-                                    <button className="volt-catalog-touch-back" onClick={() => setCurrentOffer(null)} type="button">
-                                        <img alt="" src={backIcon} />
-                                        <span>{LocalizeText('generic.back')}</span>
-                                    </button>
-                                )}
                                 <CatalogProductDetailsView offer={currentOffer} phone />
+                                <CatalogAirPriceDisplayView className="volt-catalog-phone-price" offer={currentOffer} />
                             </div>
                         )}
-                        {productView}
                         {currentOffer && colourGrid}
                         <div className="volt-catalog-phone-checkout">
                             {price}

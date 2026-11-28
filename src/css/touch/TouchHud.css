@@ -122,27 +122,6 @@ html[data-volt-layout='phone-portrait'] .volt-touch-toolbar__group .volt-touch-t
     flex: 1 0 44px;
 }
 
-.volt-touch-chat-open {
-    display: flex;
-    width: 44px;
-    height: 44px;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    border: 0;
-    background: none;
-}
-
-.volt-touch-chat-open img {
-    width: 34px;
-    height: 38px;
-    image-rendering: pixelated;
-}
-
-.volt-touch-chat-open:active img {
-    filter: brightness(0.85);
-}
-
 /* Me menu and progression menu above the toolbar */
 
 .volt-touch-toolbar__popup {
@@ -285,6 +264,33 @@ html[data-volt-layout='phone-landscape']:has([data-volt-window='dock']) .volt-pu
 
 html[data-volt-layout='phone-landscape']:has([data-volt-window='dock']) .volt-purse-compact__amount {
     display: none;
+}
+
+/* Landscape phones have width to spare: a wider purse with the currencies spread out. */
+/* The notch sits mid-height on the side, so the top-right HUD only clears the rounded corner. The purse, the extras
+   arrow and the notices share one right edge. */
+html[data-volt-layout='phone-landscape'] {
+    --volt-hud-right: max(4px, calc(var(--volt-safe-right) - 32px));
+}
+
+html[data-volt-layout='phone-landscape'] .volt-right-side {
+    width: calc(min(320px, 45vw) + var(--volt-hud-right)) !important;
+    padding-right: var(--volt-hud-right);
+}
+
+html[data-volt-layout='phone-landscape'] .volt-right-side__purse {
+    width: min(320px, 45vw) !important;
+}
+
+html[data-volt-layout='phone-landscape'] .volt-purse-container {
+    padding-right: 0;
+}
+
+html[data-volt-layout='phone-landscape'] .volt-purse-compact {
+    align-self: stretch;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 0 10px;
 }
 
 /* Tablet: the full AIR purse with 28 px buttons. */
